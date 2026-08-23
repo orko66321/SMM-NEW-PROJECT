@@ -196,3 +196,31 @@ export async function updateOrderStatus(orderId: string, input: UpdateOrderStatu
     return updated;
   });
 }
+
+// ── Auto-fulfillment support (Phase 2 — see apps/api/src/cron/) ──────────
+
+/** Orders eligible for automatic provider submission: PENDING, not yet submitted, and the service has opted in. */
+export async function findPendingAutoSubmitOrders(limit = 25) {
+  return prisma.order.findMany({
+    where: { status: "PENDING", providerOrderId: null, service: { autoSubmit: true } },
+    include: { service: { include: { provider: true, backupProvider: true } } },
+    orderBy: { createdAt: "asc" },
+    take: limit,
+  });
+}
+
+export async function markOrderSubmittedToProvider(orderId: string, providerOrderId: string) {
+  return prisma.order.update({
+    where: { id: orderId },
+    data: { providerOrderId, status: "PROCESSING", mode: "AUTO" },
+  });
+}
+
+/** Orders actively being fulfilled by a provider — what the status-polling cron reconciles. */
+export async function findActiveProviderOrders(limit = 200) {
+  return prisma.order.findMany({
+    where: { status: { in: ["PROCESSING", "IN_PROGRESS"] }, providerOrderId: { not: null } },
+    include: { service: { include: { provider: true } } },
+    take: limit,
+  });
+}

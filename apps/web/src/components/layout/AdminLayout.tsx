@@ -8,6 +8,8 @@ const navItems = [
   { to: "/admin/orders", label: "Orders" },
   { to: "/admin/deposits", label: "Deposits" },
   { to: "/admin/tickets", label: "Tickets" },
+  { to: "/admin/providers", label: "Providers" },
+  { to: "/admin/payment-gateways", label: "Payment Gateways" },
 ];
 
 export default function AdminLayout() {

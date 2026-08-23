@@ -3,12 +3,15 @@
 A social-media-marketing reseller panel: customers buy engagement services (followers, likes, views…) on
 credit from a prepaid wallet; admins manage the catalog, orders, users, and deposits.
 
-**Status: Phase 1 foundation.** This ships a fully working, tested core — auth, RBAC, the atomic wallet
-ledger, order placement with server-side price validation, service catalog, manual deposit approval flow,
-support tickets, and both the customer and admin dashboards. It is a real, runnable application, not a
-mockup. Modules from the original design docs that are **not yet built** are listed at the bottom — the
-Prisma schema already has tables reserved for them so adding the modules later won't require migrations
-that touch existing data.
+**Status: Phase 1 + Phase 2.** Phase 1 shipped the money-safety/access-control core — auth, RBAC, the
+atomic wallet ledger, order placement with server-side price validation, service catalog, manual deposit
+approval, support tickets, and both dashboards. Phase 2 adds the *framework* for payment gateways and
+upstream provider integration: encrypted credential storage, a generic JAP-standard provider client with
+per-service opt-in auto-fulfillment + one-level failover, background cron reconciliation, and a bKash
+adapter as the reference payment gateway — shipped **disabled**, since no real merchant/provider account
+exists yet (see "What's still not live" below). Everything described here is real, tested, runnable code,
+not a mockup. Modules that are **schema-only** are listed at the bottom — the Prisma schema already
+reserves tables for them so adding them later won't require migrations that touch existing data.
 
 ## Stack
 
@@ -25,11 +28,11 @@ that touch existing data.
 
 ```bash
 cp .env.example .env
-# then edit .env: at minimum set a real JWT_SECRET (openssl rand -base64 48)
-# and a real POSTGRES_PASSWORD — never keep the placeholder values.
+# then edit .env: at minimum set real values for JWT_SECRET (openssl rand -base64 48),
+# ENCRYPTION_KEY (openssl rand -base64 32), and POSTGRES_PASSWORD — never keep the placeholders.
 
-docker compose up -d          # starts Postgres
-npm install                   # installs all workspaces
+docker compose up -d          # starts Postgres (see note below if you don't have Docker)
+npm install                   # installs all workspaces; also builds packages/shared
 
 npm run db:migrate            # applies the Prisma schema
 npm run db:seed               # creates a demo admin + demo user + sample services
@@ -39,6 +42,16 @@ npm run dev                   # runs the API (http://localhost:4000) and web app
 
 The seed script prints the demo admin/user credentials it created — use those to log in locally.
 **Change or remove them before deploying anywhere real.**
+
+**No Docker?** `brew install postgresql@16 && brew services start postgresql@16` works as a drop-in
+replacement — create a role/database matching your `DATABASE_URL`, and grant it `CREATEDB` so
+`prisma migrate dev` can manage its shadow database (`ALTER ROLE smm_panel CREATEDB;`). This repo's own
+local dev environment is running this way.
+
+**Test database:** the integration suite's `resetDb()` truncates every table between tests, so it runs
+against a separate `<database>_test` database (auto-derived from `DATABASE_URL` by
+`apps/api/tests/setup-env.ts`) rather than your dev database — create it once (same owner/privileges) and
+run `DATABASE_URL=.../<db>_test prisma migrate deploy` against it after each new migration.
 
 ## Verification
 
@@ -57,6 +70,17 @@ The test suite specifically proves the two highest-risk properties of a wallet-b
   and the server always recalculates it, and that replaying the same `Idempotency-Key` never double-charges.
 - **`tests/rbac.test.ts`** proves every `/api/admin/*` route rejects a plain `USER` token with 403 — even
   when the request body itself claims `{ "role": "ADMIN" }`.
+- **`tests/crypto.test.ts`** proves at-rest encryption round-trips correctly and that tampered ciphertext
+  fails loudly instead of decrypting to silently-wrong plaintext.
+- **`tests/providerClient.test.ts`** exercises the JAP-standard provider client against a real local mock
+  HTTP server (`tests/mocks/japProvider.ts`) — no real upstream account needed to verify it.
+- **`tests/autoFulfillment.test.ts`** is the load-bearing test for Phase 2's money safety: a PENDING
+  auto-submit order is fulfilled by the primary provider, falls back to the backup provider on primary
+  failure, and — if both fail — is marked FAILED **and the wallet is refunded in full**, proving a broken
+  provider integration can never silently keep a customer's money.
+- **`tests/payments.test.ts`** proves the payment gateway callback route cannot be tricked into crediting
+  a wallet from query-string parameters alone (it mocks the gateway's own confirm API, not the browser
+  redirect), and that hitting the callback twice for one payment only credits once.
 
 ## Project layout
 
@@ -78,13 +102,30 @@ packages/shared  Zod schemas + types shared by both
   immediately rather than after its token expires.
 - Rate limiting is in-memory (`express-rate-limit`), which is fine for a single process but does **not**
   share state across horizontally scaled instances — swap in a Redis-backed store before running more
-  than one API replica.
+  than one API replica. The Phase 2 cron jobs (`apps/api/src/cron/`) have the same single-instance caveat.
+- Provider API keys and payment gateway credentials are encrypted at rest (AES-256-GCM,
+  `apps/api/src/lib/crypto.ts`) using `ENCRYPTION_KEY` from `.env` — the admin panel is where you add or
+  rotate a provider/gateway, not `.env`, so that's a config change rather than a redeploy.
+- Every payment gateway `confirm()` call re-verifies payment status with the gateway itself using our
+  stored credentials — a callback/redirect's query string is only ever a trigger to re-check, never
+  trusted as proof of payment (see `apps/api/src/services/payments/types.ts`).
+
+## What's still not live
+
+- **bKash** is implemented against bKash's public Tokenized Checkout API docs but has **not been run
+  against a real bKash sandbox** (no merchant account exists yet) — treat it as reviewed-but-unverified.
+  Configure it from the admin Payment Gateways page in SANDBOX mode and confirm a real test transaction
+  end-to-end before ever switching to LIVE mode.
+- **Provider API sync** is implemented against the de facto JAP-standard reseller API and verified against
+  a local mock server, but has not been run against a real upstream provider — add one from the admin
+  Providers page and confirm "Sync now" and a real test order before enabling `autoSubmit` on any service.
+- Every other deposit method (Nagad, Rocket, Upay, crypto, etc.) still goes through the Phase 1 manual
+  "submit deposit → admin approves" flow — only bKash has a live-gateway framework built.
 
 ## What's deferred to a later phase
 
-Drip-feed automation, affiliates/referrals, child-panel reseller wizard, live payment gateway integrations
-(bKash/Nagad/Rocket/Upay/crypto/etc. — Phase 1 has a manual "submit deposit → admin approves" flow instead),
-provider API integration + cron sync + auto-failover, coupon redemption, 2FA, IP allow-listing, a global
-command palette, CSV export, analytics charts, bulk user actions, fraud/duplicate-account detection, and a
-granular per-permission admin role matrix (Phase 1 has role-level RBAC: USER / STAFF / ADMIN, with STAFF
-not yet granted any admin routes).
+Drip-feed automation, affiliates/referrals, child-panel reseller wizard, coupon redemption, 2FA, IP
+allow-listing, a global command palette, CSV export, analytics charts, bulk user actions,
+fraud/duplicate-account detection, provider health monitoring/alerting beyond the sync-log + failover
+already built, and a granular per-permission admin role matrix (role-level RBAC exists: USER / STAFF /
+ADMIN, with STAFF not yet granted any admin routes).

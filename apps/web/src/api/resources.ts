@@ -1,10 +1,15 @@
 import type {
   AdjustWalletInput,
   CreateDepositInput,
+  CreateGatewayDepositInput,
   CreateOrderInput,
+  CreateProviderInput,
   CreateTicketInput,
+  PaymentGatewayKey,
   ServiceInput,
+  UpdateGatewayConfigInput,
   UpdateOrderStatusInput,
+  UpdateProviderInput,
   UpdateUserInput,
 } from "@smm/shared";
 import { apiClient } from "./client.js";
@@ -75,3 +80,22 @@ export const replyToAdminTicket = (id: string, message: string) =>
   apiClient.post(`/admin/tickets/${id}/messages`, { message }).then((r) => r.data.message);
 export const updateAdminTicketStatus = (id: string, status: string) =>
   apiClient.patch(`/admin/tickets/${id}/status`, { status }).then((r) => r.data.ticket);
+
+// ── Providers (Phase 2) ─────────────────────────────────────────────────
+export const getAdminProviders = () => apiClient.get("/admin/providers").then((r) => r.data.items);
+export const createAdminProvider = (input: CreateProviderInput) =>
+  apiClient.post("/admin/providers", input).then((r) => r.data.provider);
+export const updateAdminProvider = (id: string, input: UpdateProviderInput) =>
+  apiClient.put(`/admin/providers/${id}`, input).then((r) => r.data.provider);
+export const getAdminProviderLogs = (id: string) => apiClient.get(`/admin/providers/${id}/logs`).then((r) => r.data.items);
+export const syncAdminProvider = (id: string) => apiClient.post(`/admin/providers/${id}/sync`).then((r) => r.data);
+
+// ── Payment gateways (Phase 2) ───────────────────────────────────────────
+export const getAdminGatewayConfigs = () => apiClient.get("/admin/payment-gateways").then((r) => r.data.items);
+export const updateAdminGatewayConfig = (provider: PaymentGatewayKey, input: UpdateGatewayConfigInput) =>
+  apiClient.put(`/admin/payment-gateways/${provider}`, input);
+
+// ── Payments (user-facing gateway deposits) ─────────────────────────────
+export const getEnabledGateways = () => apiClient.get("/payments/gateways").then((r) => r.data.enabled as PaymentGatewayKey[]);
+export const initiateGatewayDeposit = (gateway: PaymentGatewayKey, input: CreateGatewayDepositInput) =>
+  apiClient.post(`/payments/${gateway}/deposits`, input).then((r) => r.data.redirectUrl as string);

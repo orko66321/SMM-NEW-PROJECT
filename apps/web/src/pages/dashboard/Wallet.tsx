@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createDeposit, getMyDeposits, getWallet } from "../../api/resources.js";
+import { createDeposit, getEnabledGateways, getMyDeposits, getWallet, initiateGatewayDeposit } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 
@@ -9,14 +10,53 @@ const METHODS = ["bKash", "Nagad", "Rocket", "Upay", "Other"];
 export default function Wallet() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet });
   const { data: deposits } = useQuery({ queryKey: ["deposits"], queryFn: () => getMyDeposits({ page: 1, pageSize: 20 }) });
+  const { data: enabledGateways } = useQuery({ queryKey: ["enabled-gateways"], queryFn: getEnabledGateways });
 
   const [method, setMethod] = useState(METHODS[0]);
   const [amount, setAmount] = useState<number | "">("");
   const [reference, setReference] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [gatewayLoading, setGatewayLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const outcome = searchParams.get("deposit");
+    if (!outcome) return;
+    const messages: Record<string, [string, "success" | "error"]> = {
+      success: ["Payment confirmed — your balance has been updated.", "success"],
+      pending: ["Payment is still processing — we'll credit it as soon as it's confirmed.", "error"],
+      failed: ["Payment was not completed.", "error"],
+      error: ["Something went wrong confirming the payment. Contact support if you were charged.", "error"],
+    };
+    const [message, variant] = messages[outcome] ?? ["Payment status unknown.", "error"];
+    toast.push(message, variant);
+    queryClient.invalidateQueries({ queryKey: ["wallet"] });
+    queryClient.invalidateQueries({ queryKey: ["deposits"] });
+    setSearchParams((p) => {
+      p.delete("deposit");
+      return p;
+    }, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function onPayWithGateway(gateway: "BKASH") {
+    if (!amount) {
+      setError("Enter an amount first");
+      return;
+    }
+    setGatewayLoading(true);
+    setError(null);
+    try {
+      const redirectUrl = await initiateGatewayDeposit(gateway, { amount: Number(amount) });
+      window.location.href = redirectUrl;
+    } catch (err) {
+      setError(apiErrorMessage(err, "Failed to start payment"));
+      setGatewayLoading(false);
+    }
+  }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -109,11 +149,25 @@ export default function Wallet() {
           <label className="label" htmlFor="reference">Transaction reference (optional)</label>
           <input id="reference" className="input-field" value={reference} onChange={(e) => setReference(e.target.value)} />
         </div>
+        {enabledGateways?.includes("BKASH") && method === "bKash" && (
+          <button
+            type="button"
+            className="btn-primary w-full !bg-bkash"
+            disabled={gatewayLoading}
+            onClick={() => onPayWithGateway("BKASH")}
+          >
+            {gatewayLoading ? "Redirecting…" : "Pay instantly with bKash"}
+          </button>
+        )}
+
         <button type="submit" className="btn-primary w-full" disabled={submitting}>
           {submitting ? "Submitting…" : "Submit deposit request"}
         </button>
         <p className="text-xs text-on-surface-variant">
-          Deposits are reviewed by an admin and credited once verified. Minimum deposit $0.20.
+          {enabledGateways?.includes("BKASH") && method === "bKash"
+            ? "\"Pay instantly\" credits your balance automatically once bKash confirms payment. The form below submits a manual request instead, reviewed by an admin."
+            : "Deposits are reviewed by an admin and credited once verified."}
+          {" "}Minimum deposit $0.20.
           <br />
           ন্যূনতম ডিপোজিট $0.20। যাচাই হওয়ার পর ব্যালেন্স যোগ হবে।
         </p>

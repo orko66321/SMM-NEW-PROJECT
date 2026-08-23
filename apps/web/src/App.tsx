@@ -22,6 +22,8 @@ import AdminOrders from "./pages/admin/Orders.js";
 import AdminDeposits from "./pages/admin/Deposits.js";
 import AdminTickets from "./pages/admin/Tickets.js";
 import AdminTicketDetail from "./pages/admin/TicketDetail.js";
+import AdminProviders from "./pages/admin/Providers.js";
+import AdminPaymentGateways from "./pages/admin/PaymentGateways.js";
 
 export default function App() {
   return (
@@ -65,6 +67,8 @@ export default function App() {
           <Route path="deposits" element={<AdminDeposits />} />
           <Route path="tickets" element={<AdminTickets />} />
           <Route path="tickets/:id" element={<AdminTicketDetail />} />
+          <Route path="providers" element={<AdminProviders />} />
+          <Route path="payment-gateways" element={<AdminPaymentGateways />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

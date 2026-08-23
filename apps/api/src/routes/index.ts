@@ -4,6 +4,7 @@ import { walletRouter } from "./wallet.routes.js";
 import { ordersRouter } from "./orders.routes.js";
 import { servicesRouter } from "./services.routes.js";
 import { ticketsRouter } from "./tickets.routes.js";
+import { paymentsRouter } from "./payments.routes.js";
 import { adminRouter } from "./admin/index.js";
 
 export const apiRouter = Router();
@@ -13,4 +14,5 @@ apiRouter.use("/wallet", walletRouter);
 apiRouter.use("/orders", ordersRouter);
 apiRouter.use("/services", servicesRouter);
 apiRouter.use("/tickets", ticketsRouter);
+apiRouter.use("/payments", paymentsRouter);
 apiRouter.use("/admin", adminRouter);

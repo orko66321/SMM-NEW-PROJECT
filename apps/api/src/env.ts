@@ -23,6 +23,26 @@ const envSchema = z.object({
   REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().positive().default(30),
   CORS_ORIGIN: z.string().default("http://localhost:5173"),
   COOKIE_DOMAIN: z.string().optional(),
+  // Encrypts provider API keys / payment gateway credentials at rest in
+  // Postgres (see lib/crypto.ts) — must decode to exactly 32 bytes for
+  // AES-256-GCM. Generate with `openssl rand -base64 32`.
+  ENCRYPTION_KEY: z.string().refine(
+    (v) => {
+      try {
+        return Buffer.from(v, "base64").length === 32;
+      } catch {
+        return false;
+      }
+    },
+    { message: "ENCRYPTION_KEY must be base64 for exactly 32 bytes — generate with `openssl rand -base64 32`" },
+  ),
+  // Used to build absolute callback/redirect URLs for payment gateways
+  // (e.g. bKash's callbackURL) — must be reachable by the gateway/browser,
+  // not just localhost, once a real gateway is enabled.
+  APP_BASE_URL: z.string().url().default("http://localhost:4000"),
+  // Where a payment gateway callback redirects the browser back to once
+  // confirm() has resolved — the web app, not the API.
+  FRONTEND_BASE_URL: z.string().url().default("http://localhost:5173"),
 });
 
 const parsed = envSchema.safeParse(process.env);

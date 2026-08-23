@@ -126,6 +126,13 @@ export const serviceObjectSchema = z.object({
   refillEnabled: z.boolean().default(false),
   cancelEnabled: z.boolean().default(false),
   status: z.enum(["ACTIVE", "DISABLED"]).default("ACTIVE"),
+  providerId: z.string().nullable().optional(),
+  providerServiceId: z.string().trim().max(100).nullable().optional(),
+  backupProviderId: z.string().nullable().optional(),
+  // Opt-in per service — see Provider API sync (Phase 2). Defaults to false
+  // so adding a provider mapping never silently starts auto-fulfilling a
+  // service until an admin explicitly verifies it.
+  autoSubmit: z.boolean().default(false),
 });
 
 export const serviceInputSchema = serviceObjectSchema.refine((s) => s.maxQuantity >= s.minQuantity, {
@@ -175,3 +182,48 @@ export const updateUserSchema = z.object({
   role: z.enum(RoleValues).optional(),
 });
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+
+// ── Providers (Phase 2: upstream SMM reseller API) ─────────────────────────
+
+export const createProviderSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  apiUrl: z.string().trim().url().max(500),
+  apiKey: z.string().trim().min(8).max(500),
+});
+export type CreateProviderInput = z.infer<typeof createProviderSchema>;
+
+// apiKey is optional on update — omit it to keep the existing encrypted key
+// (the admin UI never re-displays a stored key, so there's nothing to prefill).
+export const updateProviderSchema = z.object({
+  name: z.string().trim().min(2).max(100).optional(),
+  apiUrl: z.string().trim().url().max(500).optional(),
+  apiKey: z.string().trim().min(8).max(500).optional(),
+  status: z.enum(["ACTIVE", "DISABLED"]).optional(),
+});
+export type UpdateProviderInput = z.infer<typeof updateProviderSchema>;
+
+// ── Payment gateways (Phase 2 — framework; bKash is the reference adapter) ─
+
+export const PaymentGatewayKeys = ["BKASH"] as const;
+export type PaymentGatewayKey = (typeof PaymentGatewayKeys)[number];
+
+export const bkashCredentialsSchema = z.object({
+  appKey: z.string().trim().min(1),
+  appSecret: z.string().trim().min(1),
+  username: z.string().trim().min(1),
+  password: z.string().trim().min(1),
+  baseUrl: z.string().trim().url(),
+});
+export type BkashCredentials = z.infer<typeof bkashCredentialsSchema>;
+
+export const updateGatewayConfigSchema = z.object({
+  mode: z.enum(["SANDBOX", "LIVE"]),
+  enabled: z.boolean(),
+  credentials: bkashCredentialsSchema,
+});
+export type UpdateGatewayConfigInput = z.infer<typeof updateGatewayConfigSchema>;
+
+export const createGatewayDepositSchema = z.object({
+  amount: z.coerce.number().positive().max(1_000_000),
+});
+export type CreateGatewayDepositInput = z.infer<typeof createGatewayDepositSchema>;

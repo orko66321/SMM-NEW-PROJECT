@@ -7,6 +7,8 @@ import { adminWalletRouter } from "./wallet.routes.js";
 import { adminDepositsRouter } from "./deposits.routes.js";
 import { adminTicketsRouter } from "./tickets.routes.js";
 import { adminStatsRouter } from "./stats.routes.js";
+import { adminProvidersRouter } from "./providers.routes.js";
+import { adminPaymentGatewaysRouter } from "./paymentGateways.routes.js";
 
 export const adminRouter = Router();
 
@@ -29,3 +31,5 @@ adminRouter.use("/wallet", adminWalletRouter);
 adminRouter.use("/deposits", adminDepositsRouter);
 adminRouter.use("/tickets", adminTicketsRouter);
 adminRouter.use("/stats", adminStatsRouter);
+adminRouter.use("/providers", adminProvidersRouter);
+adminRouter.use("/payment-gateways", adminPaymentGatewaysRouter);

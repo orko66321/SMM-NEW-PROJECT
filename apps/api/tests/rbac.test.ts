@@ -12,7 +12,7 @@ function tokenFor(userId: string) {
 }
 
 describe("admin RBAC boundary", () => {
-  const adminRoutes: Array<[method: "get" | "post" | "patch" | "delete", path: string]> = [
+  const adminRoutes: Array<[method: "get" | "post" | "patch" | "delete" | "put", path: string]> = [
     ["get", "/api/admin/stats"],
     ["get", "/api/admin/users"],
     ["get", "/api/admin/orders"],
@@ -23,6 +23,11 @@ describe("admin RBAC boundary", () => {
     ["post", "/api/admin/services/categories"],
     ["patch", "/api/admin/users/does-not-matter"],
     ["post", "/api/admin/wallet/does-not-matter/adjust"],
+    ["get", "/api/admin/providers"],
+    ["post", "/api/admin/providers"],
+    ["post", "/api/admin/providers/does-not-matter/sync"],
+    ["get", "/api/admin/payment-gateways"],
+    ["put", "/api/admin/payment-gateways/BKASH"],
   ];
 
   it.each(adminRoutes)("a plain USER gets 403 on %s %s — even with a well-formed body", async (method, path) => {

@@ -87,6 +87,11 @@ enum CouponType {
   FIXED
 }
 
+enum PaymentGatewayMode {
+  SANDBOX
+  LIVE
+}
+
 // ── Core identity ────────────────────────────────────────────────────────
 
 model User {
@@ -192,7 +197,37 @@ model Provider {
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 
-  services Service[]
+  services       Service[] @relation("PrimaryProvider")
+  backupServices Service[] @relation("BackupProvider")
+  syncLogs       ProviderSyncLog[]
+}
+
+// Every provider API call (services/add/status/balance) that fails writes a
+// row here — this is the "Synced Logs" admin view, and what the auto-order
+// and catalog-sync cron jobs (apps/api/src/cron/) diagnose failures from.
+model ProviderSyncLog {
+  id         String   @id @default(cuid())
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  action     String // "services" | "add" | "status" | "balance" | ...
+  status     String // "SUCCESS" | "FAILURE"
+  message    String?
+  createdAt  DateTime @default(now())
+
+  @@index([providerId, createdAt])
+}
+
+// Admin-configured, encrypted-at-rest payment gateway credentials (see
+// lib/crypto.ts). Deliberately starts with zero rows / enabled=false —
+// adding or rotating a gateway is an admin-UI action, not a redeploy.
+model PaymentGatewayConfig {
+  id                    String             @id @default(cuid())
+  provider              String             @unique // "BKASH" | ...
+  mode                  PaymentGatewayMode @default(SANDBOX)
+  credentialsCiphertext String // JSON blob of gateway-specific fields, encrypted
+  enabled               Boolean            @default(false)
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
 }
 
 // ── Catalog ──────────────────────────────────────────────────────────────
@@ -212,8 +247,14 @@ model Service {
   categoryId           String
   category             ServiceCategory @relation(fields: [categoryId], references: [id])
   providerId           String?
-  provider             Provider?       @relation(fields: [providerId], references: [id])
+  provider             Provider?       @relation("PrimaryProvider", fields: [providerId], references: [id])
   providerServiceId    String?
+
+  // Tried once if the primary provider submission fails — see
+  // cron/submitPendingOrders.ts. Optional one-level failover, not a general
+  // health-routing system.
+  backupProviderId     String?
+  backupProvider       Provider?       @relation("BackupProvider", fields: [backupProviderId], references: [id])
 
   name                 String
   description          String?
@@ -227,6 +268,11 @@ model Service {
   refillEnabled        Boolean @default(false)
   cancelEnabled        Boolean @default(false)
   status               ServiceStatus @default(ACTIVE)
+
+  // Opt-in per service: only services an admin has explicitly verified
+  // against a real provider mapping auto-submit orders. Everything else
+  // stays on the Phase 1 manual fulfillment path.
+  autoSubmit           Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -297,7 +343,7 @@ model TicketMessage {
   @@index([ticketId, createdAt])
 }
 
-// ── Deposits (manual wallet top-up flow; live gateways are Phase 2) ──────
+// ── Deposits (manual admin-approval flow, plus Phase 2 gateway-confirmed flow) ──
 
 model Deposit {
   id           String        @id @default(cuid())
@@ -312,6 +358,12 @@ model Deposit {
   reviewNote   String?
   createdAt    DateTime      @default(now())
   reviewedAt   DateTime?
+
+  // Set only for gateway-initiated deposits (see services/payments/) — links
+  // this row to the gateway's own payment/session id so confirmGatewayDeposit()
+  // can look it up from a callback and so a duplicate callback is a no-op.
+  gatewayProvider String?
+  gatewayRef      String? @unique
 
   @@index([userId])
   @@index([status])
