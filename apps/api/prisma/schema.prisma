@@ -1,0 +1,404 @@
+// SMM Panel — Phase 1 schema.
+// Money fields are always Decimal (never Float) to avoid rounding-error exploits.
+// Enum string values MUST stay in sync with packages/shared/src/index.ts.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  STAFF
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  IN_PROGRESS
+  COMPLETED
+  PARTIAL
+  CANCELED
+  FAILED
+}
+
+enum OrderMode {
+  AUTO
+  MANUAL
+}
+
+enum TicketStatus {
+  OPEN
+  PENDING_ADMIN
+  PENDING_USER
+  CLOSED
+}
+
+enum TicketSender {
+  USER
+  ADMIN
+}
+
+enum ServiceStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum DepositStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum WalletTxType {
+  DEPOSIT
+  ORDER_DEBIT
+  ORDER_REFUND
+  ADMIN_ADJUSTMENT
+  AFFILIATE_PAYOUT
+  CHILD_PANEL_FEE
+}
+
+enum ProviderStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum ChildPanelStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum CouponType {
+  PERCENT
+  FIXED
+}
+
+// ── Core identity ────────────────────────────────────────────────────────
+
+model User {
+  id           String     @id @default(cuid())
+  username     String     @unique
+  email        String     @unique
+  passwordHash String
+  role         Role       @default(USER)
+  status       UserStatus @default(ACTIVE)
+
+  // Phase 2: TOTP secret for 2FA, encrypted at rest.
+  twoFactorSecret String?
+  twoFactorEnabled Boolean @default(false)
+
+  apiKey String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  wallet         Wallet?
+  refreshTokens  RefreshToken[]
+  orders         Order[]
+  tickets        Ticket[]
+  ticketMessages TicketMessage[]
+  deposits       Deposit[]
+  reviewedDeposits Deposit[] @relation("DepositReviewer")
+  adminAuditLogs AdminAuditLog[] @relation("AuditActor")
+  childPanel     ChildPanel?
+  affiliate      Affiliate?
+  couponRedemptions CouponRedemption[]
+
+  @@index([role])
+}
+
+model RefreshToken {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash     String    @unique
+  expiresAt     DateTime
+  revokedAt     DateTime?
+  replacedById  String?
+  createdByIp   String?
+  userAgent     String?
+  createdAt     DateTime  @default(now())
+
+  @@index([userId])
+}
+
+// ── Wallet / ledger ──────────────────────────────────────────────────────
+
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance   Decimal  @default(0) @db.Decimal(18, 4)
+  currency  String   @default("USD")
+  updatedAt DateTime @updatedAt
+
+  transactions WalletTransaction[]
+}
+
+// Append-only ledger. Rows are never updated or deleted — balance history
+// must always be reconstructable and auditable.
+model WalletTransaction {
+  id            String       @id @default(cuid())
+  walletId      String
+  wallet        Wallet       @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  type          WalletTxType
+  amount        Decimal      @db.Decimal(18, 4) // positive = credit, negative = debit
+  balanceAfter  Decimal      @db.Decimal(18, 4)
+  referenceType String? // "ORDER" | "DEPOSIT" | "ADMIN" | ...
+  referenceId   String?
+  note          String?
+  createdAt     DateTime     @default(now())
+
+  @@index([walletId, createdAt])
+}
+
+// Prevents duplicate order submission (double-click / retry / replay) from
+// ever debiting the wallet twice for the same client-issued request.
+model IdempotencyKey {
+  id           String   @id @default(cuid())
+  userId       String
+  key          String
+  requestHash  String
+  responseJson String?
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, key])
+}
+
+// ── Provider (upstream API) ─────────────────────────────────────────────
+
+model Provider {
+  id                String         @id @default(cuid())
+  name              String
+  apiUrl            String
+  apiKeyCiphertext  String // encrypted at rest, see lib/crypto.ts — never store plaintext
+  balance           Decimal        @default(0) @db.Decimal(18, 4)
+  status            ProviderStatus @default(ACTIVE)
+  lastSyncAt        DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  services Service[]
+}
+
+// ── Catalog ──────────────────────────────────────────────────────────────
+
+model ServiceCategory {
+  id        String    @id @default(cuid())
+  name      String
+  platform  String
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+
+  services Service[]
+}
+
+model Service {
+  id                   String          @id @default(cuid())
+  categoryId           String
+  category             ServiceCategory @relation(fields: [categoryId], references: [id])
+  providerId           String?
+  provider             Provider?       @relation(fields: [providerId], references: [id])
+  providerServiceId    String?
+
+  name                 String
+  description          String?
+
+  sellPricePer1000     Decimal @db.Decimal(18, 4)
+  providerCostPer1000  Decimal @db.Decimal(18, 4) @default(0)
+
+  minQuantity          Int
+  maxQuantity          Int
+
+  refillEnabled        Boolean @default(false)
+  cancelEnabled        Boolean @default(false)
+  status               ServiceStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders    Order[]
+  dripFeeds DripFeed[]
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+// ── Orders ───────────────────────────────────────────────────────────────
+
+model Order {
+  id                String      @id @default(cuid())
+  userId            String
+  user              User        @relation(fields: [userId], references: [id])
+  serviceId         String
+  service           Service     @relation(fields: [serviceId], references: [id])
+
+  link              String
+  quantity          Int
+
+  // Snapshot of price at order time — server-calculated, never client-supplied.
+  charge            Decimal     @db.Decimal(18, 4)
+  providerCost      Decimal     @db.Decimal(18, 4)
+
+  startCount        Int?
+  remains           Int?
+  status            OrderStatus @default(PENDING)
+  mode              OrderMode   @default(MANUAL)
+  providerOrderId   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+// ── Support tickets ──────────────────────────────────────────────────────
+
+model Ticket {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  subject   String
+  status    TicketStatus @default(OPEN)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  messages TicketMessage[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model TicketMessage {
+  id        String       @id @default(cuid())
+  ticketId  String
+  ticket    Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User         @relation(fields: [senderId], references: [id])
+  senderRole TicketSender
+  body      String // sanitized with DOMPurify before persisting
+  createdAt DateTime     @default(now())
+
+  @@index([ticketId, createdAt])
+}
+
+// ── Deposits (manual wallet top-up flow; live gateways are Phase 2) ──────
+
+model Deposit {
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  method       String
+  amount       Decimal       @db.Decimal(18, 4)
+  reference    String?
+  status       DepositStatus @default(PENDING)
+  reviewedById String?
+  reviewedBy   User?         @relation("DepositReviewer", fields: [reviewedById], references: [id])
+  reviewNote   String?
+  createdAt    DateTime      @default(now())
+  reviewedAt   DateTime?
+
+  @@index([userId])
+  @@index([status])
+}
+
+// ── Admin audit trail ────────────────────────────────────────────────────
+
+model AdminAuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  actor      User     @relation("AuditActor", fields: [actorId], references: [id])
+  action     String
+  targetType String
+  targetId   String
+  beforeJson String?
+  afterJson  String?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([targetType, targetId])
+  @@index([actorId, createdAt])
+}
+
+// ── Phase 2+ domain: schema only, no API/UI wired yet ────────────────────
+
+model DripFeed {
+  id          String   @id @default(cuid())
+  userId      String
+  serviceId   String
+  service     Service  @relation(fields: [serviceId], references: [id])
+  link        String
+  totalCharge Decimal  @db.Decimal(18, 4)
+  quantity    Int
+  runs        Int
+  interval    Int // minutes between runs
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Affiliate {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id])
+  code             String   @unique
+  commissionRate   Decimal  @default(5) @db.Decimal(5, 2)
+  visits           Int      @default(0)
+  registrations    Int      @default(0)
+  totalEarnings    Decimal  @default(0) @db.Decimal(18, 4)
+  availableEarnings Decimal @default(0) @db.Decimal(18, 4)
+  createdAt        DateTime @default(now())
+}
+
+model ChildPanel {
+  id             String           @id @default(cuid())
+  userId         String           @unique
+  user           User             @relation(fields: [userId], references: [id])
+  domain         String           @unique
+  currency       String           @default("USD")
+  adminUsername  String
+  status         ChildPanelStatus @default(PENDING)
+  createdAt      DateTime         @default(now())
+}
+
+model Coupon {
+  id        String     @id @default(cuid())
+  code      String     @unique
+  type      CouponType
+  value     Decimal    @db.Decimal(18, 4)
+  maxUses   Int?
+  usedCount Int        @default(0)
+  expiresAt DateTime?
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+
+  redemptions CouponRedemption[]
+}
+
+model CouponRedemption {
+  id        String   @id @default(cuid())
+  couponId  String
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Decimal  @db.Decimal(18, 4)
+  createdAt DateTime @default(now())
+
+  @@unique([couponId, userId])
+}

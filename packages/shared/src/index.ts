@@ -1,0 +1,177 @@
+import { z } from "zod";
+
+/**
+ * Single source of truth for request/response shapes shared between
+ * apps/api and apps/web. String literal unions here MUST stay in sync
+ * with the enum values in apps/api/prisma/schema.prisma.
+ */
+
+// ── Enums ────────────────────────────────────────────────────────────────
+
+export const RoleValues = ["USER", "STAFF", "ADMIN"] as const;
+export type Role = (typeof RoleValues)[number];
+
+export const OrderStatusValues = [
+  "PENDING",
+  "PROCESSING",
+  "IN_PROGRESS",
+  "COMPLETED",
+  "PARTIAL",
+  "CANCELED",
+  "FAILED",
+] as const;
+export type OrderStatus = (typeof OrderStatusValues)[number];
+
+export const TicketStatusValues = ["OPEN", "PENDING_ADMIN", "PENDING_USER", "CLOSED"] as const;
+export type TicketStatus = (typeof TicketStatusValues)[number];
+
+export const DepositStatusValues = ["PENDING", "APPROVED", "REJECTED"] as const;
+export type DepositStatus = (typeof DepositStatusValues)[number];
+
+export const UserStatusValues = ["ACTIVE", "SUSPENDED"] as const;
+export type UserStatus = (typeof UserStatusValues)[number];
+
+// ── Common ───────────────────────────────────────────────────────────────
+
+export const paginationQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(20),
+});
+export type PaginationQuery = z.infer<typeof paginationQuerySchema>;
+
+// Usernames: letters/numbers/underscore only, 3-32 chars — avoids
+// homoglyph/whitespace tricks in a field rendered back to admins.
+const usernameSchema = z
+  .string()
+  .trim()
+  .min(3)
+  .max(32)
+  .regex(/^[a-zA-Z0-9_]+$/, "Username may only contain letters, numbers, and underscores");
+
+// OWASP-minimum password policy; actual strength enforced by Argon2id cost on the server.
+const passwordSchema = z
+  .string()
+  .min(10, "Password must be at least 10 characters")
+  .max(128)
+  .regex(/[a-z]/, "Password must include a lowercase letter")
+  .regex(/[A-Z]/, "Password must include an uppercase letter")
+  .regex(/[0-9]/, "Password must include a number");
+
+// ── Auth ─────────────────────────────────────────────────────────────────
+
+export const registerSchema = z.object({
+  username: usernameSchema,
+  email: z.string().trim().toLowerCase().email().max(255),
+  password: passwordSchema,
+});
+export type RegisterInput = z.infer<typeof registerSchema>;
+
+export const loginSchema = z.object({
+  identifier: z.string().trim().min(3).max(255), // username or email
+  password: z.string().min(1).max(128),
+});
+export type LoginInput = z.infer<typeof loginSchema>;
+
+export const authUserSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  email: z.string(),
+  role: z.enum(RoleValues),
+  status: z.enum(UserStatusValues),
+  createdAt: z.string(),
+});
+export type AuthUser = z.infer<typeof authUserSchema>;
+
+// ── Wallet ───────────────────────────────────────────────────────────────
+
+export const createDepositSchema = z.object({
+  method: z.string().trim().min(2).max(40),
+  amount: z.coerce.number().positive().max(1_000_000),
+  reference: z.string().trim().max(255).optional(),
+});
+export type CreateDepositInput = z.infer<typeof createDepositSchema>;
+
+export const reviewDepositSchema = z.object({
+  action: z.enum(["APPROVE", "REJECT"]),
+  note: z.string().trim().max(500).optional(),
+});
+export type ReviewDepositInput = z.infer<typeof reviewDepositSchema>;
+
+export const adjustWalletSchema = z.object({
+  amount: z.coerce.number().refine((n) => n !== 0, "Amount cannot be zero"),
+  reason: z.string().trim().min(3).max(500),
+});
+export type AdjustWalletInput = z.infer<typeof adjustWalletSchema>;
+
+// ── Services / Categories ───────────────────────────────────────────────
+
+export const createCategorySchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  platform: z.string().trim().min(2).max(50),
+  sortOrder: z.coerce.number().int().default(0),
+});
+export type CreateCategoryInput = z.infer<typeof createCategorySchema>;
+
+// Kept as a plain ZodObject (not the refined version below) so admin update
+// routes can call `.partial()` on it — `.refine()` returns a ZodEffects,
+// which does not support `.partial()`.
+export const serviceObjectSchema = z.object({
+  categoryId: z.string(),
+  name: z.string().trim().min(2).max(200),
+  description: z.string().trim().max(2000).optional(),
+  sellPricePer1000: z.coerce.number().positive().max(1_000_000),
+  providerCostPer1000: z.coerce.number().nonnegative().max(1_000_000),
+  minQuantity: z.coerce.number().int().positive(),
+  maxQuantity: z.coerce.number().int().positive(),
+  refillEnabled: z.boolean().default(false),
+  cancelEnabled: z.boolean().default(false),
+  status: z.enum(["ACTIVE", "DISABLED"]).default("ACTIVE"),
+});
+
+export const serviceInputSchema = serviceObjectSchema.refine((s) => s.maxQuantity >= s.minQuantity, {
+  message: "maxQuantity must be >= minQuantity",
+  path: ["maxQuantity"],
+});
+export type ServiceInput = z.infer<typeof serviceInputSchema>;
+
+// ── Orders ───────────────────────────────────────────────────────────────
+
+export const createOrderSchema = z.object({
+  serviceId: z.string(),
+  link: z.string().trim().url().max(2048),
+  quantity: z.coerce.number().int().positive().max(2_147_483_647),
+});
+export type CreateOrderInput = z.infer<typeof createOrderSchema>;
+
+export const updateOrderStatusSchema = z.object({
+  status: z.enum(OrderStatusValues),
+  startCount: z.coerce.number().int().nonnegative().optional(),
+  remains: z.coerce.number().int().nonnegative().optional(),
+});
+export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;
+
+// ── Tickets ──────────────────────────────────────────────────────────────
+
+export const createTicketSchema = z.object({
+  subject: z.string().trim().min(3).max(200),
+  message: z.string().trim().min(1).max(5000),
+});
+export type CreateTicketInput = z.infer<typeof createTicketSchema>;
+
+export const createTicketMessageSchema = z.object({
+  message: z.string().trim().min(1).max(5000),
+});
+export type CreateTicketMessageInput = z.infer<typeof createTicketMessageSchema>;
+
+export const updateTicketStatusSchema = z.object({
+  status: z.enum(TicketStatusValues),
+});
+export type UpdateTicketStatusInput = z.infer<typeof updateTicketStatusSchema>;
+
+// ── Admin: users ─────────────────────────────────────────────────────────
+
+export const updateUserSchema = z.object({
+  status: z.enum(UserStatusValues).optional(),
+  role: z.enum(RoleValues).optional(),
+});
+export type UpdateUserInput = z.infer<typeof updateUserSchema>;

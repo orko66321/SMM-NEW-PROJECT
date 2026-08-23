@@ -1,0 +1,13 @@
+module.exports = {
+  root: true,
+  parser: "@typescript-eslint/parser",
+  parserOptions: { ecmaFeatures: { jsx: true }, sourceType: "module" },
+  plugins: ["@typescript-eslint", "react-hooks", "react-refresh"],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:react-hooks/recommended"],
+  env: { browser: true, es2022: true },
+  rules: {
+    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+    "react-refresh/only-export-components": "warn",
+  },
+  ignorePatterns: ["dist", "node_modules"],
+};

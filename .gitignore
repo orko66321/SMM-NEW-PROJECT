@@ -1,0 +1,37 @@
+# dependencies
+node_modules/
+apps/*/node_modules/
+packages/*/node_modules/
+
+# secrets — never commit
+.env
+.env.*.local
+!.env.example
+
+# build output
+dist/
+build/
+apps/*/dist/
+apps/*/build/
+packages/*/dist/
+
+# prisma
+apps/api/prisma/*.db
+apps/api/prisma/migrations/dev/
+
+# logs
+*.log
+npm-debug.log*
+logs/
+
+# test/coverage
+coverage/
+
+# editor/os
+.DS_Store
+.vscode/
+*.swp
+
+# misc
+.turbo/
+.cache/
