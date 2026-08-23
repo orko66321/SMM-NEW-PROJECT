@@ -77,6 +77,52 @@ async function main() {
     });
   }
 
+  const manualMethods: {
+    id: string;
+    title: string;
+    accountType: "PERSONAL" | "AGENT";
+    accountNumber: string;
+    instructions: string;
+    bonusPercent: number;
+  }[] = [
+    {
+      id: "seed-method-bkash-1",
+      title: "bKash Personal #1",
+      accountType: "PERSONAL",
+      accountNumber: "01700000001",
+      instructions: "Send Money (not Cash Out/Payment) to this number, then submit the Transaction ID below.",
+      bonusPercent: 0,
+    },
+    {
+      id: "seed-method-nagad-1",
+      title: "Nagad Agent",
+      accountType: "AGENT",
+      accountNumber: "01800000002",
+      instructions: "Cash Out to this Nagad Agent number, then submit the Transaction ID below.",
+      bonusPercent: 2,
+    },
+  ];
+
+  for (const [index, m] of manualMethods.entries()) {
+    await prisma.paymentMethod.upsert({
+      where: { id: m.id },
+      update: {},
+      create: {
+        id: m.id,
+        title: m.title,
+        gatewayType: "MANUAL",
+        accountType: m.accountType,
+        accountNumber: m.accountNumber,
+        instructions: m.instructions,
+        minAmount: 0.2,
+        maxAmount: 1000,
+        bonusPercent: m.bonusPercent,
+        status: "ACTIVE",
+        sortOrder: index,
+      },
+    });
+  }
+
   // eslint-disable-next-line no-console
   console.log("Seed complete.");
   // eslint-disable-next-line no-console

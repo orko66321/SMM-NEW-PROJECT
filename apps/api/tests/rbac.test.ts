@@ -28,6 +28,10 @@ describe("admin RBAC boundary", () => {
     ["post", "/api/admin/providers/does-not-matter/sync"],
     ["get", "/api/admin/payment-gateways"],
     ["put", "/api/admin/payment-gateways/BKASH"],
+    ["get", "/api/admin/payment-methods"],
+    ["post", "/api/admin/payment-methods"],
+    ["put", "/api/admin/payment-methods/does-not-matter"],
+    ["delete", "/api/admin/payment-methods/does-not-matter"],
   ];
 
   it.each(adminRoutes)("a plain USER gets 403 on %s %s — even with a well-formed body", async (method, path) => {

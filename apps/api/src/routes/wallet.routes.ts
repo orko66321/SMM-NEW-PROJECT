@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { createDepositSchema, paginationQuerySchema } from "@smm/shared";
+import { createManualDepositSchema, paginationQuerySchema } from "@smm/shared";
 import { authenticate } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
+import { orderLimiter } from "../middleware/rateLimit.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { getWalletForUser, listWalletTransactions } from "../services/wallet.service.js";
-import { createDeposit, listDepositsForUser } from "../services/deposit.service.js";
+import { createManualDeposit, listDepositsForUser } from "../services/deposit.service.js";
 
 export const walletRouter = Router();
 walletRouter.use(authenticate);
@@ -32,9 +33,10 @@ walletRouter.get(
 
 walletRouter.post(
   "/deposits",
-  validate(createDepositSchema),
+  orderLimiter,
+  validate(createManualDepositSchema),
   asyncHandler(async (req, res) => {
-    const deposit = await createDeposit(req.user!.id, req.body);
+    const deposit = await createManualDeposit(req.user!.id, req.body);
     res.status(201).json({ deposit });
   }),
 );
@@ -45,6 +47,9 @@ walletRouter.get(
   asyncHandler(async (req, res) => {
     const { page, pageSize } = req.query as unknown as { page: number; pageSize: number };
     const result = await listDepositsForUser(req.user!.id, page, pageSize);
-    res.json(result);
+    res.json({
+      ...result,
+      items: result.items.map((d) => ({ ...d, amount: d.amount.toString(), bonusAmount: d.bonusAmount.toString() })),
+    });
   }),
 );

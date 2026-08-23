@@ -3,15 +3,18 @@
 A social-media-marketing reseller panel: customers buy engagement services (followers, likes, views…) on
 credit from a prepaid wallet; admins manage the catalog, orders, users, and deposits.
 
-**Status: Phase 1 + Phase 2.** Phase 1 shipped the money-safety/access-control core — auth, RBAC, the
-atomic wallet ledger, order placement with server-side price validation, service catalog, manual deposit
-approval, support tickets, and both dashboards. Phase 2 adds the *framework* for payment gateways and
-upstream provider integration: encrypted credential storage, a generic JAP-standard provider client with
-per-service opt-in auto-fulfillment + one-level failover, background cron reconciliation, and a bKash
-adapter as the reference payment gateway — shipped **disabled**, since no real merchant/provider account
-exists yet (see "What's still not live" below). Everything described here is real, tested, runnable code,
-not a mockup. Modules that are **schema-only** are listed at the bottom — the Prisma schema already
-reserves tables for them so adding them later won't require migrations that touch existing data.
+**Status: Phase 1 + Phase 2 + Phase 3.** Phase 1 shipped the money-safety/access-control core — auth,
+RBAC, the atomic wallet ledger, order placement with server-side price validation, service catalog,
+support tickets, and both dashboards. Phase 2 added the payment-gateway/provider *framework* — encrypted
+credential storage, a generic JAP-standard provider client with per-service opt-in auto-fulfillment +
+one-level failover, background cron reconciliation, and bKash as the reference gateway adapter. Phase 3
+made the whole payment system **dynamic**: the old hardcoded deposit-method list is gone, replaced by an
+admin-managed `PaymentMethod` catalog (create/edit/toggle/delete any number of manual or automated
+methods, each with its own account number, instructions, min/max, and deposit bonus %), a manual deposit
+queue with duplicate-TrxID prevention, and **ZiniPay** — a second automated gateway (Bangladeshi
+aggregator fronting bKash/Nagad/Rocket/cards) — shipped **disabled** alongside bKash, since no real
+merchant/provider account exists yet (see "What's still not live" below). Everything described here is
+real, tested, runnable code, not a mockup. Modules that are **schema-only** are listed at the bottom.
 
 ## Stack
 
@@ -81,6 +84,16 @@ The test suite specifically proves the two highest-risk properties of a wallet-b
 - **`tests/payments.test.ts`** proves the payment gateway callback route cannot be tricked into crediting
   a wallet from query-string parameters alone (it mocks the gateway's own confirm API, not the browser
   redirect), and that hitting the callback twice for one payment only credits once.
+- **`tests/manualDeposit.test.ts`** proves a duplicate TrxID is rejected both via the API's friendly
+  pre-check and — bypassing that pre-check entirely — via the underlying DB unique constraint (the actual
+  guarantee), and that a payment method's deposit bonus % is credited as its own ledger row, exactly once,
+  only on approval.
+- **`tests/zinipay.test.ts`** proves the ZiniPay webhook cannot credit a wallet from its own claimed
+  `status` field (only a server-side `verify()` call decides), that a replayed webhook never double-credits,
+  and that the browser-redirect leg (which carries *our* reference, not ZiniPay's) resolves correctly.
+- **`tests/paymentMethods.test.ts`** proves admin CRUD works, the public list only ever returns `ACTIVE`
+  methods, and deleting a method with deposit history is blocked (disable it instead) rather than silently
+  breaking the ledger's "paid via X" trail.
 
 ## Project layout
 
@@ -109,6 +122,9 @@ packages/shared  Zod schemas + types shared by both
 - Every payment gateway `confirm()` call re-verifies payment status with the gateway itself using our
   stored credentials — a callback/redirect's query string is only ever a trigger to re-check, never
   trusted as proof of payment (see `apps/api/src/services/payments/types.ts`).
+- Manual-deposit transaction IDs (`Deposit.trxId`) are globally unique at the database level — the same
+  real-world bKash/Nagad TrxID (or a reused screenshot of one) can never be submitted twice, by the same
+  or a different user, to claim a second credit.
 
 ## What's still not live
 
@@ -116,11 +132,20 @@ packages/shared  Zod schemas + types shared by both
   against a real bKash sandbox** (no merchant account exists yet) — treat it as reviewed-but-unverified.
   Configure it from the admin Payment Gateways page in SANDBOX mode and confirm a real test transaction
   end-to-end before ever switching to LIVE mode.
+- **ZiniPay** is implemented against their public docs (https://zinipay.com/docs — Create Invoice, Verify
+  Invoice, webhook). One assumption isn't confirmed against a real response: the docs show `payment_url`
+  but not a separate `invoice_id` field on invoice creation, so the invoice id is parsed from the URL's
+  last path segment (see the comment in `apps/api/src/services/payments/zinipay.ts`). Verify this against
+  a real sandbox response before going live. No webhook signature scheme is documented — ZiniPay's own
+  guidance is "always verify from your backend," which is exactly what `confirm()` does regardless of what
+  a webhook claims, so nothing extra was needed there.
 - **Provider API sync** is implemented against the de facto JAP-standard reseller API and verified against
   a local mock server, but has not been run against a real upstream provider — add one from the admin
   Providers page and confirm "Sync now" and a real test order before enabling `autoSubmit` on any service.
-- Every other deposit method (Nagad, Rocket, Upay, crypto, etc.) still goes through the Phase 1 manual
-  "submit deposit → admin approves" flow — only bKash has a live-gateway framework built.
+- Every payment method an admin creates as **MANUAL** (the default — e.g. bKash/Nagad/Rocket numbers you
+  actually receive money on) goes through the admin-approval deposit queue regardless of which real-world
+  gateway it names; only methods explicitly set to **AUTOMATED** with a `gatewayProvider` route through a
+  live integration, and today that's bKash or ZiniPay once one is enabled.
 
 ## What's deferred to a later phase
 

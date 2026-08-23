@@ -1,5 +1,5 @@
 import type { PaymentGatewayKey, UpdateGatewayConfigInput } from "@smm/shared";
-import { PaymentGatewayKeys, bkashCredentialsSchema } from "@smm/shared";
+import { PaymentGatewayKeys, gatewayCredentialsSchemas } from "@smm/shared";
 import { prisma } from "../../lib/prisma.js";
 import { encrypt, decrypt } from "../../lib/crypto.js";
 import { AppError } from "../../utils/AppError.js";
@@ -30,7 +30,9 @@ export async function upsertGatewayConfig(provider: PaymentGatewayKey, input: Up
   // Re-validated here even though the route already validates the request
   // body — this is the credential shape actually persisted, worth a second
   // guarantee that we never write malformed/partial gateway credentials.
-  const credentials = bkashCredentialsSchema.parse(input.credentials);
+  // Picked per-provider since each gateway's credential shape differs
+  // (bKash: app key/secret/username/password; ZiniPay: a single API key).
+  const credentials = gatewayCredentialsSchemas[provider].parse(input.credentials);
   await prisma.paymentGatewayConfig.upsert({
     where: { provider },
     create: { provider, mode: input.mode, enabled: input.enabled, credentialsCiphertext: encrypt(JSON.stringify(credentials)) },

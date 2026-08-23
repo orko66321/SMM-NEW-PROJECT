@@ -14,7 +14,10 @@ adminDepositsRouter.get(
     const { page, pageSize } = req.query as unknown as { page: number; pageSize: number };
     const status = typeof req.query.status === "string" ? req.query.status : undefined;
     const result = await listDepositsForAdmin(page, pageSize, status);
-    res.json({ ...result, items: result.items.map((d) => ({ ...d, amount: d.amount.toString() })) });
+    res.json({
+      ...result,
+      items: result.items.map((d) => ({ ...d, amount: d.amount.toString(), bonusAmount: d.bonusAmount.toString() })),
+    });
   }),
 );
 
@@ -32,6 +35,6 @@ adminDepositsRouter.post(
       after: { action, note },
       ip: req.ip,
     });
-    res.json({ deposit: { ...deposit, amount: deposit.amount.toString() } });
+    res.json({ deposit: { ...deposit, amount: deposit.amount.toString(), bonusAmount: deposit.bonusAmount.toString() } });
   }),
 );

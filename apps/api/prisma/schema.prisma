@@ -64,6 +64,7 @@ enum DepositStatus {
 
 enum WalletTxType {
   DEPOSIT
+  DEPOSIT_BONUS
   ORDER_DEBIT
   ORDER_REFUND
   ADMIN_ADJUSTMENT
@@ -90,6 +91,22 @@ enum CouponType {
 enum PaymentGatewayMode {
   SANDBOX
   LIVE
+}
+
+enum PaymentMethodGatewayType {
+  AUTOMATED
+  MANUAL
+}
+
+enum PaymentMethodAccountType {
+  PERSONAL
+  MERCHANT
+  AGENT
+}
+
+enum PaymentMethodStatus {
+  ACTIVE
+  DISABLED
 }
 
 // ── Core identity ────────────────────────────────────────────────────────
@@ -230,6 +247,36 @@ model PaymentGatewayConfig {
   updatedAt             DateTime           @updatedAt
 }
 
+// Phase 3: the dynamic, admin-managed list of payment options users see on
+// the Add Funds page — replaces the old hardcoded frontend method list.
+// AUTOMATED rows point at a PaymentGatewayConfig (via gatewayProvider) for
+// credentials; MANUAL rows are just display copy + an account number that
+// feeds the existing admin-approval Deposit queue. "Multiple numbers" (per
+// the spec) means creating multiple rows here, e.g. two "bKash Personal"
+// entries — not a list embedded in one row.
+model PaymentMethod {
+  id             String                   @id @default(cuid())
+  title          String
+  gatewayType    PaymentMethodGatewayType
+  accountType    PaymentMethodAccountType @default(PERSONAL)
+  accountNumber  String?
+  instructions   String?
+  minAmount      Decimal                  @default(0.2) @db.Decimal(18, 4)
+  maxAmount      Decimal                  @default(100000) @db.Decimal(18, 4)
+  bonusPercent   Decimal                  @default(0) @db.Decimal(5, 2)
+  // Only set when gatewayType = AUTOMATED; references which PaymentGatewayConfig
+  // (by its `provider` key) supplies credentials for this method.
+  gatewayProvider String?
+  status         PaymentMethodStatus      @default(ACTIVE)
+  sortOrder      Int                      @default(0)
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  deposits Deposit[]
+
+  @@index([status])
+}
+
 // ── Catalog ──────────────────────────────────────────────────────────────
 
 model ServiceCategory {
@@ -349,7 +396,7 @@ model Deposit {
   id           String        @id @default(cuid())
   userId       String
   user         User          @relation(fields: [userId], references: [id])
-  method       String
+  method       String // denormalized snapshot of PaymentMethod.title (or gateway name) at deposit time
   amount       Decimal       @db.Decimal(18, 4)
   reference    String?
   status       DepositStatus @default(PENDING)
@@ -364,6 +411,22 @@ model Deposit {
   // can look it up from a callback and so a duplicate callback is a no-op.
   gatewayProvider String?
   gatewayRef      String? @unique
+
+  // Phase 3: which admin-configured PaymentMethod this deposit was made
+  // through. onDelete: Restrict — a method with deposit history can be
+  // disabled but not deleted, so the ledger's "paid via X" trail never breaks.
+  paymentMethodId String?
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: Restrict)
+
+  // Manual-deposit proof of payment. trxId is globally unique — the actual
+  // guarantee behind "duplicate TrxID prevention" (see deposit.service.ts
+  // for the friendlier pre-check that runs before hitting this constraint).
+  trxId        String? @unique
+  senderNumber String?
+
+  // Snapshotted from PaymentMethod.bonusPercent at approval time, so a later
+  // change to the method's bonus % never rewrites deposit history.
+  bonusAmount Decimal @default(0) @db.Decimal(18, 4)
 
   @@index([userId])
   @@index([status])

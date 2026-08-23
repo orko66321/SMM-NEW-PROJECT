@@ -14,8 +14,14 @@ export default function AdminDeposits() {
   });
 
   async function onReview(id: string, action: "APPROVE" | "REJECT") {
+    let note: string | undefined;
+    if (action === "REJECT") {
+      const reason = window.prompt("Reason for rejecting this deposit:");
+      if (reason === null) return; // cancelled
+      note = reason || undefined;
+    }
     try {
-      await reviewAdminDeposit(id, action);
+      await reviewAdminDeposit(id, action, note);
       toast.push(`Deposit ${action.toLowerCase()}d.`, "success");
       queryClient.invalidateQueries({ queryKey: ["admin-deposits"] });
     } catch (err) {
@@ -42,19 +48,24 @@ export default function AdminDeposits() {
               <th className="px-4 py-3">User</th>
               <th className="px-4 py-3">Method</th>
               <th className="px-4 py-3">Amount</th>
-              <th className="px-4 py-3">Reference</th>
+              <th className="px-4 py-3">Bonus</th>
+              <th className="px-4 py-3">TrxID / Sender</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
-            {isLoading && <tr><td colSpan={6} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
-            {data?.items.map((d: { id: string; user: { username: string }; method: string; amount: string; reference: string | null; status: string }) => (
+            {isLoading && <tr><td colSpan={7} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
+            {data?.items.map((d: { id: string; user: { username: string }; method: string; amount: string; bonusAmount: string; trxId: string | null; senderNumber: string | null; status: string }) => (
               <tr key={d.id}>
                 <td className="px-4 py-3">{d.user.username}</td>
                 <td className="px-4 py-3">{d.method}</td>
                 <td className="px-4 py-3 font-mono text-success">${d.amount}</td>
-                <td className="px-4 py-3 text-xs text-on-surface-variant">{d.reference ?? "—"}</td>
+                <td className="px-4 py-3 font-mono text-xs">{Number(d.bonusAmount) > 0 ? `+$${d.bonusAmount}` : "—"}</td>
+                <td className="px-4 py-3 text-xs text-on-surface-variant">
+                  {d.trxId ? <span className="font-mono">{d.trxId}</span> : "—"}
+                  {d.senderNumber ? ` · ${d.senderNumber}` : ""}
+                </td>
                 <td className="px-4 py-3"><span className="badge bg-warning/15 text-warning">{d.status}</span></td>
                 <td className="px-4 py-3 text-right">
                   {d.status === "PENDING" && (
@@ -66,7 +77,7 @@ export default function AdminDeposits() {
                 </td>
               </tr>
             ))}
-            {data?.items.length === 0 && <tr><td colSpan={6} className="px-4 py-6 text-center text-on-surface-variant">No deposits found.</td></tr>}
+            {data?.items.length === 0 && <tr><td colSpan={7} className="px-4 py-6 text-center text-on-surface-variant">No deposits found.</td></tr>}
           </tbody>
         </table>
       </div>

@@ -15,6 +15,7 @@ export async function resetDb() {
   await prisma.ticket.deleteMany();
   await prisma.order.deleteMany();
   await prisma.deposit.deleteMany();
+  await prisma.paymentMethod.deleteMany();
   await prisma.service.deleteMany();
   await prisma.serviceCategory.deleteMany();
   await prisma.providerSyncLog.deleteMany();
@@ -79,4 +80,35 @@ export async function createProvider(overrides: Partial<{ name: string; apiUrl: 
       apiKeyCiphertext: encrypt(overrides.apiKey ?? "test-provider-key"),
     },
   });
+}
+
+export async function createPaymentMethod(
+  overrides: Partial<{
+    title: string;
+    gatewayType: "AUTOMATED" | "MANUAL";
+    accountNumber: string | null;
+    gatewayProvider: string | null;
+    bonusPercent: number;
+    minAmount: number;
+    maxAmount: number;
+    status: "ACTIVE" | "DISABLED";
+  }> = {},
+) {
+  return prisma.paymentMethod.create({
+    data: {
+      title: overrides.title ?? "Test Method",
+      gatewayType: overrides.gatewayType ?? "MANUAL",
+      accountNumber: overrides.accountNumber ?? "01700000000",
+      gatewayProvider: overrides.gatewayProvider,
+      bonusPercent: overrides.bonusPercent ?? 0,
+      minAmount: overrides.minAmount ?? 0.2,
+      maxAmount: overrides.maxAmount ?? 1000,
+      status: overrides.status ?? "ACTIVE",
+    },
+  });
+}
+
+export async function enableGateway(provider: "BKASH" | "ZINIPAY", credentials: Record<string, unknown>) {
+  const { upsertGatewayConfig } = await import("../src/services/payments/config.service.js");
+  await upsertGatewayConfig(provider, { mode: "SANDBOX", enabled: true, credentials });
 }

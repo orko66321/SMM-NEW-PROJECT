@@ -84,12 +84,16 @@ export type AuthUser = z.infer<typeof authUserSchema>;
 
 // ── Wallet ───────────────────────────────────────────────────────────────
 
-export const createDepositSchema = z.object({
-  method: z.string().trim().min(2).max(40),
+// Phase 3: replaces the old free-text `method` deposit form — the user now
+// picks a real PaymentMethod row (see below) and supplies proof of a manual
+// transfer (trxId + senderNumber), which the server dedupes and snapshots.
+export const createManualDepositSchema = z.object({
+  paymentMethodId: z.string(),
   amount: z.coerce.number().positive().max(1_000_000),
-  reference: z.string().trim().max(255).optional(),
+  trxId: z.string().trim().min(3).max(100),
+  senderNumber: z.string().trim().min(5).max(20),
 });
-export type CreateDepositInput = z.infer<typeof createDepositSchema>;
+export type CreateManualDepositInput = z.infer<typeof createManualDepositSchema>;
 
 export const reviewDepositSchema = z.object({
   action: z.enum(["APPROVE", "REJECT"]),
@@ -202,9 +206,9 @@ export const updateProviderSchema = z.object({
 });
 export type UpdateProviderInput = z.infer<typeof updateProviderSchema>;
 
-// ── Payment gateways (Phase 2 — framework; bKash is the reference adapter) ─
+// ── Payment gateways (Phase 2 framework; Phase 3 adds ZiniPay) ─────────────
 
-export const PaymentGatewayKeys = ["BKASH"] as const;
+export const PaymentGatewayKeys = ["BKASH", "ZINIPAY"] as const;
 export type PaymentGatewayKey = (typeof PaymentGatewayKeys)[number];
 
 export const bkashCredentialsSchema = z.object({
@@ -216,14 +220,73 @@ export const bkashCredentialsSchema = z.object({
 });
 export type BkashCredentials = z.infer<typeof bkashCredentialsSchema>;
 
+// Per ZiniPay's public docs (https://zinipay.com/docs): a single API key is
+// the only documented auth mechanism, and no webhook signature scheme is
+// documented — ZiniPay's own guidance is "always verify from your backend,"
+// which is exactly what confirm() does regardless of what a webhook claims.
+// `secretKey` is stored for forward compatibility only; the adapter does not
+// use it today (see services/payments/zinipay.ts).
+export const zinipayCredentialsSchema = z.object({
+  apiKey: z.string().trim().min(1),
+  secretKey: z.string().trim().optional(),
+  baseUrl: z.string().trim().url().default("https://api.zinipay.com"),
+});
+export type ZiniPayCredentials = z.infer<typeof zinipayCredentialsSchema>;
+
+// Keyed lookup so admin config validation can pick the right shape for
+// whichever gateway key is being saved, without a giant if/else chain.
+export const gatewayCredentialsSchemas = {
+  BKASH: bkashCredentialsSchema,
+  ZINIPAY: zinipayCredentialsSchema,
+} satisfies Record<PaymentGatewayKey, z.ZodTypeAny>;
+
+// `credentials` is validated server-side against gatewayCredentialsSchemas[provider]
+// (see apps/api/src/services/payments/config.service.ts) — kept generic here
+// since the shape genuinely differs per gateway.
 export const updateGatewayConfigSchema = z.object({
   mode: z.enum(["SANDBOX", "LIVE"]),
   enabled: z.boolean(),
-  credentials: bkashCredentialsSchema,
+  credentials: z.record(z.string(), z.unknown()),
 });
 export type UpdateGatewayConfigInput = z.infer<typeof updateGatewayConfigSchema>;
 
 export const createGatewayDepositSchema = z.object({
   amount: z.coerce.number().positive().max(1_000_000),
+  paymentMethodId: z.string().optional(),
 });
 export type CreateGatewayDepositInput = z.infer<typeof createGatewayDepositSchema>;
+
+// ── Payment methods (Phase 3 — dynamic, admin-managed) ─────────────────────
+
+export const PaymentMethodGatewayTypeValues = ["AUTOMATED", "MANUAL"] as const;
+export type PaymentMethodGatewayType = (typeof PaymentMethodGatewayTypeValues)[number];
+
+export const PaymentMethodAccountTypeValues = ["PERSONAL", "MERCHANT", "AGENT"] as const;
+export type PaymentMethodAccountType = (typeof PaymentMethodAccountTypeValues)[number];
+
+// Base object (no .refine()) so admin update routes can call `.partial()` —
+// same reasoning as serviceObjectSchema above.
+export const paymentMethodObjectSchema = z.object({
+  title: z.string().trim().min(2).max(100),
+  gatewayType: z.enum(PaymentMethodGatewayTypeValues),
+  accountType: z.enum(PaymentMethodAccountTypeValues).default("PERSONAL"),
+  // "Manage multiple numbers simultaneously" (per the spec) means creating
+  // multiple PaymentMethod rows — e.g. "bKash Personal #1" / "#2" — each
+  // with its own single accountNumber, rather than a list on one row.
+  accountNumber: z.string().trim().max(50).nullable().optional(),
+  instructions: z.string().trim().max(2000).nullable().optional(),
+  minAmount: z.coerce.number().nonnegative().default(0.2),
+  maxAmount: z.coerce.number().positive().default(100_000),
+  bonusPercent: z.coerce.number().min(0).max(100).default(0),
+  gatewayProvider: z.enum(PaymentGatewayKeys).nullable().optional(),
+  status: z.enum(["ACTIVE", "DISABLED"]).default("ACTIVE"),
+  sortOrder: z.coerce.number().int().default(0),
+});
+
+export const paymentMethodInputSchema = paymentMethodObjectSchema
+  .refine((v) => v.maxAmount >= v.minAmount, { message: "maxAmount must be >= minAmount", path: ["maxAmount"] })
+  .refine((v) => v.gatewayType === "MANUAL" || !!v.gatewayProvider, {
+    message: "AUTOMATED methods require a gatewayProvider",
+    path: ["gatewayProvider"],
+  });
+export type PaymentMethodInput = z.infer<typeof paymentMethodInputSchema>;

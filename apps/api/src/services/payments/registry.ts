@@ -1,6 +1,7 @@
 import type { PaymentGatewayKey } from "@smm/shared";
 import type { PaymentGateway } from "./types.js";
 import { bkashGateway } from "./bkash.js";
+import { zinipayGateway } from "./zinipay.js";
 
 // Add new gateway adapters here and to PaymentGatewayKeys in
 // packages/shared/src/index.ts — everything else (routes, cron
@@ -16,4 +17,5 @@ import { bkashGateway } from "./bkash.js";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const gatewayRegistry: Record<PaymentGatewayKey, PaymentGateway<any>> = {
   BKASH: bkashGateway,
+  ZINIPAY: zinipayGateway,
 };

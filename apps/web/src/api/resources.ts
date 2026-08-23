@@ -1,11 +1,12 @@
 import type {
   AdjustWalletInput,
-  CreateDepositInput,
   CreateGatewayDepositInput,
+  CreateManualDepositInput,
   CreateOrderInput,
   CreateProviderInput,
   CreateTicketInput,
   PaymentGatewayKey,
+  PaymentMethodInput,
   ServiceInput,
   UpdateGatewayConfigInput,
   UpdateOrderStatusInput,
@@ -23,7 +24,7 @@ export const getServices = (params: { page?: number; pageSize?: number; category
 export const getWallet = () => apiClient.get("/wallet").then((r) => r.data.wallet);
 export const getWalletTransactions = (params: { page?: number; pageSize?: number }) =>
   apiClient.get("/wallet/transactions", { params }).then((r) => r.data);
-export const createDeposit = (input: CreateDepositInput) => apiClient.post("/wallet/deposits", input).then((r) => r.data.deposit);
+export const createDeposit = (input: CreateManualDepositInput) => apiClient.post("/wallet/deposits", input).then((r) => r.data.deposit);
 export const getMyDeposits = (params: { page?: number; pageSize?: number }) =>
   apiClient.get("/wallet/deposits", { params }).then((r) => r.data);
 
@@ -99,3 +100,12 @@ export const updateAdminGatewayConfig = (provider: PaymentGatewayKey, input: Upd
 export const getEnabledGateways = () => apiClient.get("/payments/gateways").then((r) => r.data.enabled as PaymentGatewayKey[]);
 export const initiateGatewayDeposit = (gateway: PaymentGatewayKey, input: CreateGatewayDepositInput) =>
   apiClient.post(`/payments/${gateway}/deposits`, input).then((r) => r.data.redirectUrl as string);
+
+// ── Payment methods (Phase 3 — dynamic, admin-managed) ──────────────────
+export const getPaymentMethods = () => apiClient.get("/payment-methods").then((r) => r.data.items);
+export const getAdminPaymentMethods = () => apiClient.get("/admin/payment-methods").then((r) => r.data.items);
+export const createAdminPaymentMethod = (input: PaymentMethodInput) =>
+  apiClient.post("/admin/payment-methods", input).then((r) => r.data.method);
+export const updateAdminPaymentMethod = (id: string, input: Partial<PaymentMethodInput>) =>
+  apiClient.put(`/admin/payment-methods/${id}`, input).then((r) => r.data.method);
+export const deleteAdminPaymentMethod = (id: string) => apiClient.delete(`/admin/payment-methods/${id}`);

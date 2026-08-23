@@ -9,6 +9,7 @@ import { adminTicketsRouter } from "./tickets.routes.js";
 import { adminStatsRouter } from "./stats.routes.js";
 import { adminProvidersRouter } from "./providers.routes.js";
 import { adminPaymentGatewaysRouter } from "./paymentGateways.routes.js";
+import { adminPaymentMethodsRouter } from "./paymentMethods.routes.js";
 
 export const adminRouter = Router();
 
@@ -33,3 +34,4 @@ adminRouter.use("/tickets", adminTicketsRouter);
 adminRouter.use("/stats", adminStatsRouter);
 adminRouter.use("/providers", adminProvidersRouter);
 adminRouter.use("/payment-gateways", adminPaymentGatewaysRouter);
+adminRouter.use("/payment-methods", adminPaymentMethodsRouter);
