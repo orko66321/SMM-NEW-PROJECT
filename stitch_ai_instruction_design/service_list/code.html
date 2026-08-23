@@ -1,0 +1,315 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SMM Elite - Services Catalog</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#908fa0",
+                        "inverse-on-surface": "#213145",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "info": "#3B82F6",
+                        "secondary": "#bec6e0",
+                        "surface-dim": "#031427",
+                        "inverse-primary": "#494bd6",
+                        "surface-tint": "#c0c1ff",
+                        "on-error": "#690005",
+                        "success": "#10B981",
+                        "surface-container-low": "#0b1c30",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed": "#d5e3fd",
+                        "error-container": "#93000a",
+                        "on-tertiary-container": "#1c2a3d",
+                        "on-primary": "#1000a9",
+                        "surface-glass": "rgba(30, 41, 59, 0.7)",
+                        "surface": "#031427",
+                        "error": "#EF4444",
+                        "primary-fixed": "#e1e0ff",
+                        "background": "#031427",
+                        "outline-variant": "#464554",
+                        "on-primary-fixed": "#07006c",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary": "#233144",
+                        "surface-container-lowest": "#000f21",
+                        "surface-variant": "#26364a",
+                        "on-secondary-container": "#adb4ce",
+                        "on-secondary": "#283044",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-surface": "#d3e4fe",
+                        "surface-deep": "#020617",
+                        "on-primary-container": "#0d0096",
+                        "surface-container-high": "#1b2b3f",
+                        "primary": "#c0c1ff",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "surface-container-highest": "#26364a",
+                        "inverse-surface": "#d3e4fe",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary": "#b9c7e0",
+                        "on-background": "#d3e4fe",
+                        "warning": "#F59E0B",
+                        "nagad": "#F7941D",
+                        "bkash": "#E2136E",
+                        "primary-container": "#8083ff",
+                        "surface-container": "#102034",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "surface-bright": "#2a3a4f",
+                        "tertiary-container": "#8392a9",
+                        "secondary-container": "#3f465c",
+                        "secondary-fixed": "#dae2fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "40px",
+                        "container-max": "1280px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "gutter": "20px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex text-body-md">
+<!-- SideNavBar (Hidden on mobile, visible on md+) -->
+<aside class="hidden md:flex flex-col h-screen border-r border-outline-variant bg-surface-container-low dark:bg-surface-container-low docked left-0 w-64 shadow-sm flex-shrink-0 z-50 fixed">
+<div class="p-lg border-b border-outline-variant/30 flex items-center justify-center">
+<span class="font-display text-headline-md font-bold text-primary dark:text-primary">SMM Elite</span>
+</div>
+<div class="p-md border-b border-outline-variant/30 text-center">
+<div class="w-16 h-16 mx-auto rounded-full bg-surface-variant overflow-hidden mb-sm border border-outline-variant">
+<img alt="User Profile" class="object-cover w-full h-full" data-alt="A professional close up portrait of an individual in front of an abstract, dark, modern background with cool blue accents representing a high-end SaaS application user. Lighting is soft and studio quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAFFTL8zlmgd7J7Pd2mF51e7G2zD_ENMC8XNhL-1z_6rMGKyQ98lgWC2AEP2kyObK0YcTKSXGb6mt7UyDU6_vNgH-tjEZIoRZ_NyuNSzv7P7DS4mF_MUlyIhs5tT2GC-bATRLgGJ7s9_g8yF7nYgWNdfyuswHmPFsq_VJJgOfCFkGwpIWuoH006GkiCGyw2HuMY9g14wuNDGmg43B99_GzP9MtTbNTJPkKoVUrW-lezevDe7UbH1kGZw">
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Main Balance</p>
+<p class="font-headline-md text-headline-md text-primary">$1,240.50</p>
+<button class="mt-sm w-full py-2 bg-primary text-on-primary rounded font-body-md font-medium hover:bg-primary-fixed transition-colors">Add Funds</button>
+</div>
+<nav class="flex-1 overflow-y-auto py-sm">
+<ul class="space-y-xs px-sm">
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">add_shopping_cart</span>
+                        New Order
+                    </a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">layers</span>
+                        Bulk Order
+                    </a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">history</span>
+                        History
+                    </a>
+</li>
+<!-- Active Item: Services -->
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm fill-icon">list_alt</span>
+                        Services
+                    </a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">account_balance_wallet</span>
+                        Wallet
+                    </a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">contact_support</span>
+                        Support
+                    </a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">alt_route</span>
+                        Child Panel
+                    </a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">group_add</span>
+                        Affiliates
+                    </a>
+</li><li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">api</span>
+                        API
+                    </a>
+</li>
+</ul>
+</nav>
+<div class="p-sm border-t border-outline-variant/30">
+<ul class="space-y-xs">
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">settings</span>
+                        Settings
+                    </a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined mr-sm">logout</span>
+                        Logout
+                    </a>
+</li>
+</ul>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-lg py-sm sticky top-0 w-full z-40 bg-surface dark:bg-surface bg-surface-glass backdrop-blur-md border-b border-outline-variant shadow-sm docked full-width top-0">
+<div class="flex items-center">
+<!-- Mobile menu button (hidden on md+) -->
+<button class="md:hidden mr-sm text-on-surface-variant hover:text-primary active:opacity-70 cursor-pointer">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary">Services Catalog</h1>
+</div>
+<div class="flex items-center space-x-sm">
+<button class="p-2 text-on-surface-variant hover:text-primary active:opacity-70 cursor-pointer rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary active:opacity-70 cursor-pointer rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">translate</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary active:opacity-70 cursor-pointer rounded-full hover:bg-surface-container-high transition-colors md:hidden">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-md md:p-lg lg:p-xl max-w-container-max mx-auto w-full flex-1">
+<!-- Controls / Filters -->
+<div class="mb-lg flex flex-col md:flex-row gap-md justify-between items-start md:items-center">
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-on-background placeholder:text-on-surface-variant/50 font-body-md" placeholder="Search services..." type="text">
+</div>
+<div class="flex flex-wrap gap-sm">
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-high text-on-surface font-label-caps text-label-caps hover:border-primary transition-colors flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-1">public</span> All Platforms
+                    </button>
+<button class="px-4 py-2 rounded-full border border-primary bg-primary/10 text-primary font-label-caps text-label-caps transition-colors flex items-center">
+                        Instagram
+                    </button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface text-on-surface-variant font-label-caps text-label-caps hover:border-primary transition-colors flex items-center">
+                        YouTube
+                    </button>
+</div>
+</div>
+<!-- Service Group: Instagram -->
+<div class="mb-xl">
+<h2 class="font-headline-md text-headline-md text-on-background mb-md flex items-center">
+<span class="w-8 h-8 rounded-md bg-gradient-to-tr from-pink-500 to-purple-500 flex items-center justify-center mr-sm">
+<span class="material-symbols-outlined text-white text-sm">photo_camera</span>
+</span>
+                    Instagram Services
+                </h2>
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/50 bg-surface-container">
+<th class="p-sm md:p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider w-16">ID</th>
+<th class="p-sm md:p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Service</th>
+<th class="p-sm md:p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider w-32 hidden sm:table-cell">Min / Max</th>
+<th class="p-sm md:p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider w-32 text-right">Price per 1k</th>
+<th class="p-sm md:p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider w-48 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="p-sm md:p-md font-data-mono text-data-mono text-on-surface-variant">1042</td>
+<td class="p-sm md:p-md">
+<div class="font-body-md text-body-md text-on-background mb-1">Instagram Followers - Real [Max: 50K]</div>
+<div class="flex gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-success/10 text-success border border-success/20">Non-Drop</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary/10 text-primary border border-primary/20">Fast</span>
+</div>
+</td>
+<td class="p-sm md:p-md font-data-mono text-data-mono text-on-surface-variant hidden sm:table-cell">100 / 50,000</td>
+<td class="p-sm md:p-md font-data-mono text-data-mono text-primary text-right">$0.85</td>
+<td class="p-sm md:p-md text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 rounded border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-colors" title="Description">
+<span class="material-symbols-outlined text-[18px]">info</span>
+</button>
+<button class="px-3 py-1.5 rounded bg-primary text-on-primary font-body-md font-medium text-sm hover:shadow-[0_0_10px_rgba(192,193,255,0.3)] transition-all">Order</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-auto flex flex-col md:flex-row justify-between items-center px-lg py-xl w-full max-w-container-max mx-auto bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant font-body-md text-body-md">
+<div class="mb-4 md:mb-0">
+<span class="font-display text-headline-md font-bold text-primary dark:text-primary mr-sm">SMM Elite</span>
+<span class="text-on-surface-variant">© 2024 SMM Elite Panel. All rights reserved.</span>
+</div>
+<div class="flex space-x-md">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Terms</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Privacy</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Sitemap</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Contact</a>
+</div>
+</footer>
+</main>
+
+
+</body></html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SMM Elite Panel - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#908fa0",
+                        "inverse-on-surface": "#213145",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "info": "#3B82F6",
+                        "secondary": "#bec6e0",
+                        "surface-dim": "#031427",
+                        "inverse-primary": "#494bd6",
+                        "surface-tint": "#c0c1ff",
+                        "on-error": "#690005",
+                        "success": "#10B981",
+                        "surface-container-low": "#0b1c30",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed": "#d5e3fd",
+                        "error-container": "#93000a",
+                        "on-tertiary-container": "#1c2a3d",
+                        "on-primary": "#1000a9",
+                        "surface-glass": "rgba(30, 41, 59, 0.7)",
+                        "surface": "#031427",
+                        "error": "#EF4444",
+                        "primary-fixed": "#e1e0ff",
+                        "background": "#031427",
+                        "outline-variant": "#464554",
+                        "on-primary-fixed": "#07006c",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary": "#233144",
+                        "surface-container-lowest": "#000f21",
+                        "surface-variant": "#26364a",
+                        "on-secondary-container": "#adb4ce",
+                        "on-secondary": "#283044",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-surface": "#d3e4fe",
+                        "surface-deep": "#020617",
+                        "on-primary-container": "#0d0096",
+                        "surface-container-high": "#1b2b3f",
+                        "primary": "#c0c1ff",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "surface-container-highest": "#26364a",
+                        "inverse-surface": "#d3e4fe",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary": "#b9c7e0",
+                        "on-background": "#d3e4fe",
+                        "warning": "#F59E0B",
+                        "nagad": "#F7941D",
+                        "bkash": "#E2136E",
+                        "primary-container": "#8083ff",
+                        "surface-container": "#102034",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "surface-bright": "#2a3a4f",
+                        "tertiary-container": "#8392a9",
+                        "secondary-container": "#3f465c",
+                        "secondary-fixed": "#dae2fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "40px",
+                        "container-max": "1280px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "gutter": "20px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        
+        /* Ambient Hover Effects */
+        .ambient-hover:hover {
+            box-shadow: 0px 10px 15px -3px rgba(192, 193, 255, 0.1); /* Using Primary tint for ambient shadow */
+            transform: translateY(-1px);
+        }
+        
+        /* Glassmorphism */
+        .glass-panel {
+            background: theme('colors.surface-glass');
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Custom Scrollbar for side panel */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: theme('colors.surface-variant');
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden antialiased font-body-md">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden md:flex flex-col h-full border-r border-outline-variant bg-surface-container-low text-primary docked left-0 w-64 shadow-sm transition-all duration-200 ease-in-out shrink-0 z-50">
+<!-- Header / Brand Area -->
+<div class="p-lg border-b border-outline-variant/30 flex items-center justify-between">
+<span class="font-display text-headline-md font-bold text-primary tracking-tight">SMM Elite</span>
+</div>
+<!-- User Info / Balance -->
+<div class="px-md py-lg flex flex-col items-center border-b border-outline-variant/30">
+<div class="w-16 h-16 rounded-full overflow-hidden mb-sm border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A futuristic abstract digital avatar for a professional SaaS dashboard. The avatar features a stylized geometric human head constructed from glowing wireframes and subtle gradients of deep indigo and soft silver, set against a dark void background. The aesthetic is ultra-modern, clean, and communicates advanced technology and security. High contrast, studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2Bbyon30cur-Hfc2mQWV87YxftR_SCUVnkk-m922kGk937j9lDkvpbyV3NrQzfEd1p4rV64-D5zzh3Cprxvg4BOq1Dj64Fe678zcrsbcVIRIW8c0swDVMYWdp9bm92M3N6RjzG3agKHJbrmMqKX3Ot5WyWJt0bCjYNYBwAeCfiB4xjLfNq2Kihyt5QBvcfkmLPmlkilgjGu-sqIPIc19zYWSaOjAy8-Gh3sMyGmue2O0L0u-kfLMxeQ"/>
+</div>
+<span class="font-body-md text-on-surface-variant mb-xs">Main Balance</span>
+<span class="font-headline-md text-on-surface tracking-tight">$1,240.50</span>
+<button class="mt-md w-full bg-primary text-on-primary py-2 rounded-lg font-body-md font-semibold hover:bg-primary-fixed transition-all ambient-hover">Add Funds</button>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto custom-scrollbar py-sm">
+<ul class="px-sm space-y-1"><li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">dashboard</span>
+<span class="">Dashboard</span>
+</a>
+</li>
+<!-- Active Item -->
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">add_shopping_cart</span>
+<span class="">New Order</span>
+</a>
+</li>
+<!-- Inactive Items -->
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">layers</span>
+<span class="">Bulk Order</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">history</span>
+<span class="">History</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">list_alt</span>
+<span class="">Services</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">account_balance_wallet</span>
+<span class="">Wallet</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">contact_support</span>
+<span class="">Support</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">alt_route</span>
+<span class="">Child Panel</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">group_add</span>
+<span class="">Affiliates</span>
+</a>
+</li><li class="">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">api</span>
+<span class="">API</span>
+</a>
+</li>
+</ul>
+</div>
+<!-- Footer Actions -->
+<div class="p-sm border-t border-outline-variant/30 mt-auto">
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+<span class="">Settings</span>
+</a>
+<a class="flex items-center px-md py-sm rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container/10 transition-all" href="#">
+<span class="material-symbols-outlined mr-md">logout</span>
+<span class="">Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center px-lg py-sm sticky top-0 w-full bg-surface-glass backdrop-blur-md border-b border-outline-variant shadow-sm z-40 text-primary docked full-width font-headline-md">
+<!-- Mobile Menu Toggle (Visible only on md<) -->
+<button class="md:hidden text-on-surface-variant hover:text-primary active:opacity-70 cursor-pointer">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Headline -->
+<h1 class="font-headline-md text-headline-md tracking-tight ml-md md:ml-0">Dashboard</h1>
+<!-- Actions -->
+<div class="flex items-center gap-sm">
+<button class="text-on-surface-variant hover:text-primary active:opacity-70 cursor-pointer p-2 rounded-full hover:bg-surface-container-high transition-colors relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary active:opacity-70 cursor-pointer p-2 rounded-full hover:bg-surface-container-high transition-colors hidden sm:block">
+<span class="material-symbols-outlined">translate</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary active:opacity-70 cursor-pointer p-2 rounded-full hover:bg-surface-container-high transition-colors hidden sm:block">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Scrollable Area -->
+<main class="flex-1 overflow-y-auto custom-scrollbar p-md md:p-lg w-full max-w-container-max mx-auto relative z-10">
+<!-- Platform Filters -->
+<div class="mb-lg flex items-center gap-sm overflow-x-auto pb-xs custom-scrollbar">
+<button class="flex items-center px-4 py-2 rounded-full bg-primary text-on-primary font-label-caps whitespace-nowrap ambient-hover transition-all border border-transparent">
+<span class="material-symbols-outlined mr-2 text-[18px]">star</span> <!-- Placeholder for actual social icon -->
+                    All Platforms
+                </button>
+<button class="flex items-center px-4 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-variant border border-outline-variant/30 font-label-caps whitespace-nowrap transition-all">
+                    Instagram
+                </button>
+<button class="flex items-center px-4 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-variant border border-outline-variant/30 font-label-caps whitespace-nowrap transition-all">
+                    Facebook
+                </button>
+<button class="flex items-center px-4 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-variant border border-outline-variant/30 font-label-caps whitespace-nowrap transition-all">
+                    YouTube
+                </button>
+<button class="flex items-center px-4 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-variant border border-outline-variant/30 font-label-caps whitespace-nowrap transition-all">
+                    TikTok
+                </button>
+<button class="flex items-center px-4 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-variant border border-outline-variant/30 font-label-caps whitespace-nowrap transition-all">
+                    Twitter
+                </button>
+</div>
+<!-- Bento Grid Layout for Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Left Column: Order Form (Spans 8 cols on large screens) -->
+<div class="lg:col-span-8 space-y-md">
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/30 p-lg shadow-sm">
+<h2 class="font-headline-md text-on-surface mb-lg flex items-center border-b border-outline-variant/30 pb-sm">
+<span class="material-symbols-outlined mr-sm text-primary">add_circle</span>
+                            Create New Order
+                        </h2>
+<form class="space-y-lg">
+<!-- Category Dropdown -->
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-xs">Category</label>
+<div class="relative">
+<select class="w-full bg-surface-container-high border border-outline-variant rounded-lg px-md py-3 text-on-surface appearance-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md h-[48px]">
+<option>🚀 [HOT SERVICES] - Instagram Followers</option>
+<option>Facebook Page Likes [Refill]</option>
+<option>YouTube Views [High Retention]</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Service Dropdown -->
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-xs">Service</label>
+<div class="relative">
+<select class="w-full bg-surface-container-high border border-outline-variant rounded-lg px-md py-3 text-on-surface appearance-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-md h-[48px] pr-12">
+<option>ID: 1042 - Instagram Followers [HQ] [Non-Drop] - $0.85/1k</option>
+<option>ID: 2011 - Instagram Likes [Real] [Fast] - $0.20/1k</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+<!-- Service Badges / Details -->
+<div class="flex flex-wrap gap-xs mt-sm">
+<span class="inline-flex items-center px-2 py-1 rounded bg-success/10 text-success font-data-mono text-xs border border-success/20">
+                                        [Non-Drop]
+                                    </span>
+<span class="inline-flex items-center px-2 py-1 rounded bg-primary/10 text-primary font-data-mono text-xs border border-primary/20">
+                                        [HQ]
+                                    </span>
+<span class="inline-flex items-center px-2 py-1 rounded bg-surface-container-highest text-on-surface-variant font-data-mono text-xs border border-outline-variant/30">
+                                        Min: 100 | Max: 50,000
+                                    </span>
+</div>
+</div>
+<!-- Link Input -->
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-xs">Target Link</label>
+<input class="w-full bg-surface-container-high border border-outline-variant rounded-lg px-md py-3 text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent font-body-md h-[48px] placeholder-on-surface-variant/50" placeholder="https://instagram.com/username" type="url"/>
+</div>
+<!-- Quantity & Charge -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-xs">Quantity</label>
+<input class="w-full bg-surface-container-high border border-outline-variant rounded-lg px-md py-3 text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent font-data-mono h-[48px]" max="50000" min="100" placeholder="1000" type="number"/>
+</div>
+<div>
+<label class="block font-label-caps text-on-surface-variant mb-xs">Total Charge ($)</label>
+<input class="w-full bg-surface-container-highest border border-outline-variant/50 rounded-lg px-md py-3 text-primary font-data-mono h-[48px] cursor-not-allowed" readonly="" type="text" value="0.85"/>
+</div>
+</div>
+<!-- Submit Button -->
+<div class="pt-sm border-t border-outline-variant/30">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-headline-md h-[48px] ambient-hover transition-all flex items-center justify-center" type="button">
+                                    Place Order
+                                    <span class="material-symbols-outlined ml-2">send</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Right Column: Important Notes & Stats (Spans 4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-lg">
+<!-- Stats Card -->
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/30 p-lg shadow-sm flex flex-col justify-center">
+<span class="font-label-caps text-on-surface-variant uppercase tracking-wider mb-xs">Active Orders</span>
+<div class="flex items-baseline gap-sm">
+<span class="font-display text-4xl font-bold text-on-surface">142</span>
+<span class="text-success font-data-mono text-sm flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_up</span> +12%
+                            </span>
+</div>
+</div>
+<!-- Important Notes Panel -->
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/30 p-0 shadow-sm flex-1 flex flex-col overflow-hidden">
+<div class="bg-error-container/20 border-b border-error/30 p-sm px-lg flex items-center">
+<span class="material-symbols-outlined text-error mr-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+<h3 class="font-headline-md text-error">Important Notes</h3>
+</div>
+<div class="p-lg space-y-md overflow-y-auto custom-scrollbar flex-1 text-sm">
+<!-- Note 1 -->
+<div class="border-l-2 border-primary pl-md">
+<p class="text-on-surface font-body-md mb-1 leading-relaxed">
+                                    Do not place multiple orders for the same link at the same time. Wait for the first order to complete, cancel, or partial before placing a new one.
+                                </p>
+<p class="text-on-surface-variant font-body-md text-sm opacity-80 leading-relaxed">
+                                    একই লিঙ্কের জন্য একই সময়ে একাধিক অর্ডার করবেন না। প্রথম অর্ডার সম্পূর্ণ, বাতিল বা আংশিক হওয়ার জন্য অপেক্ষা করুন।
+                                </p>
+</div>
+<!-- Note 2 -->
+<div class="border-l-2 border-warning pl-md">
+<p class="text-on-surface font-body-md mb-1 leading-relaxed">
+                                    Ensure the account/profile is set to PUBLIC. We cannot deliver to private accounts and refunds will not be issued.
+                                </p>
+<p class="text-on-surface-variant font-body-md text-sm opacity-80 leading-relaxed">
+                                    নিশ্চিত করুন অ্যাকাউন্ট/প্রোফাইলটি পাবলিক করা আছে। আমরা ব্যক্তিগত অ্যাকাউন্টে ডেলিভারি করতে পারি না এবং রিফান্ড দেওয়া হবে না।
+                                </p>
+</div>
+<!-- Note 3 -->
+<div class="border-l-2 border-info pl-md">
+<p class="text-on-surface font-body-md mb-1 leading-relaxed">
+                                    Refill times may vary based on platform updates. Check the service description for average refill durations.
+                                </p>
+<p class="text-on-surface-variant font-body-md text-sm opacity-80 leading-relaxed">
+                                    প্ল্যাটফর্ম আপডেটের উপর ভিত্তি করে রিফিল সময় পরিবর্তিত হতে পারে। গড় রিফিল সময়কাল জানতে পরিষেবার বিবরণ চেক করুন।
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

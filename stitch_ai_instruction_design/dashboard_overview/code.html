@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SMM Elite - Dashboard Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#031427",
+                        "inverse-on-surface": "#213145",
+                        "on-surface-variant": "#c7c4d7",
+                        "inverse-surface": "#d3e4fe",
+                        "surface-deep": "#020617",
+                        "on-primary": "#1000a9",
+                        "surface-container": "#102034",
+                        "on-tertiary-container": "#1c2a3d",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "surface": "#031427",
+                        "tertiary-container": "#8392a9",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "warning": "#F59E0B",
+                        "outline-variant": "#464554",
+                        "surface-glass": "rgba(30, 41, 59, 0.7)",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "bkash": "#E2136E",
+                        "on-tertiary": "#233144",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "nagad": "#F7941D",
+                        "on-secondary-fixed": "#131b2e",
+                        "success": "#10B981",
+                        "primary-container": "#8083ff",
+                        "on-surface": "#d3e4fe",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "inverse-primary": "#494bd6",
+                        "on-secondary": "#283044",
+                        "outline": "#908fa0",
+                        "surface-container-highest": "#26364a",
+                        "primary-fixed": "#e1e0ff",
+                        "surface-tint": "#c0c1ff",
+                        "error": "#EF4444",
+                        "on-primary-fixed": "#07006c",
+                        "surface-bright": "#2a3a4f",
+                        "secondary-container": "#3f465c",
+                        "surface-dim": "#031427",
+                        "on-background": "#d3e4fe",
+                        "primary": "#c0c1ff",
+                        "tertiary": "#b9c7e0",
+                        "error-container": "#93000a",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-container-high": "#1b2b3f",
+                        "surface-container-lowest": "#000f21",
+                        "on-primary-container": "#0d0096",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#d5e3fd",
+                        "surface-variant": "#26364a",
+                        "on-secondary-container": "#adb4ce",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-container-low": "#0b1c30",
+                        "info": "#3B82F6",
+                        "secondary": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "base": "4px",
+                        "xl": "40px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "display": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(192, 193, 255, 0.1);
+        }
+        .ambient-shadow:hover {
+            box-shadow: 0px 10px 15px -3px rgba(128, 131, 255, 0.1);
+        }
+        .carousel-slide {
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        /* Custom Scrollbar for sleek dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #031427; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #26364a; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f465c; 
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
+<!-- Desktop SideNav -->
+<aside class="hidden md:flex flex-col h-screen left-0 w-64 bg-surface-container-low border-r border-outline-variant shadow-sm z-30 sticky top-0 shrink-0">
+<!-- Header / Logo area -->
+<div class="px-lg py-lg border-b border-outline-variant flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">insights</span>
+<h1 class="font-display text-headline-md font-bold text-primary">SMM Elite</h1>
+</div>
+<!-- User Balance Snippet in SideNav -->
+<div class="px-lg py-md border-b border-outline-variant bg-surface-container-highest/30">
+<p class="text-on-surface-variant font-label-caps uppercase tracking-wider text-xs mb-xs">Main Balance</p>
+<div class="flex items-center justify-between">
+<span class="font-data-mono text-headline-md text-on-surface">$1,240.50</span>
+<button class="bg-primary/10 text-primary hover:bg-primary/20 p-sm rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-md px-sm space-y-xs">
+<!-- Active Nav Item -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold bg-primary-container/10 border-l-4 border-primary transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Inactive Nav Items -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+<span>New Order</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span>Bulk Order</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">history</span>
+<span>History</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<span>Services</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span>Wallet</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">alt_route</span>
+<span>Child Panel</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">group_add</span>
+<span>Affiliates</span>
+</a>
+</nav>
+<div class="p-md border-t border-outline-variant space-y-xs">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container/10 transition-all duration-200 ease-in-out border-l-4 border-transparent" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-lg py-sm sticky top-0 w-full bg-surface-glass backdrop-blur-md border-b border-outline-variant shadow-sm z-40 h-16 shrink-0">
+<div class="flex items-center gap-md">
+<!-- Mobile Menu Toggle (Visible only on mobile) -->
+<button class="md:hidden text-on-surface-variant hover:text-primary cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="font-headline-md text-headline-md text-on-surface hidden sm:block">Overview</h2>
+</div>
+<div class="flex items-center gap-sm md:gap-md">
+<button class="text-on-surface-variant hover:text-primary cursor-pointer active:opacity-70 p-sm rounded-full hover:bg-surface-container-high transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary cursor-pointer active:opacity-70 p-sm rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">translate</span>
+</button>
+<div class="h-6 w-px bg-outline-variant mx-xs hidden md:block"></div>
+<button class="flex items-center gap-sm hover:bg-surface-container-high p-xs pr-sm rounded-full transition-colors border border-transparent hover:border-outline-variant cursor-pointer active:opacity-70">
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9aCaeT6FAJqUNb5SkyNaqfvXptleouOsGLufvPORaNebXvPsZdtSpv13T-i9dso9sGQkZzw23YHsT1Kn-ysolnyfsDC8Uszihp5UXD1AUPk4l2eOVUiPcRITsiedAwXX0AazpAzoMRTJJApCZqrwYIu9BeZHBDU-QCABkWVqBJVU_mvTtPYguPT7K0eSM0jqY7U38cCXftECQqItMxhKeDEesVYVBUuyF-faDaQAy9gybBr2SgKrXwg"/>
+<span class="font-body-md text-sm hidden md:block">Admin</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant hidden md:block">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="flex-1 p-md md:p-lg lg:p-xl max-w-container-max mx-auto w-full space-y-lg md:space-y-xl">
+<!-- Hero Carousel Area -->
+<section class="relative w-full rounded-xl overflow-hidden glass-panel h-48 md:h-64 shadow-sm group">
+<!-- Carousel Container -->
+<div class="flex w-full h-full transition-transform duration-500 ease-in-out" id="hero-carousel">
+<!-- Slide 1 -->
+<div class="w-full h-full flex-shrink-0 relative flex items-center p-lg md:p-xl">
+<!-- Abstract Background using CSS Gradients -->
+<div class="absolute inset-0 bg-gradient-to-r from-surface-deep via-surface-container to-primary-container/20 opacity-80"></div>
+<div class="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-primary/10 to-transparent"></div>
+<div class="relative z-10 max-w-2xl">
+<span class="inline-block px-sm py-xs bg-success/20 text-success text-xs font-label-caps rounded mb-md border border-success/30">Special Offer</span>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-sm">10% Bonus on bKash Deposits</h2>
+<p class="text-on-surface-variant mb-lg max-w-md hidden md:block">Boost your wallet balance instantly. Valid for deposits over $50. Use code BKASH10 at checkout.</p>
+<button class="bg-primary hover:bg-primary-fixed-dim text-on-primary font-label-caps px-lg py-sm rounded-lg transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] flex items-center gap-sm">
+                                Deposit Now <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Slide 2 (Hidden by translation initially) -->
+<div class="w-full h-full flex-shrink-0 relative flex items-center p-lg md:p-xl bg-surface-container-high">
+<div class="absolute inset-0 bg-gradient-to-r from-surface-deep to-surface-container-highest"></div>
+<div class="relative z-10 max-w-2xl">
+<span class="inline-block px-sm py-xs bg-info/20 text-info text-xs font-label-caps rounded mb-md border border-info/30">System Update</span>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-sm">New High-Speed Services Added</h2>
+<p class="text-on-surface-variant mb-lg max-w-md hidden md:block">We've integrated new non-drop nodes for Instagram and TikTok. Check out category #42.</p>
+<button class="border border-outline-variant hover:bg-surface-container-highest text-on-surface font-label-caps px-lg py-sm rounded-lg transition-all flex items-center gap-sm">
+                                View Services
+                            </button>
+</div>
+</div>
+</div>
+<!-- Carousel Controls -->
+<button class="absolute left-md top-1/2 -translate-y-1/2 bg-surface-deep/50 hover:bg-surface-deep text-on-surface p-sm rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity border border-outline-variant" id="prev-slide">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="absolute right-md top-1/2 -translate-y-1/2 bg-surface-deep/50 hover:bg-surface-deep text-on-surface p-sm rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity border border-outline-variant" id="next-slide">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+<!-- Dots -->
+<div class="absolute bottom-md left-1/2 -translate-x-1/2 flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary transition-all carousel-dot" data-index="0"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant transition-all carousel-dot" data-index="1"></div>
+</div>
+</section>
+<!-- Stats Grid -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
+<!-- Stat Card 1 -->
+<div class="glass-panel p-lg rounded-xl ambient-shadow transition-all relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<div>
+<p class="text-on-surface-variant font-body-md text-sm mb-xs">Available Balance</p>
+<h3 class="font-data-mono text-headline-lg-mobile font-bold text-on-surface">$1,240.50</h3>
+</div>
+<div class="p-sm bg-primary-container/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+</div>
+<div class="flex items-center gap-sm text-xs relative z-10">
+<span class="flex items-center text-success"><span class="material-symbols-outlined text-[14px]">trending_up</span> 2.5%</span>
+<span class="text-on-surface-variant">vs last month</span>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-panel p-lg rounded-xl ambient-shadow transition-all relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-info/5 rounded-full blur-xl group-hover:bg-info/10 transition-colors"></div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<div>
+<p class="text-on-surface-variant font-body-md text-sm mb-xs">Total Spent</p>
+<h3 class="font-data-mono text-headline-lg-mobile font-bold text-on-surface">$8,459.00</h3>
+</div>
+<div class="p-sm bg-info/10 rounded-lg text-info">
+<span class="material-symbols-outlined">payments</span>
+</div>
+</div>
+<div class="flex items-center gap-sm text-xs relative z-10">
+<span class="text-on-surface-variant">Lifetime expenditure</span>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-panel p-lg rounded-xl ambient-shadow transition-all relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-tertiary/5 rounded-full blur-xl group-hover:bg-tertiary/10 transition-colors"></div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<div>
+<p class="text-on-surface-variant font-body-md text-sm mb-xs">Total Orders</p>
+<h3 class="font-data-mono text-headline-lg-mobile font-bold text-on-surface">1,432</h3>
+</div>
+<div class="p-sm bg-tertiary/10 rounded-lg text-tertiary">
+<span class="material-symbols-outlined">shopping_cart_checkout</span>
+</div>
+</div>
+<div class="flex items-center gap-sm text-xs relative z-10">
+<span class="flex items-center text-success"><span class="material-symbols-outlined text-[14px]">check_circle</span> 1,420 Completed</span>
+</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="glass-panel p-lg rounded-xl ambient-shadow transition-all relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-warning/5 rounded-full blur-xl group-hover:bg-warning/10 transition-colors"></div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<div>
+<p class="text-on-surface-variant font-body-md text-sm mb-xs">Active Tickets</p>
+<h3 class="font-data-mono text-headline-lg-mobile font-bold text-warning">3</h3>
+</div>
+<div class="p-sm bg-warning/10 rounded-lg text-warning">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+</div>
+<div class="flex items-center gap-sm text-xs relative z-10">
+<a class="text-primary hover:underline flex items-center" href="#">View Support <span class="material-symbols-outlined text-[14px] ml-1">arrow_forward</span></a>
+</div>
+</div>
+</section>
+<!-- Main Layout Grid (Bento style) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-md md:gap-lg">
+<!-- Services Overview (Spans 2 columns on lg) -->
+<section class="lg:col-span-2 space-y-md">
+<div class="flex justify-between items-end mb-sm border-b border-outline-variant pb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface">Popular Platforms</h3>
+<a class="text-sm font-label-caps text-primary hover:text-primary-fixed-dim flex items-center transition-colors" href="#">View All Catalog <span class="material-symbols-outlined text-sm ml-1">chevron_right</span></a>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-md">
+<!-- Platform Card 1 -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-sm mb-md">
+<div class="w-10 h-10 rounded bg-[#1877F2]/10 flex items-center justify-center text-[#1877F2]">
+<span class="material-symbols-outlined">thumb_up</span>
+</div>
+<h4 class="font-body-md font-semibold text-on-surface group-hover:text-primary transition-colors">Facebook</h4>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant">340 Services</span>
+<span class="font-data-mono text-success">From $0.05</span>
+</div>
+</div>
+<!-- Platform Card 2 -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-sm mb-md">
+<div class="w-10 h-10 rounded bg-[#E1306C]/10 flex items-center justify-center text-[#E1306C]">
+<span class="material-symbols-outlined">photo_camera</span>
+</div>
+<h4 class="font-body-md font-semibold text-on-surface group-hover:text-primary transition-colors">Instagram</h4>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant">512 Services</span>
+<span class="font-data-mono text-success">From $0.02</span>
+</div>
+</div>
+<!-- Platform Card 3 -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-sm mb-md">
+<div class="w-10 h-10 rounded bg-[#FF0000]/10 flex items-center justify-center text-[#FF0000]">
+<span class="material-symbols-outlined">play_circle</span>
+</div>
+<h4 class="font-body-md font-semibold text-on-surface group-hover:text-primary transition-colors">YouTube</h4>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant">128 Services</span>
+<span class="font-data-mono text-success">From $0.50</span>
+</div>
+</div>
+<!-- Platform Card 4 -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-sm mb-md">
+<div class="w-10 h-10 rounded bg-on-surface/10 flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined">music_note</span>
+</div>
+<h4 class="font-body-md font-semibold text-on-surface group-hover:text-primary transition-colors">TikTok</h4>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant">245 Services</span>
+<span class="font-data-mono text-success">From $0.01</span>
+</div>
+</div>
+<!-- Platform Card 5 -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-sm mb-md">
+<div class="w-10 h-10 rounded bg-[#0088cc]/10 flex items-center justify-center text-[#0088cc]">
+<span class="material-symbols-outlined">send</span>
+</div>
+<h4 class="font-body-md font-semibold text-on-surface group-hover:text-primary transition-colors">Telegram</h4>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant">89 Services</span>
+<span class="font-data-mono text-success">From $0.15</span>
+</div>
+</div>
+<!-- Extra Action Card -->
+<div class="bg-primary-container/5 border border-primary/30 border-dashed rounded-xl p-md hover:bg-primary-container/10 transition-colors cursor-pointer flex flex-col items-center justify-center text-center">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-sm">
+<span class="material-symbols-outlined">search</span>
+</div>
+<h4 class="font-body-md font-semibold text-primary">Explore All</h4>
+</div>
+</div>
+</section>
+<!-- Support/Notice Column -->
+<aside class="space-y-md">
+<div class="flex justify-between items-end mb-sm border-b border-outline-variant pb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface">News &amp; Updates</h3>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden h-[calc(100%-3rem)] flex flex-col">
+<div class="p-md bg-surface-container-highest/50 border-b border-outline-variant flex items-center gap-sm">
+<span class="material-symbols-outlined text-info">campaign</span>
+<span class="font-body-md font-medium text-on-surface">System Announcements</span>
+</div>
+<div class="p-md space-y-md overflow-y-auto flex-1">
+<!-- Notice Item -->
+<div class="border-l-2 border-warning pl-md">
+<div class="flex items-center gap-xs text-xs text-on-surface-variant mb-xs">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Oct 24, 2024
+                                </div>
+<h4 class="font-body-md font-semibold text-on-surface mb-xs">Maintenance Notice</h4>
+<!-- Bilingual Content -->
+<div class="space-y-sm">
+<p class="text-sm text-on-surface-variant">We will be performing scheduled maintenance on our main database. Services may experience slight delays.</p>
+<p class="text-sm text-on-surface-variant/70 border-t border-outline-variant/50 pt-xs mt-xs">আমাদের মূল ডাটাবেসে নির্ধারিত রক্ষণাবেক্ষণ করা হবে। পরিষেবাগুলিতে সামান্য বিলম্ব হতে পারে।</p>
+</div>
+</div>
+<!-- Notice Item -->
+<div class="border-l-2 border-success pl-md">
+<div class="flex items-center gap-xs text-xs text-on-surface-variant mb-xs">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Oct 20, 2024
+                                </div>
+<h4 class="font-body-md font-semibold text-on-surface mb-xs">New Deposit Method</h4>
+<div class="space-y-sm">
+<p class="text-sm text-on-surface-variant">Binance Pay is now fully integrated and automated. Instant funding is available.</p>
+<p class="text-sm text-on-surface-variant/70 border-t border-outline-variant/50 pt-xs mt-xs">বিনান্স পে এখন সম্পূর্ণ একত্রিত এবং স্বয়ংক্রিয়। তাৎক্ষণিক ফান্ডিং উপলব্ধ।</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- Recent Activity Table -->
+<section class="space-y-md">
+<div class="flex justify-between items-end mb-sm border-b border-outline-variant pb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface">Recent Orders</h3>
+<a class="text-sm font-label-caps text-primary hover:text-primary-fixed-dim flex items-center transition-colors" href="#">View History <span class="material-symbols-outlined text-sm ml-1">chevron_right</span></a>
+</div>
+<div class="glass-panel rounded-xl overflow-x-auto border border-outline-variant">
+<table class="w-full text-left border-collapse min-w-[600px]">
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container-highest/30">
+<th class="p-md font-label-caps text-on-surface-variant whitespace-nowrap">ID</th>
+<th class="p-md font-label-caps text-on-surface-variant whitespace-nowrap">Service</th>
+<th class="p-md font-label-caps text-on-surface-variant whitespace-nowrap">Link</th>
+<th class="p-md font-label-caps text-on-surface-variant text-right whitespace-nowrap">Quantity</th>
+<th class="p-md font-label-caps text-on-surface-variant text-right whitespace-nowrap">Charge</th>
+<th class="p-md font-label-caps text-on-surface-variant text-center whitespace-nowrap">Status</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-sm divide-y divide-outline-variant/50">
+<tr class="hover:bg-primary/5 transition-colors group cursor-default">
+<td class="p-md font-data-mono text-on-surface-variant">#89432</td>
+<td class="p-md text-on-surface">
+<div class="flex items-center gap-xs">
+<span class="px-xs py-[2px] bg-primary/10 text-primary text-[10px] rounded font-data-mono">[Non-Drop]</span>
+<span class="truncate max-w-[200px]">IG Followers - Fast</span>
+</div>
+</td>
+<td class="p-md text-on-surface-variant truncate max-w-[150px]">instagram.com/user...</td>
+<td class="p-md font-data-mono text-right text-on-surface">1,000</td>
+<td class="p-md font-data-mono text-right text-on-surface">$0.85</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-label-caps bg-info/10 text-info border border-info/20">
+                                        Processing
+                                    </span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group cursor-default">
+<td class="p-md font-data-mono text-on-surface-variant">#89431</td>
+<td class="p-md text-on-surface">
+<div class="flex items-center gap-xs">
+<span class="truncate max-w-[200px]">FB Page Likes - Real</span>
+</div>
+</td>
+<td class="p-md text-on-surface-variant truncate max-w-[150px]">facebook.com/page...</td>
+<td class="p-md font-data-mono text-right text-on-surface">500</td>
+<td class="p-md font-data-mono text-right text-on-surface">$1.20</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-label-caps bg-success/10 text-success border border-success/20">
+                                        Completed
+                                    </span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group cursor-default">
+<td class="p-md font-data-mono text-on-surface-variant">#89430</td>
+<td class="p-md text-on-surface">
+<div class="flex items-center gap-xs">
+<span class="px-xs py-[2px] bg-warning/10 text-warning text-[10px] rounded font-data-mono">[Slow]</span>
+<span class="truncate max-w-[200px]">YT Views - High Retent...</span>
+</div>
+</td>
+<td class="p-md text-on-surface-variant truncate max-w-[150px]">youtube.com/watch...</td>
+<td class="p-md font-data-mono text-right text-on-surface">5,000</td>
+<td class="p-md font-data-mono text-right text-on-surface">$4.50</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-label-caps bg-surface-variant text-on-surface-variant border border-outline-variant/50">
+                                        Pending
+                                    </span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group cursor-default">
+<td class="p-md font-data-mono text-on-surface-variant">#89429</td>
+<td class="p-md text-on-surface">
+<div class="flex items-center gap-xs">
+<span class="truncate max-w-[200px]">TikTok Likes - Instant</span>
+</div>
+</td>
+<td class="p-md text-on-surface-variant truncate max-w-[150px]">tiktok.com/@user/vi...</td>
+<td class="p-md font-data-mono text-right text-on-surface">200</td>
+<td class="p-md font-data-mono text-right text-on-surface">$0.10</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-label-caps bg-success/10 text-success border border-success/20">
+                                        Completed
+                                    </span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group cursor-default">
+<td class="p-md font-data-mono text-on-surface-variant">#89428</td>
+<td class="p-md text-on-surface">
+<div class="flex items-center gap-xs">
+<span class="px-xs py-[2px] bg-primary/10 text-primary text-[10px] rounded font-data-mono">[New]</span>
+<span class="truncate max-w-[200px]">Telegram Members - ...</span>
+</div>
+</td>
+<td class="p-md text-on-surface-variant truncate max-w-[150px]">t.me/channel_name</td>
+<td class="p-md font-data-mono text-right text-on-surface">10,000</td>
+<td class="p-md font-data-mono text-right text-on-surface">$15.00</td>
+<td class="p-md text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-label-caps bg-info/10 text-info border border-info/20">
+                                        Processing
+                                    </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Footer Spacer -->
+<div class="h-lg"></div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface-container-low border-t border-outline-variant z-40 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+<div class="flex justify-around items-center h-16">
+<a class="flex flex-col items-center justify-center w-full h-full text-primary" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">add_shopping_cart</span>
+<span class="text-[10px] font-label-caps">Order</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">list_alt</span>
+<span class="text-[10px] font-label-caps">Services</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">account_balance_wallet</span>
+<span class="text-[10px] font-label-caps">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">menu</span>
+<span class="text-[10px] font-label-caps">Menu</span>
+</a>
+</div>
+</nav>
+<!-- Simple JS for Carousel -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const carousel = document.getElementById('hero-carousel');
+            const prevBtn = document.getElementById('prev-slide');
+            const nextBtn = document.getElementById('next-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+            let currentSlide = 0;
+            const totalSlides = 2; // Fixed to 2 for this demo
+            let slideInterval;
+
+            function updateSlide(index) {
+                currentSlide = index;
+                carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                dots.forEach((dot, i) => {
+                    if(i === currentSlide) {
+                        dot.classList.replace('bg-outline-variant', 'bg-primary');
+                        dot.classList.add('w-4');
+                    } else {
+                        dot.classList.replace('bg-primary', 'bg-outline-variant');
+                        dot.classList.remove('w-4');
+                    }
+                });
+            }
+
+            function nextSlide() {
+                updateSlide((currentSlide + 1) % totalSlides);
+            }
+
+            function prevSlideFunc() {
+                updateSlide((currentSlide - 1 + totalSlides) % totalSlides);
+            }
+
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                resetInterval();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                prevSlideFunc();
+                resetInterval();
+            });
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    updateSlide(parseInt(e.target.dataset.index));
+                    resetInterval();
+                });
+            });
+
+            function startInterval() {
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+
+            function resetInterval() {
+                clearInterval(slideInterval);
+                startInterval();
+            }
+
+            // Initialize active dot size
+            dots[0].classList.add('w-4');
+            startInterval();
+        });
+    </script>
+</body></html>

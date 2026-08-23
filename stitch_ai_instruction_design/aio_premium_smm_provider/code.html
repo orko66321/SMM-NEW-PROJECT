@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SMM Elite - Main SMM Provider</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#908fa0",
+                        "inverse-on-surface": "#213145",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "info": "#3B82F6",
+                        "secondary": "#bec6e0",
+                        "surface-dim": "#031427",
+                        "inverse-primary": "#494bd6",
+                        "surface-tint": "#c0c1ff",
+                        "on-error": "#690005",
+                        "success": "#10B981",
+                        "surface-container-low": "#0b1c30",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed": "#d5e3fd",
+                        "error-container": "#93000a",
+                        "on-tertiary-container": "#1c2a3d",
+                        "on-primary": "#1000a9",
+                        "surface-glass": "rgba(30, 41, 59, 0.7)",
+                        "surface": "#031427",
+                        "error": "#EF4444",
+                        "primary-fixed": "#e1e0ff",
+                        "background": "#031427",
+                        "outline-variant": "#464554",
+                        "on-primary-fixed": "#07006c",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary": "#233144",
+                        "surface-container-lowest": "#000f21",
+                        "surface-variant": "#26364a",
+                        "on-secondary-container": "#adb4ce",
+                        "on-secondary": "#283044",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-surface": "#d3e4fe",
+                        "surface-deep": "#020617",
+                        "on-primary-container": "#0d0096",
+                        "surface-container-high": "#1b2b3f",
+                        "primary": "#c0c1ff",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "surface-container-highest": "#26364a",
+                        "inverse-surface": "#d3e4fe",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary": "#b9c7e0",
+                        "on-background": "#d3e4fe",
+                        "warning": "#F59E0B",
+                        "nagad": "#F7941D",
+                        "bkash": "#E2136E",
+                        "primary-container": "#8083ff",
+                        "surface-container": "#102034",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "surface-bright": "#2a3a4f",
+                        "tertiary-container": "#8392a9",
+                        "secondary-container": "#3f465c",
+                        "secondary-fixed": "#dae2fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "40px",
+                        "container-max": "1280px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "gutter": "20px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            font-family: theme('fontFamily.body-md');
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface w-full z-50 border-b border-outline-variant docked full-width top-0">
+<div class="flex justify-between items-center px-lg py-md w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-lg">
+<a class="font-display text-headline-md font-bold text-primary dark:text-primary transition-opacity hover:opacity-80" href="#">SMM Elite</a>
+<nav class="hidden md:flex items-center gap-md">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-high px-sm py-xs rounded-DEFAULT" href="#">Services</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-high px-sm py-xs rounded-DEFAULT" href="#">API</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-high px-sm py-xs rounded-DEFAULT" href="#">Blog</a>
+</nav>
+</div>
+<div class="flex items-center gap-sm">
+<a class="hidden md:block font-body-md text-body-md text-on-surface hover:text-primary transition-colors hover:bg-surface-container-high px-md py-sm rounded-lg scale-95 active:scale-90 transition-transform" href="#">Sign In</a>
+<a class="font-body-md text-body-md bg-primary text-on-primary px-md py-sm rounded-lg hover:bg-primary-container transition-colors font-medium scale-95 active:scale-90 transition-transform" href="#">Sign Up</a>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<!-- Hero Section -->
+<section class="relative pt-xl pb-xl md:pt-[80px] md:pb-[120px] overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-surface-container-lowest to-background z-0"></div>
+<div class="relative z-10 max-w-container-max mx-auto px-lg flex flex-col lg:flex-row items-center gap-xl">
+<!-- Hero Content -->
+<div class="flex-1 text-center lg:text-left space-y-lg">
+<div class="inline-flex items-center gap-xs bg-surface-container border border-outline-variant rounded-full px-md py-xs font-label-caps text-label-caps text-primary">
+<span class="w-2 h-2 rounded-full bg-success"></span>
+                        ALL IN ONE SMM PANEL
+                    </div>
+<h1 class="font-display text-display text-on-background md:max-w-2xl">
+                        The Main SMM Provider for <span class="text-primary">Agencies &amp; Power Users.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto lg:mx-0">
+                        High-speed, premium quality social media marketing services. Starting at just $0.001 per 1K. Frictionless API integration for true scalability.
+                    </p>
+<div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-md pt-sm">
+<a class="w-full sm:w-auto font-body-md text-body-md bg-primary text-on-primary px-lg py-[14px] rounded-lg hover:bg-primary-container transition-all shadow-[0_0_20px_rgba(192,193,255,0.2)] font-medium flex items-center justify-center gap-sm" href="#services">
+                            View Services
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<a class="w-full sm:w-auto font-body-md text-body-md border border-outline-variant text-on-surface px-lg py-[14px] rounded-lg hover:bg-surface-container transition-colors font-medium text-center" href="#api">
+                            API Documentation
+                        </a>
+</div>
+</div>
+<!-- Sign In Form (Hero Embedded) -->
+<div class="w-full max-w-md bg-surface-container-low border border-outline-variant rounded-xl p-lg shadow-2xl relative overflow-hidden group">
+<!-- Subtle glow effect -->
+<div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-500"></div>
+<div class="text-center mb-lg relative z-10">
+<h2 class="font-headline-md text-headline-md text-on-surface">Welcome Back</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Sign in to access your dashboard</p>
+</div>
+<form class="space-y-md relative z-10">
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Username</label>
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-outline" placeholder="Enter username" type="text"/>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Password</label>
+<a class="font-label-caps text-label-caps text-primary hover:underline" href="#">Forgot?</a>
+</div>
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-outline" placeholder="Enter password" type="password"/>
+</div>
+<button class="w-full font-body-md text-body-md bg-primary text-on-primary py-[12px] rounded-lg hover:bg-primary-container transition-colors font-medium mt-sm" type="button">
+                            Sign In
+                        </button>
+</form>
+<div class="mt-lg relative z-10">
+<div class="relative flex items-center py-sm">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="flex-shrink-0 mx-4 font-label-caps text-label-caps text-on-surface-variant">OR CONTINUE WITH</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<button class="mt-sm w-full font-body-md text-body-md bg-surface-dim border border-outline-variant text-on-surface py-[12px] rounded-lg hover:bg-surface-container transition-colors flex items-center justify-center gap-sm" type="button">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="currentColor"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="currentColor"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="currentColor"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="currentColor"></path>
+</svg>
+                            Sign in with Google
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust Strip -->
+<section class="border-y border-outline-variant bg-surface-container-lowest py-lg">
+<div class="max-w-container-max mx-auto px-lg flex flex-wrap justify-center gap-xl md:gap-20">
+<div class="text-center">
+<p class="font-display text-headline-lg text-primary font-bold">15M+</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-xs">Total Orders</p>
+</div>
+<div class="text-center">
+<p class="font-display text-headline-lg text-primary font-bold">99.9%</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-xs">Uptime</p>
+</div>
+<div class="text-center">
+<p class="font-display text-headline-lg text-primary font-bold">$0.001</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-xs">Starting Price / 1K</p>
+</div>
+<div class="text-center">
+<p class="font-display text-headline-lg text-primary font-bold">24/7</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-xs">Expert Support</p>
+</div>
+</div>
+</section>
+<!-- Payment Methods -->
+<section class="py-xl max-w-container-max mx-auto px-lg border-b border-outline-variant/50">
+<div class="text-center mb-lg">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Local Payment Methods Supported</h3>
+</div>
+<div class="flex flex-wrap justify-center items-center gap-lg md:gap-xl opacity-70 grayscale hover:grayscale-0 transition-all duration-300">
+<!-- bKash Button style -->
+<div class="flex items-center gap-sm px-md py-sm bg-surface-container border border-outline-variant rounded-lg">
+<div class="w-6 h-6 rounded-sm bg-bkash flex items-center justify-center">
+<span class="text-white font-bold text-[10px]">b</span>
+</div>
+<span class="font-body-md font-semibold text-on-surface">Pay with bKash</span>
+</div>
+<!-- Nagad Button style -->
+<div class="flex items-center gap-sm px-md py-sm bg-surface-container border border-outline-variant rounded-lg">
+<div class="w-6 h-6 rounded-sm bg-nagad flex items-center justify-center">
+<span class="text-white font-bold text-[10px]">N</span>
+</div>
+<span class="font-body-md font-semibold text-on-surface">Pay with Nagad</span>
+</div>
+<!-- Rocket placeholder (using primary color as base) -->
+<div class="flex items-center gap-sm px-md py-sm bg-surface-container border border-outline-variant rounded-lg">
+<div class="w-6 h-6 rounded-sm bg-primary-container flex items-center justify-center">
+<span class="text-on-primary-container font-bold text-[10px]">R</span>
+</div>
+<span class="font-body-md font-semibold text-on-surface">Pay with Rocket</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest w-full border-t border-outline-variant mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-lg py-xl w-full max-w-container-max mx-auto">
+<div class="mb-md md:mb-0">
+<a class="font-display text-headline-md font-bold text-primary dark:text-primary" href="#">SMM Elite</a>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">© 2024 SMM Elite Panel. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Terms</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Sitemap</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+<!-- Floating WhatsApp Button -->
+<a class="fixed bottom-lg right-lg z-50 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform hover:shadow-xl" href="#">
+<svg class="w-7 h-7 fill-current" viewbox="0 0 24 24">
+<path d="M12.013 2.013c-5.514 0-10 4.486-10 10 0 1.764.455 3.42 1.258 4.88L2 21.987l5.242-1.233c1.42.748 3.036 1.173 4.771 1.173 5.513 0 10-4.486 10-10s-4.487-10-10-10zm0 18.258c-1.464 0-2.857-.378-4.086-1.036l-.293-.157-3.036.714.726-2.936-.174-.298A8.256 8.256 0 0 1 3.754 12c0-4.545 3.696-8.241 8.259-8.241 4.545 0 8.241 3.696 8.241 8.241 0 4.546-3.696 8.258-8.241 8.258zm4.532-6.191c-.248-.124-1.467-.724-1.693-.807-.226-.083-.391-.124-.555.124-.165.248-.64 .807-.784.972-.144.165-.29.186-.537.062-.248-.124-1.047-.386-1.996-1.23-.739-.658-1.237-1.472-1.382-1.72-.144-.248-.016-.381.108-.505.111-.111.248-.29.371-.433.124-.144.165-.248.248-.413.083-.165.041-.31-.021-.433-.062-.124-.555-1.341-.762-1.836-.201-.482-.405-.417-.555-.425-.144-.008-.31-.008-.475-.008-.165 0-.433.062-.66.31-.227.248-.867.847-.867 2.065 0 1.218.888 2.395 1.011 2.56.124.165 1.745 2.664 4.227 3.734 2.482 1.07 2.482.71 2.936.669.454-.041 1.467-.6 1.673-1.177.206-.578.206-1.074.144-1.177-.061-.103-.226-.165-.474-.289z"></path>
+</svg>
+</a>
+</body></html>
