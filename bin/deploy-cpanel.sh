@@ -105,19 +105,21 @@ find "$PUBLIC_HTML" -mindepth 1 -maxdepth 1 -not -name '.well-known' -exec rm -r
 cp -a apps/web/dist/. "$PUBLIC_HTML"/
 
 echo "==> PostgreSQL reachability diagnostics (read-only, no credentials printed)"
-# Two straight failed migration attempts (TCP localhost:5432, then the
-# Unix socket path phpPgAdmin itself uses) both failed with "Can't reach
-# database server" — this narrows down whether it's a CageFS filesystem
-# visibility issue (socket path not mounted into this account's jail),
-# a permissions issue, or something else, without needing another guess
-# to burn a whole deploy cycle.
+# Confirmed so far: TCP localhost:5432 fails, and the Unix socket dir
+# phpPgAdmin itself uses (/var/run/postgresql) doesn't even exist from
+# this account's CageFS-isolated view ("No such file or directory") — so
+# CageFS is hiding the real socket from this jail. pg_isready isn't
+# installed here, but psql is, so test real connectivity directly through
+# the same driver applyMigrations.js uses (PrismaClient), against every
+# host candidate we know about, instead of guessing one at a time.
 echo "-- running as:"; id 2>&1 || true
-echo "-- /var/run/postgresql listing:"; ls -la /var/run/postgresql/ 2>&1 || true
-echo "-- socket file stat:"; stat /var/run/postgresql/.s.PGSQL.5432 2>&1 || true
+echo "-- searching common socket locations:"
+for d in /var/run/postgresql /run/postgresql /tmp /var/lib/pgsql; do
+  echo "  $d:"; ls -la "$d"/.s.PGSQL.* 2>&1 || echo "    (not found)"
+done
 echo "-- available client tools:"; command -v psql pg_isready nc 2>&1 || true
-echo "-- pg_isready via socket dir:"; pg_isready -h /var/run/postgresql -p 5432 2>&1 || true
-echo "-- pg_isready via localhost:5432:"; pg_isready -h localhost -p 5432 2>&1 || true
-echo "-- pg_isready via 127.0.0.200:5432:"; pg_isready -h 127.0.0.200 -p 5432 2>&1 || true
+echo "-- live connection test via PrismaClient against candidate hosts (see bin/diagnose-db.mjs; no credentials printed):"
+node bin/diagnose-db.mjs 2>&1 || true
 
 echo "==> Applying database migrations"
 # apps/api/generated-client (the pre-generated Prisma client, engine
