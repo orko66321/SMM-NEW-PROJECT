@@ -1,20 +1,59 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { OrderStatusValues } from "@smm/shared";
-import { getMyOrders } from "../../api/resources.js";
+import { apiErrorMessage } from "../../api/client.js";
+import { getMyOrders, requestOrderRefill } from "../../api/resources.js";
+import { useToast } from "../../components/ui/Toast.js";
 
 const statusTabs = ["ALL", ...OrderStatusValues] as const;
 
 type OrderRow = {
   id: string;
   createdAt: string;
-  service: { name: string };
+  service: { name: string; refillEnabled: boolean };
   link: string;
   charge: string;
   quantity: number;
   remains: number | null;
   status: string;
 };
+
+function isRefillEligible(o: OrderRow) {
+  return o.service.refillEnabled && (o.status === "COMPLETED" || o.status === "PARTIAL");
+}
+
+function RefillButton({ orderId }: { orderId: string }) {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const [done, setDone] = useState(false);
+
+  const mutation = useMutation({
+    mutationFn: () => requestOrderRefill(orderId),
+    onSuccess: () => {
+      setDone(true);
+      toast.push("Refill requested.", "success");
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+    onError: (err) => {
+      toast.push(apiErrorMessage(err, "Failed to request refill"), "error");
+    },
+  });
+
+  if (done) {
+    return <span className="badge shrink-0 bg-info/15 text-info">Refill requested</span>;
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => mutation.mutate()}
+      disabled={mutation.isPending}
+      className="btn-ghost !min-h-[36px] shrink-0 !px-3 !py-1.5 text-xs"
+    >
+      {mutation.isPending ? "Requesting…" : "Refill"}
+    </button>
+  );
+}
 
 function CopyIdButton({ id }: { id: string }) {
   const [copied, setCopied] = useState(false);
@@ -63,8 +102,11 @@ function OrderCard({ o }: { o: OrderRow }) {
       </div>
 
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-outline-variant pt-3">
-        <span className="min-w-0 truncate font-mono text-xs text-on-surface-variant">#{o.id.slice(0, 8)}</span>
-        <CopyIdButton id={o.id} />
+        <span className="flex min-w-0 items-center gap-1">
+          <span className="truncate font-mono text-xs text-on-surface-variant">#{o.id.slice(0, 8)}</span>
+          <CopyIdButton id={o.id} />
+        </span>
+        {isRefillEligible(o) && <RefillButton orderId={o.id} />}
       </div>
 
       <dl className="mt-1 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
@@ -142,14 +184,15 @@ export default function OrdersHistory() {
               <th className="px-4 py-3">Qty</th>
               <th className="px-4 py-3">Remains</th>
               <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
             {isLoading && (
-              <tr><td colSpan={8} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>
+              <tr><td colSpan={9} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>
             )}
             {!isLoading && data?.items.length === 0 && (
-              <tr><td colSpan={8} className="px-4 py-6 text-center text-on-surface-variant">No orders found.</td></tr>
+              <tr><td colSpan={9} className="px-4 py-6 text-center text-on-surface-variant">No orders found.</td></tr>
             )}
             {data?.items.map((o: OrderRow) => (
               <tr key={o.id}>
@@ -166,6 +209,7 @@ export default function OrdersHistory() {
                 <td className="px-4 py-3 font-mono">{o.quantity}</td>
                 <td className="px-4 py-3 font-mono">{o.remains ?? "—"}</td>
                 <td className="px-4 py-3"><span className="badge bg-primary/15 text-primary">{o.status}</span></td>
+                <td className="px-4 py-3">{isRefillEligible(o) && <RefillButton orderId={o.id} />}</td>
               </tr>
             ))}
           </tbody>

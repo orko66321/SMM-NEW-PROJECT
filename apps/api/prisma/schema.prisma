@@ -39,6 +39,13 @@ enum OrderMode {
   MANUAL
 }
 
+enum RefillStatus {
+  REQUESTED
+  IN_PROGRESS
+  COMPLETED
+  REJECTED
+}
+
 enum TicketStatus {
   OPEN
   PENDING_ADMIN
@@ -426,7 +433,29 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  refillRequests RefillRequest[]
+
   @@index([userId, createdAt])
+  @@index([status])
+}
+
+// A refill is a distinct provider-side request tied to a specific order, not
+// a field on Order — a service can legitimately be refilled more than once
+// (e.g. a partial re-drop after the first refill only partially restored the
+// count), and keeping the full history is what the admin/user refill log
+// actually needs to show.
+model RefillRequest {
+  id               String       @id @default(cuid())
+  orderId          String
+  order            Order        @relation(fields: [orderId], references: [id])
+  providerRefillId String?
+  status           RefillStatus @default(REQUESTED)
+  note             String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId])
   @@index([status])
 }
 

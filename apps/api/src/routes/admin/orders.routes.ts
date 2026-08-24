@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { adminOrderListQuerySchema, updateOrderStatusSchema } from "@smm/shared";
+import { adminOrderListQuerySchema, adminRefillListQuerySchema, resolveManualRefillSchema, updateOrderStatusSchema } from "@smm/shared";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
-import { listOrdersForAdmin, updateOrderStatus } from "../../services/order.service.js";
+import { listOrdersForAdmin, listRefillsForAdmin, resolveManualRefill, updateOrderStatus } from "../../services/order.service.js";
 import { writeAuditLog } from "../../services/audit.service.js";
 
 export const adminOrdersRouter = Router();
@@ -36,5 +36,36 @@ adminOrdersRouter.patch(
       ip: req.ip,
     });
     res.json({ order: { ...order, charge: order.charge.toString(), providerCost: order.providerCost.toString() } });
+  }),
+);
+
+adminOrdersRouter.get(
+  "/refills",
+  validate(adminRefillListQuerySchema, "query"),
+  asyncHandler(async (req, res) => {
+    const { page, pageSize } = req.query as unknown as { page: number; pageSize: number };
+    const status = typeof req.query.status === "string" ? req.query.status : undefined;
+    const result = await listRefillsForAdmin(page, pageSize, status);
+    res.json(result);
+  }),
+);
+
+// Resolves a manual-mode refill (no provider to poll — see requestRefill in
+// order.service.ts). A provider-submitted refill instead resolves itself via
+// cron/pollRefillStatus.ts and is never touched through this endpoint.
+adminOrdersRouter.patch(
+  "/refills/:id",
+  validate(resolveManualRefillSchema),
+  asyncHandler(async (req, res) => {
+    const refill = await resolveManualRefill(req.params.id!, req.body);
+    await writeAuditLog({
+      actorId: req.user!.id,
+      action: "refill.resolve",
+      targetType: "RefillRequest",
+      targetId: req.params.id!,
+      after: req.body,
+      ip: req.ip,
+    });
+    res.json({ refill });
   }),
 );

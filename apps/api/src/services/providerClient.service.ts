@@ -129,6 +129,42 @@ export async function getProviderBalance(provider: { id: string; apiUrl: string;
   return postAction<{ balance: string; currency: string }>(provider, "balance", {});
 }
 
+/** JAP-standard `action=refill` — requests a refill for one already-placed provider order. */
+export async function submitProviderRefill(
+  provider: { id: string; apiUrl: string; apiKeyCiphertext: string },
+  providerOrderId: string,
+): Promise<string> {
+  const res = await postAction<{ refill?: string | number; error?: string }>(provider, "refill", {
+    order: providerOrderId,
+  });
+  if (res.refill === undefined) {
+    throw AppError.badRequest("Provider refill request failed: unexpected response shape");
+  }
+  return String(res.refill);
+}
+
+/** JAP-standard `action=refill_status` — polled by cron/pollRefillStatus.ts. */
+export async function getProviderRefillStatus(
+  provider: { id: string; apiUrl: string; apiKeyCiphertext: string },
+  providerRefillId: string,
+) {
+  return postAction<{ status: string }>(provider, "refill_status", { refill: providerRefillId });
+}
+
+/**
+ * Same "unknown stays non-terminal" philosophy as mapProviderOrderStatus
+ * above — we'd rather keep polling a refill we don't understand than wrongly
+ * mark it completed or rejected.
+ */
+export function mapProviderRefillStatus(raw: string): "IN_PROGRESS" | "COMPLETED" | "REJECTED" {
+  const normalized = raw.trim().toLowerCase();
+  if (normalized === "completed") return "COMPLETED";
+  if (normalized === "rejected" || normalized === "error" || normalized === "canceled" || normalized === "cancelled") {
+    return "REJECTED";
+  }
+  return "IN_PROGRESS";
+}
+
 /**
  * Maps a provider's free-text status string (the JAP-standard dialect isn't
  * strictly enumerated across implementations) to our own OrderStatus enum.

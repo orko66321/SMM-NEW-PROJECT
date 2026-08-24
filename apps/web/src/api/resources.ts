@@ -11,6 +11,7 @@ import type {
   NoticeInput,
   PaymentGatewayKey,
   PaymentMethodInput,
+  ResolveManualRefillInput,
   ServiceInput,
   UpdateGatewayConfigInput,
   UpdateOrderStatusInput,
@@ -41,6 +42,8 @@ export const placeOrder = (input: CreateOrderInput, idempotencyKey: string) =>
     .then((r) => r.data.order);
 export const getMyOrders = (params: { page?: number; pageSize?: number; status?: string }) =>
   apiClient.get("/orders", { params }).then((r) => r.data);
+export const requestOrderRefill = (orderId: string) =>
+  apiClient.post(`/orders/${orderId}/refill`).then((r) => r.data.refill);
 
 // ── Tickets ──────────────────────────────────────────────────────────────
 export const getMyTickets = (params: { page?: number; pageSize?: number }) =>
@@ -74,6 +77,10 @@ export const getAdminOrders = (params: { page?: number; pageSize?: number; statu
   apiClient.get("/admin/orders", { params }).then((r) => r.data);
 export const updateAdminOrderStatus = (id: string, input: UpdateOrderStatusInput) =>
   apiClient.patch(`/admin/orders/${id}/status`, input).then((r) => r.data.order);
+export const getAdminRefills = (params: { page?: number; pageSize?: number; status?: string }) =>
+  apiClient.get("/admin/orders/refills", { params }).then((r) => r.data);
+export const resolveAdminRefill = (id: string, input: ResolveManualRefillInput) =>
+  apiClient.patch(`/admin/orders/refills/${id}`, input).then((r) => r.data.refill);
 
 export const getAdminDeposits = (params: { page?: number; pageSize?: number; status?: string }) =>
   apiClient.get("/admin/deposits", { params }).then((r) => r.data);

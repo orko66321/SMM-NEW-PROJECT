@@ -5,8 +5,12 @@ packages/*/node_modules/
 
 # secrets — never commit
 .env
-.env.*.local
+.env.*
 !.env.example
+
+# deployment backups — large binaries, never commit
+*.zip
+old_cpanel_backup*
 
 # build output
 dist/

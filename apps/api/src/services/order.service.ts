@@ -1,9 +1,10 @@
 import crypto from "node:crypto";
 import { Prisma } from "@prisma/client";
-import type { CreateOrderInput, UpdateOrderStatusInput } from "@smm/shared";
+import type { CreateOrderInput, ResolveManualRefillInput, UpdateOrderStatusInput } from "@smm/shared";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import { adjustWalletBalance } from "./wallet.service.js";
+import { getProviderOrThrow, submitProviderRefill } from "./providerClient.service.js";
 
 function requestFingerprint(input: CreateOrderInput): string {
   return crypto.createHash("sha256").update(JSON.stringify(input)).digest("hex");
@@ -122,7 +123,7 @@ export async function listOrdersForUser(userId: string, page: number, pageSize: 
   const [items, total] = await Promise.all([
     prisma.order.findMany({
       where,
-      include: { service: { select: { name: true } } },
+      include: { service: { select: { name: true, refillEnabled: true } } },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -223,4 +224,98 @@ export async function findActiveProviderOrders(limit = 200) {
     include: { service: { include: { provider: true } } },
     take: limit,
   });
+}
+
+// ── Refills ────────────────────────────────────────────────────────────────
+
+/**
+ * Requests a refill for a delivered order. Only the order's own owner may
+ * call this (enforced by the `userId` match below, mirroring every other
+ * user-scoped lookup in this file) and only once per order at a time — a
+ * second request while one is already REQUESTED/IN_PROGRESS is rejected
+ * rather than silently creating a duplicate provider-side request.
+ *
+ * An AUTO order that actually reached a provider is submitted immediately
+ * (action=refill); everything else (MANUAL mode, or an AUTO order that
+ * somehow never got a providerOrderId) drops into the same admin-resolved
+ * queue shape used for manual deposits — see resolveManualRefill below.
+ */
+export async function requestRefill(userId: string, orderId: string) {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { service: true },
+  });
+  if (!order || order.userId !== userId) {
+    throw AppError.notFound("Order not found");
+  }
+  if (!order.service.refillEnabled) {
+    throw AppError.badRequest("This service is not eligible for refill");
+  }
+  if (order.status !== "COMPLETED" && order.status !== "PARTIAL") {
+    throw AppError.badRequest("Only completed or partially-delivered orders can be refilled");
+  }
+
+  const pending = await prisma.refillRequest.findFirst({
+    where: { orderId: order.id, status: { in: ["REQUESTED", "IN_PROGRESS"] } },
+  });
+  if (pending) {
+    throw AppError.conflict("A refill request is already in progress for this order");
+  }
+
+  if (order.mode === "AUTO" && order.providerOrderId && order.service.providerId) {
+    const provider = await getProviderOrThrow(order.service.providerId);
+    const providerRefillId = await submitProviderRefill(provider, order.providerOrderId);
+    return prisma.refillRequest.create({
+      data: { orderId: order.id, providerRefillId, status: "IN_PROGRESS" },
+    });
+  }
+
+  return prisma.refillRequest.create({ data: { orderId: order.id, status: "REQUESTED" } });
+}
+
+export async function listRefillsForOrder(userId: string, orderId: string) {
+  const order = await prisma.order.findUnique({ where: { id: orderId }, select: { userId: true } });
+  if (!order || order.userId !== userId) throw AppError.notFound("Order not found");
+  return prisma.refillRequest.findMany({ where: { orderId }, orderBy: { createdAt: "desc" } });
+}
+
+export async function listRefillsForAdmin(page: number, pageSize: number, status?: string) {
+  const where = status ? { status: status as never } : {};
+  const [items, total] = await Promise.all([
+    prisma.refillRequest.findMany({
+      where,
+      include: { order: { include: { service: { select: { name: true } }, user: { select: { username: true } } } } },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.refillRequest.count({ where }),
+  ]);
+  return { items, total, page, pageSize };
+}
+
+/** Admin hand-resolves a REQUESTED/IN_PROGRESS refill with no provider to poll (manual-mode orders). */
+export async function resolveManualRefill(refillId: string, input: ResolveManualRefillInput) {
+  const refill = await prisma.refillRequest.findUnique({ where: { id: refillId } });
+  if (!refill) throw AppError.notFound("Refill request not found");
+  if (refill.status !== "REQUESTED" && refill.status !== "IN_PROGRESS") {
+    throw AppError.conflict("This refill request has already been resolved");
+  }
+  return prisma.refillRequest.update({
+    where: { id: refillId },
+    data: { status: input.status, note: input.note },
+  });
+}
+
+/** Provider-submitted refills still awaiting a terminal status — what cron/pollRefillStatus.ts reconciles. */
+export async function findPollableRefills(limit = 200) {
+  return prisma.refillRequest.findMany({
+    where: { status: "IN_PROGRESS", providerRefillId: { not: null } },
+    include: { order: { include: { service: { include: { provider: true } } } } },
+    take: limit,
+  });
+}
+
+export async function updateRefillStatus(refillId: string, status: "COMPLETED" | "REJECTED") {
+  return prisma.refillRequest.update({ where: { id: refillId }, data: { status } });
 }

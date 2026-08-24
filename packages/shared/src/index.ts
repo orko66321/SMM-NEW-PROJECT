@@ -31,6 +31,9 @@ export type DepositStatus = (typeof DepositStatusValues)[number];
 export const UserStatusValues = ["ACTIVE", "SUSPENDED"] as const;
 export type UserStatus = (typeof UserStatusValues)[number];
 
+export const RefillStatusValues = ["REQUESTED", "IN_PROGRESS", "COMPLETED", "REJECTED"] as const;
+export type RefillStatus = (typeof RefillStatusValues)[number];
+
 // ── Common ───────────────────────────────────────────────────────────────
 
 export const paginationQuerySchema = z.object({
@@ -65,6 +68,11 @@ export const adminOrderListQuerySchema = paginationQuerySchema.extend({
   search: searchQueryField,
 });
 export type AdminOrderListQuery = z.infer<typeof adminOrderListQuerySchema>;
+
+export const adminRefillListQuerySchema = paginationQuerySchema.extend({
+  status: z.enum(RefillStatusValues).optional(),
+});
+export type AdminRefillListQuery = z.infer<typeof adminRefillListQuerySchema>;
 
 export const depositListQuerySchema = paginationQuerySchema.extend({
   status: z.enum(DepositStatusValues).optional(),
@@ -213,6 +221,15 @@ export const updateOrderStatusSchema = z.object({
   remains: z.coerce.number().int().nonnegative().optional(),
 });
 export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;
+
+// A manual-mode (or never-auto-submitted) refill has no provider to poll —
+// an admin resolves it by hand, same REQUESTED-queue shape as manual deposit
+// review (see reviewDeposit / admin/deposits.routes.ts).
+export const resolveManualRefillSchema = z.object({
+  status: z.enum(["COMPLETED", "REJECTED"]),
+  note: z.string().trim().max(500).optional(),
+});
+export type ResolveManualRefillInput = z.infer<typeof resolveManualRefillSchema>;
 
 // ── Tickets ──────────────────────────────────────────────────────────────
 

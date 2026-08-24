@@ -13,6 +13,7 @@ export async function resetDb() {
   await prisma.adminAuditLog.deleteMany();
   await prisma.ticketMessage.deleteMany();
   await prisma.ticket.deleteMany();
+  await prisma.refillRequest.deleteMany();
   await prisma.order.deleteMany();
   await prisma.couponRedemption.deleteMany();
   await prisma.deposit.deleteMany();
@@ -54,6 +55,7 @@ export async function createCategoryAndService(
     providerId: string;
     backupProviderId: string;
     providerServiceId: string;
+    refillEnabled: boolean;
   }> = {},
 ) {
   const category = await prisma.serviceCategory.create({
@@ -72,6 +74,7 @@ export async function createCategoryAndService(
       providerId: overrides.providerId,
       backupProviderId: overrides.backupProviderId,
       providerServiceId: overrides.providerServiceId ?? "1",
+      refillEnabled: overrides.refillEnabled ?? false,
     },
   });
   return { category, service };

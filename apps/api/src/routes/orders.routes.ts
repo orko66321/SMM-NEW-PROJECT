@@ -5,7 +5,7 @@ import { validate } from "../middleware/validate.js";
 import { orderLimiter } from "../middleware/rateLimit.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
-import { createOrder, listOrdersForUser } from "../services/order.service.js";
+import { createOrder, listOrdersForUser, listRefillsForOrder, requestRefill } from "../services/order.service.js";
 
 export const ordersRouter = Router();
 ordersRouter.use(authenticate);
@@ -35,5 +35,22 @@ ordersRouter.get(
       ...result,
       items: result.items.map((o) => ({ ...o, charge: o.charge.toString(), providerCost: o.providerCost.toString() })),
     });
+  }),
+);
+
+ordersRouter.post(
+  "/:id/refill",
+  orderLimiter,
+  asyncHandler(async (req, res) => {
+    const refill = await requestRefill(req.user!.id, req.params.id!);
+    res.status(201).json({ refill });
+  }),
+);
+
+ordersRouter.get(
+  "/:id/refills",
+  asyncHandler(async (req, res) => {
+    const refills = await listRefillsForOrder(req.user!.id, req.params.id!);
+    res.json({ items: refills });
   }),
 );
