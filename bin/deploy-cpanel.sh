@@ -70,6 +70,17 @@ set -a
 source "$APP_ROOT/.env"
 set +a
 
+echo "==> Server diagnostics (plain files/commands only, no WASM involved)"
+# Moved to right after install, before any build step — apps/web's own
+# build just OOM'd on a WebAssembly instantiation too (esbuild's WASM
+# fallback, most likely), not just Prisma's, so this now needs to be
+# captured before ANY build attempt, not just before the Prisma one.
+cat /etc/os-release 2>&1 || true
+echo "---"
+free -h 2>&1 || true
+echo "---"
+ulimit -a 2>&1 || true
+
 echo "==> Building packages/shared and apps/web"
 # apps/web doesn't touch Prisma at all — built and published before
 # anything Prisma-related runs, so a backend-side failure below (still
@@ -81,15 +92,6 @@ echo "==> Publishing the frontend build to public_html"
 mkdir -p "$PUBLIC_HTML"
 find "$PUBLIC_HTML" -mindepth 1 -maxdepth 1 -not -name '.well-known' -exec rm -rf {} +
 cp -a apps/web/dist/. "$PUBLIC_HTML"/
-
-echo "==> Server diagnostics (plain files/commands only, no Prisma involved)"
-cat /etc/os-release 2>&1 || true
-echo "---"
-openssl version -a 2>&1 | head -5 || true
-echo "---"
-free -h 2>&1 || true
-echo "---"
-ulimit -a 2>&1 || true
 
 echo "==> Generating the Prisma client"
 # Must run before building apps/api — tsc needs the generated types
