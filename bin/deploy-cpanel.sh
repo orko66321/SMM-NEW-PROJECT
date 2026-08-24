@@ -48,7 +48,11 @@ set -u
 cd "$APP_ROOT"
 
 echo "==> Installing dependencies"
-npm ci
+# Setup Node.js App's "Application mode: Production" makes the activated
+# venv export NODE_ENV=production, which makes plain `npm ci` silently
+# skip devDependencies — that's exactly where typescript/vite/eslint live,
+# so the build below needs them installed regardless of NODE_ENV.
+npm ci --include=dev
 
 echo "==> Building packages/shared, apps/api, apps/web"
 npm run build --workspace=packages/shared
