@@ -47,6 +47,27 @@ describe("providerClient (JAP-standard reseller API)", () => {
     }
   });
 
+  it("normalizes a provider's numeric service/rate/min/max fields to strings (found live against smmgen.com/PerfectPanel, which returns real JSON numbers, not the JAP-standard dialect's implied strings)", async () => {
+    const mock = await startMockProvider({
+      // Deliberately raw numbers, not strings — exactly what broke Map
+      // lookups keyed on providerServiceId before this was fixed.
+      services: () => [{ service: 18801, name: "Numeric ID Service", category: "Facebook", rate: 0.096, min: 100, max: 100000, refill: false, cancel: true }],
+    });
+    try {
+      const provider = await createProvider({ apiUrl: mock.url });
+      const services = await listProviderServices(provider);
+      expect(services).toHaveLength(1);
+      const entry = services[0]!;
+      expect(entry.service).toBe("18801");
+      expect(typeof entry.service).toBe("string");
+      expect(entry.rate).toBe("0.096");
+      expect(entry.min).toBe("100");
+      expect(entry.max).toBe("100000");
+    } finally {
+      await mock.close();
+    }
+  });
+
   it("throws on a provider error response and writes a ProviderSyncLog(FAILURE) row", async () => {
     const mock = await startMockProvider({
       add: () => ({ error: "Insufficient provider balance" }),

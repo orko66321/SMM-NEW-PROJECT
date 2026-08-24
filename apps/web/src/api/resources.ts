@@ -1,5 +1,6 @@
 import type {
   AdjustWalletInput,
+  BulkImportProviderServicesInput,
   ChangePasswordInput,
   CouponInput,
   CreateGatewayDepositInput,
@@ -59,7 +60,7 @@ export const updateAdminUser = (id: string, input: UpdateUserInput) =>
 export const adjustUserWallet = (userId: string, input: AdjustWalletInput) =>
   apiClient.post(`/admin/wallet/${userId}/adjust`, input).then((r) => r.data);
 
-export const getAdminServices = (params: { page?: number; pageSize?: number }) =>
+export const getAdminServices = (params: { page?: number; pageSize?: number; categoryId?: string; search?: string }) =>
   apiClient.get("/admin/services", { params }).then((r) => r.data);
 export const createAdminService = (input: ServiceInput) => apiClient.post("/admin/services", input).then((r) => r.data.service);
 export const updateAdminService = (id: string, input: Partial<ServiceInput>) =>
@@ -95,6 +96,13 @@ export const updateAdminProvider = (id: string, input: UpdateProviderInput) =>
   apiClient.put(`/admin/providers/${id}`, input).then((r) => r.data.provider);
 export const getAdminProviderLogs = (id: string) => apiClient.get(`/admin/providers/${id}/logs`).then((r) => r.data.items);
 export const syncAdminProvider = (id: string) => apiClient.post(`/admin/providers/${id}/sync`).then((r) => r.data);
+export const deleteAdminProvider = (id: string) => apiClient.delete(`/admin/providers/${id}`);
+
+// ── Bulk service import (one-click catalog import from a provider) ──────
+export const getAdminProviderImportPreview = (id: string) =>
+  apiClient.get(`/admin/providers/${id}/import/preview`).then((r) => r.data);
+export const bulkImportAdminProviderServices = (id: string, input: BulkImportProviderServicesInput) =>
+  apiClient.post(`/admin/providers/${id}/import`, input).then((r) => r.data);
 
 // ── Payment gateways (Phase 2) ───────────────────────────────────────────
 export const getAdminGatewayConfigs = () => apiClient.get("/admin/payment-gateways").then((r) => r.data.items);

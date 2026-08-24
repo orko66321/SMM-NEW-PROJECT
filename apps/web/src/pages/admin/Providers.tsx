@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createAdminProvider,
+  deleteAdminProvider,
   getAdminProviderLogs,
   getAdminProviders,
   syncAdminProvider,
@@ -71,6 +73,18 @@ export default function AdminProviders() {
     }
   }
 
+  async function onDelete(p: ProviderItem) {
+    if (!window.confirm(`"${p.name}" প্রোভাইডারটি স্থায়ীভাবে মুছে ফেলবেন?`)) return;
+    try {
+      await deleteAdminProvider(p.id);
+      toast.push("Provider deleted.", "success");
+      if (selectedId === p.id) setSelectedId(null);
+      refresh();
+    } catch (err) {
+      toast.push(apiErrorMessage(err, "Failed to delete provider — it may still have services mapped to it"), "error");
+    }
+  }
+
   return (
     <div className="space-y-6">
       <h1 className="text-xl font-bold">Providers</h1>
@@ -103,10 +117,14 @@ export default function AdminProviders() {
                 <td className="px-4 py-3 text-xs">{p.lastSyncAt ? new Date(p.lastSyncAt).toLocaleString() : "Never"}</td>
                 <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-end gap-2">
+                    <Link to={`/admin/providers/${p.id}/import`} className="btn-primary !px-3 !py-1.5 text-xs">
+                      Import Services
+                    </Link>
                     <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={() => onSync(p.id)}>Sync now</button>
                     <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={() => onToggleStatus(p)}>
                       {p.status === "ACTIVE" ? "Disable" : "Enable"}
                     </button>
+                    <button className="btn-ghost !px-3 !py-1.5 text-xs text-error" onClick={() => onDelete(p)}>Delete</button>
                   </div>
                 </td>
               </tr>

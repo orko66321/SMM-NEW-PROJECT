@@ -33,6 +33,7 @@ import AdminDeposits from "./pages/admin/Deposits.js";
 import AdminTickets from "./pages/admin/Tickets.js";
 import AdminTicketDetail from "./pages/admin/TicketDetail.js";
 import AdminProviders from "./pages/admin/Providers.js";
+import AdminProviderImport from "./pages/admin/ProviderImport.js";
 import AdminPaymentGateways from "./pages/admin/PaymentGateways.js";
 import AdminPaymentMethods from "./pages/admin/PaymentMethods.js";
 import AdminSettings from "./pages/admin/Settings.js";
@@ -91,6 +92,7 @@ export default function App() {
           <Route path="tickets" element={<AdminTickets />} />
           <Route path="tickets/:id" element={<AdminTicketDetail />} />
           <Route path="providers" element={<AdminProviders />} />
+          <Route path="providers/:id/import" element={<AdminProviderImport />} />
           <Route path="payment-gateways" element={<AdminPaymentGateways />} />
           <Route path="payment-methods" element={<AdminPaymentMethods />} />
           <Route path="settings" element={<AdminSettings />} />

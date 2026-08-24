@@ -27,6 +27,12 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
 
     const res = await request(app).get("/api/public/settings");
     expect(res.status).toBe(200);
+    // googleAuthEnabled is intentionally not asserted to a specific value
+    // here — it reflects whatever real GOOGLE_CLIENT_ID/SECRET happen to be
+    // configured in this environment's .env (an admin may have legitimately
+    // set them up), and this test's job is only to prove SMTP secrets never
+    // leak. See tests/googleAuth.test.ts and googleAuthDisabled.test.ts for
+    // the two deterministic, env-mocked cases of that field itself.
     expect(res.body).toEqual({
       siteName: "Test Panel",
       whatsappEnabled: true,
@@ -35,12 +41,7 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
       liveChatWidgetId: null,
       usdToBdtRate: "120",
       defaultCurrency: "USD",
-      // GOOGLE_CLIENT_ID/SECRET are unset in the test environment (see
-      // tests/googleAuth.test.ts for the "configured" case, and
-      // tests/googleAuthDisabled.test.ts for this exact env's behavior on
-      // the /api/auth/google endpoint itself) — this just documents that
-      // the field is present in the public settings payload either way.
-      googleAuthEnabled: false,
+      googleAuthEnabled: expect.any(Boolean),
     });
     expect(JSON.stringify(res.body)).not.toContain("super-secret-password");
     expect(JSON.stringify(res.body)).not.toContain("smtp");

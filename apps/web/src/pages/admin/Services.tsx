@@ -31,7 +31,15 @@ export default function AdminServices() {
   const queryClient = useQueryClient();
   const { data: categories } = useQuery({ queryKey: ["admin-categories"], queryFn: getAdminCategories });
   const { data: providers } = useQuery({ queryKey: ["admin-providers"], queryFn: getAdminProviders });
-  const { data: services } = useQuery({ queryKey: ["admin-services"], queryFn: () => getAdminServices({ page: 1, pageSize: 100 }) });
+
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const pageSize = 50;
+  const { data: services } = useQuery({
+    queryKey: ["admin-services", page, search, categoryFilter],
+    queryFn: () => getAdminServices({ page, pageSize, categoryId: categoryFilter || undefined, search: search || undefined }),
+  });
 
   const [form, setForm] = useState(emptyForm);
   const [newCategory, setNewCategory] = useState({ name: "", platform: "" });
@@ -41,6 +49,8 @@ export default function AdminServices() {
     queryClient.invalidateQueries({ queryKey: ["admin-services"] });
     queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
   }
+
+  const totalPages = services ? Math.max(1, Math.ceil(services.total / pageSize)) : 1;
 
   async function onCreateCategory(e: FormEvent) {
     e.preventDefault();
@@ -104,12 +114,39 @@ export default function AdminServices() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold">Services</h1>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-xl font-bold">Services</h1>
+        {services && <p className="text-sm text-on-surface-variant">{services.total.toLocaleString()} total</p>}
+      </div>
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <input
+          className="input-field w-full sm:max-w-xs"
+          placeholder="নাম বা Product Code দিয়ে খুঁজুন…"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
+        />
+        <select
+          className="input-field w-full sm:max-w-xs"
+          value={categoryFilter}
+          onChange={(e) => {
+            setCategoryFilter(e.target.value);
+            setPage(1);
+          }}
+        >
+          <option value="">সব ক্যাটাগরি</option>
+          {categories?.map((c: { id: string; name: string }) => <option key={c.id} value={c.id}>{c.name}</option>)}
+        </select>
+      </div>
 
       <div className="card overflow-x-auto p-0">
-        <table className="w-full min-w-[720px] text-sm">
+        <table className="w-full min-w-[820px] text-sm">
           <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
             <tr>
+              <th className="px-4 py-3">Product Code</th>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Category</th>
               <th className="px-4 py-3">Sell / 1000</th>
@@ -121,8 +158,15 @@ export default function AdminServices() {
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
-            {services?.items.map((s: { id: string; name: string; category: { name: string }; sellPricePer1000: string; providerCostPer1000: string; minQuantity: number; maxQuantity: number; status: string; autoSubmit: boolean; providerId: string | null }) => (
+            {services?.items.map((s: { id: string; name: string; category: { name: string }; sellPricePer1000: string; providerCostPer1000: string; minQuantity: number; maxQuantity: number; status: string; autoSubmit: boolean; providerId: string | null; providerServiceId: string | null }) => (
               <tr key={s.id}>
+                <td className="px-4 py-3">
+                  {s.providerServiceId ? (
+                    <span className="badge bg-surface-container-high font-mono text-on-surface-variant">{s.providerServiceId}</span>
+                  ) : (
+                    <span className="text-xs text-on-surface-variant">—</span>
+                  )}
+                </td>
                 <td className="px-4 py-3">{s.name}</td>
                 <td className="px-4 py-3 text-on-surface-variant">{s.category.name}</td>
                 <td className="px-4 py-3 font-mono text-success">${s.sellPricePer1000}</td>
@@ -151,9 +195,20 @@ export default function AdminServices() {
                 </td>
               </tr>
             ))}
+            {services?.items.length === 0 && (
+              <tr><td colSpan={9} className="px-4 py-8 text-center text-on-surface-variant">কোনো সার্ভিস পাওয়া যায়নি।</td></tr>
+            )}
           </tbody>
         </table>
       </div>
+
+      {services && totalPages > 1 && (
+        <div className="flex items-center justify-center gap-3 text-sm">
+          <button className="btn-ghost !px-3 !py-1.5 text-xs" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>← Prev</button>
+          <span className="text-on-surface-variant">Page {page} / {totalPages}</span>
+          <button className="btn-ghost !px-3 !py-1.5 text-xs" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>Next →</button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <form onSubmit={onCreateCategory} className="card space-y-3">

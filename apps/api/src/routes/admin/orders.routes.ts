@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { paginationQuerySchema, updateOrderStatusSchema } from "@smm/shared";
+import { adminOrderListQuerySchema, updateOrderStatusSchema } from "@smm/shared";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { listOrdersForAdmin, updateOrderStatus } from "../../services/order.service.js";
@@ -9,7 +9,7 @@ export const adminOrdersRouter = Router();
 
 adminOrdersRouter.get(
   "/",
-  validate(paginationQuerySchema, "query"),
+  validate(adminOrderListQuerySchema, "query"),
   asyncHandler(async (req, res) => {
     const { page, pageSize } = req.query as unknown as { page: number; pageSize: number };
     const status = typeof req.query.status === "string" ? req.query.status : undefined;

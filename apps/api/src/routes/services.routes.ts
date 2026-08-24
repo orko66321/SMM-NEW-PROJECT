@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { paginationQuerySchema } from "@smm/shared";
+import { serviceListQuerySchema } from "@smm/shared";
 import { authenticate } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -17,7 +17,7 @@ servicesRouter.get(
 
 servicesRouter.get(
   "/",
-  validate(paginationQuerySchema, "query"),
+  validate(serviceListQuerySchema, "query"),
   asyncHandler(async (req, res) => {
     const { page, pageSize } = req.query as unknown as { page: number; pageSize: number };
     const categoryId = typeof req.query.categoryId === "string" ? req.query.categoryId : undefined;

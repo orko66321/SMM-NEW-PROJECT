@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createOrderSchema, paginationQuerySchema } from "@smm/shared";
+import { createOrderSchema, orderListQuerySchema } from "@smm/shared";
 import { authenticate } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
 import { orderLimiter } from "../middleware/rateLimit.js";
@@ -26,7 +26,7 @@ ordersRouter.post(
 
 ordersRouter.get(
   "/",
-  validate(paginationQuerySchema, "query"),
+  validate(orderListQuerySchema, "query"),
   asyncHandler(async (req, res) => {
     const { page, pageSize } = req.query as unknown as { page: number; pageSize: number };
     const status = typeof req.query.status === "string" ? req.query.status : undefined;

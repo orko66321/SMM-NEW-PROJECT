@@ -39,6 +39,48 @@ export const paginationQuerySchema = z.object({
 });
 export type PaginationQuery = z.infer<typeof paginationQuerySchema>;
 
+// Every "list" route that also accepts a filter (status/search/categoryId)
+// beyond page/pageSize needs its OWN schema, not the bare
+// paginationQuerySchema above — zod objects strip unrecognized keys by
+// default, so validating against paginationQuerySchema silently drops
+// `search`/`status`/`categoryId` from req.query before the route handler
+// ever reads them (found while adding service search-by-product-code; it
+// turned out every filter box wired this way — Orders, Deposits, Tickets,
+// Users, Services — was already silently non-functional the same way).
+const searchQueryField = z.string().trim().max(200).optional();
+
+export const serviceListQuerySchema = paginationQuerySchema.extend({
+  categoryId: z.string().optional(),
+  search: searchQueryField,
+});
+export type ServiceListQuery = z.infer<typeof serviceListQuerySchema>;
+
+export const orderListQuerySchema = paginationQuerySchema.extend({
+  status: z.enum(OrderStatusValues).optional(),
+});
+export type OrderListQuery = z.infer<typeof orderListQuerySchema>;
+
+export const adminOrderListQuerySchema = paginationQuerySchema.extend({
+  status: z.enum(OrderStatusValues).optional(),
+  search: searchQueryField,
+});
+export type AdminOrderListQuery = z.infer<typeof adminOrderListQuerySchema>;
+
+export const depositListQuerySchema = paginationQuerySchema.extend({
+  status: z.enum(DepositStatusValues).optional(),
+});
+export type DepositListQuery = z.infer<typeof depositListQuerySchema>;
+
+export const ticketListQuerySchema = paginationQuerySchema.extend({
+  status: z.enum(TicketStatusValues).optional(),
+});
+export type TicketListQuery = z.infer<typeof ticketListQuerySchema>;
+
+export const userListQuerySchema = paginationQuerySchema.extend({
+  search: searchQueryField,
+});
+export type UserListQuery = z.infer<typeof userListQuerySchema>;
+
 // Usernames: letters/numbers/underscore only, 3-32 chars — avoids
 // homoglyph/whitespace tricks in a field rendered back to admins.
 const usernameSchema = z
@@ -216,6 +258,25 @@ export const updateProviderSchema = z.object({
   status: z.enum(["ACTIVE", "DISABLED"]).optional(),
 });
 export type UpdateProviderInput = z.infer<typeof updateProviderSchema>;
+
+// Bulk service import — pulls a provider's full JAP-standard catalog and
+// creates Service (+ auto-created ServiceCategory) rows from it in one
+// batch. See services/providerImport.service.ts.
+export const bulkImportProviderServicesSchema = z.object({
+  // The provider's own service ids (ProviderServiceEntry.service), not our
+  // cuids. Capped well above any real catalog seen so far (my.smmgen.com
+  // alone has ~7,800 services) rather than at a number that felt generous
+  // in the abstract — the request body itself is tiny either way (just ids,
+  // not full service objects), so this is a sanity ceiling against a
+  // malformed/malicious request, not a real capacity constraint.
+  providerServiceIds: z.array(z.string().trim().min(1)).min(1).max(50_000),
+  markupPercent: z.coerce.number().min(0).max(1000).default(20),
+  // Defaults false — same "opt-in per service, never trust an unverified
+  // provider mapping" rule as serviceObjectSchema.autoSubmit. A bulk import
+  // is exactly the kind of unverified mapping that rule exists for.
+  autoSubmit: z.boolean().default(false),
+});
+export type BulkImportProviderServicesInput = z.infer<typeof bulkImportProviderServicesSchema>;
 
 // ── Payment gateways (Phase 2 framework; Phase 3 adds ZiniPay) ─────────────
 

@@ -37,7 +37,11 @@ export function createApp() {
     }),
   );
 
-  app.use(express.json({ limit: "1mb" }));
+  // 1mb was fine for every other route, but bulk-selecting a large real
+  // provider catalog (my.smmgen.com alone has ~7,800 services) for import
+  // can get close to it on just the id array — 5mb gives real headroom
+  // without meaningfully changing this app's request-size risk profile.
+  app.use(express.json({ limit: "5mb" }));
   app.use(cookieParser());
   app.use(pinoHttp({ logger }));
   app.use(generalLimiter);

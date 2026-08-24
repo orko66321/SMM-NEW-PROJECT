@@ -47,6 +47,28 @@ export async function updateProvider(id: string, input: UpdateProviderInput) {
   return { ...provider, balance: provider.balance.toString() };
 }
 
+/**
+ * A provider with any Service mapped to it (as primary or backup) can't be
+ * hard-deleted — same "disable/reassign instead" pattern as
+ * paymentMethod.service.ts's deletePaymentMethod and coupon.service.ts's
+ * deleteCoupon, for the same reason: those Service rows would otherwise be
+ * orphaned (auto-fulfillment pointing at a provider that no longer exists).
+ * ProviderSyncLog rows cascade-delete automatically (see schema.prisma).
+ */
+export async function deleteProvider(id: string): Promise<void> {
+  const existing = await prisma.provider.findUnique({
+    where: { id },
+    include: { _count: { select: { services: true, backupServices: true } } },
+  });
+  if (!existing) throw AppError.notFound("Provider not found");
+  if (existing._count.services > 0 || existing._count.backupServices > 0) {
+    throw AppError.conflict(
+      "This provider has services mapped to it — reassign or delete those services first, or disable the provider instead",
+    );
+  }
+  await prisma.provider.delete({ where: { id } });
+}
+
 export async function listProviderSyncLogs(providerId: string, limit = 50) {
   return prisma.providerSyncLog.findMany({
     where: { providerId },

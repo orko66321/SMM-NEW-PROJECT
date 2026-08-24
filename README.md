@@ -23,8 +23,21 @@ widgets, and Recharts analytics on the admin dashboard. On top of that, **Google
 Google") shipped full-stack: server-side ID-token verification (`google-auth-library`), auto-registration
 with an initialized wallet for new Google users, account linking by email for existing ones, and a
 `GoogleLogin` button on both auth pages that simply doesn't render when `GOOGLE_CLIENT_ID`/`SECRET` aren't
-configured — no crash, no dead button. Everything described here is real, tested, runnable code, not a
-mockup. Modules that are **schema-only** are listed at the bottom.
+configured — no crash, no dead button. Providers also gained **one-click bulk catalog import** and
+**deletion**: an admin Import Services page pulls a provider's entire JAP-standard catalog, previews it
+with new/already-imported/invalid counts before anything is created, pre-selects everything importable,
+and creates `Service` rows (auto-creating/deduping `ServiceCategory` rows by name, with platform
+auto-detected) in one batch with an admin-set markup % — safe to re-run, since `Service` now has a
+`@@unique([providerId, providerServiceId])` constraint so a repeat import can never duplicate a row.
+`DELETE /api/admin/providers/:id` lets an admin remove a provider outright, blocked (same as payment
+methods / coupons) only when real `Service` rows still reference it. This was verified against a real,
+live provider account (my.smmgen.com, ~7,800 real services) — which is also how a real, previously-latent
+bug got found and fixed: some providers return numeric JSON fields (`service`/`rate`/`min`/`max`) instead
+of the JAP-standard dialect's implied strings, which silently broke `Map`-keyed lookups everywhere
+(`providerClient.service.ts`'s `listProviderServices` now normalizes every field to a real string at the
+one place all callers get their data from, covered by a regression test in `providerClient.test.ts`).
+Everything described here is real, tested, runnable code, not a mockup. Modules that are **schema-only**
+are listed at the bottom.
 
 ## Stack
 
@@ -86,7 +99,10 @@ The test suite specifically proves the two highest-risk properties of a wallet-b
 - **`tests/crypto.test.ts`** proves at-rest encryption round-trips correctly and that tampered ciphertext
   fails loudly instead of decrypting to silently-wrong plaintext.
 - **`tests/providerClient.test.ts`** exercises the JAP-standard provider client against a real local mock
-  HTTP server (`tests/mocks/japProvider.ts`) — no real upstream account needed to verify it.
+  HTTP server (`tests/mocks/japProvider.ts`) — no real upstream account needed to verify it. Also proves
+  `listProviderServices` normalizes a provider's numeric `service`/`rate`/`min`/`max` fields to strings — a
+  real bug found live against my.smmgen.com, which returns JSON numbers rather than the JAP dialect's
+  implied strings.
 - **`tests/autoFulfillment.test.ts`** is the load-bearing test for Phase 2's money safety: a PENDING
   auto-submit order is fulfilled by the primary provider, falls back to the backup provider on primary
   failure, and — if both fail — is marked FAILED **and the wallet is refunded in full**, proving a broken
@@ -129,6 +145,32 @@ The test suite specifically proves the two highest-risk properties of a wallet-b
 - **`tests/googleAuthDisabled.test.ts`** proves the real (unconfigured-by-default) environment never
   crashes — `POST /api/auth/google` returns a clear 400 and `/api/public/settings` reports
   `googleAuthEnabled: false` so the frontend hides the button entirely.
+- **`tests/providerImport.test.ts`** proves the bulk import preview never creates anything, that a
+  malformed row (bad rate/min/max) from the provider is skipped with a reason rather than failing the
+  whole batch, that two services sharing a category string get exactly one `ServiceCategory` row (not a
+  duplicate per differing case), that markup % is applied correctly to `sellPricePer1000`, that requesting
+  an id no longer in the provider's live catalog is reported rather than silently ignored, and that
+  re-running an import with an overlapping selection never creates duplicate `Service` rows.
+- **`tests/providers.test.ts`** proves a provider with no mapped services can be deleted (and its
+  `ProviderSyncLog` rows cascade with it), and that one with any `Service` still pointing at it — as
+  primary or backup provider — is blocked with a clear conflict error instead of an orphaning delete or a
+  raw FK constraint violation, same "disable/reassign instead" pattern as payment methods and coupons.
+- **`tests/listQueryFilters.test.ts`** is the regression suite for a real, previously-untested bug: every
+  paginated list route validates its query string with `validate(<schema>, "query")`, and zod objects strip
+  unrecognized keys by default — so a schema declaring only `page`/`pageSize` silently deleted
+  `status`/`search`/`categoryId` from `req.query` before any route handler read them. This affected Orders
+  (both the customer's own list and the admin one), Deposits, Tickets, Users, and Services — every status
+  filter and search box on those admin pages was quietly a no-op. Each now has its own schema
+  (`serviceListQuerySchema`, `orderListQuerySchema`, `adminOrderListQuerySchema`, `depositListQuerySchema`,
+  `ticketListQuerySchema`, `userListQuerySchema` in `packages/shared`) that declares its actual extra
+  fields, and this test proves each one now genuinely narrows results through the real HTTP route. Found
+  while adding the ability below to search a service catalog by its exact provider product code.
+- **Service search by exact product code**: `GET /api/services`, `/api/public/services`, and
+  `/api/admin/services` now match a `search` term against either the service name (partial) or
+  `providerServiceId` (exact) — the same code a bulk-imported service's row was created with, and the same
+  code shown in the provider's own dashboard. The admin Services page also gained a search box, a category
+  filter, a visible "Product Code" column, and pagination — none of which existed before, and all necessary
+  once a real provider import can add thousands of rows (see the bulk import section above).
 
 ## Project layout
 
@@ -165,16 +207,29 @@ packages/shared  Zod schemas + types shared by both
 
 - **Google OAuth** is implemented against `google-auth-library` (Google's own official SDK) for
   server-side ID-token verification, and against `@react-oauth/google` (Google Identity Services) on the
-  frontend — both real, current, official Google libraries, not hand-rolled. What hasn't happened yet: an
-  actual end-to-end run through Google's consent screen with a real registered OAuth client, since no real
-  `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` exists in this environment. Manually verified so far: with fake
-  credentials configured, Google's real button widget renders correctly in the app's theme (confirming the
+  frontend — both real, current, official Google libraries, not hand-rolled. A real OAuth client is now
+  configured (`GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` in `.env`, authorized for `https://allinonsr.com`);
+  what hasn't happened yet is an actual click-through of Google's consent screen end-to-end (add
+  `http://localhost:5173` to the client's Authorized JavaScript origins in
+  https://console.cloud.google.com/apis/credentials to test that locally too). Manually verified so far:
+  Google's real button widget renders correctly in the app's theme with the real client id (confirming the
   integration wiring); the actual token-verification logic is covered by `tests/googleAuth.test.ts` against
   a mocked `OAuth2Client` (Google's own libraries aren't something a local mock server can stand in for the
-  way `tests/mocks/japProvider.ts` or `tests/mocks/zinipay.ts` do for those integrations). Create real
-  credentials at https://console.cloud.google.com/apis/credentials and confirm one real sign-in end-to-end
-  before relying on this in production — same "reviewed but unverified until a real account exists"
-  treatment as bKash below.
+  way `tests/mocks/japProvider.ts` or `tests/mocks/zinipay.ts` do for those integrations). Confirm one real
+  sign-in end-to-end before fully relying on this in production — same "reviewed but unverified until a
+  real click-through happens" treatment as the items below.
+- **Provider bulk import** (`GET/POST /api/admin/providers/:id/import*`) — unlike most integrations in
+  this README, this one **has** been confirmed against a real, live provider account: my.smmgen.com
+  (PerfectPanel-based), previewing its actual ~7,800-service catalog correctly (platform detection, cost
+  parsing, the numeric-field normalization bug below) end-to-end through the real app code, not just a
+  local mock. The full create-and-land-in-the-catalog step was verified against a local mock catalog (25
+  services, one malformed row) rather than actually importing all ~7,800 real rows into this environment's
+  database — the create path itself (`prisma.service.createMany` with `skipDuplicates`) is the same either
+  way, so this is a much smaller gap than the rest of this section, but running one real "Import Services"
+  batch and spot-checking the resulting prices/categories is still worth doing before fully trusting it
+  unattended. Two real bugs were caught exactly this way and are now fixed + regression-tested: the numeric
+  JSON fields noted above, and `providerServiceIds`'s array cap being 5,000 when my.smmgen.com alone has
+  ~7,800 services (now 50,000, see `tests/providerImport.test.ts`'s real-catalog-sized regression test).
 - **bKash** is implemented against bKash's public Tokenized Checkout API docs but has **not been run
   against a real bKash sandbox** (no merchant account exists yet) — treat it as reviewed-but-unverified.
   Configure it from the admin Payment Gateways page in SANDBOX mode and confirm a real test transaction

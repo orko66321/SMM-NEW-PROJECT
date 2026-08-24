@@ -19,7 +19,7 @@ export default function Services() {
       <div className="flex flex-col gap-3 sm:flex-row">
         <input
           className="input-field sm:max-w-xs"
-          placeholder="Search services…"
+          placeholder="Search by name or exact product ID…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -35,6 +35,7 @@ export default function Services() {
         <table className="w-full min-w-[640px] text-sm">
           <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
             <tr>
+              <th className="px-4 py-3">ID</th>
               <th className="px-4 py-3">Service</th>
               <th className="px-4 py-3">Min / Max</th>
               <th className="px-4 py-3">Price / 1000</th>
@@ -42,8 +43,15 @@ export default function Services() {
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
-            {data?.items.map((s: { id: string; name: string; minQuantity: number; maxQuantity: number; sellPricePer1000: string }) => (
+            {data?.items.map((s: { id: string; name: string; minQuantity: number; maxQuantity: number; sellPricePer1000: string; providerServiceId: string | null }) => (
               <tr key={s.id}>
+                <td className="px-4 py-3">
+                  {s.providerServiceId ? (
+                    <span className="badge bg-surface-container-high font-mono text-on-surface-variant">{s.providerServiceId}</span>
+                  ) : (
+                    <span className="text-xs text-on-surface-variant">—</span>
+                  )}
+                </td>
                 <td className="px-4 py-3">{s.name}</td>
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">{s.minQuantity} / {s.maxQuantity}</td>
                 <td className="px-4 py-3 font-mono text-success">${s.sellPricePer1000}</td>

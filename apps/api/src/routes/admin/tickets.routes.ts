@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTicketMessageSchema, paginationQuerySchema, updateTicketStatusSchema } from "@smm/shared";
+import { createTicketMessageSchema, ticketListQuerySchema, updateTicketStatusSchema } from "@smm/shared";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { addMessage, getTicketForAdmin, listTicketsForAdmin, updateTicketStatus } from "../../services/ticket.service.js";
@@ -8,7 +8,7 @@ export const adminTicketsRouter = Router();
 
 adminTicketsRouter.get(
   "/",
-  validate(paginationQuerySchema, "query"),
+  validate(ticketListQuerySchema, "query"),
   asyncHandler(async (req, res) => {
     const { page, pageSize } = req.query as unknown as { page: number; pageSize: number };
     const status = typeof req.query.status === "string" ? req.query.status : undefined;

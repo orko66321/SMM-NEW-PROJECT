@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { paginationQuerySchema, reviewDepositSchema } from "@smm/shared";
+import { depositListQuerySchema, reviewDepositSchema } from "@smm/shared";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { listDepositsForAdmin, reviewDeposit } from "../../services/deposit.service.js";
@@ -9,7 +9,7 @@ export const adminDepositsRouter = Router();
 
 adminDepositsRouter.get(
   "/",
-  validate(paginationQuerySchema, "query"),
+  validate(depositListQuerySchema, "query"),
   asyncHandler(async (req, res) => {
     const { page, pageSize } = req.query as unknown as { page: number; pageSize: number };
     const status = typeof req.query.status === "string" ? req.query.status : undefined;

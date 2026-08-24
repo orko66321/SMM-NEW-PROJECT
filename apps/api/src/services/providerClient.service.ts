@@ -34,13 +34,14 @@ async function postAction<T>(
   provider: { id: string; apiUrl: string; apiKeyCiphertext: string },
   action: string,
   params: Record<string, string | number>,
+  timeoutMs = 15_000,
 ): Promise<T> {
   const apiKey = decrypt(provider.apiKeyCiphertext);
   const body = new URLSearchParams({ key: apiKey, action, ...stringifyParams(params) });
 
   try {
     const res = await axios.post(provider.apiUrl, body, {
-      timeout: 15_000,
+      timeout: timeoutMs,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
     if (res.data && typeof res.data === "object" && "error" in res.data) {
@@ -63,8 +64,41 @@ async function logSync(providerId: string, action: string, status: "SUCCESS" | "
   await prisma.providerSyncLog.create({ data: { providerId, action, status, message } });
 }
 
+/**
+ * Real providers don't reliably honor the JAP-standard dialect's implied
+ * "everything is a string" contract — smmgen.com, for one, returns
+ * `service` (and sometimes rate/min/max) as raw JSON numbers, not strings.
+ * axios/JSON.parse preserves whatever type the wire payload actually used,
+ * so `ProviderServiceEntry.service: string` would otherwise be a lie at
+ * runtime for exactly the providers this client exists to support —
+ * silently breaking every `Map`/`===` lookup keyed on it (bulk import,
+ * syncProviderCatalog) since `18801 !== "18801"` as a Map key. Normalizing
+ * once here, at the single point every caller gets its data from, means
+ * every consumer can trust the declared type without its own defensive
+ * coercion.
+ */
+function normalizeServiceEntry(raw: Record<string, unknown>): ProviderServiceEntry {
+  return {
+    service: String(raw.service),
+    name: String(raw.name ?? ""),
+    category: raw.category !== undefined && raw.category !== null ? String(raw.category) : undefined,
+    rate: String(raw.rate),
+    min: String(raw.min),
+    max: String(raw.max),
+    refill: raw.refill as ProviderServiceEntry["refill"],
+    cancel: raw.cancel as ProviderServiceEntry["cancel"],
+  };
+}
+
 export async function listProviderServices(provider: { id: string; apiUrl: string; apiKeyCiphertext: string }) {
-  return postAction<ProviderServiceEntry[]>(provider, "services", {});
+  // A full mega-panel catalog (smmgen.com alone has ~7,800 rows) is a
+  // fundamentally larger, slower request than placing/checking one order —
+  // 15s was tuned for those, not this.
+  const raw = await postAction<Record<string, unknown>[]>(provider, "services", {}, 45_000);
+  if (!Array.isArray(raw)) {
+    throw AppError.badRequest("Provider request failed (services): unexpected response shape (expected an array)");
+  }
+  return raw.map(normalizeServiceEntry);
 }
 
 export async function submitProviderOrder(

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { paginationQuerySchema, updateUserSchema } from "@smm/shared";
+import { updateUserSchema, userListQuerySchema } from "@smm/shared";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { getUserDetail, listUsers, updateUser } from "../../services/user.service.js";
@@ -9,7 +9,7 @@ export const adminUsersRouter = Router();
 
 adminUsersRouter.get(
   "/",
-  validate(paginationQuerySchema, "query"),
+  validate(userListQuerySchema, "query"),
   asyncHandler(async (req, res) => {
     const { page, pageSize } = req.query as unknown as { page: number; pageSize: number };
     const search = typeof req.query.search === "string" ? req.query.search : undefined;

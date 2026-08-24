@@ -1,12 +1,23 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+// Deliberately forces the unconfigured state via a per-file env mock rather
+// than relying on the real .env happening to have GOOGLE_CLIENT_ID/SECRET
+// unset — that's what this file originally did, and it broke the moment a
+// real admin (correctly) configured Google OAuth in this repo's .env for
+// production use. Mocking here makes the "graceful fallback" guarantee
+// deterministic regardless of whatever the ambient environment happens to
+// have configured, matching the mocking pattern in googleAuth.test.ts.
+vi.mock("../src/env.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../src/env.js")>();
+  return {
+    ...actual,
+    env: { ...actual.env, GOOGLE_CLIENT_ID: undefined, GOOGLE_CLIENT_SECRET: undefined, googleAuthEnabled: false },
+  };
+});
+
 import request from "supertest";
 import { app, resetDb } from "./helpers.js";
 
-// Deliberately does NOT mock env.js or google-auth-library — this exercises
-// the real, unmodified env (GOOGLE_CLIENT_ID/SECRET are unset in this
-// repo's .env by default) to prove the "graceful fallback" requirement:
-// the app never crashes or throws an unhandled error when Google OAuth
-// isn't configured, it just returns a clear, ordinary 400.
 beforeEach(resetDb);
 afterEach(resetDb);
 

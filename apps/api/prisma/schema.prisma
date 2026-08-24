@@ -392,6 +392,13 @@ model Service {
 
   @@index([categoryId])
   @@index([status])
+  // The real guard against a bulk import (or a re-run of one) creating
+  // duplicate rows for the same upstream service — see
+  // services/providerImport.service.ts, which relies on this via
+  // createMany's skipDuplicates rather than an app-level pre-check alone.
+  // Postgres treats each NULL as distinct, so manually-created services
+  // (providerId/providerServiceId both null) are never affected by this.
+  @@unique([providerId, providerServiceId])
 }
 
 // ── Orders ───────────────────────────────────────────────────────────────
