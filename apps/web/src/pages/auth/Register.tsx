@@ -4,6 +4,7 @@ import { apiErrorMessage } from "../../api/client.js";
 import * as authApi from "../../api/auth.js";
 import { useToast } from "../../components/ui/Toast.js";
 import AuthShell from "../../components/auth/AuthShell.js";
+import GoogleSignInButton from "../../components/auth/GoogleSignInButton.js";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -73,6 +74,7 @@ export default function Register() {
           Already have an account? <Link to="/login" className="text-primary hover:underline">Sign in</Link>
         </p>
       </form>
+      <GoogleSignInButton />
     </AuthShell>
   );
 }

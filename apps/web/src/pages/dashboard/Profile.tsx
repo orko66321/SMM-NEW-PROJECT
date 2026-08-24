@@ -19,6 +19,8 @@ interface Profile {
   notifyPromotions: boolean;
   apiKeyPrefix: string | null;
   apiKeyCreatedAt: string | null;
+  avatarUrl: string | null;
+  hasPassword: boolean;
 }
 
 function ProfileDetailsCard({ profile }: { profile: Profile }) {
@@ -46,7 +48,12 @@ function ProfileDetailsCard({ profile }: { profile: Profile }) {
 
   return (
     <form onSubmit={onSave} className="card space-y-4">
-      <h2 className="text-lg font-bold">Account details</h2>
+      <div className="flex items-center gap-3">
+        {profile.avatarUrl && (
+          <img src={profile.avatarUrl} alt="" className="h-10 w-10 rounded-full border border-outline-variant" referrerPolicy="no-referrer" />
+        )}
+        <h2 className="text-lg font-bold">Account details</h2>
+      </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
           <label className="label">Username</label>
@@ -82,8 +89,9 @@ function ProfileDetailsCard({ profile }: { profile: Profile }) {
   );
 }
 
-function ChangePasswordCard() {
+function ChangePasswordCard({ hasPassword }: { hasPassword: boolean }) {
   const toast = useToast();
+  const queryClient = useQueryClient();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -95,9 +103,13 @@ function ChangePasswordCard() {
     setError(null);
     try {
       await changeMyPassword({ currentPassword, newPassword });
-      toast.push("Password updated — other sessions have been signed out.", "success");
+      toast.push(
+        hasPassword ? "Password updated — other sessions have been signed out." : "Password set — you can now sign in with it too.",
+        "success",
+      );
       setCurrentPassword("");
       setNewPassword("");
+      queryClient.invalidateQueries({ queryKey: ["my-profile"] });
     } catch (err) {
       setError(apiErrorMessage(err, "Failed to change password"));
     } finally {
@@ -107,19 +119,26 @@ function ChangePasswordCard() {
 
   return (
     <form onSubmit={onSubmit} className="card space-y-3">
-      <h2 className="text-lg font-bold">Change password</h2>
+      <h2 className="text-lg font-bold">{hasPassword ? "Change password" : "Set a password"}</h2>
+      {!hasPassword && (
+        <p className="text-sm text-on-surface-variant">
+          Your account currently only signs in with Google. Set a password here to also be able to sign in the usual way.
+        </p>
+      )}
       {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
+      {hasPassword && (
+        <div>
+          <label className="label" htmlFor="currentPassword">Current password</label>
+          <input id="currentPassword" type="password" className="input-field" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} autoComplete="current-password" required />
+        </div>
+      )}
       <div>
-        <label className="label" htmlFor="currentPassword">Current password</label>
-        <input id="currentPassword" type="password" className="input-field" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} autoComplete="current-password" required />
-      </div>
-      <div>
-        <label className="label" htmlFor="newPassword">New password</label>
+        <label className="label" htmlFor="newPassword">{hasPassword ? "New password" : "Password"}</label>
         <input id="newPassword" type="password" className="input-field" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} autoComplete="new-password" required />
         <p className="mt-1 text-xs text-on-surface-variant">At least 10 characters, with uppercase, lowercase, and a number.</p>
       </div>
       <button type="submit" className="btn-primary" disabled={submitting}>
-        {submitting ? "Updating…" : "Update password"}
+        {submitting ? "Saving…" : hasPassword ? "Update password" : "Set password"}
       </button>
     </form>
   );
@@ -203,7 +222,7 @@ export default function Profile() {
     <div className="mx-auto max-w-2xl space-y-6">
       <h1 className="text-2xl font-bold">Profile &amp; Settings</h1>
       <ProfileDetailsCard profile={profile} />
-      <ChangePasswordCard />
+      <ChangePasswordCard hasPassword={profile.hasPassword} />
       <ApiKeyCard profile={profile} />
     </div>
   );

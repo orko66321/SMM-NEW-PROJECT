@@ -35,6 +35,12 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
       liveChatWidgetId: null,
       usdToBdtRate: "120",
       defaultCurrency: "USD",
+      // GOOGLE_CLIENT_ID/SECRET are unset in the test environment (see
+      // tests/googleAuth.test.ts for the "configured" case, and
+      // tests/googleAuthDisabled.test.ts for this exact env's behavior on
+      // the /api/auth/google endpoint itself) — this just documents that
+      // the field is present in the public settings payload either way.
+      googleAuthEnabled: false,
     });
     expect(JSON.stringify(res.body)).not.toContain("super-secret-password");
     expect(JSON.stringify(res.body)).not.toContain("smtp");

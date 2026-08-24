@@ -1,6 +1,6 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
-import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from "@smm/shared";
+import { forgotPasswordSchema, googleAuthSchema, loginSchema, registerSchema, resetPasswordSchema } from "@smm/shared";
 import { validate } from "../middleware/validate.js";
 import { authenticate } from "../middleware/auth.js";
 import { authLimiter } from "../middleware/rateLimit.js";
@@ -9,6 +9,7 @@ import { AppError } from "../utils/AppError.js";
 import { env } from "../env.js";
 import {
   getPublicUserById,
+  googleAuth,
   loginUser,
   logoutSession,
   refreshSession,
@@ -61,6 +62,17 @@ authRouter.post(
   validate(loginSchema),
   asyncHandler(async (req, res) => {
     const { user, accessToken, refreshTokenValue } = await loginUser(req.body, meta(req));
+    setRefreshCookie(res, refreshTokenValue);
+    res.json({ user, accessToken });
+  }),
+);
+
+authRouter.post(
+  "/google",
+  authLimiter,
+  validate(googleAuthSchema),
+  asyncHandler(async (req, res) => {
+    const { user, accessToken, refreshTokenValue } = await googleAuth(req.body.idToken, meta(req));
     setRefreshCookie(res, refreshTokenValue);
     res.json({ user, accessToken });
   }),

@@ -43,6 +43,17 @@ const envSchema = z.object({
   // Where a payment gateway callback redirects the browser back to once
   // confirm() has resolved — the web app, not the API.
   FRONTEND_BASE_URL: z.string().url().default("http://localhost:5173"),
+
+  // "Sign in with Google" — both optional so the app boots fine with
+  // neither set (see services/auth.service.ts's verifyGoogleIdToken, which
+  // rejects with a clear 400 rather than crashing when unconfigured, and
+  // GET /api/public/settings's googleAuthEnabled, which lets the frontend
+  // hide the button entirely rather than show one that always errors).
+  // GOOGLE_CLIENT_ID doubles as the OAuth audience checked against every
+  // ID token; GOOGLE_CLIENT_SECRET isn't needed by the ID-token-verification
+  // flow used here but is captured for a future authorization-code flow.
+  GOOGLE_CLIENT_ID: z.string().trim().min(1).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().trim().min(1).optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -57,4 +68,5 @@ export const env = {
   ...parsed.data,
   isProduction: parsed.data.NODE_ENV === "production",
   corsOrigins: parsed.data.CORS_ORIGIN.split(",").map((s) => s.trim()).filter(Boolean),
+  googleAuthEnabled: !!(parsed.data.GOOGLE_CLIENT_ID && parsed.data.GOOGLE_CLIENT_SECRET),
 };

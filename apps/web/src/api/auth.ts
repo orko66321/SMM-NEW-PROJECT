@@ -7,6 +7,13 @@ export async function login(input: LoginInput) {
   return res.data.user as AuthUser;
 }
 
+/** idToken is the credential Google Identity Services hands back on sign-in — the server verifies it, this never trusts it client-side. */
+export async function googleLogin(idToken: string) {
+  const res = await apiClient.post("/auth/google", { idToken });
+  setAccessToken(res.data.accessToken);
+  return res.data.user as AuthUser;
+}
+
 export async function register(input: RegisterInput) {
   const res = await apiClient.post("/auth/register", input);
   return res.data.user as AuthUser;

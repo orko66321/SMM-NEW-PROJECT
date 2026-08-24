@@ -133,9 +133,20 @@ model User {
   id           String     @id @default(cuid())
   username     String     @unique
   email        String     @unique
-  passwordHash String
+  // Nullable — a social-login-only account (Google) has no password until
+  // the user explicitly sets one (via the forgot-password flow or the
+  // profile page's change-password form, which skips the "current
+  // password" check when this is null; see profile.service.ts).
+  passwordHash String?
   role         Role       @default(USER)
   status       UserStatus @default(ACTIVE)
+
+  // Google OAuth (Sign in with Google) — unique so a Google account can
+  // only ever be linked to one User row. Nullable: most accounts are
+  // password-only and never touch this. See services/auth.service.ts's
+  // googleAuth().
+  googleId  String? @unique
+  avatarUrl String?
 
   // Phase 2: TOTP secret for 2FA, encrypted at rest.
   twoFactorSecret String?

@@ -17,6 +17,11 @@ export async function getMyProfile(userId: string) {
     notifyPromotions: user.notifyPromotions,
     apiKeyPrefix: user.apiKeyPrefix,
     apiKeyCreatedAt: user.apiKeyCreatedAt?.toISOString() ?? null,
+    avatarUrl: user.avatarUrl,
+    // Lets the profile UI skip asking for a "current password" a
+    // Google-only account was never issued in the first place (see
+    // changePassword below).
+    hasPassword: !!user.passwordHash,
   };
 }
 
@@ -29,8 +34,15 @@ export async function changePassword(userId: string, input: ChangePasswordInput)
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw AppError.notFound("User not found");
 
-  const valid = await argon2.verify(user.passwordHash, input.currentPassword);
-  if (!valid) throw AppError.badRequest("Current password is incorrect");
+  // A Google-only account (passwordHash null, see schema.prisma) has no
+  // current password to check — this is legitimately how such a user sets
+  // their first one, guarded only by already holding a valid session (the
+  // authenticate middleware), same trust boundary as every other
+  // authenticated profile mutation.
+  if (user.passwordHash) {
+    const valid = await argon2.verify(user.passwordHash, input.currentPassword);
+    if (!valid) throw AppError.badRequest("Current password is incorrect");
+  }
 
   const passwordHash = await argon2.hash(input.newPassword, ARGON2_OPTIONS);
   await prisma.$transaction([

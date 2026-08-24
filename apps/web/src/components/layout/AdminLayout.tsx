@@ -49,7 +49,10 @@ export default function AdminLayout() {
 
       <div className="flex min-h-screen flex-1 flex-col">
         <header className="flex h-16 items-center justify-between border-b border-outline-variant bg-surface-container-high px-6">
-          <div className="font-mono text-sm text-on-surface-variant">
+          <div className="flex items-center gap-2 font-mono text-sm text-on-surface-variant">
+            {user?.avatarUrl && (
+              <img src={user.avatarUrl} alt="" className="h-6 w-6 rounded-full" referrerPolicy="no-referrer" />
+            )}
             admin: @{user?.username}
           </div>
           <div className="flex items-center gap-3">

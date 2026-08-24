@@ -72,12 +72,22 @@ export const loginSchema = z.object({
 });
 export type LoginInput = z.infer<typeof loginSchema>;
 
+// The credential is a signed Google ID token (a JWT) handed to the frontend
+// by Google Identity Services — the server is the only party that verifies
+// it (see services/auth.service.ts's verifyGoogleIdToken), never trusted as
+// proof of identity just because it's shaped like a JWT.
+export const googleAuthSchema = z.object({
+  idToken: z.string().trim().min(10),
+});
+export type GoogleAuthInput = z.infer<typeof googleAuthSchema>;
+
 export const authUserSchema = z.object({
   id: z.string(),
   username: z.string(),
   email: z.string(),
   role: z.enum(RoleValues),
   status: z.enum(UserStatusValues),
+  avatarUrl: z.string().nullable(),
   createdAt: z.string(),
 });
 export type AuthUser = z.infer<typeof authUserSchema>;
@@ -339,6 +349,10 @@ export const publicSettingsSchema = z.object({
   liveChatWidgetId: z.string().nullable(),
   usdToBdtRate: z.string(),
   defaultCurrency: z.enum(DisplayCurrencyValues),
+  // Derived from env (GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET), not stored
+  // in SiteSettings — lets the frontend hide the Google button entirely
+  // rather than show one that always fails. See env.ts's googleAuthEnabled.
+  googleAuthEnabled: z.boolean(),
 });
 export type PublicSettings = z.infer<typeof publicSettingsSchema>;
 
@@ -396,7 +410,11 @@ export const updateProfileSchema = z.object({
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 
 export const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1).max(128),
+  // Optional — a Google-only account (see User.passwordHash in
+  // schema.prisma) has no current password to confirm; the server only
+  // enforces this check when one actually exists (see
+  // services/profile.service.ts's changePassword).
+  currentPassword: z.string().max(128).default(""),
   newPassword: passwordSchema,
 });
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;

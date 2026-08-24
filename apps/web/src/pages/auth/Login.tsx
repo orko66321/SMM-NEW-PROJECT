@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import AuthShell from "../../components/auth/AuthShell.js";
+import GoogleSignInButton from "../../components/auth/GoogleSignInButton.js";
 
 export default function Login() {
   const { login } = useAuth();
@@ -68,6 +69,7 @@ export default function Login() {
           No account? <Link to="/register" className="text-primary hover:underline">Sign up</Link>
         </p>
       </form>
+      <GoogleSignInButton />
     </AuthShell>
   );
 }

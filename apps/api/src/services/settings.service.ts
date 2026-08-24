@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 import { encrypt, decrypt } from "../lib/crypto.js";
+import { env } from "../env.js";
 import type { UpdateSettingsInput, PublicSettings } from "@smm/shared";
 
 // Deliberately a singleton row (fixed id) rather than a key/value table —
@@ -70,6 +71,7 @@ export async function getPublicSettings(): Promise<PublicSettings> {
     liveChatWidgetId: s.liveChatWidgetId,
     usdToBdtRate: s.usdToBdtRate.toString(),
     defaultCurrency: s.defaultCurrency,
+    googleAuthEnabled: env.googleAuthEnabled,
   };
 }
 

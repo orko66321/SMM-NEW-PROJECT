@@ -19,8 +19,12 @@ safety switch, a public landing page / services catalog / API docs site, glassmo
 pages plus a real password-reset flow, a reseller API key (hashed, `X-API-Key` header auth) with working
 docs, a user profile page, an admin-managed Notice banner and Coupon-code system (redeemable on the
 deposit page, credited atomically with the deposit), a USD/BDT display-currency switcher, WhatsApp/live-chat
-widgets, and Recharts analytics on the admin dashboard. Everything described here is real, tested, runnable
-code, not a mockup. Modules that are **schema-only** are listed at the bottom.
+widgets, and Recharts analytics on the admin dashboard. On top of that, **Google OAuth** ("Sign in with
+Google") shipped full-stack: server-side ID-token verification (`google-auth-library`), auto-registration
+with an initialized wallet for new Google users, account linking by email for existing ones, and a
+`GoogleLogin` button on both auth pages that simply doesn't render when `GOOGLE_CLIENT_ID`/`SECRET` aren't
+configured — no crash, no dead button. Everything described here is real, tested, runnable code, not a
+mockup. Modules that are **schema-only** are listed at the bottom.
 
 ## Stack
 
@@ -117,6 +121,14 @@ The test suite specifically proves the two highest-risk properties of a wallet-b
 - **`tests/publicRoutes.test.ts`** proves the unauthenticated `/api/public/*` routes never leak SMTP
   credentials or other secrets, and that the public services/categories endpoints work without auth where
   the authenticated `/api/services` route does not.
+- **`tests/googleAuth.test.ts`** (Google OAuth configured, via a per-file env mock) proves a new Google
+  identity auto-registers with an initialized $0 wallet and USER role, a repeat sign-in never creates a
+  duplicate account, an existing password account gets `googleId` linked by email match without touching
+  its password, an unverified Google email is rejected, a failed/tampered token verification is rejected,
+  and a suspended account is blocked even with a valid Google credential.
+- **`tests/googleAuthDisabled.test.ts`** proves the real (unconfigured-by-default) environment never
+  crashes — `POST /api/auth/google` returns a clear 400 and `/api/public/settings` reports
+  `googleAuthEnabled: false` so the frontend hides the button entirely.
 
 ## Project layout
 
@@ -151,6 +163,18 @@ packages/shared  Zod schemas + types shared by both
 
 ## What's still not live
 
+- **Google OAuth** is implemented against `google-auth-library` (Google's own official SDK) for
+  server-side ID-token verification, and against `@react-oauth/google` (Google Identity Services) on the
+  frontend — both real, current, official Google libraries, not hand-rolled. What hasn't happened yet: an
+  actual end-to-end run through Google's consent screen with a real registered OAuth client, since no real
+  `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` exists in this environment. Manually verified so far: with fake
+  credentials configured, Google's real button widget renders correctly in the app's theme (confirming the
+  integration wiring); the actual token-verification logic is covered by `tests/googleAuth.test.ts` against
+  a mocked `OAuth2Client` (Google's own libraries aren't something a local mock server can stand in for the
+  way `tests/mocks/japProvider.ts` or `tests/mocks/zinipay.ts` do for those integrations). Create real
+  credentials at https://console.cloud.google.com/apis/credentials and confirm one real sign-in end-to-end
+  before relying on this in production — same "reviewed but unverified until a real account exists"
+  treatment as bKash below.
 - **bKash** is implemented against bKash's public Tokenized Checkout API docs but has **not been run
   against a real bKash sandbox** (no merchant account exists yet) — treat it as reviewed-but-unverified.
   Configure it from the admin Payment Gateways page in SANDBOX mode and confirm a real test transaction
