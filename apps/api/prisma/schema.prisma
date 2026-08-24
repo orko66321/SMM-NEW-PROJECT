@@ -2,8 +2,20 @@
 // Money fields are always Decimal (never Float) to avoid rounding-error exploits.
 // Enum string values MUST stay in sync with packages/shared/src/index.ts.
 
+// Custom output + explicit binaryTargets: the cPanel host's Node.js App
+// has ulimit -v hard-capped at 4GB, which crashes any WebAssembly
+// instantiation ("WebAssembly.Instance(): Out of memory") — including the
+// Prisma CLI's schema-engine WASM. So `prisma generate` never runs on the
+// server; the client (with all its engine binaries) is generated locally
+// and committed to this project-internal folder instead of node_modules
+// (which is gitignored). See bin/deploy-cpanel.sh and the note at the
+// bottom of this file for the full deploy flow this enables.
+// Target OS is CloudLinux/RHEL-family but the exact version wasn't
+// confirmed, hence multiple targets.
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  output        = "../generated-client"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "rhel-openssl-1.1.x", "debian-openssl-3.0.x"]
 }
 
 datasource db {

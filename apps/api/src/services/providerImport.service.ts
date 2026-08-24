@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "#prisma/client";
 import type { BulkImportProviderServicesInput } from "@smm/shared";
 import { prisma } from "../lib/prisma.js";
 import { getProviderOrThrow, listProviderServices, type ProviderServiceEntry } from "./providerClient.service.js";

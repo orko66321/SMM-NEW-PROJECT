@@ -13,11 +13,19 @@ packages/*/node_modules/
 old_cpanel_backup*
 
 # build output
+# The cPanel host can't run tsc/vite/prisma at all (WebAssembly OOMs under
+# its 4GB ulimit -v), so apps/web/dist, apps/api/dist, and
+# packages/shared/dist are built locally and committed on purpose — see
+# bin/deploy-cpanel.sh and the note at the bottom of apps/api/prisma/schema.prisma.
+# Everything else under dist/build stays ignored as before.
 dist/
 build/
 apps/*/dist/
 apps/*/build/
 packages/*/dist/
+!apps/web/dist/
+!apps/api/dist/
+!packages/shared/dist/
 
 # prisma
 apps/api/prisma/*.db

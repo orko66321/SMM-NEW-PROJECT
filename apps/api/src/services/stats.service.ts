@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "#prisma/client";
 import { prisma } from "../lib/prisma.js";
 
 // Every number here comes from a real aggregate query — no fabricated or

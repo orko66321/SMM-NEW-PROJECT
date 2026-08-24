@@ -1,4 +1,4 @@
-import { Prisma, type WalletTxType } from "@prisma/client";
+import { Prisma, type WalletTxType } from "#prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 

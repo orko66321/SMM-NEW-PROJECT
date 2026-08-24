@@ -1,0 +1,29 @@
+# Copied verbatim into apps/web/dist by Vite (anything in public/ is), so
+# it lands at public_html/.htaccess on every deploy — see
+# bin/deploy-cpanel.sh. react-router-dom handles routing entirely
+# client-side, so a direct hit or refresh on e.g. /dashboard/orders has no
+# matching file/directory on disk; without this rewrite Apache 404s it
+# instead of handing it to index.html for the router to take over.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Real files and directories (assets, etc.) are served as-is.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else falls through to the SPA shell.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Never let the browser cache the SPA shell itself — its <script>/<link>
+# tags reference hashed asset filenames that change on every deploy, so a
+# stale cached index.html would keep pointing at assets that no longer
+# exist once old build output is deleted.
+<IfModule mod_headers.c>
+  <FilesMatch "^index\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+</IfModule>

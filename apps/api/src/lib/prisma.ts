@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "#prisma/client";
 import { env } from "../env.js";
 
 // Single shared client — avoid exhausting the Postgres connection pool by

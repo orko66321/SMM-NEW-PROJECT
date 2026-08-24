@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "#prisma/client";
 import argon2 from "argon2";
 import { ARGON2_OPTIONS } from "../src/services/auth.service.js";
 

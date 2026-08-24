@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "#prisma/client";
 import type { CreateOrderInput, ResolveManualRefillInput, UpdateOrderStatusInput } from "@smm/shared";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";

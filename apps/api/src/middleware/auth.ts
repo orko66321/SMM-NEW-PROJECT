@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type { Role } from "@prisma/client";
+import type { Role } from "#prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { verifyAccessToken } from "../services/token.service.js";
 import { findUserByApiKey } from "../services/apiKey.service.js";

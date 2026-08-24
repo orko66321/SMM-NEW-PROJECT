@@ -1,0 +1,687 @@
+// SMM Panel — Phase 1 schema.
+// Money fields are always Decimal (never Float) to avoid rounding-error exploits.
+// Enum string values MUST stay in sync with packages/shared/src/index.ts.
+
+// Custom output + explicit binaryTargets: the cPanel host's Node.js App
+// has ulimit -v hard-capped at 4GB, which crashes any WebAssembly
+// instantiation ("WebAssembly.Instance(): Out of memory") — including the
+// Prisma CLI's schema-engine WASM. So `prisma generate` never runs on the
+// server; the client (with all its engine binaries) is generated locally
+// and committed to this project-internal folder instead of node_modules
+// (which is gitignored). See bin/deploy-cpanel.sh and the note at the
+// bottom of this file for the full deploy flow this enables.
+// Target OS is CloudLinux/RHEL-family but the exact version wasn't
+// confirmed, hence multiple targets.
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../generated-client"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "rhel-openssl-1.1.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  STAFF
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  IN_PROGRESS
+  COMPLETED
+  PARTIAL
+  CANCELED
+  FAILED
+}
+
+enum OrderMode {
+  AUTO
+  MANUAL
+}
+
+enum RefillStatus {
+  REQUESTED
+  IN_PROGRESS
+  COMPLETED
+  REJECTED
+}
+
+enum TicketStatus {
+  OPEN
+  PENDING_ADMIN
+  PENDING_USER
+  CLOSED
+}
+
+enum TicketSender {
+  USER
+  ADMIN
+}
+
+enum ServiceStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum DepositStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum WalletTxType {
+  DEPOSIT
+  DEPOSIT_BONUS
+  ORDER_DEBIT
+  ORDER_REFUND
+  ADMIN_ADJUSTMENT
+  AFFILIATE_PAYOUT
+  CHILD_PANEL_FEE
+}
+
+enum ProviderStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum ChildPanelStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum CouponType {
+  PERCENT
+  FIXED
+}
+
+enum PaymentGatewayMode {
+  SANDBOX
+  LIVE
+}
+
+enum PaymentMethodGatewayType {
+  AUTOMATED
+  MANUAL
+}
+
+enum PaymentMethodAccountType {
+  PERSONAL
+  MERCHANT
+  AGENT
+}
+
+enum PaymentMethodStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum NoticeLevel {
+  INFO
+  WARNING
+  SUCCESS
+  ERROR
+}
+
+enum LiveChatProvider {
+  NONE
+  TAWKTO
+  CRISP
+}
+
+enum DisplayCurrency {
+  USD
+  BDT
+}
+
+// ── Core identity ────────────────────────────────────────────────────────
+
+model User {
+  id           String     @id @default(cuid())
+  username     String     @unique
+  email        String     @unique
+  // Nullable — a social-login-only account (Google) has no password until
+  // the user explicitly sets one (via the forgot-password flow or the
+  // profile page's change-password form, which skips the "current
+  // password" check when this is null; see profile.service.ts).
+  passwordHash String?
+  role         Role       @default(USER)
+  status       UserStatus @default(ACTIVE)
+
+  // Google OAuth (Sign in with Google) — unique so a Google account can
+  // only ever be linked to one User row. Nullable: most accounts are
+  // password-only and never touch this. See services/auth.service.ts's
+  // googleAuth().
+  googleId  String? @unique
+  avatarUrl String?
+
+  // Phase 2: TOTP secret for 2FA, encrypted at rest.
+  twoFactorSecret  String?
+  twoFactorEnabled Boolean @default(false)
+
+  // Reseller API key — hashed at rest (sha256), same pattern as
+  // RefreshToken.tokenHash below. Only a short prefix is kept in the clear
+  // so the profile UI can show "which key is this" without ever being able
+  // to re-display the full secret after generation (see services/apiKey.service.ts).
+  apiKeyHash      String?   @unique
+  apiKeyPrefix    String?
+  apiKeyCreatedAt DateTime?
+
+  phone              String?
+  notifyEmail        Boolean @default(true)
+  notifyOrderUpdates Boolean @default(true)
+  notifyPromotions   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  wallet              Wallet?
+  refreshTokens       RefreshToken[]
+  orders              Order[]
+  tickets             Ticket[]
+  ticketMessages      TicketMessage[]
+  deposits            Deposit[]
+  reviewedDeposits    Deposit[]            @relation("DepositReviewer")
+  adminAuditLogs      AdminAuditLog[]      @relation("AuditActor")
+  childPanel          ChildPanel?
+  affiliate           Affiliate?
+  couponRedemptions   CouponRedemption[]
+  passwordResetTokens PasswordResetToken[]
+
+  @@index([role])
+}
+
+// Hashed, single-use, expiring — same shape as RefreshToken above, applied
+// to the forgot-password flow (services/passwordReset.service.ts). Only the
+// hash is stored; the plaintext token only ever exists in the emailed link.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model RefreshToken {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash    String    @unique
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  replacedById String?
+  createdByIp  String?
+  userAgent    String?
+  createdAt    DateTime  @default(now())
+
+  @@index([userId])
+}
+
+// ── Wallet / ledger ──────────────────────────────────────────────────────
+
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance   Decimal  @default(0) @db.Decimal(18, 4)
+  currency  String   @default("USD")
+  updatedAt DateTime @updatedAt
+
+  transactions WalletTransaction[]
+}
+
+// Append-only ledger. Rows are never updated or deleted — balance history
+// must always be reconstructable and auditable.
+model WalletTransaction {
+  id            String       @id @default(cuid())
+  walletId      String
+  wallet        Wallet       @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  type          WalletTxType
+  amount        Decimal      @db.Decimal(18, 4) // positive = credit, negative = debit
+  balanceAfter  Decimal      @db.Decimal(18, 4)
+  referenceType String? // "ORDER" | "DEPOSIT" | "ADMIN" | ...
+  referenceId   String?
+  note          String?
+  createdAt     DateTime     @default(now())
+
+  @@index([walletId, createdAt])
+}
+
+// Prevents duplicate order submission (double-click / retry / replay) from
+// ever debiting the wallet twice for the same client-issued request.
+model IdempotencyKey {
+  id           String   @id @default(cuid())
+  userId       String
+  key          String
+  requestHash  String
+  responseJson String?
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, key])
+}
+
+// ── Provider (upstream API) ─────────────────────────────────────────────
+
+model Provider {
+  id               String         @id @default(cuid())
+  name             String
+  apiUrl           String
+  apiKeyCiphertext String // encrypted at rest, see lib/crypto.ts — never store plaintext
+  balance          Decimal        @default(0) @db.Decimal(18, 4)
+  status           ProviderStatus @default(ACTIVE)
+  lastSyncAt       DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  services       Service[]         @relation("PrimaryProvider")
+  backupServices Service[]         @relation("BackupProvider")
+  syncLogs       ProviderSyncLog[]
+}
+
+// Every provider API call (services/add/status/balance) that fails writes a
+// row here — this is the "Synced Logs" admin view, and what the auto-order
+// and catalog-sync cron jobs (apps/api/src/cron/) diagnose failures from.
+model ProviderSyncLog {
+  id         String   @id @default(cuid())
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  action     String // "services" | "add" | "status" | "balance" | ...
+  status     String // "SUCCESS" | "FAILURE"
+  message    String?
+  createdAt  DateTime @default(now())
+
+  @@index([providerId, createdAt])
+}
+
+// Admin-configured, encrypted-at-rest payment gateway credentials (see
+// lib/crypto.ts). Deliberately starts with zero rows / enabled=false —
+// adding or rotating a gateway is an admin-UI action, not a redeploy.
+model PaymentGatewayConfig {
+  id                    String             @id @default(cuid())
+  provider              String             @unique // "BKASH" | ...
+  mode                  PaymentGatewayMode @default(SANDBOX)
+  credentialsCiphertext String // JSON blob of gateway-specific fields, encrypted
+  enabled               Boolean            @default(false)
+  // Phase 4 safety switch: when true (default), confirmGatewayDeposit()
+  // auto-credits the wallet the moment adapter.confirm() reports PAID — the
+  // existing Phase 2/3 behavior. When false, confirm() still runs (so admins
+  // see a "Verified via API" badge) but the deposit is left PENDING in the
+  // manual-approval queue instead of auto-crediting — for trialing a newly
+  // connected gateway before trusting it to move money unattended.
+  autoVerify            Boolean            @default(true)
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+}
+
+// Phase 3: the dynamic, admin-managed list of payment options users see on
+// the Add Funds page — replaces the old hardcoded frontend method list.
+// AUTOMATED rows point at a PaymentGatewayConfig (via gatewayProvider) for
+// credentials; MANUAL rows are just display copy + an account number that
+// feeds the existing admin-approval Deposit queue. "Multiple numbers" (per
+// the spec) means creating multiple rows here, e.g. two "bKash Personal"
+// entries — not a list embedded in one row.
+model PaymentMethod {
+  id              String                   @id @default(cuid())
+  title           String
+  gatewayType     PaymentMethodGatewayType
+  accountType     PaymentMethodAccountType @default(PERSONAL)
+  accountNumber   String?
+  instructions    String?
+  minAmount       Decimal                  @default(0.2) @db.Decimal(18, 4)
+  maxAmount       Decimal                  @default(100000) @db.Decimal(18, 4)
+  bonusPercent    Decimal                  @default(0) @db.Decimal(5, 2)
+  // Only set when gatewayType = AUTOMATED; references which PaymentGatewayConfig
+  // (by its `provider` key) supplies credentials for this method.
+  gatewayProvider String?
+  status          PaymentMethodStatus      @default(ACTIVE)
+  sortOrder       Int                      @default(0)
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+
+  deposits Deposit[]
+
+  @@index([status])
+}
+
+// ── Catalog ──────────────────────────────────────────────────────────────
+
+model ServiceCategory {
+  id        String   @id @default(cuid())
+  name      String
+  platform  String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  services Service[]
+}
+
+model Service {
+  id                String          @id @default(cuid())
+  categoryId        String
+  category          ServiceCategory @relation(fields: [categoryId], references: [id])
+  providerId        String?
+  provider          Provider?       @relation("PrimaryProvider", fields: [providerId], references: [id])
+  providerServiceId String?
+
+  // Tried once if the primary provider submission fails — see
+  // cron/submitPendingOrders.ts. Optional one-level failover, not a general
+  // health-routing system.
+  backupProviderId String?
+  backupProvider   Provider? @relation("BackupProvider", fields: [backupProviderId], references: [id])
+
+  name        String
+  description String?
+
+  sellPricePer1000    Decimal @db.Decimal(18, 4)
+  providerCostPer1000 Decimal @default(0) @db.Decimal(18, 4)
+
+  minQuantity Int
+  maxQuantity Int
+
+  refillEnabled Boolean       @default(false)
+  cancelEnabled Boolean       @default(false)
+  status        ServiceStatus @default(ACTIVE)
+
+  // Opt-in per service: only services an admin has explicitly verified
+  // against a real provider mapping auto-submit orders. Everything else
+  // stays on the Phase 1 manual fulfillment path.
+  autoSubmit Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders    Order[]
+  dripFeeds DripFeed[]
+
+  // The real guard against a bulk import (or a re-run of one) creating
+  // duplicate rows for the same upstream service — see
+  // services/providerImport.service.ts, which relies on this via
+  // createMany's skipDuplicates rather than an app-level pre-check alone.
+  // Postgres treats each NULL as distinct, so manually-created services
+  // (providerId/providerServiceId both null) are never affected by this.
+  @@unique([providerId, providerServiceId])
+  @@index([categoryId])
+  @@index([status])
+}
+
+// ── Orders ───────────────────────────────────────────────────────────────
+
+model Order {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  link     String
+  quantity Int
+
+  // Snapshot of price at order time — server-calculated, never client-supplied.
+  charge       Decimal @db.Decimal(18, 4)
+  providerCost Decimal @db.Decimal(18, 4)
+
+  startCount      Int?
+  remains         Int?
+  status          OrderStatus @default(PENDING)
+  mode            OrderMode   @default(MANUAL)
+  providerOrderId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refillRequests RefillRequest[]
+
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+// A refill is a distinct provider-side request tied to a specific order, not
+// a field on Order — a service can legitimately be refilled more than once
+// (e.g. a partial re-drop after the first refill only partially restored the
+// count), and keeping the full history is what the admin/user refill log
+// actually needs to show.
+model RefillRequest {
+  id               String       @id @default(cuid())
+  orderId          String
+  order            Order        @relation(fields: [orderId], references: [id])
+  providerRefillId String?
+  status           RefillStatus @default(REQUESTED)
+  note             String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([status])
+}
+
+// ── Support tickets ──────────────────────────────────────────────────────
+
+model Ticket {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  subject   String
+  status    TicketStatus @default(OPEN)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  messages TicketMessage[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model TicketMessage {
+  id         String       @id @default(cuid())
+  ticketId   String
+  ticket     Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderId   String
+  sender     User         @relation(fields: [senderId], references: [id])
+  senderRole TicketSender
+  body       String // sanitized with DOMPurify before persisting
+  createdAt  DateTime     @default(now())
+
+  @@index([ticketId, createdAt])
+}
+
+// ── Deposits (manual admin-approval flow, plus Phase 2 gateway-confirmed flow) ──
+
+model Deposit {
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  method       String // denormalized snapshot of PaymentMethod.title (or gateway name) at deposit time
+  amount       Decimal       @db.Decimal(18, 4)
+  reference    String?
+  status       DepositStatus @default(PENDING)
+  reviewedById String?
+  reviewedBy   User?         @relation("DepositReviewer", fields: [reviewedById], references: [id])
+  reviewNote   String?
+  createdAt    DateTime      @default(now())
+  reviewedAt   DateTime?
+
+  // Set only for gateway-initiated deposits (see services/payments/) — links
+  // this row to the gateway's own payment/session id so confirmGatewayDeposit()
+  // can look it up from a callback and so a duplicate callback is a no-op.
+  gatewayProvider String?
+  gatewayRef      String? @unique
+
+  // Phase 3: which admin-configured PaymentMethod this deposit was made
+  // through. onDelete: Restrict — a method with deposit history can be
+  // disabled but not deleted, so the ledger's "paid via X" trail never breaks.
+  paymentMethodId String?
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: Restrict)
+
+  // Manual-deposit proof of payment. trxId is globally unique — the actual
+  // guarantee behind "duplicate TrxID prevention" (see deposit.service.ts
+  // for the friendlier pre-check that runs before hitting this constraint).
+  trxId        String? @unique
+  senderNumber String?
+
+  // Snapshotted from PaymentMethod.bonusPercent at approval time, so a later
+  // change to the method's bonus % never rewrites deposit history.
+  bonusAmount Decimal @default(0) @db.Decimal(18, 4)
+
+  // Phase 4: optional promo code applied at deposit time. onDelete: SetNull
+  // (not Restrict like paymentMethodId) — a coupon is a marketing artifact,
+  // not part of the payment-method ledger trail, so deleting it should never
+  // be blocked by redemption history; the redemption's own CouponRedemption
+  // row (with its snapshotted amount) is the permanent record either way.
+  couponId String?
+  coupon   Coupon? @relation(fields: [couponId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+}
+
+// ── Admin audit trail ────────────────────────────────────────────────────
+
+model AdminAuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  actor      User     @relation("AuditActor", fields: [actorId], references: [id])
+  action     String
+  targetType String
+  targetId   String
+  beforeJson String?
+  afterJson  String?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([targetType, targetId])
+  @@index([actorId, createdAt])
+}
+
+// ── Phase 2+ domain: schema only, no API/UI wired yet ────────────────────
+
+model DripFeed {
+  id          String   @id @default(cuid())
+  userId      String
+  serviceId   String
+  service     Service  @relation(fields: [serviceId], references: [id])
+  link        String
+  totalCharge Decimal  @db.Decimal(18, 4)
+  quantity    Int
+  runs        Int
+  interval    Int // minutes between runs
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Affiliate {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  code              String   @unique
+  commissionRate    Decimal  @default(5) @db.Decimal(5, 2)
+  visits            Int      @default(0)
+  registrations     Int      @default(0)
+  totalEarnings     Decimal  @default(0) @db.Decimal(18, 4)
+  availableEarnings Decimal  @default(0) @db.Decimal(18, 4)
+  createdAt         DateTime @default(now())
+}
+
+model ChildPanel {
+  id            String           @id @default(cuid())
+  userId        String           @unique
+  user          User             @relation(fields: [userId], references: [id])
+  domain        String           @unique
+  currency      String           @default("USD")
+  adminUsername String
+  status        ChildPanelStatus @default(PENDING)
+  createdAt     DateTime         @default(now())
+}
+
+model Coupon {
+  id        String     @id @default(cuid())
+  code      String     @unique
+  type      CouponType
+  value     Decimal    @db.Decimal(18, 4)
+  maxUses   Int?
+  usedCount Int        @default(0)
+  expiresAt DateTime?
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+
+  redemptions CouponRedemption[]
+  deposits    Deposit[]
+}
+
+model CouponRedemption {
+  id        String   @id @default(cuid())
+  couponId  String
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Decimal  @db.Decimal(18, 4)
+  createdAt DateTime @default(now())
+
+  @@unique([couponId, userId])
+}
+
+// ── Phase 4: site config, notices ───────────────────────────────────────
+
+// Deliberately a singleton (fixed id "default", enforced in
+// services/settings.service.ts) rather than a key/value table — the set of
+// fields is small and fixed, so a real schema is more useful than a generic
+// blob. smtpPassCiphertext is encrypted at rest via lib/crypto.ts, same as
+// PaymentGatewayConfig.credentialsCiphertext; getPublicSettings() strips it
+// (and every other secret) before anything reaches an unauthenticated route.
+model SiteSettings {
+  id String @id @default("default")
+
+  siteName String @default("SMM Panel")
+
+  whatsappEnabled Boolean @default(false)
+  whatsappNumber  String?
+
+  liveChatProvider LiveChatProvider @default(NONE)
+  liveChatWidgetId String?
+
+  // Admin-set display-only conversion rate — never affects any stored
+  // balance or price, which stay USD everywhere server-side (see
+  // apps/web/src/context/CurrencyContext.tsx).
+  usdToBdtRate    Decimal         @default(110) @db.Decimal(10, 4)
+  defaultCurrency DisplayCurrency @default(USD)
+
+  smtpEnabled        Boolean @default(false)
+  smtpHost           String?
+  smtpPort           Int?
+  smtpUser           String?
+  smtpPassCiphertext String?
+  smtpFromAddress    String?
+
+  updatedAt DateTime @updatedAt
+}
+
+model Notice {
+  id        String      @id @default(cuid())
+  message   String
+  level     NoticeLevel @default(INFO)
+  active    Boolean     @default(true)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([active])
+}

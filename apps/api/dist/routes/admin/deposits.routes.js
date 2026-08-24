@@ -1,0 +1,29 @@
+import { Router } from "express";
+import { depositListQuerySchema, reviewDepositSchema } from "@smm/shared";
+import { validate } from "../../middleware/validate.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
+import { listDepositsForAdmin, reviewDeposit } from "../../services/deposit.service.js";
+import { writeAuditLog } from "../../services/audit.service.js";
+export const adminDepositsRouter = Router();
+adminDepositsRouter.get("/", validate(depositListQuerySchema, "query"), asyncHandler(async (req, res) => {
+    const { page, pageSize } = req.query;
+    const status = typeof req.query.status === "string" ? req.query.status : undefined;
+    const result = await listDepositsForAdmin(page, pageSize, status);
+    res.json({
+        ...result,
+        items: result.items.map((d) => ({ ...d, amount: d.amount.toString(), bonusAmount: d.bonusAmount.toString() })),
+    });
+}));
+adminDepositsRouter.post("/:id/review", validate(reviewDepositSchema), asyncHandler(async (req, res) => {
+    const { action, note } = req.body;
+    const deposit = await reviewDeposit(req.params.id, req.user.id, action, note);
+    await writeAuditLog({
+        actorId: req.user.id,
+        action: `deposit.${action.toLowerCase()}`,
+        targetType: "Deposit",
+        targetId: req.params.id,
+        after: { action, note },
+        ip: req.ip,
+    });
+    res.json({ deposit: { ...deposit, amount: deposit.amount.toString(), bonusAmount: deposit.bonusAmount.toString() } });
+}));
