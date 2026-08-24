@@ -7,6 +7,10 @@ packages/*/node_modules/
 .env
 .env.*
 !.env.example
+# Exception: no secrets in here, just the production VITE_* values Vite
+# bakes into apps/web/dist at build time — see apps/web/vite.config.ts's
+# envDir and the note at the top of .env.production.
+!.env.production
 
 # deployment backups — large binaries, never commit
 *.zip
