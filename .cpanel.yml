@@ -1,0 +1,22 @@
+---
+# cPanel "Git Version Control" deploy hook.
+#
+# Setup (one-time, in cPanel):
+#   1. Files -> Git Version Control -> Create -> Clone a Repository ->
+#      paste this repo's GitHub URL, branch "main". Any local path is
+#      fine — deploy-cpanel.sh below locates itself automatically.
+#   2. Manage the new repo -> "Pull or Deploy" tab. After this file lands
+#      on main, a "Deploy HEAD Commit" button appears there — that's what
+#      runs the task below.
+#   3. Before the FIRST deploy: create /home/allinons/smm-api/.env by hand
+#      via File Manager (never committed — see chat for the template).
+#
+# Every future `git push` to main -> "Update from Remote" then "Deploy
+# HEAD Commit" (or an automatic pull, if your cPanel version's webhook
+# support is enabled) rebuilds and republishes both the frontend
+# (public_html) and the API (the Setup Node.js App at smm-api), then
+# restarts the Node app. See bin/deploy-cpanel.sh for exactly what runs.
+
+deployment:
+  tasks:
+    - /bin/bash bin/deploy-cpanel.sh
