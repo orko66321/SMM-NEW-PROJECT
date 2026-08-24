@@ -1,16 +1,21 @@
 import type {
   AdjustWalletInput,
+  ChangePasswordInput,
+  CouponInput,
   CreateGatewayDepositInput,
   CreateManualDepositInput,
   CreateOrderInput,
   CreateProviderInput,
   CreateTicketInput,
+  NoticeInput,
   PaymentGatewayKey,
   PaymentMethodInput,
   ServiceInput,
   UpdateGatewayConfigInput,
   UpdateOrderStatusInput,
+  UpdateProfileInput,
   UpdateProviderInput,
+  UpdateSettingsInput,
   UpdateUserInput,
 } from "@smm/shared";
 import { apiClient } from "./client.js";
@@ -109,3 +114,43 @@ export const createAdminPaymentMethod = (input: PaymentMethodInput) =>
 export const updateAdminPaymentMethod = (id: string, input: Partial<PaymentMethodInput>) =>
   apiClient.put(`/admin/payment-methods/${id}`, input).then((r) => r.data.method);
 export const deleteAdminPaymentMethod = (id: string) => apiClient.delete(`/admin/payment-methods/${id}`);
+
+// ── Public (Phase 4 — unauthenticated) ──────────────────────────────────
+export const getPublicSettings = () => apiClient.get("/public/settings").then((r) => r.data);
+export const getPublicNotices = () => apiClient.get("/public/notices").then((r) => r.data.items);
+export const getPublicStats = () => apiClient.get("/public/stats").then((r) => r.data);
+export const getPublicCategories = () => apiClient.get("/public/categories").then((r) => r.data.items);
+export const getPublicServices = (params: { page?: number; pageSize?: number; categoryId?: string; search?: string }) =>
+  apiClient.get("/public/services", { params }).then((r) => r.data);
+
+// ── Coupons (Phase 4) ────────────────────────────────────────────────────
+export const validateCoupon = (code: string, amount: number) =>
+  apiClient.post("/coupons/validate", { code, amount }).then((r) => r.data as { valid: boolean; bonusAmount: string });
+export const getAdminCoupons = () => apiClient.get("/admin/coupons").then((r) => r.data.items);
+export const createAdminCoupon = (input: CouponInput) => apiClient.post("/admin/coupons", input).then((r) => r.data.coupon);
+export const updateAdminCoupon = (id: string, input: Partial<CouponInput>) =>
+  apiClient.put(`/admin/coupons/${id}`, input).then((r) => r.data.coupon);
+export const deleteAdminCoupon = (id: string) => apiClient.delete(`/admin/coupons/${id}`);
+
+// ── Notices (Phase 4) ────────────────────────────────────────────────────
+export const getAdminNotices = () => apiClient.get("/admin/notices").then((r) => r.data.items);
+export const createAdminNotice = (input: NoticeInput) => apiClient.post("/admin/notices", input).then((r) => r.data.notice);
+export const updateAdminNotice = (id: string, input: Partial<NoticeInput>) =>
+  apiClient.put(`/admin/notices/${id}`, input).then((r) => r.data.notice);
+export const deleteAdminNotice = (id: string) => apiClient.delete(`/admin/notices/${id}`);
+
+// ── Site settings (Phase 4, admin) ──────────────────────────────────────
+export const getAdminSettings = () => apiClient.get("/admin/settings").then((r) => r.data);
+export const updateAdminSettings = (input: UpdateSettingsInput) => apiClient.put("/admin/settings", input);
+
+// ── Analytics (Phase 4, admin) ───────────────────────────────────────────
+export const getAdminDailyStats = (days = 30) =>
+  apiClient.get("/admin/stats/daily", { params: { days } }).then((r) => r.data.items);
+
+// ── Profile (Phase 4) ────────────────────────────────────────────────────
+export const getMyProfile = () => apiClient.get("/users/me").then((r) => r.data.profile);
+export const updateMyProfile = (input: UpdateProfileInput) => apiClient.patch("/users/me", input).then((r) => r.data.profile);
+export const changeMyPassword = (input: ChangePasswordInput) => apiClient.post("/users/me/password", input);
+export const generateMyApiKey = () =>
+  apiClient.post("/users/me/api-key").then((r) => r.data as { apiKey: string; prefix: string });
+export const revokeMyApiKey = () => apiClient.delete("/users/me/api-key");

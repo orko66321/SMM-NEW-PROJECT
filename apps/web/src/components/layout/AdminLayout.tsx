@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.js";
+import NoticeBar from "./NoticeBar.js";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", end: true },
@@ -11,6 +12,9 @@ const navItems = [
   { to: "/admin/providers", label: "Providers" },
   { to: "/admin/payment-gateways", label: "Payment Gateways" },
   { to: "/admin/payment-methods", label: "Payment Methods" },
+  { to: "/admin/coupons", label: "Coupons" },
+  { to: "/admin/notices", label: "Notices" },
+  { to: "/admin/settings", label: "Settings" },
 ];
 
 export default function AdminLayout() {
@@ -63,6 +67,7 @@ export default function AdminLayout() {
             </button>
           </div>
         </header>
+        <NoticeBar />
         <main className="flex-1 p-6">
           <Outlet />
         </main>

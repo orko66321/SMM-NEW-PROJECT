@@ -109,6 +109,24 @@ enum PaymentMethodStatus {
   DISABLED
 }
 
+enum NoticeLevel {
+  INFO
+  WARNING
+  SUCCESS
+  ERROR
+}
+
+enum LiveChatProvider {
+  NONE
+  TAWKTO
+  CRISP
+}
+
+enum DisplayCurrency {
+  USD
+  BDT
+}
+
 // ── Core identity ────────────────────────────────────────────────────────
 
 model User {
@@ -123,7 +141,18 @@ model User {
   twoFactorSecret String?
   twoFactorEnabled Boolean @default(false)
 
-  apiKey String? @unique
+  // Reseller API key — hashed at rest (sha256), same pattern as
+  // RefreshToken.tokenHash below. Only a short prefix is kept in the clear
+  // so the profile UI can show "which key is this" without ever being able
+  // to re-display the full secret after generation (see services/apiKey.service.ts).
+  apiKeyHash      String?   @unique
+  apiKeyPrefix    String?
+  apiKeyCreatedAt DateTime?
+
+  phone             String?
+  notifyEmail       Boolean @default(true)
+  notifyOrderUpdates Boolean @default(true)
+  notifyPromotions  Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -139,8 +168,24 @@ model User {
   childPanel     ChildPanel?
   affiliate      Affiliate?
   couponRedemptions CouponRedemption[]
+  passwordResetTokens PasswordResetToken[]
 
   @@index([role])
+}
+
+// Hashed, single-use, expiring — same shape as RefreshToken above, applied
+// to the forgot-password flow (services/passwordReset.service.ts). Only the
+// hash is stored; the plaintext token only ever exists in the emailed link.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
 
 model RefreshToken {
@@ -243,6 +288,13 @@ model PaymentGatewayConfig {
   mode                  PaymentGatewayMode @default(SANDBOX)
   credentialsCiphertext String // JSON blob of gateway-specific fields, encrypted
   enabled               Boolean            @default(false)
+  // Phase 4 safety switch: when true (default), confirmGatewayDeposit()
+  // auto-credits the wallet the moment adapter.confirm() reports PAID — the
+  // existing Phase 2/3 behavior. When false, confirm() still runs (so admins
+  // see a "Verified via API" badge) but the deposit is left PENDING in the
+  // manual-approval queue instead of auto-crediting — for trialing a newly
+  // connected gateway before trusting it to move money unattended.
+  autoVerify            Boolean            @default(true)
   createdAt             DateTime           @default(now())
   updatedAt             DateTime           @updatedAt
 }
@@ -428,6 +480,14 @@ model Deposit {
   // change to the method's bonus % never rewrites deposit history.
   bonusAmount Decimal @default(0) @db.Decimal(18, 4)
 
+  // Phase 4: optional promo code applied at deposit time. onDelete: SetNull
+  // (not Restrict like paymentMethodId) — a coupon is a marketing artifact,
+  // not part of the payment-method ledger trail, so deleting it should never
+  // be blocked by redemption history; the redemption's own CouponRedemption
+  // row (with its snapshotted amount) is the permanent record either way.
+  couponId String?
+  coupon   Coupon? @relation(fields: [couponId], references: [id], onDelete: SetNull)
+
   @@index([userId])
   @@index([status])
 }
@@ -504,6 +564,7 @@ model Coupon {
   createdAt DateTime   @default(now())
 
   redemptions CouponRedemption[]
+  deposits    Deposit[]
 }
 
 model CouponRedemption {
@@ -516,4 +577,52 @@ model CouponRedemption {
   createdAt DateTime @default(now())
 
   @@unique([couponId, userId])
+}
+
+// ── Phase 4: site config, notices ───────────────────────────────────────
+
+// Deliberately a singleton (fixed id "default", enforced in
+// services/settings.service.ts) rather than a key/value table — the set of
+// fields is small and fixed, so a real schema is more useful than a generic
+// blob. smtpPassCiphertext is encrypted at rest via lib/crypto.ts, same as
+// PaymentGatewayConfig.credentialsCiphertext; getPublicSettings() strips it
+// (and every other secret) before anything reaches an unauthenticated route.
+model SiteSettings {
+  id String @id @default("default")
+
+  siteName String @default("SMM Panel")
+
+  whatsappEnabled Boolean @default(false)
+  whatsappNumber  String?
+
+  liveChatProvider LiveChatProvider @default(NONE)
+  liveChatWidgetId String?
+
+  // Admin-set display-only conversion rate — never affects any stored
+  // balance or price, which stay USD everywhere server-side (see
+  // apps/web/src/context/CurrencyContext.tsx).
+  usdToBdtRate     Decimal         @default(110) @db.Decimal(10, 4)
+  defaultCurrency  DisplayCurrency @default(USD)
+
+  smtpEnabled        Boolean @default(false)
+  smtpHost            String?
+  smtpPort             Int?
+  smtpUser            String?
+  smtpPassCiphertext  String?
+  smtpFromAddress     String?
+
+  updatedAt DateTime @updatedAt
+}
+
+model Notice {
+  id        String      @id @default(cuid())
+  message   String
+  level     NoticeLevel @default(INFO)
+  active    Boolean     @default(true)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([active])
 }

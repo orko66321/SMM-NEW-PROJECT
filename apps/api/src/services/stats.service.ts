@@ -29,3 +29,51 @@ export async function getAdminStats() {
     totalProfit: totalRevenue.minus(totalCost).toString(),
   };
 }
+
+// Real, public-safe aggregates for the landing page's stats counter — no
+// revenue/profit here (that stays admin-only), same "never fabricate trust
+// numbers" rule as getAdminStats above.
+export async function getPublicStats() {
+  const [totalUsers, totalOrdersCompleted, totalServices] = await Promise.all([
+    prisma.user.count(),
+    prisma.order.count({ where: { status: "COMPLETED" } }),
+    prisma.service.count({ where: { status: "ACTIVE" } }),
+  ]);
+  return { totalUsers, totalOrdersCompleted, totalServices };
+}
+
+interface DailyStatsRow {
+  date: Date;
+  revenue: Prisma.Decimal;
+  cost: Prisma.Decimal;
+  orderCount: bigint;
+}
+
+// Raw SQL for the date_trunc grouping Prisma's query builder can't express —
+// same "$queryRaw inside otherwise-typed services" precedent as
+// deposit.service.ts's lockDeposit. Feeds the admin dashboard's Recharts
+// daily sales/profit/order-volume charts.
+export async function getDailySalesStats(days: number) {
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const rows = await prisma.$queryRaw<DailyStatsRow[]>`
+    SELECT date_trunc('day', "createdAt") AS date,
+           COALESCE(SUM("charge"), 0) AS revenue,
+           COALESCE(SUM("providerCost"), 0) AS cost,
+           COUNT(*) AS "orderCount"
+    FROM "Order"
+    WHERE "createdAt" >= ${since}
+    GROUP BY date
+    ORDER BY date ASC
+  `;
+
+  return rows.map((r) => {
+    const revenue = new Prisma.Decimal(r.revenue);
+    const cost = new Prisma.Decimal(r.cost);
+    return {
+      date: r.date.toISOString().slice(0, 10),
+      revenue: revenue.toString(),
+      profit: revenue.minus(cost).toString(),
+      orderCount: Number(r.orderCount),
+    };
+  });
+}

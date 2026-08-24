@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import type { Role } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { verifyAccessToken } from "../services/token.service.js";
+import { findUserByApiKey } from "../services/apiKey.service.js";
 import { AppError } from "../utils/AppError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -9,7 +10,21 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 // role/status baked into the JWT) so that an admin demotion or account
 // suspension takes effect immediately — not after the access token's TTL
 // expires. The extra query is a deliberate, cheap trade for that guarantee.
+//
+// Phase 4: also accepts an `X-API-Key` header as an alternative credential
+// (checked first, so a reseller script never needs a JWT/refresh-token
+// dance) — see services/apiKey.service.ts. Same DB-verified role/status
+// guarantee either way; only the credential lookup differs.
 export const authenticate = asyncHandler(async (req: Request, _res: Response, next: NextFunction) => {
+  const apiKeyHeader = req.headers["x-api-key"];
+  if (typeof apiKeyHeader === "string" && apiKeyHeader.length > 0) {
+    const user = await findUserByApiKey(apiKeyHeader);
+    if (!user) throw AppError.unauthorized("Invalid API key");
+    if (user.status !== "ACTIVE") throw AppError.forbidden("Account is suspended");
+    req.user = user;
+    return next();
+  }
+
   const header = req.headers.authorization;
   if (!header?.startsWith("Bearer ")) {
     throw AppError.unauthorized("Missing bearer token");

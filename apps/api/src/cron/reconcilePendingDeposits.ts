@@ -2,7 +2,7 @@ import { prisma } from "../lib/prisma.js";
 import { logger } from "../lib/logger.js";
 import { confirmGatewayDeposit } from "../services/deposit.service.js";
 import { gatewayRegistry } from "../services/payments/registry.js";
-import { getEnabledGatewayCredentials } from "../services/payments/config.service.js";
+import { getEnabledGatewayCredentials, getGatewayAutoVerify } from "../services/payments/config.service.js";
 import type { PaymentGatewayKey } from "@smm/shared";
 
 const STALE_AFTER_MS = 3 * 60 * 1000;
@@ -28,9 +28,10 @@ export async function reconcilePendingDeposits() {
 
     try {
       const credentials = await getEnabledGatewayCredentials(key);
+      const autoVerify = await getGatewayAutoVerify(key);
       const result = await adapter.confirm(credentials, deposit.gatewayRef!);
       if (result.status !== "PENDING") {
-        await confirmGatewayDeposit(deposit.gatewayRef!, { status: result.status, gatewayProvider: key });
+        await confirmGatewayDeposit(deposit.gatewayRef!, { status: result.status, gatewayProvider: key }, { autoVerify });
         confirmed += 1;
       }
     } catch (err) {

@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import { adjustWalletBalance } from "./wallet.service.js";
+import { redeemCouponForDeposit, validateCoupon } from "./coupon.service.js";
 import type { CreateManualDepositInput } from "@smm/shared";
 
 /** Row-locks a Deposit within an existing transaction — see wallet.service.ts's adjustWalletBalance for the same pattern applied to wallets. */
@@ -19,7 +20,14 @@ async function lockDeposit(tx: Prisma.TransactionClient, depositId: string) {
  */
 async function creditApprovedDeposit(
   tx: Prisma.TransactionClient,
-  deposit: { id: string; userId: string; amount: Prisma.Decimal; method: string; paymentMethodId: string | null },
+  deposit: {
+    id: string;
+    userId: string;
+    amount: Prisma.Decimal;
+    method: string;
+    paymentMethodId: string | null;
+    couponId: string | null;
+  },
 ) {
   await adjustWalletBalance(tx, {
     userId: deposit.userId,
@@ -34,16 +42,31 @@ async function creditApprovedDeposit(
   if (deposit.paymentMethodId) {
     const method = await tx.paymentMethod.findUnique({ where: { id: deposit.paymentMethodId } });
     if (method && method.bonusPercent.greaterThan(0)) {
-      bonusAmount = deposit.amount.mul(method.bonusPercent).div(100);
+      const methodBonus = deposit.amount.mul(method.bonusPercent).div(100);
+      bonusAmount = bonusAmount.plus(methodBonus);
       await adjustWalletBalance(tx, {
         userId: deposit.userId,
-        amount: bonusAmount,
+        amount: methodBonus,
         type: "DEPOSIT_BONUS",
         referenceType: "DEPOSIT",
         referenceId: deposit.id,
         note: `${method.bonusPercent}% deposit bonus via ${deposit.method}`,
       });
     }
+  }
+
+  // Coupon bonus is folded into the same bonusAmount total shown on the
+  // Deposit row (Wallet.tsx's fund-history table has one "Bonus" column) —
+  // the CouponRedemption row created inside redeemCouponForDeposit is the
+  // separate, permanent record of exactly which coupon contributed what.
+  if (deposit.couponId) {
+    const couponBonus = await redeemCouponForDeposit(tx, {
+      couponId: deposit.couponId,
+      userId: deposit.userId,
+      depositId: deposit.id,
+      amount: Number(deposit.amount),
+    });
+    if (couponBonus) bonusAmount = bonusAmount.plus(couponBonus);
   }
 
   if (bonusAmount.greaterThan(0)) {
@@ -71,6 +94,17 @@ export async function createManualDeposit(userId: string, input: CreateManualDep
     throw AppError.conflict("This transaction ID has already been submitted");
   }
 
+  // Validated (fail-fast) at submission time so the user gets clear
+  // feedback immediately; re-validated again at credit time inside
+  // creditApprovedDeposit → redeemCouponForDeposit, which is the actual
+  // atomic guarantee (a coupon that goes stale in between is skipped, not
+  // an error — see that function's comment).
+  let couponId: string | undefined;
+  if (input.couponCode) {
+    const { coupon } = await validateCoupon(input.couponCode, userId, input.amount);
+    couponId = coupon.id;
+  }
+
   try {
     return await prisma.deposit.create({
       data: {
@@ -81,6 +115,7 @@ export async function createManualDeposit(userId: string, input: CreateManualDep
         paymentMethodId: method.id,
         trxId: input.trxId,
         senderNumber: input.senderNumber,
+        couponId,
       },
     });
   } catch (err) {
@@ -106,11 +141,18 @@ export async function createPendingGatewayDeposit(params: {
   amount: Prisma.Decimal.Value;
   gatewayProvider: string;
   paymentMethodId?: string;
+  couponCode?: string;
 }) {
   let methodTitle: string = params.gatewayProvider;
   if (params.paymentMethodId) {
     const method = await prisma.paymentMethod.findUnique({ where: { id: params.paymentMethodId } });
     if (method) methodTitle = method.title;
+  }
+
+  let couponId: string | undefined;
+  if (params.couponCode) {
+    const { coupon } = await validateCoupon(params.couponCode, params.userId, Number(params.amount));
+    couponId = coupon.id;
   }
 
   return prisma.deposit.create({
@@ -121,6 +163,7 @@ export async function createPendingGatewayDeposit(params: {
       status: "PENDING",
       gatewayProvider: params.gatewayProvider,
       paymentMethodId: params.paymentMethodId,
+      couponId,
     },
   });
 }
@@ -209,6 +252,11 @@ export async function reviewDeposit(
 export async function confirmGatewayDeposit(
   gatewayRef: string,
   result: { status: "PAID" | "FAILED" | "PENDING"; gatewayProvider: string },
+  // Phase 4 safety switch (PaymentGatewayConfig.autoVerify) — see routes/payments.routes.ts,
+  // which looks the flag up per-gateway before calling this. Defaults true so every
+  // existing caller/test keeps today's Phase 2/3 auto-credit behavior unless it
+  // explicitly opts out.
+  options: { autoVerify: boolean } = { autoVerify: true },
 ) {
   return prisma.$transaction(async (tx) => {
     const deposit = await tx.deposit.findUnique({ where: { gatewayRef } });
@@ -225,6 +273,19 @@ export async function confirmGatewayDeposit(
     }
     if (result.status === "PENDING") {
       return current; // gateway hasn't confirmed payment yet; leave PENDING for the next poll/callback/webhook
+    }
+
+    if (result.status === "PAID" && !options.autoVerify) {
+      // Verified with the gateway itself (adapter.confirm() already ran
+      // before this was called), but this gateway's admin-set safety switch
+      // keeps it in the manual-approval queue instead of auto-crediting —
+      // for trialing a newly connected gateway before trusting it with
+      // unattended money movement. The admin's Deposits page shows this
+      // note so they know it's already been verified, not just claimed.
+      return tx.deposit.update({
+        where: { id: deposit.id },
+        data: { reviewNote: `Verified via ${result.gatewayProvider} API — awaiting manual release (auto-verify disabled)` },
+      });
     }
 
     const updated = await tx.deposit.update({

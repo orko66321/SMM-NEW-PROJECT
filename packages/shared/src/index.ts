@@ -92,6 +92,7 @@ export const createManualDepositSchema = z.object({
   amount: z.coerce.number().positive().max(1_000_000),
   trxId: z.string().trim().min(3).max(100),
   senderNumber: z.string().trim().min(5).max(20),
+  couponCode: z.string().trim().toUpperCase().max(32).optional(),
 });
 export type CreateManualDepositInput = z.infer<typeof createManualDepositSchema>;
 
@@ -225,10 +226,14 @@ export type BkashCredentials = z.infer<typeof bkashCredentialsSchema>;
 // documented — ZiniPay's own guidance is "always verify from your backend,"
 // which is exactly what confirm() does regardless of what a webhook claims.
 // `secretKey` is stored for forward compatibility only; the adapter does not
-// use it today (see services/payments/zinipay.ts).
+// use it today (see services/payments/zinipay.ts). `merchantId` is the same
+// treatment, added per admin request — ZiniPay's documented API never asks
+// for one, so it is stored but unused until/unless a real account shows it's
+// required.
 export const zinipayCredentialsSchema = z.object({
   apiKey: z.string().trim().min(1),
   secretKey: z.string().trim().optional(),
+  merchantId: z.string().trim().optional(),
   baseUrl: z.string().trim().url().default("https://api.zinipay.com"),
 });
 export type ZiniPayCredentials = z.infer<typeof zinipayCredentialsSchema>;
@@ -246,6 +251,9 @@ export const gatewayCredentialsSchemas = {
 export const updateGatewayConfigSchema = z.object({
   mode: z.enum(["SANDBOX", "LIVE"]),
   enabled: z.boolean(),
+  // Defaults true so existing callers (and the Phase 2/3 behavior) are
+  // unaffected unless an admin explicitly flips it off — see PaymentGatewayConfig.autoVerify.
+  autoVerify: z.boolean().default(true),
   credentials: z.record(z.string(), z.unknown()),
 });
 export type UpdateGatewayConfigInput = z.infer<typeof updateGatewayConfigSchema>;
@@ -253,6 +261,7 @@ export type UpdateGatewayConfigInput = z.infer<typeof updateGatewayConfigSchema>
 export const createGatewayDepositSchema = z.object({
   amount: z.coerce.number().positive().max(1_000_000),
   paymentMethodId: z.string().optional(),
+  couponCode: z.string().trim().toUpperCase().max(32).optional(),
 });
 export type CreateGatewayDepositInput = z.infer<typeof createGatewayDepositSchema>;
 
@@ -290,3 +299,109 @@ export const paymentMethodInputSchema = paymentMethodObjectSchema
     path: ["gatewayProvider"],
   });
 export type PaymentMethodInput = z.infer<typeof paymentMethodInputSchema>;
+
+// ── Phase 4: settings, notices, coupons, password reset, profile, api keys ─
+
+export const LiveChatProviderValues = ["NONE", "TAWKTO", "CRISP"] as const;
+export type LiveChatProvider = (typeof LiveChatProviderValues)[number];
+
+export const DisplayCurrencyValues = ["USD", "BDT"] as const;
+export type DisplayCurrency = (typeof DisplayCurrencyValues)[number];
+
+export const NoticeLevelValues = ["INFO", "WARNING", "SUCCESS", "ERROR"] as const;
+export type NoticeLevel = (typeof NoticeLevelValues)[number];
+
+// Admin-facing settings update — SMTP password is optional-on-update (same
+// reasoning as updateProviderSchema.apiKey: omit to keep the existing
+// encrypted value, since it's never re-displayed after saving).
+export const updateSettingsSchema = z.object({
+  siteName: z.string().trim().min(1).max(100),
+  whatsappEnabled: z.boolean(),
+  whatsappNumber: z.string().trim().max(20).nullable().optional(),
+  liveChatProvider: z.enum(LiveChatProviderValues),
+  liveChatWidgetId: z.string().trim().max(200).nullable().optional(),
+  usdToBdtRate: z.coerce.number().positive().max(10_000),
+  defaultCurrency: z.enum(DisplayCurrencyValues),
+  smtpEnabled: z.boolean(),
+  smtpHost: z.string().trim().max(255).nullable().optional(),
+  smtpPort: z.coerce.number().int().positive().max(65_535).nullable().optional(),
+  smtpUser: z.string().trim().max(255).nullable().optional(),
+  smtpPassword: z.string().trim().max(500).optional(), // write-only; omit to keep existing
+  smtpFromAddress: z.string().trim().max(255).nullable().optional(),
+});
+export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;
+
+export const publicSettingsSchema = z.object({
+  siteName: z.string(),
+  whatsappEnabled: z.boolean(),
+  whatsappNumber: z.string().nullable(),
+  liveChatProvider: z.enum(LiveChatProviderValues),
+  liveChatWidgetId: z.string().nullable(),
+  usdToBdtRate: z.string(),
+  defaultCurrency: z.enum(DisplayCurrencyValues),
+});
+export type PublicSettings = z.infer<typeof publicSettingsSchema>;
+
+export const noticeInputSchema = z.object({
+  message: z.string().trim().min(1).max(500),
+  level: z.enum(NoticeLevelValues).default("INFO"),
+  active: z.boolean().default(true),
+  startsAt: z.coerce.date().nullable().optional(),
+  endsAt: z.coerce.date().nullable().optional(),
+});
+export type NoticeInput = z.infer<typeof noticeInputSchema>;
+
+export const CouponTypeValues = ["PERCENT", "FIXED"] as const;
+export type CouponType = (typeof CouponTypeValues)[number];
+
+export const couponInputSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .min(3)
+    .max(32)
+    .regex(/^[A-Z0-9_-]+$/, "Code may only contain letters, numbers, underscore, and hyphen"),
+  type: z.enum(CouponTypeValues),
+  value: z.coerce.number().positive().max(1_000_000),
+  maxUses: z.coerce.number().int().positive().nullable().optional(),
+  expiresAt: z.coerce.date().nullable().optional(),
+  active: z.boolean().default(true),
+});
+export type CouponInput = z.infer<typeof couponInputSchema>;
+
+export const validateCouponSchema = z.object({
+  code: z.string().trim().toUpperCase().min(1).max(32),
+  amount: z.coerce.number().positive().max(1_000_000),
+});
+export type ValidateCouponInput = z.infer<typeof validateCouponSchema>;
+
+export const forgotPasswordSchema = z.object({
+  identifier: z.string().trim().min(3).max(255), // username or email, same as loginSchema
+});
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+
+export const resetPasswordSchema = z.object({
+  token: z.string().trim().min(10).max(200),
+  password: passwordSchema,
+});
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+
+export const updateProfileSchema = z.object({
+  phone: z.string().trim().max(20).nullable().optional(),
+  notifyEmail: z.boolean().optional(),
+  notifyOrderUpdates: z.boolean().optional(),
+  notifyPromotions: z.boolean().optional(),
+});
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1).max(128),
+  newPassword: passwordSchema,
+});
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+
+export const dailyStatsQuerySchema = z.object({
+  days: z.coerce.number().int().positive().max(365).default(30),
+});
+export type DailyStatsQuery = z.infer<typeof dailyStatsQuerySchema>;

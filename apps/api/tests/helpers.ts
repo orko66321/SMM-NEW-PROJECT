@@ -14,13 +14,18 @@ export async function resetDb() {
   await prisma.ticketMessage.deleteMany();
   await prisma.ticket.deleteMany();
   await prisma.order.deleteMany();
+  await prisma.couponRedemption.deleteMany();
   await prisma.deposit.deleteMany();
+  await prisma.coupon.deleteMany();
   await prisma.paymentMethod.deleteMany();
   await prisma.service.deleteMany();
   await prisma.serviceCategory.deleteMany();
   await prisma.providerSyncLog.deleteMany();
   await prisma.provider.deleteMany();
   await prisma.paymentGatewayConfig.deleteMany();
+  await prisma.notice.deleteMany();
+  await prisma.siteSettings.deleteMany();
+  await prisma.passwordResetToken.deleteMany();
   await prisma.refreshToken.deleteMany();
   await prisma.wallet.deleteMany();
   await prisma.user.deleteMany();
@@ -108,7 +113,26 @@ export async function createPaymentMethod(
   });
 }
 
-export async function enableGateway(provider: "BKASH" | "ZINIPAY", credentials: Record<string, unknown>) {
+export async function enableGateway(
+  provider: "BKASH" | "ZINIPAY",
+  credentials: Record<string, unknown>,
+  opts: { autoVerify?: boolean } = {},
+) {
   const { upsertGatewayConfig } = await import("../src/services/payments/config.service.js");
-  await upsertGatewayConfig(provider, { mode: "SANDBOX", enabled: true, credentials });
+  await upsertGatewayConfig(provider, { mode: "SANDBOX", enabled: true, autoVerify: opts.autoVerify ?? true, credentials });
+}
+
+export async function createCoupon(
+  overrides: Partial<{ code: string; type: "PERCENT" | "FIXED"; value: number; maxUses: number | null; active: boolean; expiresAt: Date | null }> = {},
+) {
+  return prisma.coupon.create({
+    data: {
+      code: overrides.code ?? `TEST${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+      type: overrides.type ?? "PERCENT",
+      value: overrides.value ?? 10,
+      maxUses: overrides.maxUses,
+      active: overrides.active ?? true,
+      expiresAt: overrides.expiresAt,
+    },
+  });
 }

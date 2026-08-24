@@ -35,7 +35,7 @@ adminPaymentGatewaysRouter.put(
       targetType: "PaymentGatewayConfig",
       targetId: provider,
       // Never write credentials (even encrypted form) into the audit trail.
-      after: { mode: req.body.mode, enabled: req.body.enabled },
+      after: { mode: req.body.mode, enabled: req.body.enabled, autoVerify: req.body.autoVerify },
       ip: req.ip,
     });
     res.status(204).end();

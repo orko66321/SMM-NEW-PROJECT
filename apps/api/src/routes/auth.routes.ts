@@ -1,6 +1,6 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
-import { loginSchema, registerSchema } from "@smm/shared";
+import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from "@smm/shared";
 import { validate } from "../middleware/validate.js";
 import { authenticate } from "../middleware/auth.js";
 import { authLimiter } from "../middleware/rateLimit.js";
@@ -14,6 +14,7 @@ import {
   refreshSession,
   registerUser,
 } from "../services/auth.service.js";
+import { requestPasswordReset, resetPassword } from "../services/passwordReset.service.js";
 
 export const authRouter = Router();
 
@@ -82,6 +83,28 @@ authRouter.post(
     const token = req.cookies?.[REFRESH_COOKIE];
     if (token) await logoutSession(token);
     clearRefreshCookie(res);
+    res.status(204).end();
+  }),
+);
+
+authRouter.post(
+  "/forgot-password",
+  authLimiter,
+  validate(forgotPasswordSchema),
+  asyncHandler(async (req, res) => {
+    await requestPasswordReset(req.body);
+    // Always 204 regardless of whether the account exists — see
+    // passwordReset.service.ts's account-enumeration comment.
+    res.status(204).end();
+  }),
+);
+
+authRouter.post(
+  "/reset-password",
+  authLimiter,
+  validate(resetPasswordSchema),
+  asyncHandler(async (req, res) => {
+    await resetPassword(req.body);
     res.status(204).end();
   }),
 );

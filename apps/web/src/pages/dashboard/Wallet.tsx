@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createDeposit, getMyDeposits, getPaymentMethods, getWallet, initiateGatewayDeposit } from "../../api/resources.js";
+import { createDeposit, getMyDeposits, getPaymentMethods, getWallet, initiateGatewayDeposit, validateCoupon } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useCurrency } from "../../context/CurrencyContext.js";
 
 interface PaymentMethodItem {
   id: string;
@@ -21,6 +22,7 @@ interface PaymentMethodItem {
 export default function Wallet() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const { formatCurrency } = useCurrency();
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet });
   const { data: deposits } = useQuery({ queryKey: ["deposits"], queryFn: () => getMyDeposits({ page: 1, pageSize: 20 }) });
@@ -33,6 +35,11 @@ export default function Wallet() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [couponCode, setCouponCode] = useState("");
+  const [couponBonus, setCouponBonus] = useState<string | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [checkingCoupon, setCheckingCoupon] = useState(false);
+
   const selected: PaymentMethodItem | undefined = useMemo(
     () => methods?.find((m: PaymentMethodItem) => m.id === selectedId),
     [methods, selectedId],
@@ -41,6 +48,14 @@ export default function Wallet() {
   useEffect(() => {
     if (!selectedId && methods?.length) setSelectedId(methods[0].id);
   }, [methods, selectedId]);
+
+  // A coupon's bonus preview is specific to the amount it was checked
+  // against — if the user edits the amount afterward, the stale preview
+  // must not silently ride along into the submission.
+  useEffect(() => {
+    setCouponBonus(null);
+    setCouponError(null);
+  }, [amount]);
 
   useEffect(() => {
     const outcome = searchParams.get("deposit");
@@ -62,12 +77,37 @@ export default function Wallet() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  async function onApplyCoupon() {
+    if (!couponCode.trim() || !amount) return;
+    setCheckingCoupon(true);
+    setCouponError(null);
+    setCouponBonus(null);
+    try {
+      const result = await validateCoupon(couponCode.trim(), Number(amount));
+      setCouponBonus(result.bonusAmount);
+    } catch (err) {
+      setCouponError(apiErrorMessage(err, "Invalid coupon code"));
+    } finally {
+      setCheckingCoupon(false);
+    }
+  }
+
+  function resetCoupon() {
+    setCouponCode("");
+    setCouponBonus(null);
+    setCouponError(null);
+  }
+
   async function onPayAutomated() {
     if (!selected || !amount) return;
     setSubmitting(true);
     setError(null);
     try {
-      const redirectUrl = await initiateGatewayDeposit(selected.gatewayProvider as never, { amount: Number(amount), paymentMethodId: selected.id });
+      const redirectUrl = await initiateGatewayDeposit(selected.gatewayProvider as never, {
+        amount: Number(amount),
+        paymentMethodId: selected.id,
+        couponCode: couponBonus ? couponCode.trim() : undefined,
+      });
       window.location.href = redirectUrl;
     } catch (err) {
       setError(apiErrorMessage(err, "Failed to start payment"));
@@ -81,11 +121,18 @@ export default function Wallet() {
     setSubmitting(true);
     setError(null);
     try {
-      await createDeposit({ paymentMethodId: selected.id, amount: Number(amount), trxId, senderNumber });
+      await createDeposit({
+        paymentMethodId: selected.id,
+        amount: Number(amount),
+        trxId,
+        senderNumber,
+        couponCode: couponBonus ? couponCode.trim() : undefined,
+      });
       toast.push("Deposit request submitted — pending admin approval.", "success");
       setAmount("");
       setTrxId("");
       setSenderNumber("");
+      resetCoupon();
       queryClient.invalidateQueries({ queryKey: ["deposits"] });
     } catch (err) {
       setError(apiErrorMessage(err, "Failed to submit deposit"));
@@ -99,7 +146,7 @@ export default function Wallet() {
       <div className="space-y-6 lg:col-span-2">
         <div className="card">
           <p className="label">Current Balance</p>
-          <p className="font-mono text-3xl font-bold text-success">${wallet?.balance ?? "0.00"}</p>
+          <p className="font-mono text-3xl font-bold text-success">{formatCurrency(wallet?.balance ?? 0)}</p>
         </div>
 
         <div className="card">
@@ -119,8 +166,8 @@ export default function Wallet() {
                 <tr key={d.id}>
                   <td className="py-2 text-xs">{new Date(d.createdAt).toLocaleDateString()}</td>
                   <td className="py-2">{d.method}</td>
-                  <td className="py-2 font-mono">${d.amount}</td>
-                  <td className="py-2 font-mono text-success">{Number(d.bonusAmount) > 0 ? `+$${d.bonusAmount}` : "—"}</td>
+                  <td className="py-2 font-mono">{formatCurrency(d.amount)}</td>
+                  <td className="py-2 font-mono text-success">{Number(d.bonusAmount) > 0 ? `+${formatCurrency(d.bonusAmount)}` : "—"}</td>
                   <td className="py-2">
                     <span className={`badge ${d.status === "APPROVED" ? "bg-success/15 text-success" : d.status === "REJECTED" ? "bg-error/15 text-error" : "bg-warning/15 text-warning"}`}>{d.status}</span>
                   </td>
@@ -178,6 +225,37 @@ export default function Wallet() {
                 onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : "")}
                 required
               />
+            </div>
+
+            <div>
+              <label className="label" htmlFor="couponCode">Coupon / promo code (optional)</label>
+              <div className="flex gap-2">
+                <input
+                  id="couponCode"
+                  className="input-field"
+                  value={couponCode}
+                  onChange={(e) => {
+                    setCouponCode(e.target.value.toUpperCase());
+                    setCouponBonus(null);
+                    setCouponError(null);
+                  }}
+                  placeholder="e.g. WELCOME10"
+                />
+                <button
+                  type="button"
+                  className="btn-ghost shrink-0"
+                  disabled={!couponCode.trim() || !amount || checkingCoupon}
+                  onClick={onApplyCoupon}
+                >
+                  {checkingCoupon ? "Checking…" : "Apply"}
+                </button>
+              </div>
+              {couponError && <p className="mt-1 text-xs text-error">{couponError}</p>}
+              {couponBonus && (
+                <p className="mt-1 text-xs text-success">
+                  Coupon applied — you&apos;ll get an extra {formatCurrency(couponBonus)} once this deposit is credited.
+                </p>
+              )}
             </div>
 
             {selected.gatewayType === "AUTOMATED" ? (

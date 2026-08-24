@@ -1,4 +1,4 @@
-import type { AuthUser, LoginInput, RegisterInput } from "@smm/shared";
+import type { AuthUser, ForgotPasswordInput, LoginInput, RegisterInput, ResetPasswordInput } from "@smm/shared";
 import { apiClient, setAccessToken } from "./client.js";
 
 export async function login(input: LoginInput) {
@@ -26,4 +26,12 @@ export async function tryRefresh() {
   const res = await apiClient.post("/auth/refresh");
   setAccessToken(res.data.accessToken);
   return res.data.user as AuthUser;
+}
+
+export async function forgotPassword(input: ForgotPasswordInput) {
+  await apiClient.post("/auth/forgot-password", input);
+}
+
+export async function resetPassword(input: ResetPasswordInput) {
+  await apiClient.post("/auth/reset-password", input);
 }

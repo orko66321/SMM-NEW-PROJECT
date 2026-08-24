@@ -14,10 +14,17 @@ export async function listGatewayConfigs() {
       provider: key,
       mode: existing?.mode ?? "SANDBOX",
       enabled: existing?.enabled ?? false,
+      autoVerify: existing?.autoVerify ?? true,
       configured: !!existing,
       updatedAt: existing?.updatedAt.toISOString() ?? null,
     };
   });
+}
+
+/** Used by routes/payments.routes.ts before calling confirmGatewayDeposit — see PaymentGatewayConfig.autoVerify. */
+export async function getGatewayAutoVerify(provider: PaymentGatewayKey): Promise<boolean> {
+  const config = await prisma.paymentGatewayConfig.findUnique({ where: { provider } });
+  return config?.autoVerify ?? true;
 }
 
 /** Public list for the frontend deposit form — just which gateways are live and clickable. */
@@ -35,8 +42,19 @@ export async function upsertGatewayConfig(provider: PaymentGatewayKey, input: Up
   const credentials = gatewayCredentialsSchemas[provider].parse(input.credentials);
   await prisma.paymentGatewayConfig.upsert({
     where: { provider },
-    create: { provider, mode: input.mode, enabled: input.enabled, credentialsCiphertext: encrypt(JSON.stringify(credentials)) },
-    update: { mode: input.mode, enabled: input.enabled, credentialsCiphertext: encrypt(JSON.stringify(credentials)) },
+    create: {
+      provider,
+      mode: input.mode,
+      enabled: input.enabled,
+      autoVerify: input.autoVerify,
+      credentialsCiphertext: encrypt(JSON.stringify(credentials)),
+    },
+    update: {
+      mode: input.mode,
+      enabled: input.enabled,
+      autoVerify: input.autoVerify,
+      credentialsCiphertext: encrypt(JSON.stringify(credentials)),
+    },
   });
 }
 

@@ -3,8 +3,8 @@
 A social-media-marketing reseller panel: customers buy engagement services (followers, likes, views…) on
 credit from a prepaid wallet; admins manage the catalog, orders, users, and deposits.
 
-**Status: Phase 1 + Phase 2 + Phase 3.** Phase 1 shipped the money-safety/access-control core — auth,
-RBAC, the atomic wallet ledger, order placement with server-side price validation, service catalog,
+**Status: Phase 1 + Phase 2 + Phase 3 + Phase 4.** Phase 1 shipped the money-safety/access-control core —
+auth, RBAC, the atomic wallet ledger, order placement with server-side price validation, service catalog,
 support tickets, and both dashboards. Phase 2 added the payment-gateway/provider *framework* — encrypted
 credential storage, a generic JAP-standard provider client with per-service opt-in auto-fulfillment +
 one-level failover, background cron reconciliation, and bKash as the reference gateway adapter. Phase 3
@@ -13,8 +13,14 @@ admin-managed `PaymentMethod` catalog (create/edit/toggle/delete any number of m
 methods, each with its own account number, instructions, min/max, and deposit bonus %), a manual deposit
 queue with duplicate-TrxID prevention, and **ZiniPay** — a second automated gateway (Bangladeshi
 aggregator fronting bKash/Nagad/Rocket/cards) — shipped **disabled** alongside bKash, since no real
-merchant/provider account exists yet (see "What's still not live" below). Everything described here is
-real, tested, runnable code, not a mockup. Modules that are **schema-only** are listed at the bottom.
+merchant/provider account exists yet (see "What's still not live" below). Phase 4 rounded out the
+customer-facing product: an admin UI for both gateways (bKash + ZiniPay) with a per-gateway auto-verify
+safety switch, a public landing page / services catalog / API docs site, glassmorphism-redesigned auth
+pages plus a real password-reset flow, a reseller API key (hashed, `X-API-Key` header auth) with working
+docs, a user profile page, an admin-managed Notice banner and Coupon-code system (redeemable on the
+deposit page, credited atomically with the deposit), a USD/BDT display-currency switcher, WhatsApp/live-chat
+widgets, and Recharts analytics on the admin dashboard. Everything described here is real, tested, runnable
+code, not a mockup. Modules that are **schema-only** are listed at the bottom.
 
 ## Stack
 
@@ -94,6 +100,23 @@ The test suite specifically proves the two highest-risk properties of a wallet-b
 - **`tests/paymentMethods.test.ts`** proves admin CRUD works, the public list only ever returns `ACTIVE`
   methods, and deleting a method with deposit history is blocked (disable it instead) rather than silently
   breaking the ledger's "paid via X" trail.
+- **`tests/coupon.test.ts`** proves a coupon's bonus (percent or fixed) is credited atomically with the
+  deposit it was applied to, that the same coupon can never be redeemed twice by the same user, that
+  `maxUses` is enforced, that a coupon going stale between deposit creation and approval skips the bonus
+  without blocking the deposit's own principal credit, and that a coupon with redemption history can't be
+  deleted (disable it instead — same pattern as payment methods).
+- **`tests/passwordReset.test.ts`** proves the forgot-password endpoint always returns 204 whether or not
+  the account exists (no enumeration), that a reset token is single-use and expires, and that resetting a
+  password revokes every existing refresh-token session.
+- **`tests/apiKey.test.ts`** proves a generated reseller API key authenticates via `X-API-Key` exactly like
+  a JWT would, that regenerating invalidates the previous key, and that revoking or suspending the account
+  stops it working immediately.
+- **`tests/gatewayAutoVerify.test.ts`** proves `PaymentGatewayConfig.autoVerify` actually gates
+  auto-crediting: disabled, a gateway-verified payment lands in the manual Deposits queue instead of
+  crediting the wallet; enabled (the default), it auto-credits exactly as Phase 2/3 always did.
+- **`tests/publicRoutes.test.ts`** proves the unauthenticated `/api/public/*` routes never leak SMTP
+  credentials or other secrets, and that the public services/categories endpoints work without auth where
+  the authenticated `/api/services` route does not.
 
 ## Project layout
 
@@ -146,11 +169,22 @@ packages/shared  Zod schemas + types shared by both
   actually receive money on) goes through the admin-approval deposit queue regardless of which real-world
   gateway it names; only methods explicitly set to **AUTOMATED** with a `gatewayProvider` route through a
   live integration, and today that's bKash or ZiniPay once one is enabled.
+- **ZiniPay's `merchantId` credential field** (Phase 4) is stored and encrypted like the others but unused
+  by the adapter — ZiniPay's documented API never asks for one. Same forward-compatible-only treatment as
+  `secretKey` already got in Phase 3; remove or wire it up if a real account turns out to need it.
+- **SMTP/email is unconfigured by default** (Phase 4) — no real mail account exists yet. Password-reset
+  links are logged server-side (`lib/mailer.ts`) instead of emailed until an admin fills in real SMTP
+  credentials on the admin Settings page and enables sending. The reset flow itself (token generation,
+  single-use expiry, session revocation) is real and tested (`tests/passwordReset.test.ts`) — only the
+  "actually deliver the email" leg needs a real mailbox to go live.
+- **Live chat (Tawk.to/Crisp)** only loads the provider's official embed script by widget ID — an admin
+  needs a real Tawk.to or Crisp account and widget ID for it to show anything; the loader itself works
+  today, there's just no demo widget ID configured out of the box.
 
 ## What's deferred to a later phase
 
-Drip-feed automation, affiliates/referrals, child-panel reseller wizard, coupon redemption, 2FA, IP
-allow-listing, a global command palette, CSV export, analytics charts, bulk user actions,
-fraud/duplicate-account detection, provider health monitoring/alerting beyond the sync-log + failover
-already built, and a granular per-permission admin role matrix (role-level RBAC exists: USER / STAFF /
-ADMIN, with STAFF not yet granted any admin routes).
+Drip-feed automation, affiliates/referrals, child-panel reseller wizard, 2FA, IP allow-listing, a global
+command palette, CSV export, bulk user actions, fraud/duplicate-account detection, provider health
+monitoring/alerting beyond the sync-log + failover already built, and a granular per-permission admin role
+matrix (role-level RBAC exists: USER / STAFF / ADMIN, with STAFF not yet granted any admin routes).
+Coupon redemption and admin analytics charts, previously listed here, shipped in Phase 4.

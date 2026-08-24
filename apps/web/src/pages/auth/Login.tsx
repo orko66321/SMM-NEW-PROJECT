@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import AuthShell from "../../components/auth/AuthShell.js";
 
 export default function Login() {
   const { login } = useAuth();
@@ -31,9 +32,8 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <form onSubmit={onSubmit} className="card w-full max-w-sm space-y-4">
-        <h1 className="text-xl font-bold text-on-surface">Sign in</h1>
+    <AuthShell title="Welcome back" subtitle="Sign in to manage your orders and wallet.">
+      <form onSubmit={onSubmit} className="space-y-4">
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
         <div>
           <label className="label" htmlFor="identifier">Username or Email</label>
@@ -47,7 +47,10 @@ export default function Login() {
           />
         </div>
         <div>
-          <label className="label" htmlFor="password">Password</label>
+          <div className="flex items-center justify-between">
+            <label className="label" htmlFor="password">Password</label>
+            <Link to="/forgot-password" className="text-xs text-primary hover:underline">Forgot password?</Link>
+          </div>
           <input
             id="password"
             type="password"
@@ -65,6 +68,6 @@ export default function Login() {
           No account? <Link to="/register" className="text-primary hover:underline">Sign up</Link>
         </p>
       </form>
-    </div>
+    </AuthShell>
   );
 }

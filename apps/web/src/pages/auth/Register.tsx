@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiErrorMessage } from "../../api/client.js";
 import * as authApi from "../../api/auth.js";
 import { useToast } from "../../components/ui/Toast.js";
+import AuthShell from "../../components/auth/AuthShell.js";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -27,9 +28,8 @@ export default function Register() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <form onSubmit={onSubmit} className="card w-full max-w-sm space-y-4">
-        <h1 className="text-xl font-bold text-on-surface">Create an account</h1>
+    <AuthShell title="Create an account" subtitle="Start ordering in minutes — no setup fees.">
+      <form onSubmit={onSubmit} className="space-y-4">
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
         <div>
           <label className="label" htmlFor="username">Username</label>
@@ -73,6 +73,6 @@ export default function Register() {
           Already have an account? <Link to="/login" className="text-primary hover:underline">Sign in</Link>
         </p>
       </form>
-    </div>
+    </AuthShell>
   );
 }

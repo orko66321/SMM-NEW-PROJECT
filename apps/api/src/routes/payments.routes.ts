@@ -7,7 +7,7 @@ import { AppError } from "../utils/AppError.js";
 import { env } from "../env.js";
 import { logger } from "../lib/logger.js";
 import { gatewayRegistry } from "../services/payments/registry.js";
-import { getEnabledGatewayCredentials, listEnabledGatewayKeys } from "../services/payments/config.service.js";
+import { getEnabledGatewayCredentials, getGatewayAutoVerify, listEnabledGatewayKeys } from "../services/payments/config.service.js";
 import {
   confirmGatewayDeposit,
   createPendingGatewayDeposit,
@@ -73,11 +73,11 @@ paymentsRouter.post(
     const adapter = gatewayRegistry[key];
     const credentials = await getEnabledGatewayCredentials(key);
 
-    const { amount, paymentMethodId } = req.body as { amount: number; paymentMethodId?: string };
+    const { amount, paymentMethodId, couponCode } = req.body as { amount: number; paymentMethodId?: string; couponCode?: string };
 
     // Created before calling the gateway so we have our own reference to
     // embed in the redirect URL — see InitiatePaymentParams.depositId.
-    const deposit = await createPendingGatewayDeposit({ userId: req.user!.id, amount, gatewayProvider: key, paymentMethodId });
+    const deposit = await createPendingGatewayDeposit({ userId: req.user!.id, amount, gatewayProvider: key, paymentMethodId, couponCode });
 
     const callbackUrl = `${env.APP_BASE_URL}/api/payments/${key.toLowerCase()}/callback`;
     const webhookUrl = `${env.APP_BASE_URL}/api/payments/${key.toLowerCase()}/webhook`;
@@ -113,8 +113,9 @@ paymentsRouter.get(
 
     try {
       const credentials = await getEnabledGatewayCredentials(key);
+      const autoVerify = await getGatewayAutoVerify(key);
       const result = await adapter.confirm(credentials, gatewayRef);
-      await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key });
+      await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key }, { autoVerify });
       const outcome = result.status === "PAID" ? "success" : result.status === "FAILED" ? "failed" : "pending";
       return res.redirect(`${env.FRONTEND_BASE_URL}/dashboard/wallet?deposit=${outcome}`);
     } catch (err) {
@@ -143,8 +144,9 @@ paymentsRouter.post(
 
     try {
       const credentials = await getEnabledGatewayCredentials(key);
+      const autoVerify = await getGatewayAutoVerify(key);
       const result = await adapter.confirm(credentials, gatewayRef);
-      await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key });
+      await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key }, { autoVerify });
       res.status(200).json({ received: true });
     } catch (err) {
       logger.error({ err, gateway: key, gatewayRef }, "Payment webhook confirm failed");

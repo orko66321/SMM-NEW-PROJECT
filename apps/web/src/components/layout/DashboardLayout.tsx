@@ -1,7 +1,10 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../context/AuthContext.js";
+import { useCurrency } from "../../context/CurrencyContext.js";
 import { getWallet } from "../../api/resources.js";
+import NoticeBar from "./NoticeBar.js";
+import CurrencySwitcher from "./CurrencySwitcher.js";
 
 const navItems = [
   { to: "/dashboard", label: "Overview", end: true },
@@ -10,11 +13,13 @@ const navItems = [
   { to: "/dashboard/services", label: "Services" },
   { to: "/dashboard/wallet", label: "Add Funds" },
   { to: "/dashboard/tickets", label: "Tickets Support" },
+  { to: "/dashboard/profile", label: "Profile & Settings" },
 ];
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { formatCurrency } = useCurrency();
   const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet, refetchInterval: 30_000 });
 
   return (
@@ -44,9 +49,10 @@ export default function DashboardLayout() {
       <div className="flex min-h-screen flex-1 flex-col">
         <header className="flex h-16 items-center justify-between border-b border-outline-variant bg-surface-container px-6">
           <div className="font-mono text-sm text-on-surface-variant">@{user?.username}</div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <CurrencySwitcher />
             <div className="rounded-md border border-outline-variant bg-surface-container-high px-3 py-1.5 font-mono text-sm text-success">
-              ${wallet?.balance ?? "0.00"}
+              {formatCurrency(wallet?.balance ?? 0)}
             </div>
             <button
               className="btn-ghost !px-3 !py-1.5 text-xs"
@@ -59,6 +65,7 @@ export default function DashboardLayout() {
             </button>
           </div>
         </header>
+        <NoticeBar />
         <main className="flex-1 p-6">
           <Outlet />
         </main>
