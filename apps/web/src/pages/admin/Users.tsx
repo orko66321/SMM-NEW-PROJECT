@@ -13,10 +13,10 @@ export default function AdminUsers() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold">Users</h1>
         <input
-          className="input-field max-w-xs"
+          className="input-field w-full sm:max-w-xs"
           placeholder="Search username or email…"
           value={search}
           onChange={(e) => {

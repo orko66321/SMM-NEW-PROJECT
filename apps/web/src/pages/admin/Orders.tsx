@@ -11,11 +11,22 @@ export default function AdminOrders() {
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-orders", status, search, page],
     queryFn: () => getAdminOrders({ page, pageSize: 20, status: status || undefined, search: search || undefined }),
   });
+
+  async function onCopyId(id: string) {
+    try {
+      await navigator.clipboard.writeText(id);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId((c) => (c === id ? null : c)), 1500);
+    } catch {
+      // clipboard unavailable — no-op
+    }
+  }
 
   async function onStatusChange(id: string, newStatus: string) {
     try {
@@ -29,11 +40,11 @@ export default function AdminOrders() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold">Orders</h1>
-        <div className="flex gap-2">
-          <input className="input-field" placeholder="Search ID / link / username" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
-          <select className="input-field" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <input className="input-field w-full sm:w-auto" placeholder="Search ID / link / username" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+          <select className="input-field w-full sm:w-auto" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}>
             <option value="">All statuses</option>
             {OrderStatusValues.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
@@ -58,7 +69,18 @@ export default function AdminOrders() {
             {isLoading && <tr><td colSpan={8} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
             {data?.items.map((o: { id: string; user: { username: string }; service: { name: string }; charge: string; providerCost: string; quantity: number; status: string }) => (
               <tr key={o.id}>
-                <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">{o.id.slice(0, 8)}</td>
+                <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">
+                  <button
+                    type="button"
+                    className="inline-flex min-h-[44px] items-center gap-1 sm:min-h-0"
+                    onClick={() => onCopyId(o.id)}
+                    aria-label="Copy full order ID"
+                    title={o.id}
+                  >
+                    {o.id.slice(0, 8)}
+                    <span className="text-[10px] text-primary">{copiedId === o.id ? "Copied" : "Copy"}</span>
+                  </button>
+                </td>
                 <td className="px-4 py-3">{o.user.username}</td>
                 <td className="px-4 py-3">{o.service.name}</td>
                 <td className="px-4 py-3 font-mono text-success">${o.charge}</td>

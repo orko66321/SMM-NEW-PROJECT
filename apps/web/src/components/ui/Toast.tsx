@@ -24,12 +24,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ push }}>
       {children}
-      <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+      <div className="pointer-events-none fixed inset-x-4 bottom-20 z-50 flex flex-col items-stretch gap-2 sm:inset-x-auto sm:right-4 sm:items-end md:bottom-6">
         {toasts.map((t) => (
           <div
             key={t.id}
             role="status"
-            className={`pointer-events-auto rounded-md border px-4 py-3 text-sm shadow-lg backdrop-blur ${
+            className={`pointer-events-auto w-full max-w-sm break-words rounded-md border px-4 py-3 text-sm shadow-lg backdrop-blur ${
               t.variant === "success"
                 ? "border-success/40 bg-success/15 text-success"
                 : t.variant === "error"

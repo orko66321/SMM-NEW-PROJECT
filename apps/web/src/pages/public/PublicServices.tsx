@@ -92,7 +92,34 @@ export default function PublicServices() {
         />
       </div>
 
-      <div className="mt-6 overflow-x-auto rounded-lg border border-outline-variant">
+      {/* Mobile: stacked cards (no horizontal scrolling needed on a customer-facing catalog). */}
+      <div className="mt-6 space-y-3 md:hidden">
+        {filtered.map((s) => (
+          <div key={s.id} className="card">
+            <div className="flex items-start justify-between gap-3">
+              <p className="font-medium text-on-surface">{s.name}</p>
+              <span className="whitespace-nowrap font-mono text-sm text-primary">{formatCurrency(s.sellPricePer1000)}</span>
+            </div>
+            {s.description && <p className="mt-1 text-xs text-on-surface-variant">{s.description}</p>}
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-on-surface-variant">
+              <span>{s.category.platform}</span>
+              <span className="font-mono">Min/Max: {s.minQuantity} – {s.maxQuantity}</span>
+            </div>
+            {(s.refillEnabled || s.cancelEnabled) && (
+              <div className="mt-3 flex gap-1.5">
+                {s.refillEnabled && <span className="badge bg-info/15 text-info">Refill</span>}
+                {s.cancelEnabled && <span className="badge bg-warning/15 text-warning">Cancel</span>}
+              </div>
+            )}
+          </div>
+        ))}
+        {!isLoading && filtered.length === 0 && (
+          <p className="rounded-lg border border-outline-variant px-4 py-8 text-center text-on-surface-variant">No services match your filters.</p>
+        )}
+      </div>
+
+      {/* Desktop/tablet: full table. */}
+      <div className="mt-6 hidden overflow-x-auto rounded-lg border border-outline-variant md:block">
         <table className="w-full min-w-[640px] text-sm">
           <thead className="bg-surface-container-high text-left text-xs uppercase text-on-surface-variant">
             <tr>

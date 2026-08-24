@@ -6,6 +6,41 @@ import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 
+function CopyButton({ value, label }: { value: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+
+  async function onCopy() {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // clipboard unavailable — ignore silently
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onCopy}
+      aria-label={label}
+      title={copied ? "Copied!" : label}
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
+    >
+      {copied ? (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 text-success">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+          <rect x="9" y="9" width="11" height="11" rx="2" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15H4a1 1 0 01-1-1V4a1 1 0 011-1h10a1 1 0 011 1v1" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
 interface PaymentMethodItem {
   id: string;
   title: string;
@@ -149,9 +184,9 @@ export default function Wallet() {
           <p className="font-mono text-3xl font-bold text-success">{formatCurrency(wallet?.balance ?? 0)}</p>
         </div>
 
-        <div className="card">
+        <div className="card overflow-x-auto">
           <h2 className="mb-3 text-sm font-semibold">Fund history</h2>
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[520px] text-sm">
             <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
               <tr>
                 <th className="py-2">Date</th>
@@ -187,13 +222,13 @@ export default function Wallet() {
 
         <div>
           <label className="label">Payment method</label>
-          <div className="grid grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
             {methods?.map((m: PaymentMethodItem) => (
               <button
                 type="button"
                 key={m.id}
                 onClick={() => setSelectedId(m.id)}
-                className={`flex items-center justify-between rounded-md border px-3 py-2 text-left text-sm font-medium ${
+                className={`flex min-h-[44px] flex-wrap items-center justify-between gap-2 rounded-md border px-3 py-2 text-left text-sm font-medium ${
                   selectedId === m.id ? "border-primary bg-primary/10 text-primary" : "border-outline-variant text-on-surface-variant"
                 }`}
               >
@@ -211,8 +246,9 @@ export default function Wallet() {
         {selected && (
           <>
             <div>
-              <label className="label" htmlFor="amount">
-                Amount (USD) <span className="normal-case text-on-surface-variant">(Min: ${selected.minAmount} / Max: ${selected.maxAmount})</span>
+              <label className="label flex flex-wrap items-baseline gap-x-1.5" htmlFor="amount">
+                <span>Amount (USD)</span>
+                <span className="normal-case text-on-surface-variant">(Min: ${selected.minAmount} / Max: ${selected.maxAmount})</span>
               </label>
               <input
                 id="amount"
@@ -229,10 +265,10 @@ export default function Wallet() {
 
             <div>
               <label className="label" htmlFor="couponCode">Coupon / promo code (optional)</label>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <input
                   id="couponCode"
-                  className="input-field"
+                  className="input-field min-w-0 flex-1"
                   value={couponCode}
                   onChange={(e) => {
                     setCouponCode(e.target.value.toUpperCase());
@@ -268,9 +304,12 @@ export default function Wallet() {
                   <p className="rounded-md bg-surface-container-high px-3 py-2 text-xs text-on-surface-variant">{selected.instructions}</p>
                 )}
                 {selected.accountNumber && (
-                  <div className="flex items-center justify-between rounded-md bg-surface-container-high px-3 py-2">
-                    <span className="text-xs text-on-surface-variant">Send to ({selected.accountType})</span>
-                    <span className="font-mono font-semibold">{selected.accountNumber}</span>
+                  <div className="flex items-center justify-between gap-2 rounded-md bg-surface-container-high px-3 py-2">
+                    <div className="min-w-0">
+                      <span className="block text-xs text-on-surface-variant">Send to ({selected.accountType})</span>
+                      <span className="block truncate font-mono font-semibold">{selected.accountNumber}</span>
+                    </div>
+                    <CopyButton value={selected.accountNumber} label="Copy account number" />
                   </div>
                 )}
                 <div>

@@ -68,8 +68,8 @@ export default function NewOrder() {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <form onSubmit={onSubmit} className="card space-y-4 lg:col-span-2">
-        <h1 className="text-xl font-bold">New Order</h1>
-        {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
+        <h1 className="text-lg font-bold sm:text-xl">New Order</h1>
+        {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error break-words">{error}</p>}
 
         <div>
           <label className="label" htmlFor="category">Category</label>
@@ -118,8 +118,9 @@ export default function NewOrder() {
         </div>
 
         <div>
-          <label className="label" htmlFor="quantity">
-            Quantity {selectedService && <span className="normal-case text-on-surface-variant">(Min: {selectedService.minQuantity} / Max: {selectedService.maxQuantity})</span>}
+          <label className="label flex flex-wrap items-baseline gap-x-1.5" htmlFor="quantity">
+            <span>Quantity</span>
+            {selectedService && <span className="normal-case text-on-surface-variant">(Min: {selectedService.minQuantity} / Max: {selectedService.maxQuantity})</span>}
           </label>
           <input
             id="quantity"
@@ -133,7 +134,7 @@ export default function NewOrder() {
           />
         </div>
 
-        <div className="flex items-center justify-between rounded-md bg-surface-container-high px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-surface-container-high px-4 py-3">
           <span className="text-sm text-on-surface-variant">Estimated charge</span>
           <span className="font-mono text-lg font-semibold text-success">${estimatedCharge}</span>
         </div>
@@ -143,7 +144,7 @@ export default function NewOrder() {
         </button>
       </form>
 
-      <aside className="card space-y-3 text-sm text-on-surface-variant">
+      <aside className="card space-y-3 break-words text-sm text-on-surface-variant">
         <h2 className="font-semibold text-on-surface">Important</h2>
         <p>Prices are always calculated by the server at order time — the estimate above is indicative only.</p>
         <p><strong className="text-on-surface">Refill</strong>: eligible for a free refill if the count drops within the refill window.</p>

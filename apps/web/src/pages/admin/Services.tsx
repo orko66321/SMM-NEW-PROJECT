@@ -225,11 +225,11 @@ export default function AdminServices() {
             {categories?.map((c: { id: string; name: string }) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
           <input className="input-field" placeholder="Service name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required />
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <input className="input-field" type="number" step="0.0001" placeholder="Sell price/1000" value={form.sellPricePer1000} onChange={(e) => setForm((f) => ({ ...f, sellPricePer1000: e.target.value }))} required />
             <input className="input-field" type="number" step="0.0001" placeholder="Provider cost/1000" value={form.providerCostPer1000} onChange={(e) => setForm((f) => ({ ...f, providerCostPer1000: e.target.value }))} required />
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <input className="input-field" type="number" placeholder="Min qty" value={form.minQuantity} onChange={(e) => setForm((f) => ({ ...f, minQuantity: e.target.value }))} required />
             <input className="input-field" type="number" placeholder="Max qty" value={form.maxQuantity} onChange={(e) => setForm((f) => ({ ...f, maxQuantity: e.target.value }))} required />
           </div>

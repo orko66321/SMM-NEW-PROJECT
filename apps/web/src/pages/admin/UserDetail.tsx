@@ -53,12 +53,12 @@ export default function AdminUserDetail() {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="card space-y-3 lg:col-span-2">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">@{user.username}</h1>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h1 className="text-xl font-bold break-all">@{user.username}</h1>
           <span className={`badge ${user.status === "ACTIVE" ? "bg-success/15 text-success" : "bg-error/15 text-error"}`}>{user.status}</span>
         </div>
-        <p className="text-sm text-on-surface-variant">{user.email}</p>
-        <div className="grid grid-cols-3 gap-4 pt-2">
+        <p className="text-sm text-on-surface-variant break-all">{user.email}</p>
+        <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-3">
           <div>
             <p className="label">Balance</p>
             <p className="font-mono text-lg text-success">${user.wallet?.balance ?? "0"}</p>

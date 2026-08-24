@@ -10,7 +10,7 @@ export default function Overview() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Welcome back, {user?.username}</h1>
+      <h1 className="text-xl font-bold sm:text-2xl">Welcome back, {user?.username}</h1>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="card">
@@ -34,8 +34,8 @@ export default function Overview() {
         {orders?.items.length ? (
           <ul className="divide-y divide-outline-variant">
             {orders.items.map((o: { id: string; service: { name: string }; quantity: number; charge: string; status: string }) => (
-              <li key={o.id} className="flex items-center justify-between py-2 text-sm">
-                <span className="truncate">{o.service.name}</span>
+              <li key={o.id} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-2 text-sm">
+                <span className="min-w-0 flex-1 basis-full truncate sm:basis-auto">{o.service.name}</span>
                 <span className="font-mono text-on-surface-variant">{o.quantity}</span>
                 <span className="font-mono">${o.charge}</span>
                 <span className="badge bg-primary/15 text-primary">{o.status}</span>

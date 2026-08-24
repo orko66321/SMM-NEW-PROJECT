@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -27,6 +27,23 @@ export default function GoogleSignInButton() {
   const [submitting, setSubmitting] = useState(false);
   const { data: settings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
 
+  // The Google-provided button renders in a cross-origin iframe sized by a
+  // pixel `width` prop — it can't be styled responsively with CSS. Measure
+  // the wrapper so the button always fits the card, down to a 320px
+  // viewport, instead of overflowing/clipping at a hard-coded width.
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [buttonWidth, setButtonWidth] = useState(320);
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const update = () => setButtonWidth(Math.max(200, Math.min(320, Math.floor(el.clientWidth))));
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   if (!clientId || !settings?.googleAuthEnabled) return null;
 
@@ -50,13 +67,16 @@ export default function GoogleSignInButton() {
   return (
     <div className="space-y-4">
       <AuthDivider />
-      <div className={`flex justify-center ${submitting ? "pointer-events-none opacity-60" : ""}`}>
+      <div
+        ref={wrapperRef}
+        className={`flex w-full justify-center ${submitting ? "pointer-events-none opacity-60" : ""}`}
+      >
         <GoogleLogin
           theme="filled_black"
           shape="pill"
           size="large"
           text="continue_with"
-          width="320"
+          width={String(buttonWidth)}
           onSuccess={onSuccess}
           onError={() => toast.push("Google sign-in failed", "error")}
         />

@@ -8,10 +8,21 @@ export default function AdminDeposits() {
   const toast = useToast();
   const queryClient = useQueryClient();
   const [status, setStatus] = useState("PENDING");
+  const [copiedTrx, setCopiedTrx] = useState<string | null>(null);
   const { data, isLoading } = useQuery({
     queryKey: ["admin-deposits", status],
     queryFn: () => getAdminDeposits({ page: 1, pageSize: 50, status: status || undefined }),
   });
+
+  async function onCopyTrx(trxId: string) {
+    try {
+      await navigator.clipboard.writeText(trxId);
+      setCopiedTrx(trxId);
+      setTimeout(() => setCopiedTrx((c) => (c === trxId ? null : c)), 1500);
+    } catch {
+      // clipboard unavailable — no-op
+    }
+  }
 
   async function onReview(id: string, action: "APPROVE" | "REJECT") {
     let note: string | undefined;
@@ -31,9 +42,9 @@ export default function AdminDeposits() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold">Payment Notifications</h1>
-        <select className="input-field max-w-xs" value={status} onChange={(e) => setStatus(e.target.value)}>
+        <select className="input-field w-full sm:max-w-xs" value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="PENDING">Pending</option>
           <option value="APPROVED">Approved</option>
           <option value="REJECTED">Rejected</option>
@@ -63,7 +74,20 @@ export default function AdminDeposits() {
                 <td className="px-4 py-3 font-mono text-success">${d.amount}</td>
                 <td className="px-4 py-3 font-mono text-xs">{Number(d.bonusAmount) > 0 ? `+$${d.bonusAmount}` : "—"}</td>
                 <td className="px-4 py-3 text-xs text-on-surface-variant">
-                  {d.trxId ? <span className="font-mono">{d.trxId}</span> : "—"}
+                  {d.trxId ? (
+                    <button
+                      type="button"
+                      className="inline-flex min-h-[44px] items-center gap-1 font-mono sm:min-h-0"
+                      onClick={() => onCopyTrx(d.trxId as string)}
+                      aria-label="Copy transaction ID"
+                      title={d.trxId}
+                    >
+                      {d.trxId}
+                      <span className="text-[10px] text-primary">{copiedTrx === d.trxId ? "Copied" : "Copy"}</span>
+                    </button>
+                  ) : (
+                    "—"
+                  )}
                   {d.senderNumber ? ` · ${d.senderNumber}` : ""}
                 </td>
                 <td className="px-4 py-3"><span className="badge bg-warning/15 text-warning">{d.status}</span></td>

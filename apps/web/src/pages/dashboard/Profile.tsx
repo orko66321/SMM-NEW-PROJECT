@@ -23,6 +23,41 @@ interface Profile {
   hasPassword: boolean;
 }
 
+function CopyButton({ value, label }: { value: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+
+  async function onCopy() {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // clipboard unavailable — ignore silently
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onCopy}
+      aria-label={label}
+      title={copied ? "Copied!" : label}
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-on-surface-variant transition hover:bg-surface-container-high hover:text-on-surface"
+    >
+      {copied ? (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 text-success">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+          <rect x="9" y="9" width="11" height="11" rx="2" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15H4a1 1 0 01-1-1V4a1 1 0 011-1h10a1 1 0 011 1v1" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
 function ProfileDetailsCard({ profile }: { profile: Profile }) {
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -188,7 +223,10 @@ function ApiKeyCard({ profile }: { profile: Profile }) {
       {revealedKey ? (
         <div className="space-y-2 rounded-md border border-warning/40 bg-warning/10 p-3">
           <p className="text-xs font-semibold text-warning">Copy this now — it won&apos;t be shown again.</p>
-          <code className="block break-all rounded bg-surface-deep px-2 py-1.5 font-mono text-xs text-on-surface">{revealedKey}</code>
+          <div className="flex items-center gap-2">
+            <code className="block min-w-0 flex-1 break-all rounded bg-surface-deep px-2 py-1.5 font-mono text-xs text-on-surface">{revealedKey}</code>
+            <CopyButton value={revealedKey} label="Copy API key" />
+          </div>
         </div>
       ) : profile.apiKeyPrefix ? (
         <p className="font-mono text-sm text-on-surface-variant">
@@ -199,7 +237,7 @@ function ApiKeyCard({ profile }: { profile: Profile }) {
         <p className="text-sm text-on-surface-variant">No API key generated yet.</p>
       )}
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <button type="button" className="btn-primary" onClick={onGenerate} disabled={busy}>
           {profile.apiKeyPrefix ? "Regenerate key" : "Generate key"}
         </button>

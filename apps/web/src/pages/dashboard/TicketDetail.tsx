@@ -40,17 +40,22 @@ export default function TicketDetail() {
 
       <div className="space-y-3">
         {ticket.messages.map((m: { id: string; senderRole: string; body: string; createdAt: string }) => (
-          <div key={m.id} className={`max-w-[80%] rounded-md p-3 text-sm ${m.senderRole === "ADMIN" ? "bg-primary/10" : "ml-auto bg-surface-container-high"}`}>
+          <div key={m.id} className={`max-w-[85%] break-words rounded-md p-3 text-sm sm:max-w-[80%] ${m.senderRole === "ADMIN" ? "bg-primary/10" : "ml-auto bg-surface-container-high"}`}>
             <p className="mb-1 text-xs font-semibold text-on-surface-variant">{m.senderRole === "ADMIN" ? "Support" : "You"}</p>
-            <p>{m.body}</p>
+            <p className="whitespace-pre-wrap">{m.body}</p>
           </div>
         ))}
       </div>
 
       {ticket.status !== "CLOSED" && (
-        <form onSubmit={onSubmit} className="flex gap-2">
-          <input className="input-field" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Type a reply…" />
-          <button type="submit" className="btn-primary" disabled={submitting}>Send</button>
+        <form onSubmit={onSubmit} className="flex flex-wrap gap-2 sm:flex-nowrap">
+          <input
+            className="input-field min-w-0 flex-1 basis-full sm:basis-auto"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Type a reply…"
+          />
+          <button type="submit" className="btn-primary shrink-0" disabled={submitting}>Send</button>
         </form>
       )}
     </div>

@@ -39,9 +39,12 @@ export default function Tickets() {
         <ul className="divide-y divide-outline-variant">
           {data?.items.map((t: { id: string; subject: string; status: string; updatedAt: string }) => (
             <li key={t.id}>
-              <Link to={`/dashboard/tickets/${t.id}`} className="flex items-center justify-between py-3 text-sm hover:text-primary">
-                <span>{t.subject}</span>
-                <span className="flex items-center gap-3">
+              <Link
+                to={`/dashboard/tickets/${t.id}`}
+                className="flex min-h-[44px] flex-wrap items-center justify-between gap-x-3 gap-y-1 py-3 text-sm hover:text-primary"
+              >
+                <span className="min-w-0 flex-1 basis-full truncate sm:basis-auto">{t.subject}</span>
+                <span className="flex shrink-0 items-center gap-3">
                   <span className="text-xs text-on-surface-variant">{new Date(t.updatedAt).toLocaleDateString()}</span>
                   <span className="badge bg-primary/15 text-primary">{t.status}</span>
                 </span>

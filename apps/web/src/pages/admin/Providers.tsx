@@ -139,11 +139,13 @@ export default function AdminProviders() {
           <h2 className="mb-3 text-sm font-semibold">Sync logs</h2>
           <ul className="divide-y divide-outline-variant text-sm">
             {logs?.map((l: { id: string; action: string; status: string; message: string | null; createdAt: string }) => (
-              <li key={l.id} className="flex items-center justify-between py-2">
+              <li key={l.id} className="flex flex-col gap-1 py-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                 <span className="font-mono text-xs">{l.action}</span>
-                <span className="max-w-[50%] truncate text-xs text-on-surface-variant">{l.message ?? "—"}</span>
-                <span className="text-xs text-on-surface-variant">{new Date(l.createdAt).toLocaleString()}</span>
-                <span className={`badge ${l.status === "SUCCESS" ? "bg-success/15 text-success" : "bg-error/15 text-error"}`}>{l.status}</span>
+                <span className="text-xs text-on-surface-variant sm:max-w-[40%] sm:truncate">{l.message ?? "—"}</span>
+                <span className="flex items-center gap-2">
+                  <span className="text-xs text-on-surface-variant">{new Date(l.createdAt).toLocaleString()}</span>
+                  <span className={`badge ${l.status === "SUCCESS" ? "bg-success/15 text-success" : "bg-error/15 text-error"}`}>{l.status}</span>
+                </span>
               </li>
             ))}
             {logs?.length === 0 && <p className="py-3 text-on-surface-variant">No sync activity yet.</p>}

@@ -1,4 +1,5 @@
-import { Outlet, NavLink, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Outlet, NavLink, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.js";
 import CurrencySwitcher from "./CurrencySwitcher.js";
 import NoticeBar from "./NoticeBar.js";
@@ -11,6 +12,12 @@ const navItems = [
 
 export default function PublicLayout() {
   const { user } = useAuth();
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -35,21 +42,75 @@ export default function PublicLayout() {
               </NavLink>
             ))}
           </nav>
-          <div className="flex items-center gap-3">
-            <CurrencySwitcher />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden sm:block">
+              <CurrencySwitcher />
+            </div>
             {user ? (
-              <Link to={user.role === "ADMIN" ? "/admin" : "/dashboard"} className="btn-primary !px-4 !py-1.5 text-sm">
+              <Link
+                to={user.role === "ADMIN" ? "/admin" : "/dashboard"}
+                className="btn-primary hidden !px-4 !py-1.5 text-sm sm:inline-flex"
+              >
                 Dashboard
               </Link>
             ) : (
               <>
-                <Link to="/login" className="btn-ghost !px-3 !py-1.5 text-sm">Sign In</Link>
-                <Link to="/register" className="btn-primary !px-4 !py-1.5 text-sm">Sign Up</Link>
+                <Link to="/login" className="btn-ghost hidden !px-3 !py-1.5 text-sm sm:inline-flex">Sign In</Link>
+                <Link to="/register" className="btn-primary hidden !px-4 !py-1.5 text-sm sm:inline-flex">Sign Up</Link>
               </>
             )}
+            <button
+              type="button"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setMenuOpen((v) => !v)}
+              className="flex h-11 w-11 items-center justify-center rounded-md text-on-surface hover:bg-surface-container-high md:hidden"
+            >
+              {menuOpen ? <CloseIcon /> : <MenuIcon />}
+            </button>
           </div>
         </div>
         <NoticeBar />
+
+        {/* Mobile menu panel */}
+        <div
+          className={`grid overflow-hidden border-t border-outline-variant/60 bg-surface transition-[grid-template-rows] duration-300 ease-out md:hidden ${
+            menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="min-h-0">
+            <nav className="flex flex-col gap-1 px-4 py-3">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.end}
+                  className={({ isActive }) =>
+                    `flex min-h-[44px] items-center rounded-md px-3 text-sm font-medium transition ${
+                      isActive ? "bg-primary/15 text-primary" : "text-on-surface-variant hover:bg-surface-container-high"
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+              <div className="my-2 border-t border-outline-variant/60" />
+              <div className="flex items-center justify-between px-1 py-2">
+                <span className="text-xs text-on-surface-variant">Currency</span>
+                <CurrencySwitcher />
+              </div>
+              {user ? (
+                <Link to={user.role === "ADMIN" ? "/admin" : "/dashboard"} className="btn-primary min-h-[44px] w-full justify-center text-sm">
+                  Dashboard
+                </Link>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Link to="/login" className="btn-ghost min-h-[44px] w-full justify-center text-sm">Sign In</Link>
+                  <Link to="/register" className="btn-primary min-h-[44px] w-full justify-center text-sm">Sign Up</Link>
+                </div>
+              )}
+            </nav>
+          </div>
+        </div>
       </header>
 
       <main className="flex-1">
@@ -72,5 +133,24 @@ export default function PublicLayout() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
   );
 }

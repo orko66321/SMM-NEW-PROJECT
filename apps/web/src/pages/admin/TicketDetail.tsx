@@ -44,8 +44,8 @@ export default function AdminTicketDetail() {
 
   return (
     <div className="card mx-auto max-w-2xl space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-bold">{ticket.subject}</h1>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-lg font-bold break-words">{ticket.subject}</h1>
         <div className="flex items-center gap-2">
           <span className="badge bg-primary/15 text-primary">{ticket.status}</span>
           {ticket.status !== "CLOSED" && <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={onClose}>Close</button>}
@@ -63,8 +63,8 @@ export default function AdminTicketDetail() {
 
       {ticket.status !== "CLOSED" && (
         <form onSubmit={onSubmit} className="flex gap-2">
-          <input className="input-field" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Type a reply…" />
-          <button type="submit" className="btn-primary" disabled={submitting}>Send</button>
+          <input className="input-field min-w-0 flex-1" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Type a reply…" />
+          <button type="submit" className="btn-primary shrink-0" disabled={submitting}>Send</button>
         </form>
       )}
     </div>

@@ -136,16 +136,16 @@ export default function Landing() {
             <span className="badge mb-4 inline-flex items-center gap-2 bg-success/15 text-success">
               <span className="h-1.5 w-1.5 rounded-full bg-success" /> ALL-IN-ONE SMM PANEL
             </span>
-            <h1 className="font-display text-4xl font-bold leading-tight text-on-surface sm:text-5xl">
+            <h1 className="font-display text-3xl font-bold leading-tight text-on-surface sm:text-4xl md:text-5xl lg:text-6xl">
               The Main SMM Provider for Agencies &amp; Power Users.
             </h1>
             <p className="mt-4 max-w-lg text-base text-on-surface-variant">
               High-speed, premium-quality social media marketing services with instant, fully automated payment
               verification and frictionless API integration for true scalability.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/services" className="btn-primary">View Services →</Link>
-              <Link to="/api-docs" className="btn-ghost border border-outline-variant">API Documentation</Link>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link to="/services" className="btn-primary w-full sm:w-auto">View Services →</Link>
+              <Link to="/api-docs" className="btn-ghost w-full border border-outline-variant sm:w-auto">API Documentation</Link>
             </div>
 
             <div className="relative mt-10 max-w-md">

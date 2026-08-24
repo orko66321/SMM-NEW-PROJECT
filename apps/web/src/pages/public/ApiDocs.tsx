@@ -13,14 +13,14 @@ function CodeTabs({ snippets }: { snippets: Record<Lang, string> }) {
   const labels: Record<Lang, string> = { curl: "cURL", js: "JavaScript", php: "PHP" };
 
   return (
-    <div className="overflow-hidden rounded-lg border border-outline-variant">
-      <div className="flex border-b border-outline-variant bg-surface-container-high">
+    <div className="max-w-full overflow-hidden rounded-lg border border-outline-variant">
+      <div className="flex overflow-x-auto border-b border-outline-variant bg-surface-container-high">
         {(Object.keys(labels) as Lang[]).map((key) => (
           <button
             key={key}
             type="button"
             onClick={() => setLang(key)}
-            className={`px-4 py-2 font-mono text-xs font-semibold transition ${
+            className={`shrink-0 whitespace-nowrap px-4 py-2 font-mono text-xs font-semibold transition ${
               lang === key ? "bg-surface-deep text-primary" : "text-on-surface-variant hover:text-on-surface"
             }`}
           >
@@ -28,7 +28,7 @@ function CodeTabs({ snippets }: { snippets: Record<Lang, string> }) {
           </button>
         ))}
       </div>
-      <pre className="overflow-x-auto bg-surface-deep p-4 text-xs leading-relaxed text-on-surface">
+      <pre className="max-w-full overflow-x-auto bg-surface-deep p-4 text-xs leading-relaxed text-on-surface">
         <code className="font-mono">{snippets[lang]}</code>
       </pre>
     </div>

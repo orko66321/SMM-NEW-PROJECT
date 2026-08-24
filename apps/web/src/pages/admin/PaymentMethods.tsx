@@ -176,7 +176,7 @@ export default function AdminPaymentMethods() {
           </>
         )}
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           <input className="input-field" type="number" step="0.01" placeholder="Min amount" value={form.minAmount} onChange={(e) => setForm((f) => ({ ...f, minAmount: e.target.value }))} required />
           <input className="input-field" type="number" step="0.01" placeholder="Max amount" value={form.maxAmount} onChange={(e) => setForm((f) => ({ ...f, maxAmount: e.target.value }))} required />
           <input className="input-field" type="number" step="0.01" placeholder="Bonus %" value={form.bonusPercent} onChange={(e) => setForm((f) => ({ ...f, bonusPercent: e.target.value }))} required />
