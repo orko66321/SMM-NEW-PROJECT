@@ -10,8 +10,10 @@
 #   - PUBLIC_HTML — just the built frontend (apps/web/dist).
 #
 # .env at APP_ROOT is created ONCE by hand via File Manager and is never
-# touched by this script (see the --exclude on both rsync calls) — real
-# secrets never pass through git or this script.
+# touched by this script — real secrets never pass through git or this
+# script. Uses plain cp/find rather than rsync: this host doesn't have
+# rsync on PATH for deploy tasks (confirmed via the deploy log), and
+# cp/find/rm are guaranteed to exist everywhere rsync might not be.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -21,7 +23,18 @@ VENV="/home/allinons/nodevenv/smm-api/20/bin/activate"
 
 echo "==> Syncing checkout into $APP_ROOT (keeping .env)"
 mkdir -p "$APP_ROOT"
-rsync -a --delete --exclude='.git' --exclude='.env' "$REPO_ROOT"/ "$APP_ROOT"/
+ENV_BACKUP=""
+if [ -f "$APP_ROOT/.env" ]; then
+  ENV_BACKUP="$(mktemp)"
+  cp "$APP_ROOT/.env" "$ENV_BACKUP"
+fi
+find "$APP_ROOT" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+cp -a "$REPO_ROOT"/. "$APP_ROOT"/
+rm -rf "$APP_ROOT/.git"
+if [ -n "$ENV_BACKUP" ]; then
+  cp "$ENV_BACKUP" "$APP_ROOT/.env"
+  rm -f "$ENV_BACKUP"
+fi
 
 echo "==> Activating the Node 20 app environment"
 # shellcheck disable=SC1090
@@ -37,7 +50,9 @@ npm run build --workspace=apps/api
 npm run build --workspace=apps/web
 
 echo "==> Publishing the frontend build to public_html"
-rsync -a --delete --exclude='.well-known' apps/web/dist/ "$PUBLIC_HTML"/
+mkdir -p "$PUBLIC_HTML"
+find "$PUBLIC_HTML" -mindepth 1 -maxdepth 1 -not -name '.well-known' -exec rm -rf {} +
+cp -a apps/web/dist/. "$PUBLIC_HTML"/
 
 echo "==> Applying database migrations"
 if [ ! -f "$APP_ROOT/.env" ]; then
