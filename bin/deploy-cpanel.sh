@@ -54,6 +54,22 @@ echo "==> Installing dependencies"
 # so the build below needs them installed regardless of NODE_ENV.
 npm ci --include=dev
 
+if [ ! -f "$APP_ROOT/.env" ]; then
+  echo "ERROR: $APP_ROOT/.env does not exist yet." >&2
+  echo "Create it by hand via File Manager before the first deploy — see chat for the template." >&2
+  exit 1
+fi
+set -a
+# shellcheck disable=SC1091
+source "$APP_ROOT/.env"
+set +a
+
+echo "==> Generating the Prisma client"
+# Must run before building apps/api — tsc needs the generated types
+# (Prisma.Decimal, Role, WalletTxType, ...), not just the @prisma/client
+# stub that npm install alone leaves behind.
+npx prisma generate --schema=apps/api/prisma/schema.prisma
+
 echo "==> Building packages/shared, apps/api, apps/web"
 npm run build --workspace=packages/shared
 npm run build --workspace=apps/api
@@ -65,16 +81,6 @@ find "$PUBLIC_HTML" -mindepth 1 -maxdepth 1 -not -name '.well-known' -exec rm -r
 cp -a apps/web/dist/. "$PUBLIC_HTML"/
 
 echo "==> Applying database migrations"
-if [ ! -f "$APP_ROOT/.env" ]; then
-  echo "ERROR: $APP_ROOT/.env does not exist yet." >&2
-  echo "Create it by hand via File Manager before the first deploy — see chat for the template." >&2
-  exit 1
-fi
-set -a
-# shellcheck disable=SC1091
-source "$APP_ROOT/.env"
-set +a
-npx prisma generate --schema=apps/api/prisma/schema.prisma
 npx prisma migrate deploy --schema=apps/api/prisma/schema.prisma
 
 echo "==> Restarting the Node.js app (Passenger)"
