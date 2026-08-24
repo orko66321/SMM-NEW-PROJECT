@@ -10,12 +10,16 @@
 // and committed to this project-internal folder instead of node_modules
 // (which is gitignored). See bin/deploy-cpanel.sh and the note at the
 // bottom of this file for the full deploy flow this enables.
-// Target OS is CloudLinux/RHEL-family but the exact version wasn't
-// confirmed, hence multiple targets.
+// Confirmed via a real deploy's error message: the host actually needs
+// "debian-openssl-1.1.x" (Prisma's own runtime detection reported it
+// directly — "Prisma Client was generated for ... but the actual
+// deployment required 'debian-openssl-1.1.x'"). Kept the other guesses
+// too since they're harmless and cheap insurance against the host
+// changing.
 generator client {
   provider      = "prisma-client-js"
   output        = "../generated-client"
-  binaryTargets = ["native", "rhel-openssl-3.0.x", "rhel-openssl-1.1.x", "debian-openssl-3.0.x"]
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "rhel-openssl-1.1.x", "debian-openssl-3.0.x", "debian-openssl-1.1.x"]
 }
 
 datasource db {
