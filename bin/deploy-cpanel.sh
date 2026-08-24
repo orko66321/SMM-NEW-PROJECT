@@ -16,6 +16,12 @@
 # cp/find/rm are guaranteed to exist everywhere rsync might not be.
 set -euo pipefail
 
+# If the account's memory ulimit has headroom between its soft and hard
+# limits, raise the soft limit to the hard one for this process — cheap to
+# try, and may be all that's needed if the OOM below is a soft cap rather
+# than a true hard resource ceiling. No-op (silently) if not permitted.
+ulimit -Sv "$(ulimit -Hv)" 2>/dev/null || true
+
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_ROOT="/home/allinons/smm-api"
 PUBLIC_HTML="/home/allinons/public_html"
@@ -64,21 +70,35 @@ set -a
 source "$APP_ROOT/.env"
 set +a
 
-echo "==> Generating the Prisma client"
-# Must run before building apps/api — tsc needs the generated types
-# (Prisma.Decimal, Role, WalletTxType, ...), not just the @prisma/client
-# stub that npm install alone leaves behind.
-npx prisma generate --schema=apps/api/prisma/schema.prisma
-
-echo "==> Building packages/shared, apps/api, apps/web"
+echo "==> Building packages/shared and apps/web"
+# apps/web doesn't touch Prisma at all — built and published before
+# anything Prisma-related runs, so a backend-side failure below (still
+# being chased — see chat) never blocks the frontend from going live.
 npm run build --workspace=packages/shared
-npm run build --workspace=apps/api
 npm run build --workspace=apps/web
 
 echo "==> Publishing the frontend build to public_html"
 mkdir -p "$PUBLIC_HTML"
 find "$PUBLIC_HTML" -mindepth 1 -maxdepth 1 -not -name '.well-known' -exec rm -rf {} +
 cp -a apps/web/dist/. "$PUBLIC_HTML"/
+
+echo "==> Server diagnostics (plain files/commands only, no Prisma involved)"
+cat /etc/os-release 2>&1 || true
+echo "---"
+openssl version -a 2>&1 | head -5 || true
+echo "---"
+free -h 2>&1 || true
+echo "---"
+ulimit -a 2>&1 || true
+
+echo "==> Generating the Prisma client"
+# Must run before building apps/api — tsc needs the generated types
+# (Prisma.Decimal, Role, WalletTxType, ...), not just the @prisma/client
+# stub that npm install alone leaves behind.
+npx prisma generate --schema=apps/api/prisma/schema.prisma
+
+echo "==> Building apps/api"
+npm run build --workspace=apps/api
 
 echo "==> Applying database migrations"
 npx prisma migrate deploy --schema=apps/api/prisma/schema.prisma
