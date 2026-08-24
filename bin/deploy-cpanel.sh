@@ -37,8 +37,14 @@ if [ -n "$ENV_BACKUP" ]; then
 fi
 
 echo "==> Activating the Node 20 app environment"
+# cPanel's own activate script references its own internal variables
+# (e.g. CL_VIRTUAL_ENV) without guarding them — harmless under a normal
+# shell, but this script's `set -u` turns that into a hard failure. Not
+# our script to fix, so nounset is relaxed for just this one line.
+set +u
 # shellcheck disable=SC1090
 source "$VENV"
+set -u
 cd "$APP_ROOT"
 
 echo "==> Installing dependencies"
