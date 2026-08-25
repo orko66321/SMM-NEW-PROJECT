@@ -1,13 +1,20 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import type { CreateTicketInput } from "@smm/shared";
 
 // Ticket bodies are free-text rendered back to both the customer and admin
 // staff — sanitize on the way in so stored XSS via a ticket message is not
-// possible regardless of how the frontend later renders it.
+// possible regardless of how the frontend later renders it. Plain
+// sanitize-html rather than isomorphic-dompurify: the latter pulls in
+// jsdom, which pulls in html-encoding-sniffer — a package whose own
+// package.json requires Node >=20.19/22.12/24, one minor version past
+// this host's pinned Node 20.18.3, causing require(esm) to throw and
+// crash the app before it ever binds a port (Passenger then silently
+// falls back to its own placeholder page instead of surfacing the
+// crash). No allowed tags/attrs either way, so nothing is lost.
 function sanitize(input: string): string {
-  return DOMPurify.sanitize(input, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+  return sanitizeHtml(input, { allowedTags: [], allowedAttributes: {} });
 }
 
 export async function createTicket(userId: string, input: CreateTicketInput) {
