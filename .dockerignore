@@ -1,0 +1,14 @@
+node_modules
+apps/*/node_modules
+packages/*/node_modules
+.git
+apps/api/dist
+apps/api/generated-client
+apps/web/dist
+packages/shared/dist
+.env
+.env.*
+!.env.example
+tmp
+*.log
+.DS_Store
