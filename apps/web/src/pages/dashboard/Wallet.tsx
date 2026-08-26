@@ -63,8 +63,15 @@ export default function Wallet() {
   const { data: deposits } = useQuery({ queryKey: ["deposits"], queryFn: () => getMyDeposits({ page: 1, pageSize: 20 }) });
   const { data: methods } = useQuery({ queryKey: ["payment-methods"], queryFn: getPaymentMethods });
 
+  // Set when arriving here via NewOrder's insufficient-balance redirect
+  // (?orderIntentId=...&required=...) — carried through to
+  // initiateGatewayDeposit so the backend can auto-place the order once
+  // this deposit is confirmed (see order.service.ts's fulfillOrderIntent).
+  const orderIntentId = searchParams.get("orderIntentId") ?? undefined;
+  const requiredAmount = searchParams.get("required");
+
   const [selectedId, setSelectedId] = useState<string>("");
-  const [amount, setAmount] = useState<number | "">("");
+  const [amount, setAmount] = useState<number | "">(requiredAmount ? Number(requiredAmount) : "");
   const [trxId, setTrxId] = useState("");
   const [senderNumber, setSenderNumber] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -81,8 +88,19 @@ export default function Wallet() {
   );
 
   useEffect(() => {
-    if (!selectedId && methods?.length) setSelectedId(methods[0].id);
-  }, [methods, selectedId]);
+    if (selectedId || !methods?.length) return;
+    // Coming from the insufficient-balance redirect: prefer an AUTOMATED
+    // method so paying actually completes the order automatically, instead
+    // of falling into the admin-approval manual-deposit queue.
+    if (orderIntentId) {
+      const automated = methods.find((m: PaymentMethodItem) => m.gatewayType === "AUTOMATED");
+      if (automated) {
+        setSelectedId(automated.id);
+        return;
+      }
+    }
+    setSelectedId(methods[0].id);
+  }, [methods, selectedId, orderIntentId]);
 
   // A coupon's bonus preview is specific to the amount it was checked
   // against — if the user edits the amount afterward, the stale preview
@@ -105,8 +123,14 @@ export default function Wallet() {
     toast.push(message, variant);
     queryClient.invalidateQueries({ queryKey: ["wallet"] });
     queryClient.invalidateQueries({ queryKey: ["deposits"] });
+    // Covers the insufficient-balance-redirect path — if an OrderIntent
+    // just got auto-fulfilled alongside this deposit credit, this refreshes
+    // the Orders page's cache to show it without a manual reload.
+    queryClient.invalidateQueries({ queryKey: ["orders"] });
     setSearchParams((p) => {
       p.delete("deposit");
+      p.delete("orderIntentId");
+      p.delete("required");
       return p;
     }, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,6 +166,7 @@ export default function Wallet() {
         amount: Number(amount),
         paymentMethodId: selected.id,
         couponCode: couponBonus ? couponCode.trim() : undefined,
+        orderIntentId,
       });
       window.location.href = redirectUrl;
     } catch (err) {
@@ -218,6 +243,12 @@ export default function Wallet() {
 
       <div className="card h-fit space-y-4">
         <h2 className="text-lg font-bold">Add Funds</h2>
+        {orderIntentId && (
+          <p className="rounded-md bg-primary/15 px-3 py-2 text-sm text-primary">
+            You need {requiredAmount ? formatCurrency(requiredAmount) : "more funds"} to place that order — pay
+            below and it'll be submitted automatically once confirmed.
+          </p>
+        )}
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
 
         <div>

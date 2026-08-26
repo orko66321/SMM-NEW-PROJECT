@@ -56,10 +56,28 @@ paymentsRouter.post("/:gateway/deposits", authenticate, validate(createGatewayDe
     const key = requireKnownGateway(req.params.gateway);
     const adapter = gatewayRegistry[key];
     const credentials = await getEnabledGatewayCredentials(key);
-    const { amount, paymentMethodId, couponCode } = req.body;
+    const { amount, paymentMethodId, couponCode, orderIntentId } = req.body;
+    // Re-checked here, not trusted from the client — an intent belonging to
+    // someone else, already resolved, or expired just gets silently dropped
+    // (deposit proceeds as a plain top-up) rather than erroring the whole
+    // deposit attempt over it.
+    let confirmedIntentId;
+    if (orderIntentId) {
+        const intent = await prisma.orderIntent.findUnique({ where: { id: orderIntentId } });
+        if (intent && intent.userId === req.user.id && intent.status === "PENDING" && intent.expiresAt > new Date()) {
+            confirmedIntentId = intent.id;
+        }
+    }
     // Created before calling the gateway so we have our own reference to
     // embed in the redirect URL — see InitiatePaymentParams.depositId.
-    const deposit = await createPendingGatewayDeposit({ userId: req.user.id, amount, gatewayProvider: key, paymentMethodId, couponCode });
+    const deposit = await createPendingGatewayDeposit({
+        userId: req.user.id,
+        amount,
+        gatewayProvider: key,
+        paymentMethodId,
+        couponCode,
+        orderIntentId: confirmedIntentId,
+    });
     const callbackUrl = `${env.APP_BASE_URL}/api/payments/${key.toLowerCase()}/callback`;
     const webhookUrl = `${env.APP_BASE_URL}/api/payments/${key.toLowerCase()}/webhook`;
     // Only ZiniPay's create call actually needs these (cus_name/cus_email —

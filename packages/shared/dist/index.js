@@ -259,6 +259,10 @@ export const createGatewayDepositSchema = z.object({
     amount: z.coerce.number().positive().max(1_000_000),
     paymentMethodId: z.string().optional(),
     couponCode: z.string().trim().toUpperCase().max(32).optional(),
+    // Set when this deposit is funding a specific insufficient-balance order
+    // redirect (see OrderIntent / createOrderOrRedirect) rather than a plain
+    // top-up — ownership + status are re-checked server-side regardless.
+    orderIntentId: z.string().optional(),
 });
 // ── Payment methods (Phase 3 — dynamic, admin-managed) ─────────────────────
 export const PaymentMethodGatewayTypeValues = ["AUTOMATED", "MANUAL"];

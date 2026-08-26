@@ -90,7 +90,7 @@ describe("order placement — price integrity & idempotency", () => {
     expect(wallet.balance.toString()).toBe("90"); // charged exactly once
   });
 
-  it("rejects insufficient balance and does not create an order", async () => {
+  it("insufficient balance: 402 with a redirect-ready OrderIntent instead of a plain 400, no order created, wallet untouched", async () => {
     const user = await createUser({ balance: 5 });
     const { service } = await createCategoryAndService({ sellPricePer1000: 10 });
 
@@ -100,8 +100,21 @@ describe("order placement — price integrity & idempotency", () => {
       .set("Idempotency-Key", "key-poor")
       .send({ serviceId: service.id, link: "https://instagram.com/someone", quantity: 1000 });
 
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(402);
+    expect(res.body.details).toMatchObject({ charge: "10", balance: "5", shortfall: "5" });
+    expect(res.body.details.orderIntentId).toBeTruthy();
+
     const wallet = await getWalletForUser(user.id);
-    expect(wallet.balance.toString()).toBe("5");
+    expect(wallet.balance.toString()).toBe("5"); // untouched — no debit attempted
+
+    const { prisma } = await import("../src/lib/prisma.js");
+    const orders = await prisma.order.findMany({ where: { userId: user.id } });
+    expect(orders).toHaveLength(0); // no order row at all, not even a failed one
+
+    const intent = await prisma.orderIntent.findUniqueOrThrow({ where: { id: res.body.details.orderIntentId } });
+    expect(intent.status).toBe("PENDING");
+    expect(intent.serviceId).toBe(service.id);
+    expect(intent.quantity).toBe(1000);
+    expect(intent.idempotencyKey).toBe("key-poor");
   });
 });

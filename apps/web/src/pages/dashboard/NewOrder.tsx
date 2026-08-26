@@ -1,9 +1,19 @@
 import { useMemo, useState, type FormEvent } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import { getCategories, getServices, placeOrder } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+
+// Shape of the 402 response body order.service.ts's createOrderOrRedirect
+// throws when the wallet can't cover the charge (see AppError's `details`).
+interface InsufficientFundsDetails {
+  orderIntentId: string;
+  charge: string;
+  balance: string;
+  shortfall: string;
+}
 
 interface ServiceItem {
   id: string;
@@ -19,6 +29,7 @@ interface ServiceItem {
 export default function NewOrder() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const { data: categories } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
@@ -59,6 +70,19 @@ export default function NewOrder() {
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
     } catch (err) {
+      // 402 = wallet can't cover the charge (see order.service.ts's
+      // createOrderOrRedirect) — send the user straight to Add Funds
+      // instead of just showing a static error, pre-filled with exactly
+      // what's needed and carrying the orderIntentId so paying finishes
+      // the job automatically (Wallet.tsx picks these up from the URL).
+      if (axios.isAxiosError(err) && err.response?.status === 402) {
+        const details = err.response.data?.details as InsufficientFundsDetails | undefined;
+        if (details) {
+          toast.push("Insufficient balance — redirecting to Add Funds", "info");
+          navigate(`/dashboard/wallet?orderIntentId=${details.orderIntentId}&required=${details.shortfall}`);
+          return;
+        }
+      }
       setError(apiErrorMessage(err, "Failed to place order"));
     } finally {
       setSubmitting(false);

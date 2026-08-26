@@ -203,6 +203,7 @@ model User {
   affiliate      Affiliate?
   couponRedemptions CouponRedemption[]
   passwordResetTokens PasswordResetToken[]
+  orderIntents      OrderIntent[]
 
   @@index([role])
 }
@@ -410,8 +411,9 @@ model Service {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders    Order[]
-  dripFeeds DripFeed[]
+  orders       Order[]
+  dripFeeds    DripFeed[]
+  orderIntents OrderIntent[]
 
   @@index([categoryId])
   @@index([status])
@@ -453,6 +455,45 @@ model Order {
 
   @@index([userId, createdAt])
   @@index([status])
+}
+
+enum OrderIntentStatus {
+  PENDING
+  FULFILLED
+  FAILED
+  EXPIRED
+}
+
+// Insufficient-balance order flow: New Order's submit handler hits this
+// instead of failing outright when the wallet can't cover the charge. Holds
+// exactly what createOrder needs (serviceId/link/quantity + the same
+// Idempotency-Key the client already generated) so that once a deposit
+// funding the shortfall is confirmed, order.service.ts's
+// placeOrderInTransaction can run inside that SAME deposit-credit
+// transaction — "wallet credited" and "order placed" become one atomic
+// unit for this path too, same guarantee createOrder already gives the
+// direct (sufficient-balance) path. `charge` here is only a snapshot for
+// the frontend to pre-fill the payment amount with; fulfillment always
+// recalculates price fresh from the Service row, never trusts this column.
+model OrderIntent {
+  id             String            @id @default(cuid())
+  userId         String
+  user           User              @relation(fields: [userId], references: [id])
+  serviceId      String
+  service        Service           @relation(fields: [serviceId], references: [id])
+  link           String
+  quantity       Int
+  charge         Decimal           @db.Decimal(18, 4)
+  idempotencyKey String
+  status         OrderIntentStatus @default(PENDING)
+  orderId        String?
+  failureReason  String?
+  createdAt      DateTime          @default(now())
+  expiresAt      DateTime
+
+  deposits Deposit[]
+
+  @@index([userId, status])
 }
 
 // A refill is a distinct provider-side request tied to a specific order, not
@@ -532,6 +573,16 @@ model Deposit {
   // disabled but not deleted, so the ledger's "paid via X" trail never breaks.
   paymentMethodId String?
   paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: Restrict)
+
+  // Set when this deposit was initiated to fund a specific insufficient-
+  // balance order (see OrderIntent above) rather than a plain top-up —
+  // confirmGatewayDeposit() checks this after crediting and attempts to
+  // place the order in the same transaction. onDelete: SetNull, not
+  // Restrict: an OrderIntent is disposable scaffolding for one payment
+  // attempt, never something a Deposit's ledger history should be blocked
+  // from existing without.
+  orderIntentId String?
+  orderIntent   OrderIntent? @relation(fields: [orderIntentId], references: [id], onDelete: SetNull)
 
   // Manual-deposit proof of payment. trxId is globally unique — the actual
   // guarantee behind "duplicate TrxID prevention" (see deposit.service.ts

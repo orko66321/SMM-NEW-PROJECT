@@ -17,6 +17,7 @@ export async function resetDb() {
   await prisma.order.deleteMany();
   await prisma.couponRedemption.deleteMany();
   await prisma.deposit.deleteMany();
+  await prisma.orderIntent.deleteMany();
   await prisma.coupon.deleteMany();
   await prisma.paymentMethod.deleteMany();
   await prisma.service.deleteMany();

@@ -5,7 +5,7 @@ import { validate } from "../middleware/validate.js";
 import { orderLimiter } from "../middleware/rateLimit.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
-import { createOrder, listOrdersForUser, listRefillsForOrder, requestRefill } from "../services/order.service.js";
+import { createOrderOrRedirect, listOrdersForUser, listRefillsForOrder, requestRefill } from "../services/order.service.js";
 export const ordersRouter = Router();
 ordersRouter.use(authenticate);
 ordersRouter.post("/", orderLimiter, validate(createOrderSchema), asyncHandler(async (req, res) => {
@@ -13,8 +13,8 @@ ordersRouter.post("/", orderLimiter, validate(createOrderSchema), asyncHandler(a
     if (!idempotencyKey) {
         throw AppError.badRequest("Idempotency-Key header is required to place an order");
     }
-    const order = await createOrder(req.user.id, req.body, idempotencyKey);
-    res.status(201).json({ order });
+    const result = await createOrderOrRedirect(req.user.id, req.body, idempotencyKey);
+    res.status(201).json({ order: result.order });
 }));
 ordersRouter.get("/", validate(orderListQuerySchema, "query"), asyncHandler(async (req, res) => {
     const { page, pageSize } = req.query;

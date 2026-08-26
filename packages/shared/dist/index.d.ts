@@ -595,14 +595,17 @@ export declare const createGatewayDepositSchema: z.ZodObject<{
     amount: z.ZodNumber;
     paymentMethodId: z.ZodOptional<z.ZodString>;
     couponCode: z.ZodOptional<z.ZodString>;
+    orderIntentId: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     amount: number;
     paymentMethodId?: string | undefined;
     couponCode?: string | undefined;
+    orderIntentId?: string | undefined;
 }, {
     amount: number;
     paymentMethodId?: string | undefined;
     couponCode?: string | undefined;
+    orderIntentId?: string | undefined;
 }>;
 export type CreateGatewayDepositInput = z.infer<typeof createGatewayDepositSchema>;
 export declare const PaymentMethodGatewayTypeValues: readonly ["AUTOMATED", "MANUAL"];

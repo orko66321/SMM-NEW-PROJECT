@@ -288,6 +288,21 @@ exports.Prisma.OrderScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.OrderIntentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  serviceId: 'serviceId',
+  link: 'link',
+  quantity: 'quantity',
+  charge: 'charge',
+  idempotencyKey: 'idempotencyKey',
+  status: 'status',
+  orderId: 'orderId',
+  failureReason: 'failureReason',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+};
+
 exports.Prisma.RefillRequestScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
@@ -330,6 +345,7 @@ exports.Prisma.DepositScalarFieldEnum = {
   gatewayProvider: 'gatewayProvider',
   gatewayRef: 'gatewayRef',
   paymentMethodId: 'paymentMethodId',
+  orderIntentId: 'orderIntentId',
   trxId: 'trxId',
   senderNumber: 'senderNumber',
   bonusAmount: 'bonusAmount',
@@ -513,6 +529,13 @@ exports.OrderMode = exports.$Enums.OrderMode = {
   MANUAL: 'MANUAL'
 };
 
+exports.OrderIntentStatus = exports.$Enums.OrderIntentStatus = {
+  PENDING: 'PENDING',
+  FULFILLED: 'FULFILLED',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED'
+};
+
 exports.RefillStatus = exports.$Enums.RefillStatus = {
   REQUESTED: 'REQUESTED',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -581,6 +604,7 @@ exports.Prisma.ModelName = {
   ServiceCategory: 'ServiceCategory',
   Service: 'Service',
   Order: 'Order',
+  OrderIntent: 'OrderIntent',
   RefillRequest: 'RefillRequest',
   Ticket: 'Ticket',
   TicketMessage: 'TicketMessage',

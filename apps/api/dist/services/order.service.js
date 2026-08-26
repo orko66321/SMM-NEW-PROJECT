@@ -8,18 +8,25 @@ function requestFingerprint(input) {
     return crypto.createHash("sha256").update(JSON.stringify(input)).digest("hex");
 }
 /**
- * Places an order. Two safety properties are non-negotiable here:
+ * The actual order-placement work, extracted so it can run inside a
+ * transaction the CALLER already opened — createOrder (below) opens its own
+ * via prisma.$transaction for the normal direct-submit path; fulfillOrderIntent
+ * further down calls this inside confirmGatewayDeposit's existing transaction,
+ * so "wallet credited from the deposit" and "order placed" are one atomic
+ * unit for the insufficient-balance-redirect path too. Two safety properties
+ * are non-negotiable regardless of caller:
  *
  * 1. Price is always recalculated from the Service row on the server —
  *    `input` never carries a price, so there is nothing for a tampered
- *    client request to override.
- * 2. Order creation + wallet debit happen in a single DB transaction keyed
- *    by a client-supplied Idempotency-Key, so a duplicated submit (double
- *    click, network retry, replay) can never charge the wallet twice.
+ *    client request (or a stale OrderIntent snapshot) to override.
+ * 2. Order creation + wallet debit happen atomically, keyed by an
+ *    Idempotency-Key, so a duplicated submit (double click, network retry,
+ *    replay, or a second deposit confirming the same already-fulfilled
+ *    intent) can never charge the wallet twice.
  */
-export async function createOrder(userId, input, idempotencyKey) {
+export async function placeOrderInTransaction(tx, userId, input, idempotencyKey) {
     const requestHash = requestFingerprint(input);
-    const existingKey = await prisma.idempotencyKey.findUnique({
+    const existingKey = await tx.idempotencyKey.findUnique({
         where: { userId_key: { userId, key: idempotencyKey } },
     });
     if (existingKey) {
@@ -28,7 +35,7 @@ export async function createOrder(userId, input, idempotencyKey) {
         }
         return JSON.parse(existingKey.responseJson ?? "null");
     }
-    const service = await prisma.service.findUnique({ where: { id: input.serviceId } });
+    const service = await tx.service.findUnique({ where: { id: input.serviceId } });
     if (!service || service.status !== "ACTIVE") {
         throw AppError.badRequest("Service is not available");
     }
@@ -37,34 +44,35 @@ export async function createOrder(userId, input, idempotencyKey) {
     }
     const charge = new Prisma.Decimal(service.sellPricePer1000).mul(input.quantity).div(1000);
     const providerCost = new Prisma.Decimal(service.providerCostPer1000).mul(input.quantity).div(1000);
+    const order = await tx.order.create({
+        data: {
+            userId,
+            serviceId: service.id,
+            link: input.link,
+            quantity: input.quantity,
+            charge,
+            providerCost,
+            status: "PENDING",
+            mode: "MANUAL",
+        },
+    });
+    await adjustWalletBalance(tx, {
+        userId,
+        amount: charge.negated(),
+        type: "ORDER_DEBIT",
+        referenceType: "ORDER",
+        referenceId: order.id,
+        note: `Order for ${service.name}`,
+    });
+    const responsePayload = serializeOrder(order);
+    await tx.idempotencyKey.create({
+        data: { userId, key: idempotencyKey, requestHash, responseJson: JSON.stringify(responsePayload) },
+    });
+    return responsePayload;
+}
+export async function createOrder(userId, input, idempotencyKey) {
     try {
-        return await prisma.$transaction(async (tx) => {
-            const order = await tx.order.create({
-                data: {
-                    userId,
-                    serviceId: service.id,
-                    link: input.link,
-                    quantity: input.quantity,
-                    charge,
-                    providerCost,
-                    status: "PENDING",
-                    mode: "MANUAL",
-                },
-            });
-            await adjustWalletBalance(tx, {
-                userId,
-                amount: charge.negated(),
-                type: "ORDER_DEBIT",
-                referenceType: "ORDER",
-                referenceId: order.id,
-                note: `Order for ${service.name}`,
-            });
-            const responsePayload = serializeOrder(order);
-            await tx.idempotencyKey.create({
-                data: { userId, key: idempotencyKey, requestHash, responseJson: JSON.stringify(responsePayload) },
-            });
-            return responsePayload;
-        });
+        return await prisma.$transaction((tx) => placeOrderInTransaction(tx, userId, input, idempotencyKey));
     }
     catch (err) {
         if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
@@ -72,6 +80,94 @@ export async function createOrder(userId, input, idempotencyKey) {
             throw AppError.conflict("A duplicate request is already being processed. Please retry.");
         }
         throw err;
+    }
+}
+/**
+ * Route handler's actual entry point (see routes/orders.routes.ts). Wraps
+ * createOrder with a pre-check: if the wallet can't cover the charge, no
+ * money moves and no Order is created — instead an OrderIntent is stashed
+ * (see prisma schema) and a 402 is thrown with enough detail for the
+ * frontend to redirect straight into the Add Funds flow pre-filled with the
+ * shortfall. This is a pre-check, not the authoritative guard — createOrder's
+ * own atomic FOR UPDATE debit (wallet.service.ts) is what actually prevents
+ * overdraft if the balance changes between this check and the real attempt;
+ * worst case on a lost race is an ordinary 400 "Insufficient wallet
+ * balance" from the ordinary path, not a double-charge or a stuck intent.
+ */
+export async function createOrderOrRedirect(userId, input, idempotencyKey) {
+    const service = await prisma.service.findUnique({ where: { id: input.serviceId } });
+    if (!service || service.status !== "ACTIVE") {
+        throw AppError.badRequest("Service is not available");
+    }
+    if (input.quantity < service.minQuantity || input.quantity > service.maxQuantity) {
+        throw AppError.badRequest(`Quantity must be between ${service.minQuantity} and ${service.maxQuantity} for this service`);
+    }
+    const charge = new Prisma.Decimal(service.sellPricePer1000).mul(input.quantity).div(1000);
+    const wallet = await prisma.wallet.findUnique({ where: { userId } });
+    const balance = wallet?.balance ?? new Prisma.Decimal(0);
+    if (balance.greaterThanOrEqualTo(charge)) {
+        const order = await createOrder(userId, input, idempotencyKey);
+        return { kind: "ORDER", order };
+    }
+    const shortfall = charge.minus(balance);
+    const intent = await prisma.orderIntent.create({
+        data: {
+            userId,
+            serviceId: service.id,
+            link: input.link,
+            quantity: input.quantity,
+            charge,
+            idempotencyKey,
+            // 30 minutes is generous for "go pay, come back" without leaving a
+            // funded-but-forgotten intent sitting around indefinitely — after
+            // this, fulfillOrderIntent just credits the wallet and leaves the
+            // order to be placed manually rather than auto-submitting stale input.
+            expiresAt: new Date(Date.now() + 30 * 60 * 1000),
+        },
+    });
+    throw new AppError(402, "Insufficient wallet balance", {
+        orderIntentId: intent.id,
+        charge: charge.toString(),
+        balance: balance.toString(),
+        shortfall: shortfall.toString(),
+    });
+}
+/**
+ * Called from inside confirmGatewayDeposit's transaction (deposit.service.ts)
+ * right after the deposit's wallet credit — attempts to place the order the
+ * user was originally trying to submit. Deliberately swallows any failure
+ * (service went inactive meanwhile, price moved and the credited amount no
+ * longer covers it, quantity bounds changed, intent already handled by a
+ * prior confirm, expired) rather than propagating it: the deposit credit
+ * must never be rolled back just because auto-placement didn't work out —
+ * the user still has the money in their wallet either way and can place the
+ * order by hand. Only ever called with intent.status already confirmed
+ * PENDING by the caller.
+ */
+export async function fulfillOrderIntent(tx, intent) {
+    if (intent.expiresAt < new Date()) {
+        await tx.orderIntent.update({ where: { id: intent.id }, data: { status: "EXPIRED" } });
+        return;
+    }
+    // A SAVEPOINT, not a bare try/catch, is load-bearing here: this whole
+    // function runs inside confirmGatewayDeposit's already-open transaction,
+    // and placeOrderInTransaction writes the Order row *before* the wallet
+    // debit that can fail (matching createOrder's normal order of
+    // operations). Catching that failure ourselves stops it from propagating
+    // to prisma.$transaction() — which is the ONLY thing that triggers a
+    // rollback — so without a savepoint, a caught failure here would leave
+    // the just-created (unpaid) Order row committed anyway, orphaned with no
+    // matching debit. Rolling back to the savepoint discards exactly that
+    // partial write while leaving the deposit credit before it untouched.
+    await tx.$executeRawUnsafe("SAVEPOINT fulfill_order_intent");
+    try {
+        const order = await placeOrderInTransaction(tx, intent.userId, { serviceId: intent.serviceId, link: intent.link, quantity: intent.quantity }, intent.idempotencyKey);
+        await tx.orderIntent.update({ where: { id: intent.id }, data: { status: "FULFILLED", orderId: order.id } });
+    }
+    catch (err) {
+        await tx.$executeRawUnsafe("ROLLBACK TO SAVEPOINT fulfill_order_intent");
+        const reason = err instanceof AppError ? err.message : "Order placement failed";
+        await tx.orderIntent.update({ where: { id: intent.id }, data: { status: "FAILED", failureReason: reason } });
     }
 }
 function serializeOrder(order) {

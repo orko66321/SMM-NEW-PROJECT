@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import { adjustWalletBalance } from "./wallet.service.js";
 import { redeemCouponForDeposit, validateCoupon } from "./coupon.service.js";
+import { fulfillOrderIntent } from "./order.service.js";
 /** Row-locks a Deposit within an existing transaction — see wallet.service.ts's adjustWalletBalance for the same pattern applied to wallets. */
 async function lockDeposit(tx, depositId) {
     const rows = await tx.$queryRaw `SELECT "id" FROM "Deposit" WHERE "id" = ${depositId} FOR UPDATE`;
@@ -136,6 +137,7 @@ export async function createPendingGatewayDeposit(params) {
             gatewayProvider: params.gatewayProvider,
             paymentMethodId: params.paymentMethodId,
             couponId,
+            orderIntentId: params.orderIntentId,
         },
     });
 }
@@ -253,6 +255,20 @@ options = { autoVerify: true }) {
         });
         if (result.status === "PAID") {
             await creditApprovedDeposit(tx, current);
+            // Insufficient-balance redirect flow (see order.service.ts's
+            // createOrderOrRedirect / fulfillOrderIntent) — this deposit was
+            // initiated specifically to fund an order the user couldn't afford
+            // yet. Attempt to place it now, atomically alongside the credit
+            // above. fulfillOrderIntent never throws — a failure there (price
+            // moved, service went inactive, already fulfilled by an earlier
+            // confirm, expired) leaves the credited money in the wallet rather
+            // than rolling back this deposit.
+            if (current.orderIntentId) {
+                const intent = await tx.orderIntent.findUnique({ where: { id: current.orderIntentId } });
+                if (intent && intent.status === "PENDING") {
+                    await fulfillOrderIntent(tx, intent);
+                }
+            }
             // Same reasoning as reviewDeposit above — bonusAmount is written after
             // `updated` was captured, so re-fetch to return the final row.
             return tx.deposit.findUniqueOrThrow({ where: { id: deposit.id } });
