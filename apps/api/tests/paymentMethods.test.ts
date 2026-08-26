@@ -85,4 +85,48 @@ describe("dynamic payment methods (Phase 3 admin CRUD)", () => {
       .send({ status: "DISABLED" });
     expect(disabled.status).toBe(200);
   });
+
+  // Regression coverage for a real production bug: a live payment method
+  // ended up with minAmount stuck at $0 because PUT validates with
+  // paymentMethodObjectSchema.partial() (no .refine()), so a patch that
+  // only touches one side of a cross-field rule sailed through with no
+  // error. These check the rule is enforced against the FINAL merged
+  // state (existing row + patch), not just whatever fields are in the
+  // patch itself.
+  it("rejects a PUT that would push minAmount above the method's existing maxAmount", async () => {
+    const admin = await createUser({ role: "ADMIN" });
+    const method = await createPaymentMethod({ title: "bKash Personal #2", minAmount: 1, maxAmount: 500 });
+
+    const res = await request(app)
+      .put(`/api/admin/payment-methods/${method.id}`)
+      .set("Authorization", `Bearer ${tokenFor(admin.id)}`)
+      .send({ minAmount: 1000 }); // maxAmount untouched by this patch, still 500
+    expect(res.status).toBe(400);
+
+    const unchanged = await prisma.paymentMethod.findUniqueOrThrow({ where: { id: method.id } });
+    expect(Number(unchanged.minAmount)).toBe(1);
+  });
+
+  it("rejects a PUT that flips gatewayType to AUTOMATED without ever setting a gatewayProvider", async () => {
+    const admin = await createUser({ role: "ADMIN" });
+    const method = await createPaymentMethod({ title: "Nagad Personal", gatewayType: "MANUAL" });
+
+    const res = await request(app)
+      .put(`/api/admin/payment-methods/${method.id}`)
+      .set("Authorization", `Bearer ${tokenFor(admin.id)}`)
+      .send({ gatewayType: "AUTOMATED" }); // gatewayProvider untouched by this patch, still null
+    expect(res.status).toBe(400);
+  });
+
+  it("allows a PUT that only touches minAmount when it's still valid against the existing maxAmount", async () => {
+    const admin = await createUser({ role: "ADMIN" });
+    const method = await createPaymentMethod({ title: "Rocket Personal", minAmount: 1, maxAmount: 500 });
+
+    const res = await request(app)
+      .put(`/api/admin/payment-methods/${method.id}`)
+      .set("Authorization", `Bearer ${tokenFor(admin.id)}`)
+      .send({ minAmount: 5 });
+    expect(res.status).toBe(200);
+    expect(res.body.method.minAmount).toBe("5");
+  });
 });

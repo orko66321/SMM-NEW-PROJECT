@@ -54,6 +54,30 @@ export async function createPaymentMethod(input: PaymentMethodInput) {
 export async function updatePaymentMethod(id: string, input: Partial<PaymentMethodInput>) {
   const existing = await prisma.paymentMethod.findUnique({ where: { id } });
   if (!existing) throw AppError.notFound("Payment method not found");
+
+  // paymentMethodObjectSchema deliberately has no .refine() so this route's
+  // `.partial()` validation works at all (see its comment) — but that means
+  // Zod alone never checks maxAmount >= minAmount or "AUTOMATED requires
+  // gatewayProvider" on a PUT, since a partial patch might touch only one
+  // side of either rule. Re-check both against the FINAL merged state
+  // (existing row + this patch), not just whatever fields happen to be in
+  // `input` — otherwise PATCHing only minAmount past the existing
+  // maxAmount, or flipping gatewayType to AUTOMATED without ever touching
+  // gatewayProvider, would silently produce an invalid row (this is
+  // exactly how a live payment method ended up with minAmount stuck at 0).
+  const merged = {
+    minAmount: input.minAmount ?? Number(existing.minAmount),
+    maxAmount: input.maxAmount ?? Number(existing.maxAmount),
+    gatewayType: input.gatewayType ?? existing.gatewayType,
+    gatewayProvider: input.gatewayProvider !== undefined ? input.gatewayProvider : existing.gatewayProvider,
+  };
+  if (merged.maxAmount < merged.minAmount) {
+    throw AppError.badRequest("maxAmount must be >= minAmount");
+  }
+  if (merged.gatewayType !== "MANUAL" && !merged.gatewayProvider) {
+    throw AppError.badRequest("AUTOMATED methods require a gatewayProvider");
+  }
+
   const method = await prisma.paymentMethod.update({ where: { id }, data: input });
   return serialize(method);
 }

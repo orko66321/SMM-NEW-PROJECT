@@ -43,33 +43,74 @@ export default function AdminPaymentMethods() {
 
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   function refresh() {
     queryClient.invalidateQueries({ queryKey: ["admin-payment-methods"] });
   }
 
-  async function onCreate(e: FormEvent) {
+  // minAmount/maxAmount/bonusPercent are plain `type="number"` inputs bound
+  // to string state — `Number("")` is 0, not NaN, so an emptied field would
+  // otherwise silently submit as 0 instead of being caught as invalid. This
+  // is exactly how a live payment method ended up with minAmount stuck at
+  // $0 with no validation error anywhere. `required` already stops a fully
+  // empty field from submitting at all; this catches the same field holding
+  // a non-numeric leftover (e.g. just "-" or ".") that `Number()` would
+  // otherwise also coerce to 0/NaN silently.
+  function parseAmount(raw: string, label: string): number {
+    const n = Number(raw);
+    if (raw.trim() === "" || Number.isNaN(n)) {
+      throw new Error(`${label} must be a valid number`);
+    }
+    return n;
+  }
+
+  function startEdit(m: MethodItem) {
+    setEditingId(m.id);
+    setForm({
+      title: m.title,
+      gatewayType: m.gatewayType,
+      accountType: m.accountType as "PERSONAL" | "MERCHANT" | "AGENT",
+      accountNumber: m.accountNumber ?? "",
+      instructions: m.instructions ?? "",
+      minAmount: m.minAmount,
+      maxAmount: m.maxAmount,
+      bonusPercent: m.bonusPercent,
+      gatewayProvider: m.gatewayProvider ?? "",
+    });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setForm(emptyForm);
+  }
+
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await createAdminPaymentMethod({
+      const payload = {
         title: form.title,
         gatewayType: form.gatewayType,
         accountType: form.accountType,
         accountNumber: form.accountNumber || null,
         instructions: form.instructions || null,
-        minAmount: Number(form.minAmount),
-        maxAmount: Number(form.maxAmount),
-        bonusPercent: Number(form.bonusPercent),
+        minAmount: parseAmount(form.minAmount, "Min amount"),
+        maxAmount: parseAmount(form.maxAmount, "Max amount"),
+        bonusPercent: parseAmount(form.bonusPercent, "Bonus %"),
         gatewayProvider: form.gatewayType === "AUTOMATED" ? (form.gatewayProvider as never) : null,
-        status: "ACTIVE",
-        sortOrder: 0,
-      });
-      toast.push("Payment method created.", "success");
-      setForm(emptyForm);
+      };
+      if (editingId) {
+        await updateAdminPaymentMethod(editingId, payload);
+        toast.push("Payment method updated.", "success");
+      } else {
+        await createAdminPaymentMethod({ ...payload, status: "ACTIVE", sortOrder: 0 });
+        toast.push("Payment method created.", "success");
+      }
+      cancelEdit();
       refresh();
     } catch (err) {
-      toast.push(apiErrorMessage(err, "Failed to create payment method"), "error");
+      toast.push(apiErrorMessage(err, editingId ? "Failed to update payment method" : "Failed to create payment method"), "error");
     } finally {
       setSubmitting(false);
     }
@@ -132,6 +173,7 @@ export default function AdminPaymentMethods() {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-2">
+                    <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={() => startEdit(m)}>Edit</button>
                     <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={() => onToggleStatus(m)}>
                       {m.status === "ACTIVE" ? "Disable" : "Enable"}
                     </button>
@@ -145,8 +187,8 @@ export default function AdminPaymentMethods() {
         </table>
       </div>
 
-      <form onSubmit={onCreate} className="card max-w-lg space-y-3">
-        <h2 className="text-sm font-semibold">Add payment method</h2>
+      <form onSubmit={onSubmit} className="card max-w-lg space-y-3">
+        <h2 className="text-sm font-semibold">{editingId ? "Edit payment method" : "Add payment method"}</h2>
 
         <div className="flex gap-2">
           <button type="button" onClick={() => setForm((f) => ({ ...f, gatewayType: "MANUAL" }))} className={`flex-1 rounded-md border px-3 py-2 text-sm ${form.gatewayType === "MANUAL" ? "border-primary bg-primary/10 text-primary" : "border-outline-variant text-on-surface-variant"}`}>
@@ -182,7 +224,14 @@ export default function AdminPaymentMethods() {
           <input className="input-field" type="number" step="0.01" placeholder="Bonus %" value={form.bonusPercent} onChange={(e) => setForm((f) => ({ ...f, bonusPercent: e.target.value }))} required />
         </div>
 
-        <button type="submit" className="btn-primary w-full" disabled={submitting}>{submitting ? "Creating…" : "Create payment method"}</button>
+        <div className="flex gap-2">
+          <button type="submit" className="btn-primary flex-1" disabled={submitting}>
+            {submitting ? "Saving…" : editingId ? "Save changes" : "Create payment method"}
+          </button>
+          {editingId && (
+            <button type="button" className="btn-ghost" onClick={cancelEdit} disabled={submitting}>Cancel</button>
+          )}
+        </div>
       </form>
     </div>
   );

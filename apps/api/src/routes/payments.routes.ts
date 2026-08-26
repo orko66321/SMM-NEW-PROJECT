@@ -88,15 +88,30 @@ paymentsRouter.post(
     // keeps the gateway-specific requirement out of this route handler.
     const payer = await prisma.user.findUniqueOrThrow({ where: { id: req.user!.id }, select: { username: true, email: true } });
 
-    const { redirectUrl, gatewayRef } = await adapter.initiate(credentials, {
-      amount,
-      payerReference: req.user!.id,
-      payerName: payer.username,
-      payerEmail: payer.email,
-      callbackUrl,
-      webhookUrl,
-      depositId: deposit.id,
-    });
+    // Unlike /callback and /confirm below, a failure here has no fallback
+    // to degrade to — but it must still never reach the generic 500
+    // handler with a raw upstream error message. A bad/expired sandbox
+    // credential, gateway downtime, or a malformed response (e.g. ZiniPay's
+    // payment_url not containing a parseable invoice id) throws a plain
+    // Error/AxiosError, not an AppError, from inside the adapter — log the
+    // real cause here (so it's actually diagnosable), then surface a safe,
+    // generic message to the client.
+    let initiateResult;
+    try {
+      initiateResult = await adapter.initiate(credentials, {
+        amount,
+        payerReference: req.user!.id,
+        payerName: payer.username,
+        payerEmail: payer.email,
+        callbackUrl,
+        webhookUrl,
+        depositId: deposit.id,
+      });
+    } catch (err) {
+      logger.error({ err, gateway: key, depositId: deposit.id }, "Payment gateway initiate() failed");
+      throw new AppError(502, "The payment gateway is temporarily unavailable. Please try again shortly.");
+    }
+    const { redirectUrl, gatewayRef } = initiateResult;
 
     await setDepositGatewayRef(deposit.id, gatewayRef);
 
