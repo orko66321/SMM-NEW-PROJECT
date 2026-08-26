@@ -27,7 +27,7 @@ export default function AdminSettingsPage() {
   const { data: settings } = useQuery({ queryKey: ["admin-settings"], queryFn: getAdminSettings });
 
   const [form, setForm] = useState({
-    siteName: "SMM Panel",
+    siteName: "All In One Service",
     whatsappEnabled: false,
     whatsappNumber: "",
     liveChatProvider: "NONE" as LiveChatProvider,

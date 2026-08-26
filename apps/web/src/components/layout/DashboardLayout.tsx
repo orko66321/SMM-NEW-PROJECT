@@ -6,6 +6,7 @@ import { useCurrency } from "../../context/CurrencyContext.js";
 import { getWallet } from "../../api/resources.js";
 import NoticeBar from "./NoticeBar.js";
 import CurrencySwitcher from "./CurrencySwitcher.js";
+import { Logo } from "../Logo.js";
 
 const navItems = [
   { to: "/dashboard", label: "Overview", end: true },
@@ -53,7 +54,9 @@ export default function DashboardLayout() {
     <div className="flex min-h-screen bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 border-r border-outline-variant bg-surface-container md:block">
-        <div className="flex h-16 items-center px-6 font-display text-lg font-bold text-on-surface">SMM Panel</div>
+        <div className="flex h-16 items-center px-6">
+          <Logo />
+        </div>
         <nav className="flex flex-col gap-1 px-3">
           {navItems.map((item) => (
             <NavLink
@@ -91,7 +94,7 @@ export default function DashboardLayout() {
           }`}
         >
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-outline-variant px-4">
-            <span className="font-display text-lg font-bold text-on-surface">SMM Panel</span>
+            <Logo />
             <button
               type="button"
               aria-label="Close menu"

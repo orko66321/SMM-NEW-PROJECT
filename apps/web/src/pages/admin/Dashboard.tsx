@@ -28,8 +28,8 @@ function DailyChartsCard({ items }: { items: DailyStat[] }) {
           <AreaChart data={data}>
             <defs>
               <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6366F1" stopOpacity={0.35} />
-                <stop offset="95%" stopColor="#6366F1" stopOpacity={0} />
+                <stop offset="5%" stopColor="#6D28D9" stopOpacity={0.35} />
+                <stop offset="95%" stopColor="#6D28D9" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#10B981" stopOpacity={0.35} />
@@ -40,7 +40,7 @@ function DailyChartsCard({ items }: { items: DailyStat[] }) {
             <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#c7c4d7" }} tickFormatter={(d: string) => d.slice(5)} />
             <YAxis tick={{ fontSize: 10, fill: "#c7c4d7" }} />
             <Tooltip contentStyle={CHART_TOOLTIP_STYLE} />
-            <Area type="monotone" dataKey="revenue" stroke="#6366F1" fill="url(#revenueGradient)" name="Revenue" />
+            <Area type="monotone" dataKey="revenue" stroke="#6D28D9" fill="url(#revenueGradient)" name="Revenue" />
             <Area type="monotone" dataKey="profit" stroke="#10B981" fill="url(#profitGradient)" name="Profit" />
           </AreaChart>
         </ResponsiveContainer>
@@ -54,7 +54,7 @@ function DailyChartsCard({ items }: { items: DailyStat[] }) {
             <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#c7c4d7" }} tickFormatter={(d: string) => d.slice(5)} />
             <YAxis tick={{ fontSize: 10, fill: "#c7c4d7" }} allowDecimals={false} />
             <Tooltip contentStyle={CHART_TOOLTIP_STYLE} />
-            <Bar dataKey="orderCount" fill="#8083ff" name="Orders" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="orderCount" fill="#8B5CF6" name="Orders" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

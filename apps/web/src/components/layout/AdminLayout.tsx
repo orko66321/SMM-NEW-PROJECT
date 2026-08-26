@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.js";
 import NoticeBar from "./NoticeBar.js";
+import { Logo } from "../Logo.js";
 
 const navItems = [
   { to: "/admin", label: "Dashboard", end: true },
@@ -51,8 +52,9 @@ export default function AdminLayout() {
     <div className="flex min-h-screen bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 border-r border-outline-variant bg-surface-container-high md:block">
-        <div className="flex h-16 items-center gap-2 px-6 font-display text-lg font-bold text-on-surface">
-          <span className="badge bg-primary/20 text-primary">Admin</span> Panel
+        <div className="flex h-16 items-center gap-2 px-6">
+          <Logo />
+          <span className="badge bg-primary/20 text-primary">Admin</span>
         </div>
         <nav className="flex flex-col gap-1 px-3">
           {navItems.map((item) => (
@@ -91,8 +93,9 @@ export default function AdminLayout() {
           }`}
         >
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-outline-variant px-4">
-            <span className="flex items-center gap-2 font-display text-lg font-bold text-on-surface">
-              <span className="badge bg-primary/20 text-primary">Admin</span> Panel
+            <span className="flex items-center gap-2">
+              <Logo />
+              <span className="badge bg-primary/20 text-primary">Admin</span>
             </span>
             <button
               type="button"

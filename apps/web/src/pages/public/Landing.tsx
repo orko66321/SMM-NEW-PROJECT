@@ -128,7 +128,7 @@ export default function Landing() {
       <section className="relative overflow-hidden">
         <div
           className="pointer-events-none absolute -top-1/3 left-1/4 h-[50rem] w-[50rem] rounded-full opacity-20 blur-3xl"
-          style={{ background: "radial-gradient(circle, #6366F1 0%, transparent 65%)" }}
+          style={{ background: "radial-gradient(circle, #6D28D9 0%, transparent 65%)" }}
           aria-hidden
         />
         <div className="relative mx-auto grid max-w-container grid-cols-1 items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
@@ -183,7 +183,7 @@ export default function Landing() {
       <StatsBar startingPrice={startingPrice} />
 
       <section className="mx-auto max-w-container px-4 py-16 sm:px-6">
-        <h2 className="text-center font-display text-2xl font-bold text-on-surface sm:text-3xl">Why SMM Elite</h2>
+        <h2 className="text-center font-display text-2xl font-bold text-on-surface sm:text-3xl">Why All In One</h2>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map((f) => (
             <div key={f.title} className="card">
