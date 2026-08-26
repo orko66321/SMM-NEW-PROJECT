@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import GoogleSignInButton from "../../components/auth/GoogleSignInButton.js";
 
 interface PublicService {
   id: string;
@@ -62,6 +63,9 @@ function SignInCard() {
       <p className="mt-4 text-center text-sm text-on-surface-variant">
         No account? <Link to="/register" className="text-primary hover:underline">Sign up</Link>
       </p>
+      <div className="mt-4">
+        <GoogleSignInButton />
+      </div>
     </div>
   );
 }
