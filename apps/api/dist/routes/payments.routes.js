@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { PaymentGatewayKeys, createGatewayDepositSchema } from "@smm/shared";
+import { prisma } from "../lib/prisma.js";
 import { authenticate } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -61,9 +62,15 @@ paymentsRouter.post("/:gateway/deposits", authenticate, validate(createGatewayDe
     const deposit = await createPendingGatewayDeposit({ userId: req.user.id, amount, gatewayProvider: key, paymentMethodId, couponCode });
     const callbackUrl = `${env.APP_BASE_URL}/api/payments/${key.toLowerCase()}/callback`;
     const webhookUrl = `${env.APP_BASE_URL}/api/payments/${key.toLowerCase()}/webhook`;
+    // Only ZiniPay's create call actually needs these (cus_name/cus_email —
+    // see services/payments/zinipay.ts), but fetching unconditionally here
+    // keeps the gateway-specific requirement out of this route handler.
+    const payer = await prisma.user.findUniqueOrThrow({ where: { id: req.user.id }, select: { username: true, email: true } });
     const { redirectUrl, gatewayRef } = await adapter.initiate(credentials, {
         amount,
         payerReference: req.user.id,
+        payerName: payer.username,
+        payerEmail: payer.email,
         callbackUrl,
         webhookUrl,
         depositId: deposit.id,

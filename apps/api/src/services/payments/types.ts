@@ -11,6 +11,9 @@
 export interface InitiatePaymentParams {
   amount: number;
   payerReference: string;
+  /** Customer display name/email — only ZiniPay's create call uses these (cus_name/cus_email); bKash ignores them. */
+  payerName?: string;
+  payerEmail?: string;
   callbackUrl: string;
   /**
    * Our own Deposit row id, created before `initiate()` is called (see

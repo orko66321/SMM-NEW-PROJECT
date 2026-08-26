@@ -6,21 +6,30 @@ import type { ConfirmPaymentResult, InitiatePaymentParams, InitiatePaymentResult
  * ZiniPay adapter — a Bangladeshi payment aggregator fronting bKash/Nagad/
  * Rocket/cards behind one hosted-checkout API.
  *
- * Implemented against ZiniPay's public docs (https://zinipay.com/docs):
+ * Field shapes below are confirmed against a real reference integration
+ * (a working PHP module's create/verify calls), not just ZiniPay's public
+ * docs — two things the docs alone left ambiguous turned out to matter:
+ *   - POST /v1/payment/verify takes `{ invoiceId }` — **camelCase**, not
+ *     `invoice_id`. Sending `invoice_id` there is a silent-looking bug: axios
+ *     gets a 200 back either way if ZiniPay just ignores unknown fields, but
+ *     confirm() would then be looking up a payment ZiniPay never received a
+ *     real identifier for. (Contrast: the async webhook *ZiniPay sends us*
+ *     does use snake_case `invoice_id` in its JSON body — see
+ *     routes/payments.routes.ts's resolveWebhookGatewayRef. Request and
+ *     webhook payload shapes are simply inconsistent with each other in
+ *     ZiniPay's own API, confirmed by the reference implementation checking
+ *     both `invoiceId` and `invoice_id` in different places.)
+ *   - POST /v1/payment/create requires customer identity fields
+ *     (`cus_name`, `cus_email`) that this adapter previously omitted
+ *     entirely, plus `val_id`/`metadata`/`return_type` which the reference
+ *     implementation always sends (val_id set to the merchant's own
+ *     transaction reference — our depositId here — echoed back on verify).
  *   - Auth: `zini-api-key` header + `Content-Type: application/json`.
- *   - POST /v1/payment/create → { status, message, payment_url }. The docs
- *     do not show a separate `invoice_id` field in this response, only the
- *     payment_url (`https://secure.zinipay.com/payment/INVOICE_ID`) — the
- *     invoice id is parsed from its last path segment. Flag this as the one
- *     assumption in this adapter that needs confirming against a real
- *     sandbox response before going live, same treatment Phase 2 gave bKash.
- *   - POST /v1/payment/verify with { invoice_id } → { status: "PENDING" |
- *     "COMPLETED" | "FAILED", ... } — this is what confirm() calls; it is
- *     the only source of truth this adapter trusts.
- *   - Webhook payload carries only ZiniPay's invoice_id, no signature is
- *     documented — ZiniPay's own docs say to always verify from the
- *     backend, which is exactly what confirm() does regardless of what a
- *     webhook or redirect claims.
+ *   - POST /v1/payment/create → { status, message, payment_url }; no
+ *     separate invoice-id field, so it's parsed from payment_url's last
+ *     path segment (`https://secure.zinipay.com/payment/INVOICE_ID`).
+ *   - confirm() is the only source of truth this adapter trusts — never the
+ *     webhook or browser redirect, matching every other gateway here.
  */
 
 interface CreateInvoiceResponse {
@@ -58,8 +67,17 @@ export const zinipayGateway: PaymentGateway<ZiniPayCredentials> = {
     const res = await axios.post<CreateInvoiceResponse>(
       `${creds.baseUrl}/v1/payment/create`,
       {
+        cus_name: params.payerName ?? "Customer",
+        cus_email: params.payerEmail ?? "no-reply@allinonsr.com",
         amount: params.amount,
+        // val_id is echoed back verbatim on verify — our own depositId, so
+        // confirm()'s caller can cross-check it if ever needed. Not itself
+        // used for the confirm() lookup (that's gatewayRef/invoiceId,
+        // parsed from payment_url below), just extra correlation.
+        val_id: params.depositId,
+        metadata: { order_id: params.depositId, user_id: params.payerReference },
         redirect_url: redirectUrl,
+        return_type: "GET",
         cancel_url: redirectUrl,
         webhook_url: params.webhookUrl,
       },
@@ -76,7 +94,7 @@ export const zinipayGateway: PaymentGateway<ZiniPayCredentials> = {
   async confirm(creds, gatewayRef): Promise<ConfirmPaymentResult> {
     const res = await axios.post<VerifyInvoiceResponse>(
       `${creds.baseUrl}/v1/payment/verify`,
-      { invoice_id: gatewayRef },
+      { invoiceId: gatewayRef },
       { headers: authHeaders(creds), timeout: 15_000 },
     );
 

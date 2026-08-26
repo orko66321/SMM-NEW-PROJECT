@@ -18,6 +18,38 @@ async function enableMockZiniPay(baseUrl: string) {
 }
 
 describe("ZiniPay integration (Phase 3)", () => {
+  it("sends the exact request field names ZiniPay's real API expects — invoiceId (camelCase) on verify, cus_name/cus_email on create", async () => {
+    // Regression test for a real bug: this adapter used to send
+    // `invoice_id` (snake_case) to /v1/payment/verify, which is wrong per
+    // a working reference implementation — the real API expects
+    // `invoiceId`. A mock that doesn't care what key name it receives
+    // wouldn't have caught that; this test inspects the raw request body
+    // ZiniPay actually receives.
+    const mock = await startMockZiniPay({ invoiceId: "inv-fields", verify: () => ({ status: "PENDING" }) });
+    try {
+      await enableMockZiniPay(mock.baseUrl);
+      const user = await createUser({ balance: 0 });
+
+      await request(app)
+        .post("/api/payments/zinipay/deposits")
+        .set("Authorization", `Bearer ${tokenFor(user.id)}`)
+        .send({ amount: 25 });
+
+      const createBody = mock.getLastCreateBody();
+      expect(createBody).toMatchObject({ cus_name: expect.any(String), cus_email: expect.any(String), amount: 25 });
+
+      const { prisma } = await import("../src/lib/prisma.js");
+      const deposit = await prisma.deposit.findFirstOrThrow({ where: { userId: user.id } });
+      await request(app).get(`/api/payments/zinipay/callback?depositId=${deposit.id}`);
+
+      const verifyBody = mock.getLastVerifyBody();
+      expect(verifyBody).toEqual({ invoiceId: "inv-fields" });
+      expect(verifyBody).not.toHaveProperty("invoice_id");
+    } finally {
+      await mock.close();
+    }
+  });
+
   it("browser callback: creates a deposit, confirms via our own reference, and credits the wallet", async () => {
     const mock = await startMockZiniPay({ invoiceId: "inv-1", verify: () => ({ invoice_id: "inv-1", status: "COMPLETED", amount: 25 }) });
     try {
