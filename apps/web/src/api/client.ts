@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import type { AuthUser } from "@smm/shared";
 
 // The access token lives ONLY in memory (a module-level variable), never in
 // localStorage/sessionStorage — that closes off the most common XSS token-
@@ -32,22 +33,44 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-let refreshPromise: Promise<string | null> | null = null;
+type RefreshResult = { accessToken: string; user: AuthUser };
 
-async function refreshAccessToken(): Promise<string | null> {
+async function performRefresh(): Promise<RefreshResult | null> {
   try {
     const res = await axios.post(
       `${apiClient.defaults.baseURL}/auth/refresh`,
       {},
       { withCredentials: true },
     );
-    const token = res.data.accessToken as string;
-    setAccessToken(token);
-    return token;
+    const { accessToken, user } = res.data as RefreshResult;
+    setAccessToken(accessToken);
+    return { accessToken, user };
   } catch {
     setAccessToken(null);
     return null;
   }
+}
+
+let refreshPromise: Promise<RefreshResult | null> | null = null;
+
+// Single-flight, shared by every caller in this tab: the mount-time session
+// restore in AuthContext (api/auth.ts's tryRefresh) and this file's own
+// 401-triggered retry below both call this instead of hitting POST
+// /auth/refresh independently. The refresh token is single-use and rotates
+// server-side on every call — two callers racing with the same not-yet-
+// rotated cookie used to make the second one look like a stolen-token
+// replay to the backend, which revokes *every* session for the account as
+// a security response. That's what caused "refreshing the page logs you
+// out": AuthContext's own restore call and an interceptor-triggered retry
+// (from some other component's request firing before the access token was
+// back in memory) would both submit the same cookie value within
+// milliseconds of each other. Deduping to one in-flight request removes
+// the race entirely for same-tab callers.
+export function refreshAuthSession(): Promise<RefreshResult | null> {
+  refreshPromise ??= performRefresh().finally(() => {
+    refreshPromise = null;
+  });
+  return refreshPromise;
 }
 
 apiClient.interceptors.response.use(
@@ -58,13 +81,10 @@ apiClient.interceptors.response.use(
 
     if (error.response?.status === 401 && original && !original._retried && !isAuthEndpoint) {
       original._retried = true;
-      refreshPromise ??= refreshAccessToken().finally(() => {
-        refreshPromise = null;
-      });
-      const newToken = await refreshPromise;
-      if (newToken) {
+      const result = await refreshAuthSession();
+      if (result) {
         original.headers = original.headers ?? {};
-        original.headers.Authorization = `Bearer ${newToken}`;
+        original.headers.Authorization = `Bearer ${result.accessToken}`;
         return apiClient(original);
       }
       onSessionExpired?.();

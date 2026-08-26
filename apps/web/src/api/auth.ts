@@ -1,5 +1,5 @@
 import type { AuthUser, ForgotPasswordInput, LoginInput, RegisterInput, ResetPasswordInput } from "@smm/shared";
-import { apiClient, setAccessToken } from "./client.js";
+import { apiClient, refreshAuthSession, setAccessToken } from "./client.js";
 
 export async function login(input: LoginInput) {
   const res = await apiClient.post("/auth/login", input);
@@ -29,10 +29,17 @@ export async function logout() {
   setAccessToken(null);
 }
 
+// Routed through the shared single-flight refreshAuthSession() (see
+// client.ts) rather than posting to /auth/refresh directly — this call
+// happens on every page mount (AuthContext restoring the session), and it
+// must share an in-flight request with any 401-triggered retry the axios
+// interceptor fires around the same time, or two callers can submit the
+// same not-yet-rotated refresh-token cookie and trigger the backend's
+// reuse-detection (revokes every session for the account).
 export async function tryRefresh() {
-  const res = await apiClient.post("/auth/refresh");
-  setAccessToken(res.data.accessToken);
-  return res.data.user as AuthUser;
+  const result = await refreshAuthSession();
+  if (!result) throw new Error("No active session");
+  return result.user;
 }
 
 export async function forgotPassword(input: ForgotPasswordInput) {

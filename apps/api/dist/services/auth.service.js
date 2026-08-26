@@ -81,21 +81,18 @@ export async function loginUser(input, meta) {
     const tokens = await issueTokenPair(user.id, meta);
     return { user: publicUser(user), ...tokens };
 }
+// How long after a token was rotated a second use of it is still treated as
+// an honest race (two requests genuinely both holding the same not-yet-
+// rotated cookie) rather than a theft/replay signal. Long enough to cover
+// realistic same-tab/multi-tab request skew, short enough that it's no
+// practical help to an actual attacker replaying a token they captured off
+// a network log sometime after the legitimate rotation.
+const REUSE_GRACE_MS = 10_000;
 export async function refreshSession(refreshTokenValue, meta) {
     const tokenHash = hashRefreshToken(refreshTokenValue);
     const existing = await prisma.refreshToken.findUnique({ where: { tokenHash }, include: { user: true } });
     if (!existing) {
         throw AppError.unauthorized("Invalid refresh token");
-    }
-    if (existing.revokedAt) {
-        // A revoked (already-rotated) refresh token being reused is a strong
-        // signal of theft/replay — nuke every session for this user so a stolen
-        // token can't be used again even if the attacker races us here.
-        await prisma.refreshToken.updateMany({
-            where: { userId: existing.userId, revokedAt: null },
-            data: { revokedAt: new Date() },
-        });
-        throw AppError.unauthorized("Refresh token reuse detected — all sessions revoked");
     }
     if (existing.expiresAt < new Date()) {
         throw AppError.unauthorized("Refresh token expired");
@@ -103,12 +100,39 @@ export async function refreshSession(refreshTokenValue, meta) {
     if (existing.user.status !== "ACTIVE") {
         throw AppError.forbidden("Account is suspended");
     }
+    // Atomically claim this token for rotation — the WHERE clause only
+    // matches if it's still unrevoked at the instant of this exact UPDATE,
+    // not just at the SELECT above. Two honest requests can legitimately race
+    // here holding the same still-fresh token (the frontend briefly firing
+    // two refresh attempts before either resolves — see
+    // apps/web/src/api/client.ts's refreshAuthSession, which dedupes that
+    // specific case — or two separate browser tabs racing independently,
+    // which same-tab dedup can't cover). The loser lands below.
+    const claim = await prisma.refreshToken.updateMany({
+        where: { id: existing.id, revokedAt: null },
+        data: { revokedAt: new Date() },
+    });
+    if (claim.count === 0) {
+        // Someone else already rotated this token. `existing.revokedAt` (read
+        // *before* the race resolved) can't tell us whether that happened a
+        // moment ago or long ago — re-read the row to find out, since that's
+        // the actual signal that distinguishes "two honest requests raced"
+        // from "a stale token is being replayed" (real theft/replay defense
+        // still applies past the grace window — nuke every session).
+        const current = await prisma.refreshToken.findUniqueOrThrow({ where: { id: existing.id } });
+        const revokedMsAgo = Date.now() - (current.revokedAt?.getTime() ?? 0);
+        if (revokedMsAgo > REUSE_GRACE_MS) {
+            await prisma.refreshToken.updateMany({
+                where: { userId: existing.userId, revokedAt: null },
+                data: { revokedAt: new Date() },
+            });
+            throw AppError.unauthorized("Refresh token reuse detected — all sessions revoked");
+        }
+        throw AppError.unauthorized("Refresh token already used");
+    }
     const { accessToken, refreshTokenValue: newRefreshTokenValue } = await issueTokenPair(existing.userId, meta);
     const newToken = await prisma.refreshToken.findUnique({ where: { tokenHash: hashRefreshToken(newRefreshTokenValue) } });
-    await prisma.refreshToken.update({
-        where: { id: existing.id },
-        data: { revokedAt: new Date(), replacedById: newToken?.id },
-    });
+    await prisma.refreshToken.update({ where: { id: existing.id }, data: { replacedById: newToken?.id } });
     return { user: publicUser(existing.user), accessToken, refreshTokenValue: newRefreshTokenValue };
 }
 export async function logoutSession(refreshTokenValue) {
