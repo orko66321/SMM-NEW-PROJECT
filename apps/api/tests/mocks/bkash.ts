@@ -16,6 +16,7 @@ export function startMockBkash(routes: {
   paymentID?: string;
 }) {
   const paymentID = routes.paymentID ?? "mock-payment-id";
+  let lastCreateBody: Record<string, unknown> | undefined;
 
   const server = http.createServer((req, res) => {
     let raw = "";
@@ -27,6 +28,7 @@ export function startMockBkash(routes: {
       if (req.url?.endsWith("/token/grant")) {
         result = { id_token: "mock-id-token", token_type: "Bearer" };
       } else if (req.url?.endsWith("/checkout/create")) {
+        lastCreateBody = body;
         result = { statusCode: "0000", statusMessage: "Successful", paymentID, bkashURL: "https://mock.bka.sh/redirect" };
       } else if (req.url?.endsWith("/checkout/execute")) {
         result = routes.execute
@@ -45,13 +47,19 @@ export function startMockBkash(routes: {
     });
   });
 
-  return new Promise<{ baseUrl: string; paymentID: string; close: () => Promise<void> }>((resolve) => {
+  return new Promise<{
+    baseUrl: string;
+    paymentID: string;
+    close: () => Promise<void>;
+    getLastCreateBody: () => Record<string, unknown> | undefined;
+  }>((resolve) => {
     server.listen(0, "127.0.0.1", () => {
       const { port } = server.address() as AddressInfo;
       resolve({
         baseUrl: `http://127.0.0.1:${port}`,
         paymentID,
         close: () => new Promise((r) => server.close(() => r())),
+        getLastCreateBody: () => lastCreateBody,
       });
     });
   });

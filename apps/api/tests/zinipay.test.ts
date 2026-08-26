@@ -35,8 +35,14 @@ describe("ZiniPay integration (Phase 3)", () => {
         .set("Authorization", `Bearer ${tokenFor(user.id)}`)
         .send({ amount: 25 });
 
+      // amount here is BDT, not the $25 USD requested — ZiniPay is
+      // BDT-only, so the adapter converts via SiteSettings.usdToBdtRate
+      // before this leaves our server (services/payments/currency.ts).
+      const { getUsdToBdtRate } = await import("../src/services/settings.service.js");
+      const rate = await getUsdToBdtRate();
+      const expectedBdt = Number(rate.mul(25).toFixed(2));
       const createBody = mock.getLastCreateBody();
-      expect(createBody).toMatchObject({ cus_name: expect.any(String), cus_email: expect.any(String), amount: 25 });
+      expect(createBody).toMatchObject({ cus_name: expect.any(String), cus_email: expect.any(String), amount: expectedBdt });
 
       const { prisma } = await import("../src/lib/prisma.js");
       const deposit = await prisma.deposit.findFirstOrThrow({ where: { userId: user.id } });

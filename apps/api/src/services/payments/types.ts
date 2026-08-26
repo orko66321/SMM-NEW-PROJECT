@@ -9,6 +9,7 @@
  */
 
 export interface InitiatePaymentParams {
+  /** Always USD — every stored amount (Deposit.amount, Wallet.balance) is USD everywhere in this codebase (see SiteSettings.usdToBdtRate's schema comment). Converting to a gateway's own currency, if it needs one, is that adapter's own job — see zinipay.ts/bkash.ts's use of services/payments/currency.ts. */
   amount: number;
   payerReference: string;
   /** Customer display name/email — only ZiniPay's create call uses these (cus_name/cus_email); bKash ignores them. */
@@ -31,10 +32,14 @@ export interface InitiatePaymentParams {
 export interface InitiatePaymentResult {
   redirectUrl: string;
   gatewayRef: string;
+  /** Set when the adapter converted params.amount (USD) to its own currency before sending it to the gateway — the exact figure/currency actually charged, stored on Deposit for the admin audit trail and the soft mismatch check in deposit.service.ts's confirmGatewayDeposit. Undefined for a USD-native gateway. */
+  gatewayAmount?: string;
+  gatewayCurrency?: string;
 }
 
 export interface ConfirmPaymentResult {
   status: "PAID" | "FAILED" | "PENDING";
+  /** Whatever amount the gateway itself reports as paid, in ITS currency (e.g. BDT) — not USD. Only used for the soft mismatch check against gatewayAmount above; the wallet is always credited from Deposit.amount (USD), never this. */
   amount?: number;
 }
 

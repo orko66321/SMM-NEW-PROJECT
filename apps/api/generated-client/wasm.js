@@ -344,6 +344,8 @@ exports.Prisma.DepositScalarFieldEnum = {
   reviewedAt: 'reviewedAt',
   gatewayProvider: 'gatewayProvider',
   gatewayRef: 'gatewayRef',
+  gatewayAmount: 'gatewayAmount',
+  gatewayCurrency: 'gatewayCurrency',
   paymentMethodId: 'paymentMethodId',
   orderIntentId: 'orderIntentId',
   trxId: 'trxId',

@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { ZiniPayCredentials } from "@smm/shared";
 import type { ConfirmPaymentResult, InitiatePaymentParams, InitiatePaymentResult, PaymentGateway } from "./types.js";
+import { usdToGatewayBdt } from "./currency.js";
 
 /**
  * ZiniPay adapter — a Bangladeshi payment aggregator fronting bKash/Nagad/
@@ -64,12 +65,18 @@ export const zinipayGateway: PaymentGateway<ZiniPayCredentials> = {
   async initiate(creds, params: InitiatePaymentParams): Promise<InitiatePaymentResult> {
     const redirectUrl = `${params.callbackUrl}?depositId=${encodeURIComponent(params.depositId)}`;
 
+    // ZiniPay is BDT-only — params.amount is USD (see InitiatePaymentParams'
+    // doc comment). Real bug this fixes: this used to send params.amount
+    // straight through unconverted, so a $0.20 charge went out as "0.20"
+    // (0.20 BDT) instead of "26.00" (0.20 * 130).
+    const bdtAmount = await usdToGatewayBdt(params.amount);
+
     const res = await axios.post<CreateInvoiceResponse>(
       `${creds.baseUrl}/v1/payment/create`,
       {
         cus_name: params.payerName ?? "Customer",
         cus_email: params.payerEmail ?? "no-reply@allinonsr.com",
-        amount: params.amount,
+        amount: Number(bdtAmount),
         // val_id is echoed back verbatim on verify — our own depositId, so
         // confirm()'s caller can cross-check it if ever needed. Not itself
         // used for the confirm() lookup (that's gatewayRef/invoiceId,
@@ -88,7 +95,12 @@ export const zinipayGateway: PaymentGateway<ZiniPayCredentials> = {
       throw new Error(`ZiniPay create invoice failed: ${res.data.message}`);
     }
 
-    return { redirectUrl: res.data.payment_url, gatewayRef: parseInvoiceId(res.data.payment_url) };
+    return {
+      redirectUrl: res.data.payment_url,
+      gatewayRef: parseInvoiceId(res.data.payment_url),
+      gatewayAmount: bdtAmount,
+      gatewayCurrency: "BDT",
+    };
   },
 
   async confirm(creds, gatewayRef): Promise<ConfirmPaymentResult> {

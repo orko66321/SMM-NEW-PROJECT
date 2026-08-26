@@ -568,6 +568,17 @@ model Deposit {
   gatewayProvider String?
   gatewayRef      String? @unique
 
+  // The amount actually sent to a BDT-only gateway (ZiniPay/bKash), after
+  // converting `amount` (always USD) via SiteSettings.usdToBdtRate at the
+  // moment initiate() ran — see services/payments/currency.ts. Null for
+  // manual deposits and any USD-native gateway. Exists purely as an audit
+  // trail (so an admin reconciling against ZiniPay's own dashboard sees the
+  // BDT figure that was actually charged) and for confirmGatewayDeposit's
+  // soft mismatch check — never used to compute the wallet credit, which
+  // always comes from `amount` above.
+  gatewayAmount   Decimal? @db.Decimal(18, 4)
+  gatewayCurrency String?
+
   // Phase 3: which admin-configured PaymentMethod this deposit was made
   // through. onDelete: Restrict — a method with deposit history can be
   // disabled but not deleted, so the ledger's "paid via X" trail never breaks.

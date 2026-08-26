@@ -1,6 +1,7 @@
 import { Prisma } from "#prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
+import { logger } from "../lib/logger.js";
 import { adjustWalletBalance } from "./wallet.service.js";
 import { redeemCouponForDeposit, validateCoupon } from "./coupon.service.js";
 import { fulfillOrderIntent } from "./order.service.js";
@@ -171,8 +172,13 @@ export async function createPendingGatewayDeposit(params: {
   });
 }
 
-export async function setDepositGatewayRef(depositId: string, gatewayRef: string) {
-  await prisma.deposit.update({ where: { id: depositId }, data: { gatewayRef } });
+export async function setDepositGatewayRef(
+  depositId: string,
+  gatewayRef: string,
+  gatewayAmount?: string,
+  gatewayCurrency?: string,
+) {
+  await prisma.deposit.update({ where: { id: depositId }, data: { gatewayRef, gatewayAmount, gatewayCurrency } });
 }
 
 export async function getDepositById(depositId: string) {
@@ -254,7 +260,7 @@ export async function reviewDeposit(
  */
 export async function confirmGatewayDeposit(
   gatewayRef: string,
-  result: { status: "PAID" | "FAILED" | "PENDING"; gatewayProvider: string },
+  result: { status: "PAID" | "FAILED" | "PENDING"; gatewayProvider: string; amount?: number },
   // Phase 4 safety switch (PaymentGatewayConfig.autoVerify) — see routes/payments.routes.ts,
   // which looks the flag up per-gateway before calling this. Defaults true so every
   // existing caller/test keeps today's Phase 2/3 auto-credit behavior unless it
@@ -301,6 +307,29 @@ export async function confirmGatewayDeposit(
     });
 
     if (result.status === "PAID") {
+      // Soft check only, never blocks crediting — result.amount is whatever
+      // the gateway itself reports as paid, in ITS currency (BDT), which
+      // its own docs (zinipay.ts's header comment) confirm isn't reliably
+      // present on every response. The wallet is always credited from
+      // current.amount (USD) below, never this — this is purely so a
+      // genuine mismatch (partial payment, gateway-side rounding, a bug in
+      // the conversion) shows up in logs instead of silently crediting the
+      // full expected amount on a payment that wasn't actually for that much.
+      if (result.amount !== undefined && current.gatewayAmount) {
+        const reported = new Prisma.Decimal(result.amount);
+        if (!reported.equals(current.gatewayAmount)) {
+          logger.warn(
+            {
+              depositId: current.id,
+              gatewayProvider: result.gatewayProvider,
+              expectedGatewayAmount: current.gatewayAmount.toString(),
+              reportedAmount: reported.toString(),
+            },
+            "Gateway-reported paid amount does not match the amount we expected to charge — crediting the expected USD amount regardless, but this deposit is worth a manual look",
+          );
+        }
+      }
+
       await creditApprovedDeposit(tx, current);
 
       // Insufficient-balance redirect flow (see order.service.ts's

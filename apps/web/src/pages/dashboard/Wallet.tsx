@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createDeposit, getMyDeposits, getPaymentMethods, getWallet, initiateGatewayDeposit, validateCoupon } from "../../api/resources.js";
+import { createDeposit, getMyDeposits, getPaymentMethods, getPublicSettings, getWallet, initiateGatewayDeposit, validateCoupon } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
@@ -62,6 +62,8 @@ export default function Wallet() {
   const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet });
   const { data: deposits } = useQuery({ queryKey: ["deposits"], queryFn: () => getMyDeposits({ page: 1, pageSize: 20 }) });
   const { data: methods } = useQuery({ queryKey: ["payment-methods"], queryFn: getPaymentMethods });
+  const { data: settings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
+  const bdtRate = settings?.usdToBdtRate ? Number(settings.usdToBdtRate) : null;
 
   // Set when arriving here via NewOrder's insufficient-balance redirect
   // (?orderIntentId=...&required=...) — carried through to
@@ -292,6 +294,16 @@ export default function Wallet() {
                 onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : "")}
                 required
               />
+              {/* Every gateway here (ZiniPay, bKash) is BDT-only — the amount
+                  above is always USD, converted server-side right before the
+                  gateway call (see apps/api/src/services/payments/currency.ts).
+                  Shown so the actual local-currency charge isn't a surprise. */}
+              {selected.gatewayType === "AUTOMATED" && bdtRate && amount && (
+                <p className="mt-1.5 text-xs text-on-surface-variant">
+                  You will pay: <span className="font-mono font-semibold text-on-surface">৳{(Number(amount) * bdtRate).toFixed(2)}</span>{" "}
+                  (Exchange rate: $1 = ৳{bdtRate})
+                </p>
+              )}
             </div>
 
             <div>

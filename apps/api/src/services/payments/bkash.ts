@@ -3,6 +3,7 @@ import axios from "axios";
 import type { BkashCredentials } from "@smm/shared";
 import type { ConfirmPaymentResult, InitiatePaymentParams, InitiatePaymentResult, PaymentGateway } from "./types.js";
 import { logger } from "../../lib/logger.js";
+import { usdToGatewayBdt } from "./currency.js";
 
 /**
  * bKash Tokenized Checkout (merchant) API adapter.
@@ -70,6 +71,7 @@ async function createPayment(
   creds: BkashCredentials,
   idToken: string,
   params: InitiatePaymentParams,
+  bdtAmount: string,
 ): Promise<CreatePaymentResponse> {
   const res = await axios.post<CreatePaymentResponse>(
     `${creds.baseUrl}/tokenized/checkout/create`,
@@ -77,7 +79,7 @@ async function createPayment(
       mode: "0011",
       payerReference: params.payerReference,
       callbackURL: params.callbackUrl,
-      amount: params.amount.toFixed(2),
+      amount: bdtAmount,
       currency: "BDT",
       intent: "sale",
       merchantInvoiceNumber: crypto.randomUUID(),
@@ -122,9 +124,14 @@ export const bkashGateway: PaymentGateway<BkashCredentials> = {
   key: "BKASH",
 
   async initiate(creds, params): Promise<InitiatePaymentResult> {
+    // bKash is BDT-only — params.amount is USD (see InitiatePaymentParams'
+    // doc comment). Real bug this fixes: `currency: "BDT"` was hardcoded
+    // here while `amount` was the raw USD figure, just .toFixed(2)'d — a
+    // $0.20 charge was declared as "0.20 BDT" instead of "26.00 BDT".
+    const bdtAmount = await usdToGatewayBdt(params.amount);
     const idToken = await grantToken(creds);
-    const payment = await createPayment(creds, idToken, params);
-    return { redirectUrl: payment.bkashURL, gatewayRef: payment.paymentID };
+    const payment = await createPayment(creds, idToken, params, bdtAmount);
+    return { redirectUrl: payment.bkashURL, gatewayRef: payment.paymentID, gatewayAmount: bdtAmount, gatewayCurrency: "BDT" };
   },
 
   async confirm(creds, gatewayRef): Promise<ConfirmPaymentResult> {

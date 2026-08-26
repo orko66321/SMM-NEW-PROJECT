@@ -135,9 +135,9 @@ paymentsRouter.post(
       logger.error({ err, gateway: key, depositId: deposit.id }, "Payment gateway initiate() failed");
       throw new AppError(502, "The payment gateway is temporarily unavailable. Please try again shortly.");
     }
-    const { redirectUrl, gatewayRef } = initiateResult;
+    const { redirectUrl, gatewayRef, gatewayAmount, gatewayCurrency } = initiateResult;
 
-    await setDepositGatewayRef(deposit.id, gatewayRef);
+    await setDepositGatewayRef(deposit.id, gatewayRef, gatewayAmount, gatewayCurrency);
 
     res.status(201).json({ redirectUrl });
   }),
@@ -162,7 +162,7 @@ paymentsRouter.get(
       const credentials = await getEnabledGatewayCredentials(key);
       const autoVerify = await getGatewayAutoVerify(key);
       const result = await adapter.confirm(credentials, gatewayRef);
-      await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key }, { autoVerify });
+      await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key, amount: result.amount }, { autoVerify });
       const outcome = result.status === "PAID" ? "success" : result.status === "FAILED" ? "failed" : "pending";
       return res.redirect(`${env.FRONTEND_BASE_URL}/dashboard/wallet?deposit=${outcome}`);
     } catch (err) {
@@ -193,7 +193,7 @@ paymentsRouter.post(
       const credentials = await getEnabledGatewayCredentials(key);
       const autoVerify = await getGatewayAutoVerify(key);
       const result = await adapter.confirm(credentials, gatewayRef);
-      await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key }, { autoVerify });
+      await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key, amount: result.amount }, { autoVerify });
       res.status(200).json({ received: true });
     } catch (err) {
       logger.error({ err, gateway: key, gatewayRef }, "Payment webhook confirm failed");

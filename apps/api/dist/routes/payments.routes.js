@@ -108,8 +108,8 @@ paymentsRouter.post("/:gateway/deposits", authenticate, validate(createGatewayDe
         logger.error({ err, gateway: key, depositId: deposit.id }, "Payment gateway initiate() failed");
         throw new AppError(502, "The payment gateway is temporarily unavailable. Please try again shortly.");
     }
-    const { redirectUrl, gatewayRef } = initiateResult;
-    await setDepositGatewayRef(deposit.id, gatewayRef);
+    const { redirectUrl, gatewayRef, gatewayAmount, gatewayCurrency } = initiateResult;
+    await setDepositGatewayRef(deposit.id, gatewayRef, gatewayAmount, gatewayCurrency);
     res.status(201).json({ redirectUrl });
 }));
 // Public — the gateway redirects the customer's browser here with no auth
@@ -127,7 +127,7 @@ paymentsRouter.get("/:gateway/callback", asyncHandler(async (req, res) => {
         const credentials = await getEnabledGatewayCredentials(key);
         const autoVerify = await getGatewayAutoVerify(key);
         const result = await adapter.confirm(credentials, gatewayRef);
-        await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key }, { autoVerify });
+        await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key, amount: result.amount }, { autoVerify });
         const outcome = result.status === "PAID" ? "success" : result.status === "FAILED" ? "failed" : "pending";
         return res.redirect(`${env.FRONTEND_BASE_URL}/dashboard/wallet?deposit=${outcome}`);
     }
@@ -153,7 +153,7 @@ paymentsRouter.post("/:gateway/webhook", asyncHandler(async (req, res) => {
         const credentials = await getEnabledGatewayCredentials(key);
         const autoVerify = await getGatewayAutoVerify(key);
         const result = await adapter.confirm(credentials, gatewayRef);
-        await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key }, { autoVerify });
+        await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key, amount: result.amount }, { autoVerify });
         res.status(200).json({ received: true });
     }
     catch (err) {

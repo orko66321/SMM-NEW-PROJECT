@@ -21288,11 +21288,13 @@ export namespace Prisma {
 
   export type DepositAvgAggregateOutputType = {
     amount: Decimal | null
+    gatewayAmount: Decimal | null
     bonusAmount: Decimal | null
   }
 
   export type DepositSumAggregateOutputType = {
     amount: Decimal | null
+    gatewayAmount: Decimal | null
     bonusAmount: Decimal | null
   }
 
@@ -21309,6 +21311,8 @@ export namespace Prisma {
     reviewedAt: Date | null
     gatewayProvider: string | null
     gatewayRef: string | null
+    gatewayAmount: Decimal | null
+    gatewayCurrency: string | null
     paymentMethodId: string | null
     orderIntentId: string | null
     trxId: string | null
@@ -21330,6 +21334,8 @@ export namespace Prisma {
     reviewedAt: Date | null
     gatewayProvider: string | null
     gatewayRef: string | null
+    gatewayAmount: Decimal | null
+    gatewayCurrency: string | null
     paymentMethodId: string | null
     orderIntentId: string | null
     trxId: string | null
@@ -21351,6 +21357,8 @@ export namespace Prisma {
     reviewedAt: number
     gatewayProvider: number
     gatewayRef: number
+    gatewayAmount: number
+    gatewayCurrency: number
     paymentMethodId: number
     orderIntentId: number
     trxId: number
@@ -21363,11 +21371,13 @@ export namespace Prisma {
 
   export type DepositAvgAggregateInputType = {
     amount?: true
+    gatewayAmount?: true
     bonusAmount?: true
   }
 
   export type DepositSumAggregateInputType = {
     amount?: true
+    gatewayAmount?: true
     bonusAmount?: true
   }
 
@@ -21384,6 +21394,8 @@ export namespace Prisma {
     reviewedAt?: true
     gatewayProvider?: true
     gatewayRef?: true
+    gatewayAmount?: true
+    gatewayCurrency?: true
     paymentMethodId?: true
     orderIntentId?: true
     trxId?: true
@@ -21405,6 +21417,8 @@ export namespace Prisma {
     reviewedAt?: true
     gatewayProvider?: true
     gatewayRef?: true
+    gatewayAmount?: true
+    gatewayCurrency?: true
     paymentMethodId?: true
     orderIntentId?: true
     trxId?: true
@@ -21426,6 +21440,8 @@ export namespace Prisma {
     reviewedAt?: true
     gatewayProvider?: true
     gatewayRef?: true
+    gatewayAmount?: true
+    gatewayCurrency?: true
     paymentMethodId?: true
     orderIntentId?: true
     trxId?: true
@@ -21534,6 +21550,8 @@ export namespace Prisma {
     reviewedAt: Date | null
     gatewayProvider: string | null
     gatewayRef: string | null
+    gatewayAmount: Decimal | null
+    gatewayCurrency: string | null
     paymentMethodId: string | null
     orderIntentId: string | null
     trxId: string | null
@@ -21574,6 +21592,8 @@ export namespace Prisma {
     reviewedAt?: boolean
     gatewayProvider?: boolean
     gatewayRef?: boolean
+    gatewayAmount?: boolean
+    gatewayCurrency?: boolean
     paymentMethodId?: boolean
     orderIntentId?: boolean
     trxId?: boolean
@@ -21600,6 +21620,8 @@ export namespace Prisma {
     reviewedAt?: boolean
     gatewayProvider?: boolean
     gatewayRef?: boolean
+    gatewayAmount?: boolean
+    gatewayCurrency?: boolean
     paymentMethodId?: boolean
     orderIntentId?: boolean
     trxId?: boolean
@@ -21626,6 +21648,8 @@ export namespace Prisma {
     reviewedAt?: boolean
     gatewayProvider?: boolean
     gatewayRef?: boolean
+    gatewayAmount?: boolean
+    gatewayCurrency?: boolean
     paymentMethodId?: boolean
     orderIntentId?: boolean
     trxId?: boolean
@@ -21671,6 +21695,8 @@ export namespace Prisma {
       reviewedAt: Date | null
       gatewayProvider: string | null
       gatewayRef: string | null
+      gatewayAmount: Prisma.Decimal | null
+      gatewayCurrency: string | null
       paymentMethodId: string | null
       orderIntentId: string | null
       trxId: string | null
@@ -22087,6 +22113,8 @@ export namespace Prisma {
     readonly reviewedAt: FieldRef<"Deposit", 'DateTime'>
     readonly gatewayProvider: FieldRef<"Deposit", 'String'>
     readonly gatewayRef: FieldRef<"Deposit", 'String'>
+    readonly gatewayAmount: FieldRef<"Deposit", 'Decimal'>
+    readonly gatewayCurrency: FieldRef<"Deposit", 'String'>
     readonly paymentMethodId: FieldRef<"Deposit", 'String'>
     readonly orderIntentId: FieldRef<"Deposit", 'String'>
     readonly trxId: FieldRef<"Deposit", 'String'>
@@ -30765,6 +30793,8 @@ export namespace Prisma {
     reviewedAt: 'reviewedAt',
     gatewayProvider: 'gatewayProvider',
     gatewayRef: 'gatewayRef',
+    gatewayAmount: 'gatewayAmount',
+    gatewayCurrency: 'gatewayCurrency',
     paymentMethodId: 'paymentMethodId',
     orderIntentId: 'orderIntentId',
     trxId: 'trxId',
@@ -32705,6 +32735,8 @@ export namespace Prisma {
     reviewedAt?: DateTimeNullableFilter<"Deposit"> | Date | string | null
     gatewayProvider?: StringNullableFilter<"Deposit"> | string | null
     gatewayRef?: StringNullableFilter<"Deposit"> | string | null
+    gatewayAmount?: DecimalNullableFilter<"Deposit"> | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: StringNullableFilter<"Deposit"> | string | null
     paymentMethodId?: StringNullableFilter<"Deposit"> | string | null
     orderIntentId?: StringNullableFilter<"Deposit"> | string | null
     trxId?: StringNullableFilter<"Deposit"> | string | null
@@ -32731,6 +32763,8 @@ export namespace Prisma {
     reviewedAt?: SortOrderInput | SortOrder
     gatewayProvider?: SortOrderInput | SortOrder
     gatewayRef?: SortOrderInput | SortOrder
+    gatewayAmount?: SortOrderInput | SortOrder
+    gatewayCurrency?: SortOrderInput | SortOrder
     paymentMethodId?: SortOrderInput | SortOrder
     orderIntentId?: SortOrderInput | SortOrder
     trxId?: SortOrderInput | SortOrder
@@ -32761,6 +32795,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Deposit"> | Date | string
     reviewedAt?: DateTimeNullableFilter<"Deposit"> | Date | string | null
     gatewayProvider?: StringNullableFilter<"Deposit"> | string | null
+    gatewayAmount?: DecimalNullableFilter<"Deposit"> | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: StringNullableFilter<"Deposit"> | string | null
     paymentMethodId?: StringNullableFilter<"Deposit"> | string | null
     orderIntentId?: StringNullableFilter<"Deposit"> | string | null
     senderNumber?: StringNullableFilter<"Deposit"> | string | null
@@ -32786,6 +32822,8 @@ export namespace Prisma {
     reviewedAt?: SortOrderInput | SortOrder
     gatewayProvider?: SortOrderInput | SortOrder
     gatewayRef?: SortOrderInput | SortOrder
+    gatewayAmount?: SortOrderInput | SortOrder
+    gatewayCurrency?: SortOrderInput | SortOrder
     paymentMethodId?: SortOrderInput | SortOrder
     orderIntentId?: SortOrderInput | SortOrder
     trxId?: SortOrderInput | SortOrder
@@ -32815,6 +32853,8 @@ export namespace Prisma {
     reviewedAt?: DateTimeNullableWithAggregatesFilter<"Deposit"> | Date | string | null
     gatewayProvider?: StringNullableWithAggregatesFilter<"Deposit"> | string | null
     gatewayRef?: StringNullableWithAggregatesFilter<"Deposit"> | string | null
+    gatewayAmount?: DecimalNullableWithAggregatesFilter<"Deposit"> | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: StringNullableWithAggregatesFilter<"Deposit"> | string | null
     paymentMethodId?: StringNullableWithAggregatesFilter<"Deposit"> | string | null
     orderIntentId?: StringNullableWithAggregatesFilter<"Deposit"> | string | null
     trxId?: StringNullableWithAggregatesFilter<"Deposit"> | string | null
@@ -34992,6 +35032,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     trxId?: string | null
     senderNumber?: string | null
     bonusAmount?: Decimal | DecimalJsLike | number | string
@@ -35015,6 +35057,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     orderIntentId?: string | null
     trxId?: string | null
@@ -35034,6 +35078,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -35057,6 +35103,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35078,6 +35126,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     orderIntentId?: string | null
     trxId?: string | null
@@ -35097,6 +35147,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -35115,6 +35167,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37194,6 +37248,17 @@ export namespace Prisma {
     not?: NestedEnumDepositStatusFilter<$PrismaModel> | $Enums.DepositStatus
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -37227,6 +37292,8 @@ export namespace Prisma {
     reviewedAt?: SortOrder
     gatewayProvider?: SortOrder
     gatewayRef?: SortOrder
+    gatewayAmount?: SortOrder
+    gatewayCurrency?: SortOrder
     paymentMethodId?: SortOrder
     orderIntentId?: SortOrder
     trxId?: SortOrder
@@ -37237,6 +37304,7 @@ export namespace Prisma {
 
   export type DepositAvgOrderByAggregateInput = {
     amount?: SortOrder
+    gatewayAmount?: SortOrder
     bonusAmount?: SortOrder
   }
 
@@ -37253,6 +37321,8 @@ export namespace Prisma {
     reviewedAt?: SortOrder
     gatewayProvider?: SortOrder
     gatewayRef?: SortOrder
+    gatewayAmount?: SortOrder
+    gatewayCurrency?: SortOrder
     paymentMethodId?: SortOrder
     orderIntentId?: SortOrder
     trxId?: SortOrder
@@ -37274,6 +37344,8 @@ export namespace Prisma {
     reviewedAt?: SortOrder
     gatewayProvider?: SortOrder
     gatewayRef?: SortOrder
+    gatewayAmount?: SortOrder
+    gatewayCurrency?: SortOrder
     paymentMethodId?: SortOrder
     orderIntentId?: SortOrder
     trxId?: SortOrder
@@ -37284,6 +37356,7 @@ export namespace Prisma {
 
   export type DepositSumOrderByAggregateInput = {
     amount?: SortOrder
+    gatewayAmount?: SortOrder
     bonusAmount?: SortOrder
   }
 
@@ -37295,6 +37368,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDepositStatusFilter<$PrismaModel>
     _max?: NestedEnumDepositStatusFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type AdminAuditLogCountOrderByAggregateInput = {
@@ -39126,6 +39215,14 @@ export namespace Prisma {
     set?: $Enums.DepositStatus
   }
 
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type UserUpdateOneRequiredWithoutDepositsNestedInput = {
     create?: XOR<UserCreateWithoutDepositsInput, UserUncheckedCreateWithoutDepositsInput>
     connectOrCreate?: UserCreateOrConnectWithoutDepositsInput
@@ -39852,6 +39949,17 @@ export namespace Prisma {
     not?: NestedEnumDepositStatusFilter<$PrismaModel> | $Enums.DepositStatus
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type NestedEnumDepositStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.DepositStatus | EnumDepositStatusFieldRefInput<$PrismaModel>
     in?: $Enums.DepositStatus[] | ListEnumDepositStatusFieldRefInput<$PrismaModel>
@@ -39860,6 +39968,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDepositStatusFilter<$PrismaModel>
     _max?: NestedEnumDepositStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumChildPanelStatusFilter<$PrismaModel = never> = {
@@ -40109,6 +40233,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     trxId?: string | null
     senderNumber?: string | null
     bonusAmount?: Decimal | DecimalJsLike | number | string
@@ -40130,6 +40256,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     orderIntentId?: string | null
     trxId?: string | null
@@ -40159,6 +40287,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     trxId?: string | null
     senderNumber?: string | null
     bonusAmount?: Decimal | DecimalJsLike | number | string
@@ -40180,6 +40310,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     orderIntentId?: string | null
     trxId?: string | null
@@ -40552,6 +40684,8 @@ export namespace Prisma {
     reviewedAt?: DateTimeNullableFilter<"Deposit"> | Date | string | null
     gatewayProvider?: StringNullableFilter<"Deposit"> | string | null
     gatewayRef?: StringNullableFilter<"Deposit"> | string | null
+    gatewayAmount?: DecimalNullableFilter<"Deposit"> | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: StringNullableFilter<"Deposit"> | string | null
     paymentMethodId?: StringNullableFilter<"Deposit"> | string | null
     orderIntentId?: StringNullableFilter<"Deposit"> | string | null
     trxId?: StringNullableFilter<"Deposit"> | string | null
@@ -41625,6 +41759,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     trxId?: string | null
     senderNumber?: string | null
     bonusAmount?: Decimal | DecimalJsLike | number | string
@@ -41647,6 +41783,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     orderIntentId?: string | null
     trxId?: string | null
     senderNumber?: string | null
@@ -42570,6 +42708,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     trxId?: string | null
     senderNumber?: string | null
     bonusAmount?: Decimal | DecimalJsLike | number | string
@@ -42592,6 +42732,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     trxId?: string | null
     senderNumber?: string | null
@@ -44368,6 +44510,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     trxId?: string | null
     senderNumber?: string | null
     bonusAmount?: Decimal | DecimalJsLike | number | string
@@ -44390,6 +44534,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     orderIntentId?: string | null
     trxId?: string | null
@@ -44714,6 +44860,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     orderIntentId?: string | null
     trxId?: string | null
@@ -44734,6 +44882,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     orderIntentId?: string | null
     trxId?: string | null
@@ -44926,6 +45076,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -44947,6 +45099,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44967,6 +45121,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44986,6 +45142,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -45007,6 +45165,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45027,6 +45187,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45410,6 +45572,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     orderIntentId?: string | null
     trxId?: string | null
     senderNumber?: string | null
@@ -45428,6 +45592,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -45450,6 +45616,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45470,6 +45638,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45780,6 +45950,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     trxId?: string | null
     senderNumber?: string | null
@@ -45798,6 +45970,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -45820,6 +45994,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45840,6 +46016,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45899,6 +46077,8 @@ export namespace Prisma {
     reviewedAt?: Date | string | null
     gatewayProvider?: string | null
     gatewayRef?: string | null
+    gatewayAmount?: Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: string | null
     paymentMethodId?: string | null
     orderIntentId?: string | null
     trxId?: string | null
@@ -45938,6 +46118,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
     senderNumber?: NullableStringFieldUpdateOperationsInput | string | null
     bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -45960,6 +46142,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45980,6 +46164,8 @@ export namespace Prisma {
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gatewayProvider?: NullableStringFieldUpdateOperationsInput | string | null
     gatewayRef?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gatewayCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethodId?: NullableStringFieldUpdateOperationsInput | string | null
     orderIntentId?: NullableStringFieldUpdateOperationsInput | string | null
     trxId?: NullableStringFieldUpdateOperationsInput | string | null

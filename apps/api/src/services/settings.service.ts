@@ -75,6 +75,12 @@ export async function getPublicSettings(): Promise<PublicSettings> {
   };
 }
 
+/** Internal only — the raw Decimal, for money math (services/payments/currency.ts), never string-formatted. */
+export async function getUsdToBdtRate() {
+  const s = await ensureSettings();
+  return s.usdToBdtRate;
+}
+
 /**
  * Internal only — used exclusively by lib/mailer.ts to actually send email.
  * Never exposed through any route. Returns null if SMTP isn't fully

@@ -27,7 +27,7 @@ export async function reconcilePendingDeposits() {
             const autoVerify = await getGatewayAutoVerify(key);
             const result = await adapter.confirm(credentials, deposit.gatewayRef);
             if (result.status !== "PENDING") {
-                await confirmGatewayDeposit(deposit.gatewayRef, { status: result.status, gatewayProvider: key }, { autoVerify });
+                await confirmGatewayDeposit(deposit.gatewayRef, { status: result.status, gatewayProvider: key, amount: result.amount }, { autoVerify });
                 confirmed += 1;
             }
         }
