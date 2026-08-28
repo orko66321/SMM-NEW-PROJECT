@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma.js";
 import { encrypt } from "../lib/crypto.js";
 import { AppError } from "../utils/AppError.js";
 import { getProviderOrThrow, listProviderServices } from "./providerClient.service.js";
+import { parseDescription } from "./providerImport.service.js";
 
 // Never select apiKeyCiphertext into anything returned to a client — these
 // are the fields every provider-facing response is built from.
@@ -79,9 +80,13 @@ export async function listProviderSyncLogs(providerId: string, limit = 50) {
 
 /**
  * Pulls the provider's catalog and updates `providerCostPer1000` /
- * availability on services already mapped to it by `providerServiceId`.
- * Deliberately never touches `sellPricePer1000` — the admin's margin is the
- * admin's decision, sync only keeps the *cost* side accurate.
+ * `description` on services already mapped to it by `providerServiceId` —
+ * this is also how a service imported before description-capture existed
+ * (or before the provider itself added one) picks one up, without an admin
+ * having to delete and re-import it. Deliberately never touches
+ * `sellPricePer1000` or `name` — the admin's margin (and any editorial
+ * rename) is the admin's decision; sync only keeps provider-sourced,
+ * non-editorial fields (cost, description) accurate.
  */
 export async function syncProviderCatalog(providerId: string) {
   const provider = await getProviderOrThrow(providerId);
@@ -100,7 +105,7 @@ export async function syncProviderCatalog(providerId: string) {
     if (!Number.isFinite(rate)) continue;
     await prisma.service.update({
       where: { id: local.id },
-      data: { providerCostPer1000: rate },
+      data: { providerCostPer1000: rate, description: parseDescription(remote.desc) },
     });
     updated += 1;
   }

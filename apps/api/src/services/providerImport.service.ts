@@ -64,7 +64,7 @@ interface ParsedEntry {
 // is a sanity ceiling, not a validation the import should ever fail on.
 const MAX_DESCRIPTION_LENGTH = 2000;
 
-function parseDescription(desc: string | undefined): string | null {
+export function parseDescription(desc: string | undefined): string | null {
   const trimmed = desc?.trim();
   if (!trimmed) return null;
   return trimmed.slice(0, MAX_DESCRIPTION_LENGTH);

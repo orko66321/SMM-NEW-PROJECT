@@ -45,7 +45,7 @@ function toBool(value) {
 // provider's desc can run long (some paste full marketing copy), so this
 // is a sanity ceiling, not a validation the import should ever fail on.
 const MAX_DESCRIPTION_LENGTH = 2000;
-function parseDescription(desc) {
+export function parseDescription(desc) {
     const trimmed = desc?.trim();
     if (!trimmed)
         return null;
