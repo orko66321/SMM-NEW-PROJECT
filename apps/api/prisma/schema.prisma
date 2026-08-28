@@ -206,6 +206,9 @@ model User {
   orderIntents      OrderIntent[]
 
   @@index([role])
+  // Backs the admin dashboard's "Today User" / "Total User" cards (COUNT by
+  // createdAt range) and the Users list's date-range filter.
+  @@index([createdAt])
 }
 
 // Hashed, single-use, expiring — same shape as RefreshToken above, applied
@@ -455,6 +458,12 @@ model Order {
 
   @@index([userId, createdAt])
   @@index([status])
+  // Backs the admin dashboard's Orders/Sales/Profit cards — plain COUNT by
+  // createdAt range (Today/This Month/Last Month Orders) and SUM by
+  // status + createdAt range (Sale/Profit cards, which only count
+  // COMPLETED orders).
+  @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 enum OrderIntentStatus {

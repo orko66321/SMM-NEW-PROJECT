@@ -8,7 +8,9 @@ export const adminUsersRouter = Router();
 adminUsersRouter.get("/", validate(userListQuerySchema, "query"), asyncHandler(async (req, res) => {
     const { page, pageSize } = req.query;
     const search = typeof req.query.search === "string" ? req.query.search : undefined;
-    res.json(await listUsers(page, pageSize, search));
+    const from = req.query.from instanceof Date ? req.query.from : undefined;
+    const to = req.query.to instanceof Date ? req.query.to : undefined;
+    res.json(await listUsers(page, pageSize, search, { from, to }));
 }));
 adminUsersRouter.get("/:id", asyncHandler(async (req, res) => {
     const user = await getUserDetail(req.params.id);

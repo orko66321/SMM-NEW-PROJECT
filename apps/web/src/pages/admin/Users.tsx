@@ -1,15 +1,29 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { getAdminUsers } from "../../api/resources.js";
 
 export default function AdminUsers() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  // Deep-linked from the dashboard's "Today User" / "Total User" cards.
+  const from = searchParams.get("from") ?? undefined;
+  const to = searchParams.get("to") ?? undefined;
+  const hasDateFilter = Boolean(from || to);
+
   const { data, isLoading } = useQuery({
-    queryKey: ["admin-users", search, page],
-    queryFn: () => getAdminUsers({ page, pageSize: 20, search: search || undefined }),
+    queryKey: ["admin-users", search, page, from, to],
+    queryFn: () => getAdminUsers({ page, pageSize: 20, search: search || undefined, from, to }),
   });
+
+  function clearDateFilter() {
+    const next = new URLSearchParams(searchParams);
+    next.delete("from");
+    next.delete("to");
+    setSearchParams(next);
+    setPage(1);
+  }
 
   return (
     <div className="space-y-4">
@@ -25,6 +39,15 @@ export default function AdminUsers() {
           }}
         />
       </div>
+
+      {hasDateFilter && (
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <span className="badge bg-primary/15 text-primary">Date-filtered</span>
+          <button type="button" className="btn-ghost !min-h-0 !px-2 !py-1 text-xs" onClick={clearDateFilter}>
+            Clear filter
+          </button>
+        </div>
+      )}
 
       <div className="card overflow-x-auto p-0">
         <table className="w-full min-w-[720px] text-sm">

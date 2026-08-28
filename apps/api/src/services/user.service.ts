@@ -2,15 +2,25 @@ import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import type { UpdateUserInput } from "@smm/shared";
 
-export async function listUsers(page: number, pageSize: number, search?: string) {
-  const where = search
-    ? {
-        OR: [
-          { username: { contains: search, mode: "insensitive" as const } },
-          { email: { contains: search, mode: "insensitive" as const } },
-        ],
-      }
-    : {};
+export async function listUsers(
+  page: number,
+  pageSize: number,
+  search?: string,
+  dateRange?: { from?: Date; to?: Date },
+) {
+  const where = {
+    ...(search
+      ? {
+          OR: [
+            { username: { contains: search, mode: "insensitive" as const } },
+            { email: { contains: search, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
+    ...(dateRange?.from || dateRange?.to
+      ? { createdAt: { ...(dateRange.from ? { gte: dateRange.from } : {}), ...(dateRange.to ? { lt: dateRange.to } : {}) } }
+      : {}),
+  };
   const [items, total] = await Promise.all([
     prisma.user.findMany({
       where,

@@ -66,16 +66,25 @@ export declare const adminOrderListQuerySchema: z.ZodObject<{
 } & {
     status: z.ZodOptional<z.ZodEnum<["PENDING", "PROCESSING", "IN_PROGRESS", "COMPLETED", "PARTIAL", "CANCELED", "FAILED"]>>;
     search: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodDate>;
+    to: z.ZodOptional<z.ZodDate>;
+    likeOnly: z.ZodOptional<z.ZodEnum<["true", "false"]>>;
 }, "strip", z.ZodTypeAny, {
     page: number;
     pageSize: number;
     status?: "PENDING" | "PROCESSING" | "IN_PROGRESS" | "COMPLETED" | "PARTIAL" | "CANCELED" | "FAILED" | undefined;
     search?: string | undefined;
+    from?: Date | undefined;
+    to?: Date | undefined;
+    likeOnly?: "true" | "false" | undefined;
 }, {
     page?: number | undefined;
     pageSize?: number | undefined;
     status?: "PENDING" | "PROCESSING" | "IN_PROGRESS" | "COMPLETED" | "PARTIAL" | "CANCELED" | "FAILED" | undefined;
     search?: string | undefined;
+    from?: Date | undefined;
+    to?: Date | undefined;
+    likeOnly?: "true" | "false" | undefined;
 }>;
 export type AdminOrderListQuery = z.infer<typeof adminOrderListQuerySchema>;
 export declare const adminRefillListQuerySchema: z.ZodObject<{
@@ -128,14 +137,20 @@ export declare const userListQuerySchema: z.ZodObject<{
     pageSize: z.ZodDefault<z.ZodNumber>;
 } & {
     search: z.ZodOptional<z.ZodString>;
+    from: z.ZodOptional<z.ZodDate>;
+    to: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
     page: number;
     pageSize: number;
     search?: string | undefined;
+    from?: Date | undefined;
+    to?: Date | undefined;
 }, {
     page?: number | undefined;
     pageSize?: number | undefined;
     search?: string | undefined;
+    from?: Date | undefined;
+    to?: Date | undefined;
 }>;
 export type UserListQuery = z.infer<typeof userListQuerySchema>;
 export declare const registerSchema: z.ZodObject<{

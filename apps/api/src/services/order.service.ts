@@ -250,7 +250,14 @@ export async function listOrdersForUser(userId: string, page: number, pageSize: 
   return { items, total, page, pageSize };
 }
 
-export async function listOrdersForAdmin(page: number, pageSize: number, status?: string, search?: string) {
+export async function listOrdersForAdmin(
+  page: number,
+  pageSize: number,
+  status?: string,
+  search?: string,
+  dateRange?: { from?: Date; to?: Date },
+  likeOnly?: boolean,
+) {
   const where: Prisma.OrderWhereInput = {
     ...(status ? { status: status as never } : {}),
     ...(search
@@ -262,6 +269,14 @@ export async function listOrdersForAdmin(page: number, pageSize: number, status?
           ],
         }
       : {}),
+    ...(dateRange?.from || dateRange?.to
+      ? { createdAt: { ...(dateRange.from ? { gte: dateRange.from } : {}), ...(dateRange.to ? { lt: dateRange.to } : {}) } }
+      : {}),
+    // "Like" orders are identified by their service category's name (e.g.
+    // "Instagram Likes") — the schema has no dedicated order-type flag, so
+    // this is the closest real signal for the admin dashboard's Like Orders
+    // cards.
+    ...(likeOnly ? { service: { category: { name: { contains: "Like", mode: "insensitive" } } } } : {}),
   };
   const [items, total] = await Promise.all([
     prisma.order.findMany({

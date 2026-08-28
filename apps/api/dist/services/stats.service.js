@@ -36,6 +36,106 @@ export async function getPublicStats() {
     ]);
     return { totalUsers, totalOrdersCompleted, totalServices };
 }
+function decimalToString(value) {
+    return (value ?? new Prisma.Decimal(0)).toString();
+}
+function profitString(charge, cost) {
+    return (charge ?? new Prisma.Decimal(0)).minus(cost ?? new Prisma.Decimal(0)).toString();
+}
+// Orders whose service sits under a category name containing "Like" (e.g.
+// the seeded "Instagram Likes" / "Facebook Page Likes") — the schema has no
+// dedicated order-type flag, so this is the closest real signal for the
+// admin dashboard's "Like Orders" cards. Shared with the /admin/orders
+// ?likeOnly=true filter behind the cards' "More info" links so the count
+// shown here always matches what that link lands on.
+const LIKE_ORDER_FILTER = {
+    service: { category: { name: { contains: "Like", mode: "insensitive" } } },
+};
+// Powers the admin dashboard's stat-card overview. Every figure is a single
+// real aggregate/count query, all run in parallel — no looping in
+// application code, no fabricated numbers. Every date boundary is computed
+// once from the server's local clock/timezone and reused for both the
+// aggregate `where` clauses below AND the `ranges` returned to the client,
+// so the "More info" deep links (built from those same ISO strings) always
+// land on exactly the rows counted here — no client/server drift.
+export async function getAdminOverviewStats() {
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfTomorrow = new Date(startOfToday);
+    startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+    const startOfYesterday = new Date(startOfToday);
+    startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+    const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const [lastMonthOrders, thisMonthOrders, todayOrders, totalOrders, lastMonthLikeOrders, thisMonthLikeOrders, todayUsers, totalUsers, todaySaleAgg, yesterdaySaleAgg, thisMonthSaleAgg, lastMonthSaleAgg, lifeTimeSaleAgg, walletAgg,] = await Promise.all([
+        prisma.order.count({ where: { createdAt: { gte: startOfLastMonth, lt: startOfThisMonth } } }),
+        prisma.order.count({ where: { createdAt: { gte: startOfThisMonth } } }),
+        prisma.order.count({ where: { createdAt: { gte: startOfToday, lt: startOfTomorrow } } }),
+        prisma.order.count(),
+        prisma.order.count({ where: { createdAt: { gte: startOfLastMonth, lt: startOfThisMonth }, ...LIKE_ORDER_FILTER } }),
+        prisma.order.count({ where: { createdAt: { gte: startOfThisMonth }, ...LIKE_ORDER_FILTER } }),
+        prisma.user.count({ where: { createdAt: { gte: startOfToday, lt: startOfTomorrow } } }),
+        prisma.user.count(),
+        prisma.order.aggregate({
+            _sum: { charge: true, providerCost: true },
+            where: { status: "COMPLETED", createdAt: { gte: startOfToday, lt: startOfTomorrow } },
+        }),
+        prisma.order.aggregate({
+            _sum: { charge: true, providerCost: true },
+            where: { status: "COMPLETED", createdAt: { gte: startOfYesterday, lt: startOfToday } },
+        }),
+        prisma.order.aggregate({
+            _sum: { charge: true, providerCost: true },
+            where: { status: "COMPLETED", createdAt: { gte: startOfThisMonth } },
+        }),
+        prisma.order.aggregate({
+            _sum: { charge: true, providerCost: true },
+            where: { status: "COMPLETED", createdAt: { gte: startOfLastMonth, lt: startOfThisMonth } },
+        }),
+        prisma.order.aggregate({ _sum: { charge: true, providerCost: true }, where: { status: "COMPLETED" } }),
+        prisma.wallet.aggregate({ _sum: { balance: true } }),
+    ]);
+    return {
+        orders: {
+            lastMonth: lastMonthOrders,
+            thisMonth: thisMonthOrders,
+            today: todayOrders,
+            total: totalOrders,
+            lastMonthLike: lastMonthLikeOrders,
+            thisMonthLike: thisMonthLikeOrders,
+        },
+        users: {
+            today: todayUsers,
+            total: totalUsers,
+        },
+        sales: {
+            today: decimalToString(todaySaleAgg._sum.charge),
+            yesterday: decimalToString(yesterdaySaleAgg._sum.charge),
+            thisMonth: decimalToString(thisMonthSaleAgg._sum.charge),
+            lastMonth: decimalToString(lastMonthSaleAgg._sum.charge),
+            lifeTime: decimalToString(lifeTimeSaleAgg._sum.charge),
+        },
+        profit: {
+            today: profitString(todaySaleAgg._sum.charge, todaySaleAgg._sum.providerCost),
+            yesterday: profitString(yesterdaySaleAgg._sum.charge, yesterdaySaleAgg._sum.providerCost),
+            thisMonth: profitString(thisMonthSaleAgg._sum.charge, thisMonthSaleAgg._sum.providerCost),
+            lastMonth: profitString(lastMonthSaleAgg._sum.charge, lastMonthSaleAgg._sum.providerCost),
+            lifeTime: profitString(lifeTimeSaleAgg._sum.charge, lifeTimeSaleAgg._sum.providerCost),
+        },
+        balances: {
+            totalWallet: decimalToString(walletAgg._sum.balance),
+        },
+        // ISO boundaries the queries above actually used — the dashboard's
+        // "More info" links are built from these, not recomputed client-side,
+        // so a link always lands on exactly the rows its card counted.
+        ranges: {
+            today: { from: startOfToday.toISOString(), to: startOfTomorrow.toISOString() },
+            yesterday: { from: startOfYesterday.toISOString(), to: startOfToday.toISOString() },
+            thisMonth: { from: startOfThisMonth.toISOString(), to: null },
+            lastMonth: { from: startOfLastMonth.toISOString(), to: startOfThisMonth.toISOString() },
+        },
+    };
+}
 // Raw SQL for the date_trunc grouping Prisma's query builder can't express —
 // same "$queryRaw inside otherwise-typed services" precedent as
 // deposit.service.ts's lockDeposit. Feeds the admin dashboard's Recharts

@@ -14,6 +14,7 @@ function tokenFor(userId: string) {
 describe("admin RBAC boundary", () => {
   const adminRoutes: Array<[method: "get" | "post" | "patch" | "delete" | "put", path: string]> = [
     ["get", "/api/admin/stats"],
+    ["get", "/api/admin/stats/overview"],
     ["get", "/api/admin/users"],
     ["get", "/api/admin/orders"],
     ["get", "/api/admin/services"],

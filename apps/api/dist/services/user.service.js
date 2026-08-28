@@ -1,14 +1,19 @@
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
-export async function listUsers(page, pageSize, search) {
-    const where = search
-        ? {
-            OR: [
-                { username: { contains: search, mode: "insensitive" } },
-                { email: { contains: search, mode: "insensitive" } },
-            ],
-        }
-        : {};
+export async function listUsers(page, pageSize, search, dateRange) {
+    const where = {
+        ...(search
+            ? {
+                OR: [
+                    { username: { contains: search, mode: "insensitive" } },
+                    { email: { contains: search, mode: "insensitive" } },
+                ],
+            }
+            : {}),
+        ...(dateRange?.from || dateRange?.to
+            ? { createdAt: { ...(dateRange.from ? { gte: dateRange.from } : {}), ...(dateRange.to ? { lt: dateRange.to } : {}) } }
+            : {}),
+    };
     const [items, total] = await Promise.all([
         prisma.user.findMany({
             where,

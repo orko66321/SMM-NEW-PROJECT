@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { OrderStatusValues } from "@smm/shared";
 import { getAdminOrders, getAdminRefills, resolveAdminRefill, updateAdminOrderStatus } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
@@ -102,15 +103,42 @@ function RefillRequestsPanel() {
 export default function AdminOrders() {
   const toast = useToast();
   const queryClient = useQueryClient();
-  const [status, setStatus] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  // Deep-linked from the dashboard's "More info" cards (from/to/likeOnly) —
+  // read once on mount so a link like /admin/orders?from=...&to=...&status=
+  // COMPLETED actually lands on the filtered view it promises, not just a
+  // filtered-looking URL.
+  const [status, setStatus] = useState(searchParams.get("status") ?? "");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const from = searchParams.get("from") ?? undefined;
+  const to = searchParams.get("to") ?? undefined;
+  const likeOnly = searchParams.get("likeOnly") === "true";
+  const hasDateFilter = Boolean(from || to || likeOnly);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin-orders", status, search, page],
-    queryFn: () => getAdminOrders({ page, pageSize: 20, status: status || undefined, search: search || undefined }),
+    queryKey: ["admin-orders", status, search, page, from, to, likeOnly],
+    queryFn: () =>
+      getAdminOrders({
+        page,
+        pageSize: 20,
+        status: status || undefined,
+        search: search || undefined,
+        from,
+        to,
+        likeOnly: likeOnly || undefined,
+      }),
   });
+
+  function clearDateFilter() {
+    const next = new URLSearchParams(searchParams);
+    next.delete("from");
+    next.delete("to");
+    next.delete("likeOnly");
+    setSearchParams(next);
+    setPage(1);
+  }
 
   async function onCopyId(id: string) {
     try {
@@ -144,6 +172,17 @@ export default function AdminOrders() {
           </select>
         </div>
       </div>
+
+      {hasDateFilter && (
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <span className="badge bg-primary/15 text-primary">
+            Date-filtered{likeOnly ? " · Like orders only" : ""}
+          </span>
+          <button type="button" className="btn-ghost !min-h-0 !px-2 !py-1 text-xs" onClick={clearDateFilter}>
+            Clear filter
+          </button>
+        </div>
+      )}
 
       <div className="card overflow-x-auto p-0">
         <table className="w-full min-w-[900px] text-sm">

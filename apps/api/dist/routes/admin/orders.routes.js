@@ -9,7 +9,10 @@ adminOrdersRouter.get("/", validate(adminOrderListQuerySchema, "query"), asyncHa
     const { page, pageSize } = req.query;
     const status = typeof req.query.status === "string" ? req.query.status : undefined;
     const search = typeof req.query.search === "string" ? req.query.search : undefined;
-    const result = await listOrdersForAdmin(page, pageSize, status, search);
+    const from = req.query.from instanceof Date ? req.query.from : undefined;
+    const to = req.query.to instanceof Date ? req.query.to : undefined;
+    const likeOnly = req.query.likeOnly === "true";
+    const result = await listOrdersForAdmin(page, pageSize, status, search, { from, to }, likeOnly);
     res.json({
         ...result,
         items: result.items.map((o) => ({ ...o, charge: o.charge.toString(), providerCost: o.providerCost.toString() })),

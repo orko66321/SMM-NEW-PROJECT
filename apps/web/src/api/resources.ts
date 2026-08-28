@@ -57,7 +57,8 @@ export const replyToTicket = (id: string, message: string) =>
 
 // ── Admin ────────────────────────────────────────────────────────────────
 export const getAdminStats = () => apiClient.get("/admin/stats").then((r) => r.data);
-export const getAdminUsers = (params: { page?: number; pageSize?: number; search?: string }) =>
+export const getAdminOverviewStats = () => apiClient.get("/admin/stats/overview").then((r) => r.data);
+export const getAdminUsers = (params: { page?: number; pageSize?: number; search?: string; from?: string; to?: string }) =>
   apiClient.get("/admin/users", { params }).then((r) => r.data);
 export const getAdminUser = (id: string) => apiClient.get(`/admin/users/${id}`).then((r) => r.data.user);
 export const updateAdminUser = (id: string, input: UpdateUserInput) =>
@@ -75,7 +76,7 @@ export const getAdminCategories = () => apiClient.get("/admin/services/categorie
 export const createAdminCategory = (input: { name: string; platform: string; sortOrder?: number }) =>
   apiClient.post("/admin/services/categories", input).then((r) => r.data.category);
 
-export const getAdminOrders = (params: { page?: number; pageSize?: number; status?: string; search?: string }) =>
+export const getAdminOrders = (params: { page?: number; pageSize?: number; status?: string; search?: string; from?: string; to?: string; likeOnly?: boolean }) =>
   apiClient.get("/admin/orders", { params }).then((r) => r.data);
 export const updateAdminOrderStatus = (id: string, input: UpdateOrderStatusInput) =>
   apiClient.patch(`/admin/orders/${id}/status`, input).then((r) => r.data.order);

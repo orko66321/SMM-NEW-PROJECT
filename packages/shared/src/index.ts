@@ -63,9 +63,18 @@ export const orderListQuerySchema = paginationQuerySchema.extend({
 });
 export type OrderListQuery = z.infer<typeof orderListQuerySchema>;
 
+// from/to power the admin dashboard's "More info" deep links (Today Orders,
+// This Month Orders, etc.) — an open-ended range (only `from` set) reads as
+// "from that point through now", matching the dashboard's own bucketing.
+// likeOnly is a raw "true"/"false" string rather than z.coerce.boolean():
+// Boolean("false") is true in JS, so a naive coerce would make ?likeOnly=false
+// silently behave like ?likeOnly=true.
 export const adminOrderListQuerySchema = paginationQuerySchema.extend({
   status: z.enum(OrderStatusValues).optional(),
   search: searchQueryField,
+  from: z.coerce.date().optional(),
+  to: z.coerce.date().optional(),
+  likeOnly: z.enum(["true", "false"]).optional(),
 });
 export type AdminOrderListQuery = z.infer<typeof adminOrderListQuerySchema>;
 
@@ -86,6 +95,8 @@ export type TicketListQuery = z.infer<typeof ticketListQuerySchema>;
 
 export const userListQuerySchema = paginationQuerySchema.extend({
   search: searchQueryField,
+  from: z.coerce.date().optional(),
+  to: z.coerce.date().optional(),
 });
 export type UserListQuery = z.infer<typeof userListQuerySchema>;
 

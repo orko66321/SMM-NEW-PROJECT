@@ -40,9 +40,18 @@ export const serviceListQuerySchema = paginationQuerySchema.extend({
 export const orderListQuerySchema = paginationQuerySchema.extend({
     status: z.enum(OrderStatusValues).optional(),
 });
+// from/to power the admin dashboard's "More info" deep links (Today Orders,
+// This Month Orders, etc.) — an open-ended range (only `from` set) reads as
+// "from that point through now", matching the dashboard's own bucketing.
+// likeOnly is a raw "true"/"false" string rather than z.coerce.boolean():
+// Boolean("false") is true in JS, so a naive coerce would make ?likeOnly=false
+// silently behave like ?likeOnly=true.
 export const adminOrderListQuerySchema = paginationQuerySchema.extend({
     status: z.enum(OrderStatusValues).optional(),
     search: searchQueryField,
+    from: z.coerce.date().optional(),
+    to: z.coerce.date().optional(),
+    likeOnly: z.enum(["true", "false"]).optional(),
 });
 export const adminRefillListQuerySchema = paginationQuerySchema.extend({
     status: z.enum(RefillStatusValues).optional(),
@@ -55,6 +64,8 @@ export const ticketListQuerySchema = paginationQuerySchema.extend({
 });
 export const userListQuerySchema = paginationQuerySchema.extend({
     search: searchQueryField,
+    from: z.coerce.date().optional(),
+    to: z.coerce.date().optional(),
 });
 // Usernames: letters/numbers/underscore only, 3-32 chars — avoids
 // homoglyph/whitespace tricks in a field rendered back to admins.
