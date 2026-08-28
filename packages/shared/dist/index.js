@@ -325,6 +325,10 @@ export const updateSettingsSchema = z.object({
     whatsappNumber: z.string().trim().max(20).nullable().optional(),
     liveChatProvider: z.enum(LiveChatProviderValues),
     liveChatWidgetId: z.string().trim().max(200).nullable().optional(),
+    // Optional "How to order?" tutorial link. Empty string is accepted and
+    // normalised to null server-side (settings.service.ts) so the admin can
+    // clear it; a non-empty value must be a valid URL.
+    howToOrderVideoUrl: z.string().trim().url().max(2048).or(z.literal("")).nullable().optional(),
     usdToBdtRate: z.coerce.number().positive().max(10_000),
     defaultCurrency: z.enum(DisplayCurrencyValues),
     smtpEnabled: z.boolean(),
@@ -340,6 +344,7 @@ export const publicSettingsSchema = z.object({
     whatsappNumber: z.string().nullable(),
     liveChatProvider: z.enum(LiveChatProviderValues),
     liveChatWidgetId: z.string().nullable(),
+    howToOrderVideoUrl: z.string().nullable(),
     usdToBdtRate: z.string(),
     defaultCurrency: z.enum(DisplayCurrencyValues),
     // Derived from env (GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET), not stored

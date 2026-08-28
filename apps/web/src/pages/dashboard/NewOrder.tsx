@@ -9,6 +9,7 @@ import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import { AuthPromptModal } from "../../components/auth/GuestGate.js";
+import HowToOrderLink from "../../components/HowToOrderLink.js";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
 // throws when the wallet can't cover the charge (see AppError's `details`).
@@ -272,6 +273,9 @@ export default function NewOrder() {
         <button type="submit" className="btn-primary w-full" disabled={submitting || !selectedService}>
           {submitting ? t("newOrder.submitting") : t("newOrder.submit")}
         </button>
+
+        {/* Optional admin-configured tutorial link — hides itself when unset. */}
+        <HowToOrderLink />
       </form>
 
       {(noticeTitle || noticeBody) && (

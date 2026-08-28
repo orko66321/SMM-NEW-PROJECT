@@ -36141,6 +36141,7 @@ export namespace Prisma {
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider | null
     liveChatWidgetId: string | null
+    howToOrderVideoUrl: string | null
     usdToBdtRate: Decimal | null
     defaultCurrency: $Enums.DisplayCurrency | null
     smtpEnabled: boolean | null
@@ -36159,6 +36160,7 @@ export namespace Prisma {
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider | null
     liveChatWidgetId: string | null
+    howToOrderVideoUrl: string | null
     usdToBdtRate: Decimal | null
     defaultCurrency: $Enums.DisplayCurrency | null
     smtpEnabled: boolean | null
@@ -36177,6 +36179,7 @@ export namespace Prisma {
     whatsappNumber: number
     liveChatProvider: number
     liveChatWidgetId: number
+    howToOrderVideoUrl: number
     usdToBdtRate: number
     defaultCurrency: number
     smtpEnabled: number
@@ -36207,6 +36210,7 @@ export namespace Prisma {
     whatsappNumber?: true
     liveChatProvider?: true
     liveChatWidgetId?: true
+    howToOrderVideoUrl?: true
     usdToBdtRate?: true
     defaultCurrency?: true
     smtpEnabled?: true
@@ -36225,6 +36229,7 @@ export namespace Prisma {
     whatsappNumber?: true
     liveChatProvider?: true
     liveChatWidgetId?: true
+    howToOrderVideoUrl?: true
     usdToBdtRate?: true
     defaultCurrency?: true
     smtpEnabled?: true
@@ -36243,6 +36248,7 @@ export namespace Prisma {
     whatsappNumber?: true
     liveChatProvider?: true
     liveChatWidgetId?: true
+    howToOrderVideoUrl?: true
     usdToBdtRate?: true
     defaultCurrency?: true
     smtpEnabled?: true
@@ -36348,6 +36354,7 @@ export namespace Prisma {
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider
     liveChatWidgetId: string | null
+    howToOrderVideoUrl: string | null
     usdToBdtRate: Decimal
     defaultCurrency: $Enums.DisplayCurrency
     smtpEnabled: boolean
@@ -36385,6 +36392,7 @@ export namespace Prisma {
     whatsappNumber?: boolean
     liveChatProvider?: boolean
     liveChatWidgetId?: boolean
+    howToOrderVideoUrl?: boolean
     usdToBdtRate?: boolean
     defaultCurrency?: boolean
     smtpEnabled?: boolean
@@ -36403,6 +36411,7 @@ export namespace Prisma {
     whatsappNumber?: boolean
     liveChatProvider?: boolean
     liveChatWidgetId?: boolean
+    howToOrderVideoUrl?: boolean
     usdToBdtRate?: boolean
     defaultCurrency?: boolean
     smtpEnabled?: boolean
@@ -36421,6 +36430,7 @@ export namespace Prisma {
     whatsappNumber?: boolean
     liveChatProvider?: boolean
     liveChatWidgetId?: boolean
+    howToOrderVideoUrl?: boolean
     usdToBdtRate?: boolean
     defaultCurrency?: boolean
     smtpEnabled?: boolean
@@ -36443,6 +36453,7 @@ export namespace Prisma {
       whatsappNumber: string | null
       liveChatProvider: $Enums.LiveChatProvider
       liveChatWidgetId: string | null
+      howToOrderVideoUrl: string | null
       usdToBdtRate: Prisma.Decimal
       defaultCurrency: $Enums.DisplayCurrency
       smtpEnabled: boolean
@@ -36851,6 +36862,7 @@ export namespace Prisma {
     readonly whatsappNumber: FieldRef<"SiteSettings", 'String'>
     readonly liveChatProvider: FieldRef<"SiteSettings", 'LiveChatProvider'>
     readonly liveChatWidgetId: FieldRef<"SiteSettings", 'String'>
+    readonly howToOrderVideoUrl: FieldRef<"SiteSettings", 'String'>
     readonly usdToBdtRate: FieldRef<"SiteSettings", 'Decimal'>
     readonly defaultCurrency: FieldRef<"SiteSettings", 'DisplayCurrency'>
     readonly smtpEnabled: FieldRef<"SiteSettings", 'Boolean'>
@@ -41401,6 +41413,7 @@ export namespace Prisma {
     whatsappNumber: 'whatsappNumber',
     liveChatProvider: 'liveChatProvider',
     liveChatWidgetId: 'liveChatWidgetId',
+    howToOrderVideoUrl: 'howToOrderVideoUrl',
     usdToBdtRate: 'usdToBdtRate',
     defaultCurrency: 'defaultCurrency',
     smtpEnabled: 'smtpEnabled',
@@ -44553,6 +44566,7 @@ export namespace Prisma {
     whatsappNumber?: StringNullableFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderFilter<"SiteSettings"> | $Enums.LiveChatProvider
     liveChatWidgetId?: StringNullableFilter<"SiteSettings"> | string | null
+    howToOrderVideoUrl?: StringNullableFilter<"SiteSettings"> | string | null
     usdToBdtRate?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
     defaultCurrency?: EnumDisplayCurrencyFilter<"SiteSettings"> | $Enums.DisplayCurrency
     smtpEnabled?: BoolFilter<"SiteSettings"> | boolean
@@ -44571,6 +44585,7 @@ export namespace Prisma {
     whatsappNumber?: SortOrderInput | SortOrder
     liveChatProvider?: SortOrder
     liveChatWidgetId?: SortOrderInput | SortOrder
+    howToOrderVideoUrl?: SortOrderInput | SortOrder
     usdToBdtRate?: SortOrder
     defaultCurrency?: SortOrder
     smtpEnabled?: SortOrder
@@ -44592,6 +44607,7 @@ export namespace Prisma {
     whatsappNumber?: StringNullableFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderFilter<"SiteSettings"> | $Enums.LiveChatProvider
     liveChatWidgetId?: StringNullableFilter<"SiteSettings"> | string | null
+    howToOrderVideoUrl?: StringNullableFilter<"SiteSettings"> | string | null
     usdToBdtRate?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
     defaultCurrency?: EnumDisplayCurrencyFilter<"SiteSettings"> | $Enums.DisplayCurrency
     smtpEnabled?: BoolFilter<"SiteSettings"> | boolean
@@ -44610,6 +44626,7 @@ export namespace Prisma {
     whatsappNumber?: SortOrderInput | SortOrder
     liveChatProvider?: SortOrder
     liveChatWidgetId?: SortOrderInput | SortOrder
+    howToOrderVideoUrl?: SortOrderInput | SortOrder
     usdToBdtRate?: SortOrder
     defaultCurrency?: SortOrder
     smtpEnabled?: SortOrder
@@ -44636,6 +44653,7 @@ export namespace Prisma {
     whatsappNumber?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderWithAggregatesFilter<"SiteSettings"> | $Enums.LiveChatProvider
     liveChatWidgetId?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    howToOrderVideoUrl?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     usdToBdtRate?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
     defaultCurrency?: EnumDisplayCurrencyWithAggregatesFilter<"SiteSettings"> | $Enums.DisplayCurrency
     smtpEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
@@ -47798,6 +47816,7 @@ export namespace Prisma {
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
     liveChatWidgetId?: string | null
+    howToOrderVideoUrl?: string | null
     usdToBdtRate?: Decimal | DecimalJsLike | number | string
     defaultCurrency?: $Enums.DisplayCurrency
     smtpEnabled?: boolean
@@ -47816,6 +47835,7 @@ export namespace Prisma {
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
     liveChatWidgetId?: string | null
+    howToOrderVideoUrl?: string | null
     usdToBdtRate?: Decimal | DecimalJsLike | number | string
     defaultCurrency?: $Enums.DisplayCurrency
     smtpEnabled?: boolean
@@ -47834,6 +47854,7 @@ export namespace Prisma {
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
     liveChatWidgetId?: NullableStringFieldUpdateOperationsInput | string | null
+    howToOrderVideoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     usdToBdtRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     defaultCurrency?: EnumDisplayCurrencyFieldUpdateOperationsInput | $Enums.DisplayCurrency
     smtpEnabled?: BoolFieldUpdateOperationsInput | boolean
@@ -47852,6 +47873,7 @@ export namespace Prisma {
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
     liveChatWidgetId?: NullableStringFieldUpdateOperationsInput | string | null
+    howToOrderVideoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     usdToBdtRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     defaultCurrency?: EnumDisplayCurrencyFieldUpdateOperationsInput | $Enums.DisplayCurrency
     smtpEnabled?: BoolFieldUpdateOperationsInput | boolean
@@ -47870,6 +47892,7 @@ export namespace Prisma {
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
     liveChatWidgetId?: string | null
+    howToOrderVideoUrl?: string | null
     usdToBdtRate?: Decimal | DecimalJsLike | number | string
     defaultCurrency?: $Enums.DisplayCurrency
     smtpEnabled?: boolean
@@ -47888,6 +47911,7 @@ export namespace Prisma {
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
     liveChatWidgetId?: NullableStringFieldUpdateOperationsInput | string | null
+    howToOrderVideoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     usdToBdtRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     defaultCurrency?: EnumDisplayCurrencyFieldUpdateOperationsInput | $Enums.DisplayCurrency
     smtpEnabled?: BoolFieldUpdateOperationsInput | boolean
@@ -47906,6 +47930,7 @@ export namespace Prisma {
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
     liveChatWidgetId?: NullableStringFieldUpdateOperationsInput | string | null
+    howToOrderVideoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     usdToBdtRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     defaultCurrency?: EnumDisplayCurrencyFieldUpdateOperationsInput | $Enums.DisplayCurrency
     smtpEnabled?: BoolFieldUpdateOperationsInput | boolean
@@ -50606,6 +50631,7 @@ export namespace Prisma {
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
     liveChatWidgetId?: SortOrder
+    howToOrderVideoUrl?: SortOrder
     usdToBdtRate?: SortOrder
     defaultCurrency?: SortOrder
     smtpEnabled?: SortOrder
@@ -50629,6 +50655,7 @@ export namespace Prisma {
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
     liveChatWidgetId?: SortOrder
+    howToOrderVideoUrl?: SortOrder
     usdToBdtRate?: SortOrder
     defaultCurrency?: SortOrder
     smtpEnabled?: SortOrder
@@ -50647,6 +50674,7 @@ export namespace Prisma {
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
     liveChatWidgetId?: SortOrder
+    howToOrderVideoUrl?: SortOrder
     usdToBdtRate?: SortOrder
     defaultCurrency?: SortOrder
     smtpEnabled?: SortOrder

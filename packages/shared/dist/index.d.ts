@@ -787,6 +787,7 @@ export declare const updateSettingsSchema: z.ZodObject<{
     whatsappNumber: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     liveChatProvider: z.ZodEnum<["NONE", "TAWKTO", "CRISP"]>;
     liveChatWidgetId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    howToOrderVideoUrl: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
     usdToBdtRate: z.ZodNumber;
     defaultCurrency: z.ZodEnum<["USD", "BDT"]>;
     smtpEnabled: z.ZodBoolean;
@@ -804,6 +805,7 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpEnabled: boolean;
     whatsappNumber?: string | null | undefined;
     liveChatWidgetId?: string | null | undefined;
+    howToOrderVideoUrl?: string | null | undefined;
     smtpHost?: string | null | undefined;
     smtpPort?: number | null | undefined;
     smtpUser?: string | null | undefined;
@@ -818,6 +820,7 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpEnabled: boolean;
     whatsappNumber?: string | null | undefined;
     liveChatWidgetId?: string | null | undefined;
+    howToOrderVideoUrl?: string | null | undefined;
     smtpHost?: string | null | undefined;
     smtpPort?: number | null | undefined;
     smtpUser?: string | null | undefined;
@@ -831,6 +834,7 @@ export declare const publicSettingsSchema: z.ZodObject<{
     whatsappNumber: z.ZodNullable<z.ZodString>;
     liveChatProvider: z.ZodEnum<["NONE", "TAWKTO", "CRISP"]>;
     liveChatWidgetId: z.ZodNullable<z.ZodString>;
+    howToOrderVideoUrl: z.ZodNullable<z.ZodString>;
     usdToBdtRate: z.ZodString;
     defaultCurrency: z.ZodEnum<["USD", "BDT"]>;
     googleAuthEnabled: z.ZodBoolean;
@@ -840,6 +844,7 @@ export declare const publicSettingsSchema: z.ZodObject<{
     whatsappNumber: string | null;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
     liveChatWidgetId: string | null;
+    howToOrderVideoUrl: string | null;
     usdToBdtRate: string;
     defaultCurrency: "USD" | "BDT";
     googleAuthEnabled: boolean;
@@ -849,6 +854,7 @@ export declare const publicSettingsSchema: z.ZodObject<{
     whatsappNumber: string | null;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
     liveChatWidgetId: string | null;
+    howToOrderVideoUrl: string | null;
     usdToBdtRate: string;
     defaultCurrency: "USD" | "BDT";
     googleAuthEnabled: boolean;

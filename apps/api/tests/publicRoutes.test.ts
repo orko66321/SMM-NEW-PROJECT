@@ -40,6 +40,7 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
       whatsappNumber: "+8801700000000",
       liveChatProvider: "NONE",
       liveChatWidgetId: null,
+      howToOrderVideoUrl: null,
       usdToBdtRate: "120",
       defaultCurrency: "USD",
       googleAuthEnabled: expect.any(Boolean),

@@ -21,6 +21,7 @@ export async function getAdminSettings() {
         whatsappNumber: s.whatsappNumber,
         liveChatProvider: s.liveChatProvider,
         liveChatWidgetId: s.liveChatWidgetId,
+        howToOrderVideoUrl: s.howToOrderVideoUrl,
         usdToBdtRate: s.usdToBdtRate.toString(),
         defaultCurrency: s.defaultCurrency,
         smtpEnabled: s.smtpEnabled,
@@ -41,6 +42,10 @@ export async function updateSettings(input) {
             whatsappNumber: input.whatsappNumber,
             liveChatProvider: input.liveChatProvider,
             liveChatWidgetId: input.liveChatWidgetId,
+            // Normalise "" (admin cleared the field) to null so the frontend's
+            // empty check is a simple null/falsy test; leave an omitted field
+            // untouched (undefined ⇒ Prisma skips it).
+            howToOrderVideoUrl: input.howToOrderVideoUrl === undefined ? undefined : input.howToOrderVideoUrl || null,
             usdToBdtRate: input.usdToBdtRate,
             defaultCurrency: input.defaultCurrency,
             smtpEnabled: input.smtpEnabled,
@@ -63,6 +68,7 @@ export async function getPublicSettings() {
         whatsappNumber: s.whatsappNumber,
         liveChatProvider: s.liveChatProvider,
         liveChatWidgetId: s.liveChatWidgetId,
+        howToOrderVideoUrl: s.howToOrderVideoUrl,
         usdToBdtRate: s.usdToBdtRate.toString(),
         defaultCurrency: s.defaultCurrency,
         googleAuthEnabled: env.googleAuthEnabled,
