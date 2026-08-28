@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { apiErrorMessage } from "../../api/client.js";
 import * as authApi from "../../api/auth.js";
 import { useToast } from "../../components/ui/Toast.js";
@@ -9,6 +9,7 @@ import GoogleSignInButton from "../../components/auth/GoogleSignInButton.js";
 
 export default function Register() {
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
   const { t } = useLanguage();
   const [form, setForm] = useState({ username: "", email: "", password: "" });
@@ -22,7 +23,10 @@ export default function Register() {
     try {
       await authApi.register(form);
       toast.push(t("auth.register.createdToast"), "success");
-      navigate("/login", { replace: true });
+      // Forward the "where to return to" state so a guest who arrived here
+      // via a Place Order / new ticket prompt still lands back where they
+      // started once they log in with the account they just created.
+      navigate("/login", { replace: true, state: location.state });
     } catch (err) {
       setError(apiErrorMessage(err, t("auth.register.failedFallback")));
     } finally {

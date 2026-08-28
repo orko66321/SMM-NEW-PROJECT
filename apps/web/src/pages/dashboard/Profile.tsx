@@ -9,7 +9,9 @@ import {
 } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 
 interface Profile {
   username: string;
@@ -258,7 +260,12 @@ function ApiKeyCard({ profile }: { profile: Profile }) {
 
 export default function Profile() {
   const { t } = useLanguage();
-  const { data: profile } = useQuery({ queryKey: ["my-profile"], queryFn: getMyProfile });
+  const { user } = useAuth();
+  const { data: profile } = useQuery({ queryKey: ["my-profile"], queryFn: getMyProfile, enabled: !!user });
+
+  if (!user) {
+    return <GuestLockedCard title={t("guestGate.pageTitle")} body={t("guestGate.profileBody")} />;
+  }
 
   if (!profile) return null;
 

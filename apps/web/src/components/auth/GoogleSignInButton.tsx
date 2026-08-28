@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
@@ -24,6 +24,7 @@ import AuthDivider from "./AuthDivider.js";
 export default function GoogleSignInButton() {
   const { loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
   const { t, lang } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
@@ -58,7 +59,12 @@ export default function GoogleSignInButton() {
     try {
       await loginWithGoogle(credential.credential);
       toast.push(t("auth.google.welcomeToast"), "success");
-      navigate("/dashboard", { replace: true });
+      // Same "return to what you were doing" behavior as Login.tsx's
+      // password path — a guest who reached /login via a Place Order /
+      // new ticket prompt and signs in with Google should still land back
+      // there, not get bounced to the generic dashboard.
+      const from = (location.state as { from?: Location })?.from?.pathname;
+      navigate(from ?? "/dashboard", { replace: true });
     } catch (err) {
       toast.push(apiErrorMessage(err, t("auth.google.failedToast")), "error");
     } finally {

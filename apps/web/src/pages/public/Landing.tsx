@@ -1,13 +1,9 @@
-import { useMemo, useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getPublicServices, getPublicStats } from "../../api/resources.js";
-import { useAuth } from "../../context/AuthContext.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
-import { apiErrorMessage } from "../../api/client.js";
-import { useToast } from "../../components/ui/Toast.js";
-import GoogleSignInButton from "../../components/auth/GoogleSignInButton.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
 
 interface PublicService {
@@ -17,61 +13,12 @@ interface PublicService {
   category: { name: string; platform: string };
 }
 
-function SignInCard() {
-  const { login } = useAuth();
-  const navigate = useNavigate();
-  const toast = useToast();
-  const { t } = useLanguage();
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    setSubmitting(true);
-    setError(null);
-    try {
-      await login({ identifier, password });
-      toast.push(t("auth.login.welcomeToast"), "success");
-      navigate("/dashboard");
-    } catch (err) {
-      setError(apiErrorMessage(err, t("auth.login.failedFallback")));
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  return (
-    <div className="w-full max-w-sm rounded-xl border border-outline-variant/60 bg-surface-container/60 p-8 shadow-2xl shadow-primary/10 backdrop-blur-xl">
-      <h2 className="text-center text-xl font-bold text-on-surface">{t("landing.signInCard.title")}</h2>
-      <p className="mb-6 mt-1 text-center text-sm text-on-surface-variant">{t("landing.signInCard.subtitle")}</p>
-      <form onSubmit={onSubmit} className="space-y-4">
-        {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
-        <div>
-          <label className="label" htmlFor="landing-identifier">{t("landing.signInCard.usernameLabel")}</label>
-          <input id="landing-identifier" className="input-field" value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder={t("landing.signInCard.usernamePlaceholder")} required />
-        </div>
-        <div>
-          <div className="flex items-center justify-between">
-            <label className="label" htmlFor="landing-password">{t("landing.signInCard.passwordLabel")}</label>
-            <Link to="/forgot-password" className="text-xs text-primary hover:underline">{t("landing.signInCard.forgot")}</Link>
-          </div>
-          <input id="landing-password" type="password" className="input-field" value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t("landing.signInCard.passwordPlaceholder")} required />
-        </div>
-        <button type="submit" className="btn-primary w-full" disabled={submitting}>
-          {submitting ? t("landing.signInCard.submitting") : t("landing.signInCard.submit")}
-        </button>
-      </form>
-      <p className="mt-4 text-center text-sm text-on-surface-variant">
-        {t("landing.signInCard.noAccount")} <Link to="/register" className="text-primary hover:underline">{t("common.signUp")}</Link>
-      </p>
-      <div className="mt-4">
-        <GoogleSignInButton />
-      </div>
-    </div>
-  );
-}
+// The sign-in form used to live here as a hero-column card — moved out per
+// the "browse first, login only when needed" guest-access model: a visitor
+// who hasn't decided to sign up yet shouldn't be greeted by a login form as
+// the first thing they see. Login/Sign up now live only as the small
+// top-navbar buttons PublicLayout already renders for a logged-out visitor
+// (see components/layout/PublicLayout.tsx) — not as blocking hero content.
 
 function StatsBar({ startingPrice }: { startingPrice: string | null }) {
   const { t } = useLanguage();
@@ -137,50 +84,44 @@ export default function Landing() {
           style={{ background: "radial-gradient(circle, #6D28D9 0%, transparent 65%)" }}
           aria-hidden
         />
-        <div className="relative mx-auto grid max-w-container grid-cols-1 items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
-          <div>
-            <span className="badge mb-4 inline-flex items-center gap-2 bg-success/15 text-success">
-              <span className="h-1.5 w-1.5 rounded-full bg-success" /> {t("landing.badge")}
-            </span>
-            <h1 className="font-display text-3xl font-bold leading-tight text-on-surface sm:text-4xl md:text-5xl lg:text-6xl">
-              {t("landing.heroTitle")}
-            </h1>
-            <p className="mt-4 max-w-lg text-base text-on-surface-variant">
-              {t("landing.heroSubtitle")}
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link to="/services" className="btn-primary w-full sm:w-auto">{t("landing.viewServices")}</Link>
-              <Link to="/api-docs" className="btn-ghost w-full border border-outline-variant sm:w-auto">{t("landing.apiDocumentation")}</Link>
-            </div>
-
-            <div className="relative mt-10 max-w-md">
-              <input
-                className="input-field"
-                placeholder={t("landing.searchPlaceholder")}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              {filtered.length > 0 && (
-                <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-md border border-outline-variant bg-surface-container shadow-xl">
-                  {filtered.map((s) => (
-                    <Link
-                      key={s.id}
-                      to="/services"
-                      className="flex items-center justify-between px-3 py-2 text-sm hover:bg-surface-container-high"
-                    >
-                      <span>
-                        {s.name} <span className="text-xs text-on-surface-variant">· {s.category.platform}</span>
-                      </span>
-                      <span className="font-mono text-xs text-primary">{formatCurrency(s.sellPricePer1000)}/1K</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+        <div className="relative mx-auto max-w-container px-4 py-16 text-center sm:px-6 lg:py-24">
+          <span className="badge mb-4 inline-flex items-center gap-2 bg-success/15 text-success">
+            <span className="h-1.5 w-1.5 rounded-full bg-success" /> {t("landing.badge")}
+          </span>
+          <h1 className="mx-auto font-display text-3xl font-bold leading-tight text-on-surface sm:text-4xl md:text-5xl lg:text-6xl">
+            {t("landing.heroTitle")}
+          </h1>
+          <p className="mx-auto mt-4 max-w-lg text-base text-on-surface-variant">
+            {t("landing.heroSubtitle")}
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
+            <Link to="/services" className="btn-primary w-full sm:w-auto">{t("landing.viewServices")}</Link>
+            <Link to="/api-docs" className="btn-ghost w-full border border-outline-variant sm:w-auto">{t("landing.apiDocumentation")}</Link>
           </div>
 
-          <div className="flex justify-center lg:justify-end">
-            <SignInCard />
+          <div className="relative mx-auto mt-10 max-w-md text-left">
+            <input
+              className="input-field"
+              placeholder={t("landing.searchPlaceholder")}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {filtered.length > 0 && (
+              <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-md border border-outline-variant bg-surface-container shadow-xl">
+                {filtered.map((s) => (
+                  <Link
+                    key={s.id}
+                    to="/services"
+                    className="flex items-center justify-between px-3 py-2 text-sm hover:bg-surface-container-high"
+                  >
+                    <span>
+                      {s.name} <span className="text-xs text-on-surface-variant">· {s.category.platform}</span>
+                    </span>
+                    <span className="font-mono text-xs text-primary">{formatCurrency(s.sellPricePer1000)}/1K</span>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>

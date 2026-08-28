@@ -4,13 +4,16 @@ import { Link } from "react-router-dom";
 import { createTicket, getMyTickets } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 
 export default function Tickets() {
   const toast = useToast();
   const queryClient = useQueryClient();
   const { t } = useLanguage();
-  const { data } = useQuery({ queryKey: ["tickets"], queryFn: () => getMyTickets({ page: 1, pageSize: 20 }) });
+  const { user } = useAuth();
+  const { data } = useQuery({ queryKey: ["tickets"], queryFn: () => getMyTickets({ page: 1, pageSize: 20 }), enabled: !!user });
 
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
@@ -32,6 +35,10 @@ export default function Tickets() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (!user) {
+    return <GuestLockedCard title={t("guestGate.pageTitle")} body={t("guestGate.ticketsBody")} />;
   }
 
   return (

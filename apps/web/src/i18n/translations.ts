@@ -73,18 +73,6 @@ const en = {
     viewServices: "View Services →",
     apiDocumentation: "API Documentation",
     searchPlaceholder: "Search services — e.g. Instagram Followers",
-    signInCard: {
-      title: "Welcome Back",
-      subtitle: "Sign in to access your dashboard",
-      usernameLabel: "Username",
-      usernamePlaceholder: "Enter username",
-      passwordLabel: "Password",
-      passwordPlaceholder: "Enter password",
-      forgot: "Forgot?",
-      submit: "Sign In",
-      submitting: "Signing in…",
-      noAccount: "No account?",
-    },
     stats: {
       registeredUsers: "Registered Users",
       ordersCompleted: "Orders Completed",
@@ -223,10 +211,23 @@ const en = {
       support: "Support",
     },
     logout: "Logout",
+    guestLabel: "Guest",
   },
 
   noticeBar: {
     dismiss: "Dismiss",
+  },
+
+  // Shown in place of personal-data pages (Order History, Wallet, Tickets,
+  // a single ticket thread, Profile) when browsing as a guest, and as the
+  // choice modal a guest gets on a gated write action (Place Order, new
+  // ticket). See components/auth/GuestGate.tsx.
+  guestGate: {
+    pageTitle: "You're browsing as a guest",
+    ordersBody: "Log in or create a free account to see your order history.",
+    walletBody: "Log in or create a free account to add funds and view your deposit history.",
+    ticketsBody: "Log in or create a free account to open or view support tickets.",
+    profileBody: "Log in or create a free account to view your profile and settings.",
   },
 
   overview: {
@@ -237,6 +238,11 @@ const en = {
     newOrderCta: "+ New Order",
     recentOrders: "Recent orders",
     noOrdersYet: "No orders yet — place your first order to get started.",
+    guestWelcome: "Welcome! Create an account to get started",
+    guestSubtitle: "Browse services and pricing freely — you'll only need an account when you're ready to place an order.",
+    guestWhyHeading: "Why All In One",
+    guestBrowseTitle: "Ready to browse services?",
+    guestBrowseBody: "See live rates and place an order — you can look around before signing up.",
   },
 
   newOrder: {
@@ -256,6 +262,8 @@ const en = {
     successToast: "Order placed successfully!",
     insufficientToast: "Insufficient balance — redirecting to Add Funds",
     failedFallback: "Failed to place order",
+    authPromptTitle: "Almost there — log in to place this order",
+    authPromptBody: "Your service, link, and quantity are saved — log in or sign up and you'll come right back here.",
     important: "Important",
     note1: "Prices are always calculated by the server at order time — the estimate above is indicative only.",
     note2Label: "Refill",
@@ -483,18 +491,6 @@ const bn: Translations = {
     viewServices: "সার্ভিস দেখুন →",
     apiDocumentation: "এপিআই ডকুমেন্টেশন",
     searchPlaceholder: "সার্ভিস খুঁজুন — যেমন Instagram Followers",
-    signInCard: {
-      title: "আবার স্বাগতম",
-      subtitle: "আপনার ড্যাশবোর্ডে যেতে সাইন ইন করুন",
-      usernameLabel: "ইউজারনেম",
-      usernamePlaceholder: "ইউজারনেম লিখুন",
-      passwordLabel: "পাসওয়ার্ড",
-      passwordPlaceholder: "পাসওয়ার্ড লিখুন",
-      forgot: "ভুলে গেছেন?",
-      submit: "সাইন ইন করুন",
-      submitting: "সাইন ইন হচ্ছে…",
-      noAccount: "অ্যাকাউন্ট নেই?",
-    },
     stats: {
       registeredUsers: "রেজিস্টার্ড ইউজার",
       ordersCompleted: "সম্পন্ন অর্ডার",
@@ -633,10 +629,19 @@ const bn: Translations = {
       support: "সাপোর্ট",
     },
     logout: "লগ আউট",
+    guestLabel: "গেস্ট",
   },
 
   noticeBar: {
     dismiss: "বাতিল করুন",
+  },
+
+  guestGate: {
+    pageTitle: "আপনি এখন গেস্ট হিসেবে দেখছেন",
+    ordersBody: "আপনার অর্ডার হিস্টোরি দেখতে লগইন করুন অথবা ফ্রি অ্যাকাউন্ট খুলুন।",
+    walletBody: "ফান্ড যোগ করতে এবং ডিপোজিট হিস্টোরি দেখতে লগইন করুন অথবা ফ্রি অ্যাকাউন্ট খুলুন।",
+    ticketsBody: "সাপোর্ট টিকেট খুলতে বা দেখতে লগইন করুন অথবা ফ্রি অ্যাকাউন্ট খুলুন।",
+    profileBody: "প্রোফাইল ও সেটিংস দেখতে লগইন করুন অথবা ফ্রি অ্যাকাউন্ট খুলুন।",
   },
 
   overview: {
@@ -647,6 +652,11 @@ const bn: Translations = {
     newOrderCta: "+ নতুন অর্ডার",
     recentOrders: "সাম্প্রতিক অর্ডার",
     noOrdersYet: "এখনো কোনো অর্ডার নেই — শুরু করতে প্রথম অর্ডারটা করুন।",
+    guestWelcome: "স্বাগতম! শুরু করতে একটা অ্যাকাউন্ট খুলুন",
+    guestSubtitle: "সার্ভিস আর মূল্য নির্দ্বিধায় ব্রাউজ করুন — অর্ডার করার সময় হলেই শুধু অ্যাকাউন্ট লাগবে।",
+    guestWhyHeading: "কেন All In One",
+    guestBrowseTitle: "সার্ভিস ব্রাউজ করতে চান?",
+    guestBrowseBody: "লাইভ রেট দেখুন আর অর্ডার করুন — সাইন আপের আগেই ঘুরে দেখতে পারেন।",
   },
 
   newOrder: {
@@ -666,6 +676,8 @@ const bn: Translations = {
     successToast: "অর্ডার সফলভাবে প্লেস হয়েছে!",
     insufficientToast: "ব্যালেন্স যথেষ্ট নেই — Add Funds পেজে নিয়ে যাওয়া হচ্ছে",
     failedFallback: "অর্ডার প্লেস করা যায়নি",
+    authPromptTitle: "প্রায় হয়ে গেছে — অর্ডারটা প্লেস করতে লগইন করুন",
+    authPromptBody: "আপনার সার্ভিস, লিংক আর কোয়ান্টিটি সেভ আছে — লগইন বা সাইন আপ করলেই ঠিক এখানে ফিরে আসবেন।",
     important: "গুরুত্বপূর্ণ তথ্য",
     note1: "দাম সবসময় সার্ভার অর্ডারের সময় হিসাব করে — উপরের এস্টিমেট শুধু ধারণা দেওয়ার জন্য।",
     note2Label: "রিফিল",

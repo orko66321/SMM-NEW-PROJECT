@@ -4,8 +4,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createDeposit, getMyDeposits, getPaymentMethods, getPublicSettings, getWallet, initiateGatewayDeposit, validateCoupon } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useAuth } from "../../context/AuthContext.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 
 function CopyButton({ value, label }: { value: string; label: string }) {
   const { t } = useLanguage();
@@ -61,10 +63,11 @@ export default function Wallet() {
   const queryClient = useQueryClient();
   const { formatCurrency } = useCurrency();
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet });
-  const { data: deposits } = useQuery({ queryKey: ["deposits"], queryFn: () => getMyDeposits({ page: 1, pageSize: 20 }) });
-  const { data: methods } = useQuery({ queryKey: ["payment-methods"], queryFn: getPaymentMethods });
+  const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet, enabled: !!user });
+  const { data: deposits } = useQuery({ queryKey: ["deposits"], queryFn: () => getMyDeposits({ page: 1, pageSize: 20 }), enabled: !!user });
+  const { data: methods } = useQuery({ queryKey: ["payment-methods"], queryFn: getPaymentMethods, enabled: !!user });
   const { data: settings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
   const bdtRate = settings?.usdToBdtRate ? Number(settings.usdToBdtRate) : null;
 
@@ -204,6 +207,10 @@ export default function Wallet() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (!user) {
+    return <GuestLockedCard title={t("guestGate.pageTitle")} body={t("guestGate.walletBody")} />;
   }
 
   return (

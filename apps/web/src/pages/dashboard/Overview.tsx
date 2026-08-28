@@ -1,21 +1,86 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { getMyOrders, getWallet } from "../../api/resources.js";
+import { getMyOrders, getPublicStats, getWallet } from "../../api/resources.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
 
-export default function Overview() {
-  const { user } = useAuth();
+// Guest-facing variant of the Overview landing view — no wallet/order
+// queries (those 401 for a logged-out session), just generic platform
+// content and a clear path to browsing or creating an account. This is
+// what a logged-out visitor sees by default at /dashboard (see App.tsx —
+// the route carries no auth guard any more).
+function GuestOverview() {
   const { t } = useLanguage();
-  const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet });
-  const { data: orders } = useQuery({ queryKey: ["orders", "recent"], queryFn: () => getMyOrders({ page: 1, pageSize: 5 }) });
+  const { data: stats } = useQuery({ queryKey: ["public-stats"], queryFn: getPublicStats });
+
+  const statCards = [
+    { label: t("landing.stats.registeredUsers"), value: stats ? stats.totalUsers.toLocaleString() : "—" },
+    { label: t("landing.stats.ordersCompleted"), value: stats ? stats.totalOrdersCompleted.toLocaleString() : "—" },
+  ];
 
   return (
     <div className="space-y-6">
       <BannerSlider />
 
-      <h1 className="text-xl font-bold sm:text-2xl">{t("overview.welcomeBack", { username: user?.username ?? "" })}</h1>
+      <div className="card space-y-4 text-center">
+        <h1 className="text-xl font-bold sm:text-2xl">{t("overview.guestWelcome")}</h1>
+        <p className="mx-auto max-w-md text-sm text-on-surface-variant">{t("overview.guestSubtitle")}</p>
+        <div className="flex flex-col justify-center gap-2 sm:flex-row">
+          <Link to="/register" className="btn-primary sm:min-w-[10rem]">{t("common.signUp")}</Link>
+          <Link to="/login" className="btn-ghost border border-outline-variant sm:min-w-[10rem]">{t("common.signIn")}</Link>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {statCards.map((c) => (
+          <div key={c.label} className="card text-center">
+            <p className="font-mono text-2xl font-semibold text-primary">{c.value}</p>
+            <p className="label mt-1">{c.label}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="card">
+        <h2 className="mb-3 text-sm font-semibold text-on-surface-variant">{t("overview.guestWhyHeading")}</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {(["delivery", "pricing", "api", "support"] as const).map((key) => (
+            <div key={key}>
+              <p className="text-sm font-semibold text-on-surface">{t(`landing.features.${key}.title`)}</p>
+              <p className="mt-1 text-xs text-on-surface-variant">{t(`landing.features.${key}.body`)}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="card flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div>
+          <p className="font-semibold text-on-surface">{t("overview.guestBrowseTitle")}</p>
+          <p className="text-sm text-on-surface-variant">{t("overview.guestBrowseBody")}</p>
+        </div>
+        <Link to="/dashboard/new-order" className="btn-primary shrink-0">{t("overview.newOrderCta")}</Link>
+      </div>
+    </div>
+  );
+}
+
+export default function Overview() {
+  const { user } = useAuth();
+  const { t } = useLanguage();
+  const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet, enabled: !!user });
+  const { data: orders } = useQuery({
+    queryKey: ["orders", "recent"],
+    queryFn: () => getMyOrders({ page: 1, pageSize: 5 }),
+    enabled: !!user,
+  });
+
+  if (!user) return <GuestOverview />;
+
+  return (
+    <div className="space-y-6">
+      <BannerSlider />
+
+      <h1 className="text-xl font-bold sm:text-2xl">{t("overview.welcomeBack", { username: user.username })}</h1>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="card">

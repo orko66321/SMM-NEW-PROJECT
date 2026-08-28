@@ -4,14 +4,17 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTicket, replyToTicket } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 
 export default function TicketDetail() {
   const { id } = useParams<{ id: string }>();
   const toast = useToast();
   const queryClient = useQueryClient();
   const { t } = useLanguage();
-  const { data: ticket } = useQuery({ queryKey: ["ticket", id], queryFn: () => getTicket(id!), enabled: !!id });
+  const { user } = useAuth();
+  const { data: ticket } = useQuery({ queryKey: ["ticket", id], queryFn: () => getTicket(id!), enabled: !!id && !!user });
 
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -29,6 +32,10 @@ export default function TicketDetail() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (!user) {
+    return <GuestLockedCard title={t("guestGate.pageTitle")} body={t("guestGate.ticketsBody")} />;
   }
 
   if (!ticket) return <p className="text-on-surface-variant">{t("common.loading")}</p>;

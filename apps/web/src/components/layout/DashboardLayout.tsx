@@ -16,7 +16,12 @@ export default function DashboardLayout() {
   const location = useLocation();
   const { formatCurrency } = useCurrency();
   const { t } = useLanguage();
-  const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet, refetchInterval: 30_000 });
+  const { data: wallet } = useQuery({
+    queryKey: ["wallet"],
+    queryFn: getWallet,
+    refetchInterval: 30_000,
+    enabled: !!user,
+  });
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const navItems = [
@@ -112,11 +117,13 @@ export default function DashboardLayout() {
               {user?.avatarUrl && (
                 <img src={user.avatarUrl} alt="" className="h-7 w-7 rounded-full" referrerPolicy="no-referrer" />
               )}
-              @{user?.username}
+              {user ? `@${user.username}` : t("dashboardLayout.guestLabel")}
             </div>
-            <div className="rounded-md border border-outline-variant bg-surface-container-high px-2.5 py-1.5 font-mono text-xs text-success">
-              {formatCurrency(wallet?.balance ?? 0)}
-            </div>
+            {user && (
+              <div className="rounded-md border border-outline-variant bg-surface-container-high px-2.5 py-1.5 font-mono text-xs text-success">
+                {formatCurrency(wallet?.balance ?? 0)}
+              </div>
+            )}
           </div>
           <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-3">
             {navItems.map((item) => (
@@ -141,13 +148,24 @@ export default function DashboardLayout() {
             <CurrencySwitcher />
           </div>
           <div className="border-t border-outline-variant p-3">
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="btn-ghost min-h-[44px] w-full justify-center text-sm"
-            >
-              {t("dashboardLayout.logout")}
-            </button>
+            {user ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="btn-ghost min-h-[44px] w-full justify-center text-sm"
+              >
+                {t("dashboardLayout.logout")}
+              </button>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <NavLink to="/login" state={{ from: location }} className="btn-primary min-h-[44px] w-full justify-center text-sm">
+                  {t("common.signIn")}
+                </NavLink>
+                <NavLink to="/register" state={{ from: location }} className="btn-ghost min-h-[44px] w-full justify-center text-sm">
+                  {t("common.signUp")}
+                </NavLink>
+              </div>
+            )}
           </div>
         </aside>
       </div>
@@ -171,7 +189,7 @@ export default function DashboardLayout() {
               {user?.avatarUrl && (
                 <img src={user.avatarUrl} alt="" className="h-6 w-6 rounded-full" referrerPolicy="no-referrer" />
               )}
-              @{user?.username}
+              {user ? `@${user.username}` : t("dashboardLayout.guestLabel")}
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
@@ -179,15 +197,28 @@ export default function DashboardLayout() {
               <LanguageSwitcher />
               <CurrencySwitcher />
             </div>
-            <div className="rounded-md border border-outline-variant bg-surface-container-high px-2.5 py-1.5 font-mono text-xs text-success sm:px-3 sm:text-sm">
-              {formatCurrency(wallet?.balance ?? 0)}
-            </div>
-            <button
-              className="btn-ghost hidden !px-3 !py-1.5 text-xs sm:inline-flex"
-              onClick={handleLogout}
-            >
-              {t("dashboardLayout.logout")}
-            </button>
+            {user ? (
+              <>
+                <div className="rounded-md border border-outline-variant bg-surface-container-high px-2.5 py-1.5 font-mono text-xs text-success sm:px-3 sm:text-sm">
+                  {formatCurrency(wallet?.balance ?? 0)}
+                </div>
+                <button
+                  className="btn-ghost hidden !px-3 !py-1.5 text-xs sm:inline-flex"
+                  onClick={handleLogout}
+                >
+                  {t("dashboardLayout.logout")}
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink to="/login" state={{ from: location }} className="btn-ghost hidden !px-3 !py-1.5 text-xs sm:inline-flex">
+                  {t("common.signIn")}
+                </NavLink>
+                <NavLink to="/register" state={{ from: location }} className="btn-primary hidden !px-3 !py-1.5 text-xs sm:inline-flex">
+                  {t("common.signUp")}
+                </NavLink>
+              </>
+            )}
           </div>
         </header>
         <NoticeBar />

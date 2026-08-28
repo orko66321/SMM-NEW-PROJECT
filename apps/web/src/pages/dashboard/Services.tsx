@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { getCategories, getServices } from "../../api/resources.js";
+import { getPublicCategories, getPublicServices } from "../../api/resources.js";
 import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 
@@ -61,10 +61,12 @@ export default function Services() {
   const [categoryId, setCategoryId] = useState("");
   const [search, setSearch] = useState("");
   const [detailsService, setDetailsService] = useState<ServiceRow | null>(null);
-  const { data: categories } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
+  // Public (unauthenticated) catalog — this whole page is guest-browsable
+  // per the site's "browse = public" model (see GuestGate.tsx / App.tsx).
+  const { data: categories } = useQuery({ queryKey: ["public-categories"], queryFn: getPublicCategories });
   const { data, isLoading } = useQuery({
-    queryKey: ["services-catalog", categoryId, search],
-    queryFn: () => getServices({ page: 1, pageSize: 100, categoryId: categoryId || undefined, search: search || undefined }),
+    queryKey: ["public-services-catalog", categoryId, search],
+    queryFn: () => getPublicServices({ page: 1, pageSize: 100, categoryId: categoryId || undefined, search: search || undefined }),
   });
 
   const items: ServiceRow[] = data?.items ?? [];

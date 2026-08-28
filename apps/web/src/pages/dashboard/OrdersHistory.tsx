@@ -4,7 +4,9 @@ import { OrderStatusValues } from "@smm/shared";
 import { apiErrorMessage } from "../../api/client.js";
 import { getMyOrders, requestOrderRefill } from "../../api/resources.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 
 const statusTabs = ["ALL", ...OrderStatusValues] as const;
 
@@ -137,15 +139,21 @@ function OrderCard({ o }: { o: OrderRow }) {
 
 export default function OrdersHistory() {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [status, setStatus] = useState<(typeof statusTabs)[number]>("ALL");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useQuery({
     queryKey: ["orders", status, page],
     queryFn: () => getMyOrders({ page, pageSize: 20, status: status === "ALL" ? undefined : status }),
+    enabled: !!user,
   });
 
   function tabLabel(tab: (typeof statusTabs)[number]) {
     return tab === "ALL" ? t("ordersHistory.allTab") : t(`common.orderStatus.${tab}`);
+  }
+
+  if (!user) {
+    return <GuestLockedCard title={t("guestGate.pageTitle")} body={t("guestGate.ordersBody")} />;
   }
 
   return (

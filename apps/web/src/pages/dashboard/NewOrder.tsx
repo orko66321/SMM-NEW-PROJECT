@@ -1,11 +1,13 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { getCategories, getPublicSiteNotice, getServices, placeOrder } from "../../api/resources.js";
+import { getPublicCategories, getPublicServices, getPublicSiteNotice, placeOrder } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { AuthPromptModal } from "../../components/auth/GuestGate.js";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
 // throws when the wallet can't cover the charge (see AppError's `details`).
@@ -28,25 +30,87 @@ interface ServiceItem {
   cancelEnabled: boolean;
 }
 
+// A guest who fills this form out and only then hits "Place Order" gets
+// bounced through /login or /register and back — a full route change that
+// would otherwise unmount this component and lose everything they typed.
+// This is the one-shot sessionStorage draft that survives that round trip:
+// written right before the redirect, read back (and cleared) on the next
+// mount. Per-tab only and never sent anywhere — plain form-recovery, not
+// state that needs to persist reliably or be shared.
+const DRAFT_KEY = "smm_guest_order_draft";
+
+interface OrderDraft {
+  categoryId?: string;
+  serviceId?: string;
+  link?: string;
+  quantity?: number | "";
+}
+
+function saveDraft(draft: OrderDraft) {
+  try {
+    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  } catch {
+    // storage unavailable (private mode, quota) — the auth prompt still
+    // works, the form just won't be pre-filled on return
+  }
+}
+
+// Deliberately read-only, no sessionStorage.removeItem here — this runs as
+// a useState lazy initializer below, and React 18 StrictMode invokes lazy
+// initializers twice on mount (dev only) to help surface exactly this kind
+// of impurity: a clear-on-read here would make the *second* invocation
+// silently read back nothing, so the draft never actually restores. The
+// one-shot clear happens separately, in a plain useEffect (see below).
+function readDraft(): OrderDraft | null {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY);
+    return raw ? (JSON.parse(raw) as OrderDraft) : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearDraft() {
+  try {
+    sessionStorage.removeItem(DRAFT_KEY);
+  } catch {
+    // storage unavailable — nothing to clear
+  }
+}
+
 export default function NewOrder() {
   const toast = useToast();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
   const { t, lang } = useLanguage();
+  const [authPromptOpen, setAuthPromptOpen] = useState(false);
+  const [draft] = useState(readDraft);
+  useEffect(() => {
+    if (draft) clearDraft();
+    // One-shot: only ever needs to run once, against the draft this
+    // component mounted with — re-running on `draft` changing isn't a
+    // thing (it's never reassigned after the initial useState call).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const { data: siteNotice } = useQuery({ queryKey: ["public-site-notice"], queryFn: getPublicSiteNotice, staleTime: 60_000 });
 
-  const { data: categories } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
-  const [categoryId, setCategoryId] = useState<string>("");
+  // Public (unauthenticated) catalog endpoints — same underlying data as
+  // the authed /services ones, so browsing/pricing this form works
+  // identically for a guest and a logged-in user. Only the final "Place
+  // Order" submit is gated (see onSubmit below).
+  const { data: categories } = useQuery({ queryKey: ["public-categories"], queryFn: getPublicCategories });
+  const [categoryId, setCategoryId] = useState<string>(draft?.categoryId ?? "");
   const { data: servicesData } = useQuery({
-    queryKey: ["services", categoryId],
-    queryFn: () => getServices({ page: 1, pageSize: 100, categoryId: categoryId || undefined }),
+    queryKey: ["public-services", categoryId],
+    queryFn: () => getPublicServices({ page: 1, pageSize: 100, categoryId: categoryId || undefined }),
   });
 
   const services: ServiceItem[] = useMemo(() => servicesData?.items ?? [], [servicesData]);
-  const [serviceId, setServiceId] = useState<string>(searchParams.get("serviceId") ?? "");
-  const [link, setLink] = useState("");
-  const [quantity, setQuantity] = useState<number | "">("");
+  const [serviceId, setServiceId] = useState<string>(searchParams.get("serviceId") ?? draft?.serviceId ?? "");
+  const [link, setLink] = useState(draft?.link ?? "");
+  const [quantity, setQuantity] = useState<number | "">(draft?.quantity ?? "");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,6 +137,16 @@ export default function NewOrder() {
       setError(t("newOrder.quantityRangeError", { min: selectedService.minQuantity, max: selectedService.maxQuantity }));
       return;
     }
+    // Soft-gate at the point of action, not on page load — the form itself
+    // stays fully fillable for a guest (see GuestGate.tsx). The draft save
+    // is what makes "only the actual write attempt needs a session" true in
+    // practice: without it, clicking through to /login would unmount this
+    // form and lose everything just typed.
+    if (!user) {
+      saveDraft({ categoryId, serviceId, link, quantity });
+      setAuthPromptOpen(true);
+      return;
+    }
     setSubmitting(true);
     try {
       const idempotencyKey = crypto.randomUUID();
@@ -95,6 +169,13 @@ export default function NewOrder() {
           navigate(`/dashboard/wallet?orderIntentId=${details.orderIntentId}&required=${details.shortfall}`);
           return;
         }
+      }
+      // Session expired mid-fill (token lapsed between page load and
+      // submit) — same graceful prompt as the pre-submit guest check above,
+      // not a raw 401 error string.
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        setAuthPromptOpen(true);
+        return;
       }
       setError(apiErrorMessage(err, t("newOrder.failedFallback")));
     } finally {
@@ -196,6 +277,13 @@ export default function NewOrder() {
           {noticeBody && <p className="whitespace-pre-line">{noticeBody}</p>}
         </aside>
       )}
+
+      <AuthPromptModal
+        open={authPromptOpen}
+        onClose={() => setAuthPromptOpen(false)}
+        title={t("newOrder.authPromptTitle")}
+        body={t("newOrder.authPromptBody")}
+      />
     </div>
   );
 }

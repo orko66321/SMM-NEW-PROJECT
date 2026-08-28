@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastProvider } from "./components/ui/Toast.js";
-import { AdminRoute, GuestRoute, ProtectedRoute } from "./routes/guards.js";
+import { AdminRoute, GuestRoute } from "./routes/guards.js";
 import DashboardLayout from "./components/layout/DashboardLayout.js";
 import AdminLayout from "./components/layout/AdminLayout.js";
 import PublicLayout from "./components/layout/PublicLayout.js";
@@ -58,14 +58,14 @@ export default function App() {
         <Route path="/forgot-password" element={<GuestRoute><ForgotPassword /></GuestRoute>} />
         <Route path="/reset-password" element={<GuestRoute><ResetPassword /></GuestRoute>} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }
-        >
+        {/* Guest-browsable: no auth guard here on purpose. Every page inside
+            decides for itself what a logged-out visitor sees (full content
+            for Services/New Order browsing, a GuestLockedCard for personal
+            data, an AuthPromptModal on write actions) — see GuestGate.tsx.
+            The real security boundary stays server-side: every mutating
+            endpoint (POST /orders, /tickets, /wallet, ...) still requires
+            `authenticate` in the API regardless of what this route renders. */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Overview />} />
           <Route path="new-order" element={<NewOrder />} />
           <Route path="orders" element={<OrdersHistory />} />
