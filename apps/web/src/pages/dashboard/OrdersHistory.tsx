@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { OrderStatusValues } from "@smm/shared";
 import { apiErrorMessage } from "../../api/client.js";
-import { getMyOrders, requestOrderRefill } from "../../api/resources.js";
+import { getMyOrders, getOrderDeliveredCode, requestOrderRefill } from "../../api/resources.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
@@ -14,7 +14,10 @@ const statusTabs = ["ALL", ...OrderStatusValues] as const;
 type OrderRow = {
   id: string;
   createdAt: string;
-  service: { name: string; nameBn: string | null; refillEnabled: boolean };
+  service: { name: string; nameBn: string | null; refillEnabled: boolean } | null;
+  // Present instead of `service` for a Store (Brand → Product → Package) purchase.
+  package: { name: string; product: { name: string; brand: { name: string } } } | null;
+  stockCode: { id: string } | null;
   link: string;
   charge: string;
   quantity: number;
@@ -23,7 +26,40 @@ type OrderRow = {
 };
 
 function isRefillEligible(o: OrderRow) {
-  return o.service.refillEnabled && (o.status === "COMPLETED" || o.status === "PARTIAL");
+  return !!o.service?.refillEnabled && (o.status === "COMPLETED" || o.status === "PARTIAL");
+}
+
+function orderTitle(o: OrderRow, lang: "en" | "bn") {
+  if (o.service) return pickLang(lang, o.service.nameBn, o.service.name);
+  if (o.package) return `${o.package.product.brand.name} — ${o.package.product.name} — ${o.package.name}`;
+  return "—";
+}
+
+function RevealCodeButton({ orderId }: { orderId: string }) {
+  const { t } = useLanguage();
+  const toast = useToast();
+  const [code, setCode] = useState<string | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: () => getOrderDeliveredCode(orderId),
+    onSuccess: (result) => setCode(result.code),
+    onError: (err) => toast.push(apiErrorMessage(err, t("ordersHistory.revealCodeFailedFallback")), "error"),
+  });
+
+  if (code) {
+    return <code className="block max-w-[220px] truncate rounded bg-surface-container-highest px-2 py-1 text-xs">{code}</code>;
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => mutation.mutate()}
+      disabled={mutation.isPending}
+      className="btn-ghost !min-h-[36px] shrink-0 !px-3 !py-1.5 text-xs"
+    >
+      {mutation.isPending ? t("ordersHistory.requesting") : t("ordersHistory.revealCode")}
+    </button>
+  );
 }
 
 function RefillButton({ orderId }: { orderId: string }) {
@@ -102,7 +138,7 @@ function OrderCard({ o }: { o: OrderRow }) {
     <div className="rounded-lg border border-outline-variant bg-surface-container p-4">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-on-surface">{pickLang(lang, o.service.nameBn, o.service.name)}</p>
+          <p className="truncate text-sm font-semibold text-on-surface">{orderTitle(o, lang)}</p>
           <p className="mt-0.5 text-xs text-on-surface-variant">{new Date(o.createdAt).toLocaleDateString()}</p>
         </div>
         <span className="badge shrink-0 bg-primary/15 text-primary">{t(`common.orderStatus.${o.status}`)}</span>
@@ -114,6 +150,7 @@ function OrderCard({ o }: { o: OrderRow }) {
           <CopyIdButton id={o.id} />
         </span>
         {isRefillEligible(o) && <RefillButton orderId={o.id} />}
+        {o.stockCode && <RevealCodeButton orderId={o.id} />}
       </div>
 
       <dl className="mt-1 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
@@ -221,13 +258,16 @@ export default function OrdersHistory() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-xs">{new Date(o.createdAt).toLocaleDateString()}</td>
-                <td className="px-4 py-3">{pickLang(lang, o.service.nameBn, o.service.name)}</td>
+                <td className="px-4 py-3">{orderTitle(o, lang)}</td>
                 <td className="max-w-[200px] truncate px-4 py-3 text-xs text-on-surface-variant">{o.link}</td>
                 <td className="px-4 py-3 font-mono">${o.charge}</td>
                 <td className="px-4 py-3 font-mono">{o.quantity}</td>
                 <td className="px-4 py-3 font-mono">{o.remains ?? "—"}</td>
                 <td className="px-4 py-3"><span className="badge bg-primary/15 text-primary">{t(`common.orderStatus.${o.status}`)}</span></td>
-                <td className="px-4 py-3">{isRefillEligible(o) && <RefillButton orderId={o.id} />}</td>
+                <td className="px-4 py-3">
+                  {isRefillEligible(o) && <RefillButton orderId={o.id} />}
+                  {o.stockCode && <RevealCodeButton orderId={o.id} />}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -161,6 +161,247 @@ enum PostStatus {
   PUBLISHED
 }
 
+// ── Store: Brand → Product → Package (§2 of the brand-product-package spec) ─
+
+// A small, reusable set of card-grid layouts an admin picks per Brand/Product
+// rather than writing bespoke CSS per homepage section — this is how the
+// reference panel gets a compact "Special Offer" strip next to a bigger
+// "Topup" grid from the same component. See components/store/ProductGrid.tsx.
+enum ProductDesignTemplate {
+  SMALL_STRIP
+  STANDARD_GRID
+  FEATURED_LARGE
+}
+
+// Picked per Product; controls how *its* Packages render one level down.
+enum PackageDesignTemplate {
+  RADIO_LIST
+  BOXED_GRID
+}
+
+enum ProductType {
+  TOPUP
+  VOUCHER
+  SMM
+  SUBSCRIPTION
+}
+
+enum AccessType {
+  ALL
+  VIP
+  RESELLER
+}
+
+enum StockCodeStatus {
+  AVAILABLE
+  CONSUMED
+  REVOKED
+}
+
+// Top-level homepage *section*, not strictly "a company" — see the spec's
+// real examples (mixes "YouTube Service" with "SPECIAL OFFER", "TOPUP").
+// `level` is the one global sort key across every Brand on the homepage;
+// negative values pin a promo section ahead of ordinary platform sections
+// without a separate "featured" flag.
+model Brand {
+  id            String                @id @default(cuid())
+  name          String
+  level         Int                   @default(0)
+  productDesign ProductDesignTemplate @default(STANDARD_GRID)
+  logo          String? // base64 data URI, same no-persistent-filesystem convention as Banner.image
+  isActive      Boolean               @default(true)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  products Product[]
+
+  @@index([level])
+  @@index([isActive])
+}
+
+// Belongs to a Brand. Either points at an existing provider-synced Service
+// (productType SMM, serviceId set — its Packages can then flag IS AUTO to
+// auto-fulfill through that Service's existing provider pipeline) or is a
+// manually-managed product (Topup/Voucher/Subscription) fulfilled via its
+// Packages' linked StockPools or plain admin action. Never a second catalog
+// pipeline — the provider sync in catalog.service.ts / providerImport.service.ts
+// is untouched; this only ever references it by serviceId.
+model Product {
+  id      String @id @default(cuid())
+  brandId String
+  brand   Brand  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  name String
+
+  // Label for whatever the buyer must type at checkout — "Player ID",
+  // "Username", "Email", or "Link" for an SMM product. Generic across every
+  // product type instead of a hardcoded "link" field.
+  userInputFieldName    String  @default("Link")
+  // "কিভাবে অর্ডার করবেন?" — a how-to-order help link shown to the buyer.
+  orderInstructionsLink String?
+
+  salePrice Decimal @db.Decimal(18, 4)
+  buyPrice  Decimal @default(0) @db.Decimal(18, 4)
+  quantity  Int     @default(1) // default/base quantity for this product
+
+  productType ProductType
+  accessType  AccessType  @default(ALL)
+  logo        String?
+
+  // Secondary type classifier carried over from the reference implementation
+  // ("type", separate from Product Type) — kept as free text since its exact
+  // use in the source system couldn't be confirmed against real data; not
+  // relied on by any fulfillment logic here.
+  secondaryType String?
+
+  level    Int     @default(0) // sort order within the brand
+  isAuto   Boolean @default(false)
+  isActive Boolean @default(true)
+
+  productNote String?
+  slug        String  @unique
+
+  // Only relevant to gaming top-ups; optional and unused by SMM/Subscription
+  // products. No anti-cheat integration is wired up (Phase 2 per the spec).
+  gameCheaterType String?
+
+  // Anti-abuse: caps how many times one user may order this product within
+  // orderWindowHours. Enforced at checkout in store.service.ts, not just UI copy.
+  hasOrderTimeLimit  Boolean @default(false)
+  maxOrdersPerWindow Int?
+  orderWindowHours   Int?
+
+  // Validates the buyer's entered ID before accepting the order. No provider
+  // lookup API exists in this codebase yet, so this only ever renders as a
+  // manual-review flag on the order (Phase 2 per the spec) — never blocks checkout.
+  checkUniquePlayerId Boolean @default(false)
+
+  isQuantityMinusOnOrder Boolean  @default(false) // stock/quantity decrements on each order
+  isQuantityShowUser     Boolean  @default(false) // remaining stock shown publicly
+  isPremiumProduct       Boolean  @default(false)
+  minAmountForPremium    Decimal? @db.Decimal(18, 4)
+
+  // Characters stripped from the buyer's input before submitting (e.g. " -" for a Player ID field).
+  removeCharacters  String?
+  redeemLink        String? // shown to the buyer explaining how to redeem what they receive
+  isResellerProduct Boolean @default(false)
+
+  // Gacha-style product — deliberately unimplemented (Phase 2 / "nice to
+  // have" per the spec); stored so the admin form matches the reference,
+  // never read by the purchase flow.
+  isMysteryBox Boolean @default(false)
+
+  description String?
+
+  packageDesign PackageDesignTemplate @default(RADIO_LIST)
+
+  // Set only for productType SMM — the existing provider-synced Service this
+  // product sells. A Package under this Product may only set isAuto when
+  // this is set: that's what lets fulfillment call the SAME existing
+  // provider order-placement pipeline (see store.service.ts), never a
+  // second one.
+  serviceId String?
+  service   Service? @relation(fields: [serviceId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  packages Package[]
+
+  @@index([brandId, level])
+  @@index([isActive])
+  @@index([serviceId])
+}
+
+// Belongs to a Product. Either auto-fulfills through the Product's linked
+// Service (isAuto = true) or is claimed from one or more linked StockPools /
+// left for an admin to fulfill by hand (see purchasePackage in store.service.ts).
+model Package {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  name   String
+  amount Int // actual quantity/units this package delivers — separate from `name`
+  // so name can stay a friendly label ("25 Diamond") while amount
+  // drives the real fulfillment math (locked provider quantity, or
+  // just a display number for a manual/stock-pool item).
+
+  salePrice      Decimal @db.Decimal(18, 4) // charged to the wallet — this app's canonical currency is USD everywhere (see Wallet.balance), unlike the BDT-native reference panel
+  buyPrice       Decimal @default(0) @db.Decimal(18, 4) // cost snapshot, mirrors Service.providerCostPer1000's role
+  // Reference/import-fidelity field carried over from the source panel's
+  // "Common Price (USD)" column. `salePrice` above is always what's actually
+  // charged (this app prices everything in USD server-side already — see
+  // CurrencyContext.tsx) — this is not re-derived from it.
+  commonPriceUsd Decimal @db.Decimal(18, 4)
+  extraFee       Decimal @default(0) @db.Decimal(18, 4) // additive add-on fee, always shown as its own price-breakdown line — never folded into salePrice
+
+  level    Int     @default(0) // sort order within the product
+  isAuto   Boolean @default(false)
+  isManual Boolean @default(false)
+  server   String? // e.g. "BD" / "Global" — optional, only relevant to multi-server products
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stockPoolLinks PackageStockPool[]
+  orders         Order[]
+
+  @@index([productId, level])
+}
+
+// Named, reusable pool of redeemable codes/credentials — "Selected relative
+// ids" in the reference UI. Deliberately its own entity rather than stock
+// hard-owned by one Package: the reference reuses named pools ("Monthly
+// Code", "Evo Access 7D") across multiple packages/products.
+model StockPool {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  codes        StockCode[]
+  packageLinks PackageStockPool[]
+}
+
+// Many-to-many: one Package can list several pools ("Click to add item" is a
+// multi-select), and one pool can back several packages/products.
+model PackageStockPool {
+  packageId String
+  package   Package   @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  poolId    String
+  pool      StockPool @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@id([packageId, poolId])
+  @@index([poolId])
+}
+
+// One redeemable unit inside a StockPool. `codeCiphertext` is AES-256-GCM
+// encrypted at rest via lib/crypto.ts, same standard as Provider.apiKeyCiphertext
+// — a stock code is exactly the kind of secret that standard exists for.
+// Claimed atomically (SELECT ... FOR UPDATE SKIP LOCKED, see
+// store.service.ts's claimStockCode) so two simultaneous buyers can never be
+// handed the same code.
+model StockCode {
+  id             String          @id @default(cuid())
+  poolId         String
+  pool           StockPool       @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  codeCiphertext String
+  status         StockCodeStatus @default(AVAILABLE)
+
+  // One-to-one with the Order it was delivered against — lets order history
+  // re-view the delivered credential (decrypted on demand, never stored
+  // plaintext) without needing a redundant column on Order.
+  orderId    String?   @unique
+  order      Order?    @relation(fields: [orderId], references: [id])
+  consumedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([poolId, status])
+}
+
 // ── Core identity ────────────────────────────────────────────────────────
 
 model User {
@@ -193,6 +434,11 @@ model User {
   apiKeyHash      String?   @unique
   apiKeyPrefix    String?
   apiKeyCreatedAt DateTime?
+
+  // Store Access Type gating (Product.accessType VIP): admin-toggled, no
+  // separate tier system exists yet. RESELLER gating reuses the existing
+  // apiKeyHash-not-null signal above rather than a second flag.
+  isVip Boolean @default(false)
 
   phone              String?
   notifyEmail        Boolean @default(true)
@@ -436,6 +682,7 @@ model Service {
   orders       Order[]
   dripFeeds    DripFeed[]
   orderIntents OrderIntent[]
+  products     Product[] // Store products selling this service (see Product.serviceId)
 
   // The real guard against a bulk import (or a re-run of one) creating
   // duplicate rows for the same upstream service — see
@@ -451,11 +698,24 @@ model Service {
 // ── Orders ───────────────────────────────────────────────────────────────
 
 model Order {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
-  user      User    @relation(fields: [userId], references: [id])
-  serviceId String
-  service   Service @relation(fields: [serviceId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  // Nullable: a Store purchase (see Package below) that isn't SMM-linked has
+  // no Service at all — the flat Services page's own order pipeline is
+  // untouched, this only relaxes the FK so the same Order table can also
+  // hold Package purchases. Every existing SMM-order code path still always
+  // sets this (see order.service.ts / store.service.ts).
+  serviceId String?
+  service   Service? @relation(fields: [serviceId], references: [id])
+
+  // Set when this order was placed through the Brand → Product → Package
+  // store (store.service.ts) rather than the flat Services page.
+  packageId String?
+  package   Package?   @relation(fields: [packageId], references: [id])
+  // The stock-pool code claimed and delivered for this order, if any — lets
+  // order history re-view the credential (decrypted on demand). See StockCode.orderId.
+  stockCode StockCode?
 
   link     String
   quantity Int
@@ -483,6 +743,7 @@ model Order {
   // COMPLETED orders).
   @@index([createdAt])
   @@index([status, createdAt])
+  @@index([packageId])
 }
 
 enum OrderIntentStatus {

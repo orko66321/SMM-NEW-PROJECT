@@ -215,6 +215,7 @@ const en = {
   dashboardLayout: {
     nav: {
       overview: "Overview",
+      store: "Store",
       newOrder: "New Order",
       ordersHistory: "Orders History",
       services: "Services",
@@ -263,6 +264,33 @@ const en = {
     guestWhyHeading: "Why All In One",
     guestBrowseTitle: "Ready to browse services?",
     guestBrowseBody: "See live rates and place an order — you can look around before signing up.",
+    storeSectionTitle: "Store",
+    seeAll: "See all →",
+  },
+
+  store: {
+    title: "Store",
+    accessType: {
+      ALL: "All",
+      VIP: "VIP only",
+      RESELLER: "Reseller only",
+    },
+    startingFrom: "from {{price}}",
+    noBrands: "Nothing in the Store yet — check back soon.",
+    noProducts: "No products in this section yet.",
+    noPackages: "No packages available for this product yet.",
+    choosePackage: "Choose a package to continue.",
+    howToOrder: "How to order? →",
+    basePrice: "Base price",
+    extraFee: "Extra fee",
+    total: "Total",
+    buyNow: "Buy now",
+    buying: "Placing order…",
+    purchaseSuccessToast: "Order placed successfully!",
+    purchaseFailedFallback: "Failed to place order",
+    deliveredTitle: "Delivered!",
+    authPromptTitle: "Almost there — log in to complete this purchase",
+    authPromptBody: "Log in or sign up and you'll come right back here to finish buying.",
   },
 
   newOrder: {
@@ -316,6 +344,8 @@ const en = {
     page: "Page {{page}}",
     refillRequestedToast: "Refill requested.",
     refillFailedFallback: "Failed to request refill",
+    revealCode: "View code",
+    revealCodeFailedFallback: "Failed to load the delivered code",
   },
 
   servicesPage: {
@@ -653,6 +683,7 @@ const bn: Translations = {
   dashboardLayout: {
     nav: {
       overview: "ওভারভিউ",
+      store: "স্টোর",
       newOrder: "নতুন অর্ডার",
       ordersHistory: "অর্ডার হিস্টোরি",
       services: "সার্ভিসেস",
@@ -697,6 +728,33 @@ const bn: Translations = {
     guestWhyHeading: "কেন All In One",
     guestBrowseTitle: "সার্ভিস ব্রাউজ করতে চান?",
     guestBrowseBody: "লাইভ রেট দেখুন আর অর্ডার করুন — সাইন আপের আগেই ঘুরে দেখতে পারেন।",
+    storeSectionTitle: "স্টোর",
+    seeAll: "সব দেখুন →",
+  },
+
+  store: {
+    title: "স্টোর",
+    accessType: {
+      ALL: "সবার জন্য",
+      VIP: "শুধু VIP",
+      RESELLER: "শুধু রিসেলার",
+    },
+    startingFrom: "শুরু {{price}} থেকে",
+    noBrands: "স্টোরে এখনো কিছু নেই — একটু পরে আবার দেখুন।",
+    noProducts: "এই সেকশনে এখনো কোনো প্রোডাক্ট নেই।",
+    noPackages: "এই প্রোডাক্টের জন্য এখনো কোনো প্যাকেজ নেই।",
+    choosePackage: "চালিয়ে যেতে একটা প্যাকেজ বেছে নিন।",
+    howToOrder: "কিভাবে অর্ডার করবেন? →",
+    basePrice: "বেস মূল্য",
+    extraFee: "অতিরিক্ত ফি",
+    total: "সর্বমোট",
+    buyNow: "এখনই কিনুন",
+    buying: "অর্ডার প্লেস হচ্ছে…",
+    purchaseSuccessToast: "অর্ডার সফলভাবে প্লেস হয়েছে!",
+    purchaseFailedFallback: "অর্ডার প্লেস করা যায়নি",
+    deliveredTitle: "ডেলিভার হয়েছে!",
+    authPromptTitle: "প্রায় শেষ — এই কেনাকাটা শেষ করতে লগইন করুন",
+    authPromptBody: "লগইন করুন অথবা সাইন আপ করুন, আপনি ঠিক এখানেই ফিরে আসবেন কেনাকাটা শেষ করতে।",
   },
 
   newOrder: {
@@ -750,6 +808,8 @@ const bn: Translations = {
     page: "পেজ {{page}}",
     refillRequestedToast: "রিফিল রিকোয়েস্ট করা হয়েছে।",
     refillFailedFallback: "রিফিল রিকোয়েস্ট করা যায়নি",
+    revealCode: "কোড দেখুন",
+    revealCodeFailedFallback: "ডেলিভার হওয়া কোড লোড করা যায়নি",
   },
 
   servicesPage: {

@@ -1,10 +1,40 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { getMyOrders, getPublicStats, getWallet } from "../../api/resources.js";
+import { getMyOrders, getPublicStats, getStoreBrands, getWallet } from "../../api/resources.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
+
+const PINNED_BRAND_LIMIT = 6;
+
+function StoreSection() {
+  const { t } = useLanguage();
+  const { data: brands } = useQuery({ queryKey: ["store-brands", PINNED_BRAND_LIMIT], queryFn: () => getStoreBrands(PINNED_BRAND_LIMIT) });
+
+  if (brands && brands.length === 0) return null;
+
+  return (
+    <div className="card space-y-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-on-surface-variant">{t("overview.storeSectionTitle")}</h2>
+        <Link to="/dashboard/store" className="text-xs text-primary hover:underline">{t("overview.seeAll")}</Link>
+      </div>
+      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
+        {brands?.map((b: { id: string; name: string; logo: string | null }) => (
+          <Link key={b.id} to="/dashboard/store" className="flex flex-col items-center gap-1.5 rounded-lg border border-outline-variant p-3 text-center transition hover:border-primary/60">
+            {b.logo ? (
+              <img src={b.logo} alt="" className="h-10 w-10 rounded-lg object-cover" />
+            ) : (
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 text-sm font-bold text-primary">{b.name.slice(0, 1)}</div>
+            )}
+            <span className="truncate text-xs font-medium text-on-surface">{b.name}</span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 // Guest-facing variant of the Overview landing view — no wallet/order
 // queries (those 401 for a logged-out session), just generic platform
@@ -41,6 +71,8 @@ function GuestOverview() {
           </div>
         ))}
       </div>
+
+      <StoreSection />
 
       <div className="card">
         <h2 className="mb-3 text-sm font-semibold text-on-surface-variant">{t("overview.guestWhyHeading")}</h2>
@@ -99,6 +131,8 @@ export default function Overview() {
           </Link>
         </div>
       </div>
+
+      <StoreSection />
 
       <div className="card">
         <h2 className="mb-3 text-sm font-semibold text-on-surface-variant">{t("overview.recentOrders")}</h2>

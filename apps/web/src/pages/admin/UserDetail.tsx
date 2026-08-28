@@ -48,6 +48,17 @@ export default function AdminUserDetail() {
     }
   }
 
+  async function toggleVip() {
+    if (!id || !user) return;
+    try {
+      await updateAdminUser(id, { isVip: !user.isVip });
+      toast.push(user.isVip ? "VIP access removed." : "VIP access granted.", "success");
+      refresh();
+    } catch (err) {
+      toast.push(apiErrorMessage(err, "Failed to update VIP status"), "error");
+    }
+  }
+
   if (!user) return <p className="text-on-surface-variant">Loading…</p>;
 
   return (
@@ -72,9 +83,16 @@ export default function AdminUserDetail() {
             <p className="text-lg">{user.role}</p>
           </div>
         </div>
-        <button className="btn-ghost mt-2" onClick={toggleStatus}>
-          {user.status === "ACTIVE" ? "Suspend user" : "Reactivate user"}
-        </button>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <button className="btn-ghost" onClick={toggleStatus}>
+            {user.status === "ACTIVE" ? "Suspend user" : "Reactivate user"}
+          </button>
+          <button className="btn-ghost" onClick={toggleVip}>
+            {user.isVip ? "Remove VIP access" : "Grant VIP access"}
+          </button>
+          {user.isVip && <span className="badge self-center bg-primary/15 text-primary">VIP</span>}
+        </div>
+        <p className="mt-1 text-xs text-on-surface-variant">VIP gates access to Store products marked "VIP" (Access Type). Reseller-gated products use whether this user has generated a reseller API key instead.</p>
       </div>
 
       <form onSubmit={onAdjust} className="card h-fit space-y-4">

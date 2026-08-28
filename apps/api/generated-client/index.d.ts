@@ -14,6 +14,36 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model Brand
+ * 
+ */
+export type Brand = $Result.DefaultSelection<Prisma.$BrandPayload>
+/**
+ * Model Product
+ * 
+ */
+export type Product = $Result.DefaultSelection<Prisma.$ProductPayload>
+/**
+ * Model Package
+ * 
+ */
+export type Package = $Result.DefaultSelection<Prisma.$PackagePayload>
+/**
+ * Model StockPool
+ * 
+ */
+export type StockPool = $Result.DefaultSelection<Prisma.$StockPoolPayload>
+/**
+ * Model PackageStockPool
+ * 
+ */
+export type PackageStockPool = $Result.DefaultSelection<Prisma.$PackageStockPoolPayload>
+/**
+ * Model StockCode
+ * 
+ */
+export type StockCode = $Result.DefaultSelection<Prisma.$StockCodePayload>
+/**
  * Model User
  * 
  */
@@ -163,7 +193,52 @@ export type Post = $Result.DefaultSelection<Prisma.$PostPayload>
  * Enums
  */
 export namespace $Enums {
-  export const Role: {
+  export const ProductDesignTemplate: {
+  SMALL_STRIP: 'SMALL_STRIP',
+  STANDARD_GRID: 'STANDARD_GRID',
+  FEATURED_LARGE: 'FEATURED_LARGE'
+};
+
+export type ProductDesignTemplate = (typeof ProductDesignTemplate)[keyof typeof ProductDesignTemplate]
+
+
+export const ProductType: {
+  TOPUP: 'TOPUP',
+  VOUCHER: 'VOUCHER',
+  SMM: 'SMM',
+  SUBSCRIPTION: 'SUBSCRIPTION'
+};
+
+export type ProductType = (typeof ProductType)[keyof typeof ProductType]
+
+
+export const AccessType: {
+  ALL: 'ALL',
+  VIP: 'VIP',
+  RESELLER: 'RESELLER'
+};
+
+export type AccessType = (typeof AccessType)[keyof typeof AccessType]
+
+
+export const PackageDesignTemplate: {
+  RADIO_LIST: 'RADIO_LIST',
+  BOXED_GRID: 'BOXED_GRID'
+};
+
+export type PackageDesignTemplate = (typeof PackageDesignTemplate)[keyof typeof PackageDesignTemplate]
+
+
+export const StockCodeStatus: {
+  AVAILABLE: 'AVAILABLE',
+  CONSUMED: 'CONSUMED',
+  REVOKED: 'REVOKED'
+};
+
+export type StockCodeStatus = (typeof StockCodeStatus)[keyof typeof StockCodeStatus]
+
+
+export const Role: {
   USER: 'USER',
   STAFF: 'STAFF',
   ADMIN: 'ADMIN'
@@ -372,6 +447,26 @@ export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
 
 }
 
+export type ProductDesignTemplate = $Enums.ProductDesignTemplate
+
+export const ProductDesignTemplate: typeof $Enums.ProductDesignTemplate
+
+export type ProductType = $Enums.ProductType
+
+export const ProductType: typeof $Enums.ProductType
+
+export type AccessType = $Enums.AccessType
+
+export const AccessType: typeof $Enums.AccessType
+
+export type PackageDesignTemplate = $Enums.PackageDesignTemplate
+
+export const PackageDesignTemplate: typeof $Enums.PackageDesignTemplate
+
+export type StockCodeStatus = $Enums.StockCodeStatus
+
+export const StockCodeStatus: typeof $Enums.StockCodeStatus
+
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
@@ -471,8 +566,8 @@ export const PostStatus: typeof $Enums.PostStatus
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more Brands
+ * const brands = await prisma.brand.findMany()
  * ```
  *
  * 
@@ -492,8 +587,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Users
-   * const users = await prisma.user.findMany()
+   * // Fetch zero or more Brands
+   * const brands = await prisma.brand.findMany()
    * ```
    *
    * 
@@ -588,6 +683,66 @@ export class PrismaClient<
   $extends: $Extensions.ExtendsHook<"extends", Prisma.TypeMapCb, ExtArgs>
 
       /**
+   * `prisma.brand`: Exposes CRUD operations for the **Brand** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Brands
+    * const brands = await prisma.brand.findMany()
+    * ```
+    */
+  get brand(): Prisma.BrandDelegate<ExtArgs>;
+
+  /**
+   * `prisma.product`: Exposes CRUD operations for the **Product** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Products
+    * const products = await prisma.product.findMany()
+    * ```
+    */
+  get product(): Prisma.ProductDelegate<ExtArgs>;
+
+  /**
+   * `prisma.package`: Exposes CRUD operations for the **Package** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Packages
+    * const packages = await prisma.package.findMany()
+    * ```
+    */
+  get package(): Prisma.PackageDelegate<ExtArgs>;
+
+  /**
+   * `prisma.stockPool`: Exposes CRUD operations for the **StockPool** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StockPools
+    * const stockPools = await prisma.stockPool.findMany()
+    * ```
+    */
+  get stockPool(): Prisma.StockPoolDelegate<ExtArgs>;
+
+  /**
+   * `prisma.packageStockPool`: Exposes CRUD operations for the **PackageStockPool** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PackageStockPools
+    * const packageStockPools = await prisma.packageStockPool.findMany()
+    * ```
+    */
+  get packageStockPool(): Prisma.PackageStockPoolDelegate<ExtArgs>;
+
+  /**
+   * `prisma.stockCode`: Exposes CRUD operations for the **StockCode** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StockCodes
+    * const stockCodes = await prisma.stockCode.findMany()
+    * ```
+    */
+  get stockCode(): Prisma.StockCodeDelegate<ExtArgs>;
+
+  /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
     * Example usage:
     * ```ts
@@ -1317,6 +1472,12 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    Brand: 'Brand',
+    Product: 'Product',
+    Package: 'Package',
+    StockPool: 'StockPool',
+    PackageStockPool: 'PackageStockPool',
+    StockCode: 'StockCode',
     User: 'User',
     PasswordResetToken: 'PasswordResetToken',
     RefreshToken: 'RefreshToken',
@@ -1361,10 +1522,430 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticket" | "ticketMessage" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "notice" | "siteNotice" | "banner" | "post"
+      modelProps: "brand" | "product" | "package" | "stockPool" | "packageStockPool" | "stockCode" | "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticket" | "ticketMessage" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "notice" | "siteNotice" | "banner" | "post"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      Brand: {
+        payload: Prisma.$BrandPayload<ExtArgs>
+        fields: Prisma.BrandFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BrandFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BrandFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload>
+          }
+          findFirst: {
+            args: Prisma.BrandFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BrandFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload>
+          }
+          findMany: {
+            args: Prisma.BrandFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload>[]
+          }
+          create: {
+            args: Prisma.BrandCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload>
+          }
+          createMany: {
+            args: Prisma.BrandCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BrandCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload>[]
+          }
+          delete: {
+            args: Prisma.BrandDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload>
+          }
+          update: {
+            args: Prisma.BrandUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload>
+          }
+          deleteMany: {
+            args: Prisma.BrandDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BrandUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.BrandUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BrandPayload>
+          }
+          aggregate: {
+            args: Prisma.BrandAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBrand>
+          }
+          groupBy: {
+            args: Prisma.BrandGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BrandGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BrandCountArgs<ExtArgs>
+            result: $Utils.Optional<BrandCountAggregateOutputType> | number
+          }
+        }
+      }
+      Product: {
+        payload: Prisma.$ProductPayload<ExtArgs>
+        fields: Prisma.ProductFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProductFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProductFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload>
+          }
+          findFirst: {
+            args: Prisma.ProductFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProductFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload>
+          }
+          findMany: {
+            args: Prisma.ProductFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload>[]
+          }
+          create: {
+            args: Prisma.ProductCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload>
+          }
+          createMany: {
+            args: Prisma.ProductCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProductCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload>[]
+          }
+          delete: {
+            args: Prisma.ProductDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload>
+          }
+          update: {
+            args: Prisma.ProductUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProductDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProductUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ProductUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductPayload>
+          }
+          aggregate: {
+            args: Prisma.ProductAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProduct>
+          }
+          groupBy: {
+            args: Prisma.ProductGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProductGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProductCountArgs<ExtArgs>
+            result: $Utils.Optional<ProductCountAggregateOutputType> | number
+          }
+        }
+      }
+      Package: {
+        payload: Prisma.$PackagePayload<ExtArgs>
+        fields: Prisma.PackageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PackageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PackageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload>
+          }
+          findFirst: {
+            args: Prisma.PackageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PackageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload>
+          }
+          findMany: {
+            args: Prisma.PackageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload>[]
+          }
+          create: {
+            args: Prisma.PackageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload>
+          }
+          createMany: {
+            args: Prisma.PackageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PackageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload>[]
+          }
+          delete: {
+            args: Prisma.PackageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload>
+          }
+          update: {
+            args: Prisma.PackageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload>
+          }
+          deleteMany: {
+            args: Prisma.PackageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PackageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PackageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackagePayload>
+          }
+          aggregate: {
+            args: Prisma.PackageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePackage>
+          }
+          groupBy: {
+            args: Prisma.PackageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PackageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PackageCountArgs<ExtArgs>
+            result: $Utils.Optional<PackageCountAggregateOutputType> | number
+          }
+        }
+      }
+      StockPool: {
+        payload: Prisma.$StockPoolPayload<ExtArgs>
+        fields: Prisma.StockPoolFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StockPoolFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StockPoolFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload>
+          }
+          findFirst: {
+            args: Prisma.StockPoolFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StockPoolFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload>
+          }
+          findMany: {
+            args: Prisma.StockPoolFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload>[]
+          }
+          create: {
+            args: Prisma.StockPoolCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload>
+          }
+          createMany: {
+            args: Prisma.StockPoolCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StockPoolCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload>[]
+          }
+          delete: {
+            args: Prisma.StockPoolDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload>
+          }
+          update: {
+            args: Prisma.StockPoolUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload>
+          }
+          deleteMany: {
+            args: Prisma.StockPoolDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StockPoolUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.StockPoolUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockPoolPayload>
+          }
+          aggregate: {
+            args: Prisma.StockPoolAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStockPool>
+          }
+          groupBy: {
+            args: Prisma.StockPoolGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StockPoolGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StockPoolCountArgs<ExtArgs>
+            result: $Utils.Optional<StockPoolCountAggregateOutputType> | number
+          }
+        }
+      }
+      PackageStockPool: {
+        payload: Prisma.$PackageStockPoolPayload<ExtArgs>
+        fields: Prisma.PackageStockPoolFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PackageStockPoolFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PackageStockPoolFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload>
+          }
+          findFirst: {
+            args: Prisma.PackageStockPoolFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PackageStockPoolFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload>
+          }
+          findMany: {
+            args: Prisma.PackageStockPoolFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload>[]
+          }
+          create: {
+            args: Prisma.PackageStockPoolCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload>
+          }
+          createMany: {
+            args: Prisma.PackageStockPoolCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PackageStockPoolCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload>[]
+          }
+          delete: {
+            args: Prisma.PackageStockPoolDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload>
+          }
+          update: {
+            args: Prisma.PackageStockPoolUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload>
+          }
+          deleteMany: {
+            args: Prisma.PackageStockPoolDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PackageStockPoolUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PackageStockPoolUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PackageStockPoolPayload>
+          }
+          aggregate: {
+            args: Prisma.PackageStockPoolAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePackageStockPool>
+          }
+          groupBy: {
+            args: Prisma.PackageStockPoolGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PackageStockPoolGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PackageStockPoolCountArgs<ExtArgs>
+            result: $Utils.Optional<PackageStockPoolCountAggregateOutputType> | number
+          }
+        }
+      }
+      StockCode: {
+        payload: Prisma.$StockCodePayload<ExtArgs>
+        fields: Prisma.StockCodeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StockCodeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StockCodeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload>
+          }
+          findFirst: {
+            args: Prisma.StockCodeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StockCodeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload>
+          }
+          findMany: {
+            args: Prisma.StockCodeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload>[]
+          }
+          create: {
+            args: Prisma.StockCodeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload>
+          }
+          createMany: {
+            args: Prisma.StockCodeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StockCodeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload>[]
+          }
+          delete: {
+            args: Prisma.StockCodeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload>
+          }
+          update: {
+            args: Prisma.StockCodeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload>
+          }
+          deleteMany: {
+            args: Prisma.StockCodeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StockCodeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.StockCodeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockCodePayload>
+          }
+          aggregate: {
+            args: Prisma.StockCodeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStockCode>
+          }
+          groupBy: {
+            args: Prisma.StockCodeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StockCodeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StockCodeCountArgs<ExtArgs>
+            result: $Utils.Optional<StockCodeCountAggregateOutputType> | number
+          }
+        }
+      }
       User: {
         payload: Prisma.$UserPayload<ExtArgs>
         fields: Prisma.UserFieldRefs
@@ -3552,6 +4133,148 @@ export namespace Prisma {
 
 
   /**
+   * Count Type BrandCountOutputType
+   */
+
+  export type BrandCountOutputType = {
+    products: number
+  }
+
+  export type BrandCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    products?: boolean | BrandCountOutputTypeCountProductsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BrandCountOutputType without action
+   */
+  export type BrandCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BrandCountOutputType
+     */
+    select?: BrandCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BrandCountOutputType without action
+   */
+  export type BrandCountOutputTypeCountProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductWhereInput
+  }
+
+
+  /**
+   * Count Type ProductCountOutputType
+   */
+
+  export type ProductCountOutputType = {
+    packages: number
+  }
+
+  export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    packages?: boolean | ProductCountOutputTypeCountPackagesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductCountOutputType
+     */
+    select?: ProductCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountPackagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PackageWhereInput
+  }
+
+
+  /**
+   * Count Type PackageCountOutputType
+   */
+
+  export type PackageCountOutputType = {
+    stockPoolLinks: number
+    orders: number
+  }
+
+  export type PackageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stockPoolLinks?: boolean | PackageCountOutputTypeCountStockPoolLinksArgs
+    orders?: boolean | PackageCountOutputTypeCountOrdersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PackageCountOutputType without action
+   */
+  export type PackageCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageCountOutputType
+     */
+    select?: PackageCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PackageCountOutputType without action
+   */
+  export type PackageCountOutputTypeCountStockPoolLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PackageStockPoolWhereInput
+  }
+
+  /**
+   * PackageCountOutputType without action
+   */
+  export type PackageCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderWhereInput
+  }
+
+
+  /**
+   * Count Type StockPoolCountOutputType
+   */
+
+  export type StockPoolCountOutputType = {
+    codes: number
+    packageLinks: number
+  }
+
+  export type StockPoolCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    codes?: boolean | StockPoolCountOutputTypeCountCodesArgs
+    packageLinks?: boolean | StockPoolCountOutputTypeCountPackageLinksArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * StockPoolCountOutputType without action
+   */
+  export type StockPoolCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPoolCountOutputType
+     */
+    select?: StockPoolCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StockPoolCountOutputType without action
+   */
+  export type StockPoolCountOutputTypeCountCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockCodeWhereInput
+  }
+
+  /**
+   * StockPoolCountOutputType without action
+   */
+  export type StockPoolCountOutputTypeCountPackageLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PackageStockPoolWhereInput
+  }
+
+
+  /**
    * Count Type UserCountOutputType
    */
 
@@ -3813,12 +4536,14 @@ export namespace Prisma {
     orders: number
     dripFeeds: number
     orderIntents: number
+    products: number
   }
 
   export type ServiceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | ServiceCountOutputTypeCountOrdersArgs
     dripFeeds?: boolean | ServiceCountOutputTypeCountDripFeedsArgs
     orderIntents?: boolean | ServiceCountOutputTypeCountOrderIntentsArgs
+    products?: boolean | ServiceCountOutputTypeCountProductsArgs
   }
 
   // Custom InputTypes
@@ -3851,6 +4576,13 @@ export namespace Prisma {
    */
   export type ServiceCountOutputTypeCountOrderIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderIntentWhereInput
+  }
+
+  /**
+   * ServiceCountOutputType without action
+   */
+  export type ServiceCountOutputTypeCountProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductWhereInput
   }
 
 
@@ -3992,6 +4724,6420 @@ export namespace Prisma {
    */
 
   /**
+   * Model Brand
+   */
+
+  export type AggregateBrand = {
+    _count: BrandCountAggregateOutputType | null
+    _avg: BrandAvgAggregateOutputType | null
+    _sum: BrandSumAggregateOutputType | null
+    _min: BrandMinAggregateOutputType | null
+    _max: BrandMaxAggregateOutputType | null
+  }
+
+  export type BrandAvgAggregateOutputType = {
+    level: number | null
+  }
+
+  export type BrandSumAggregateOutputType = {
+    level: number | null
+  }
+
+  export type BrandMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    level: number | null
+    productDesign: $Enums.ProductDesignTemplate | null
+    logo: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BrandMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    level: number | null
+    productDesign: $Enums.ProductDesignTemplate | null
+    logo: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BrandCountAggregateOutputType = {
+    id: number
+    name: number
+    level: number
+    productDesign: number
+    logo: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BrandAvgAggregateInputType = {
+    level?: true
+  }
+
+  export type BrandSumAggregateInputType = {
+    level?: true
+  }
+
+  export type BrandMinAggregateInputType = {
+    id?: true
+    name?: true
+    level?: true
+    productDesign?: true
+    logo?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BrandMaxAggregateInputType = {
+    id?: true
+    name?: true
+    level?: true
+    productDesign?: true
+    logo?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BrandCountAggregateInputType = {
+    id?: true
+    name?: true
+    level?: true
+    productDesign?: true
+    logo?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BrandAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Brand to aggregate.
+     */
+    where?: BrandWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Brands to fetch.
+     */
+    orderBy?: BrandOrderByWithRelationInput | BrandOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BrandWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Brands from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Brands.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Brands
+    **/
+    _count?: true | BrandCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BrandAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BrandSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BrandMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BrandMaxAggregateInputType
+  }
+
+  export type GetBrandAggregateType<T extends BrandAggregateArgs> = {
+        [P in keyof T & keyof AggregateBrand]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBrand[P]>
+      : GetScalarType<T[P], AggregateBrand[P]>
+  }
+
+
+
+
+  export type BrandGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BrandWhereInput
+    orderBy?: BrandOrderByWithAggregationInput | BrandOrderByWithAggregationInput[]
+    by: BrandScalarFieldEnum[] | BrandScalarFieldEnum
+    having?: BrandScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BrandCountAggregateInputType | true
+    _avg?: BrandAvgAggregateInputType
+    _sum?: BrandSumAggregateInputType
+    _min?: BrandMinAggregateInputType
+    _max?: BrandMaxAggregateInputType
+  }
+
+  export type BrandGroupByOutputType = {
+    id: string
+    name: string
+    level: number
+    productDesign: $Enums.ProductDesignTemplate
+    logo: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: BrandCountAggregateOutputType | null
+    _avg: BrandAvgAggregateOutputType | null
+    _sum: BrandSumAggregateOutputType | null
+    _min: BrandMinAggregateOutputType | null
+    _max: BrandMaxAggregateOutputType | null
+  }
+
+  type GetBrandGroupByPayload<T extends BrandGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BrandGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BrandGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BrandGroupByOutputType[P]>
+            : GetScalarType<T[P], BrandGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BrandSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    level?: boolean
+    productDesign?: boolean
+    logo?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    products?: boolean | Brand$productsArgs<ExtArgs>
+    _count?: boolean | BrandCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["brand"]>
+
+  export type BrandSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    level?: boolean
+    productDesign?: boolean
+    logo?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["brand"]>
+
+  export type BrandSelectScalar = {
+    id?: boolean
+    name?: boolean
+    level?: boolean
+    productDesign?: boolean
+    logo?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BrandInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    products?: boolean | Brand$productsArgs<ExtArgs>
+    _count?: boolean | BrandCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BrandIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $BrandPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Brand"
+    objects: {
+      products: Prisma.$ProductPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      level: number
+      productDesign: $Enums.ProductDesignTemplate
+      logo: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["brand"]>
+    composites: {}
+  }
+
+  type BrandGetPayload<S extends boolean | null | undefined | BrandDefaultArgs> = $Result.GetResult<Prisma.$BrandPayload, S>
+
+  type BrandCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BrandFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BrandCountAggregateInputType | true
+    }
+
+  export interface BrandDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Brand'], meta: { name: 'Brand' } }
+    /**
+     * Find zero or one Brand that matches the filter.
+     * @param {BrandFindUniqueArgs} args - Arguments to find a Brand
+     * @example
+     * // Get one Brand
+     * const brand = await prisma.brand.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BrandFindUniqueArgs>(args: SelectSubset<T, BrandFindUniqueArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Brand that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BrandFindUniqueOrThrowArgs} args - Arguments to find a Brand
+     * @example
+     * // Get one Brand
+     * const brand = await prisma.brand.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BrandFindUniqueOrThrowArgs>(args: SelectSubset<T, BrandFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Brand that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandFindFirstArgs} args - Arguments to find a Brand
+     * @example
+     * // Get one Brand
+     * const brand = await prisma.brand.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BrandFindFirstArgs>(args?: SelectSubset<T, BrandFindFirstArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Brand that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandFindFirstOrThrowArgs} args - Arguments to find a Brand
+     * @example
+     * // Get one Brand
+     * const brand = await prisma.brand.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BrandFindFirstOrThrowArgs>(args?: SelectSubset<T, BrandFindFirstOrThrowArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Brands that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Brands
+     * const brands = await prisma.brand.findMany()
+     * 
+     * // Get first 10 Brands
+     * const brands = await prisma.brand.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const brandWithIdOnly = await prisma.brand.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BrandFindManyArgs>(args?: SelectSubset<T, BrandFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Brand.
+     * @param {BrandCreateArgs} args - Arguments to create a Brand.
+     * @example
+     * // Create one Brand
+     * const Brand = await prisma.brand.create({
+     *   data: {
+     *     // ... data to create a Brand
+     *   }
+     * })
+     * 
+     */
+    create<T extends BrandCreateArgs>(args: SelectSubset<T, BrandCreateArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Brands.
+     * @param {BrandCreateManyArgs} args - Arguments to create many Brands.
+     * @example
+     * // Create many Brands
+     * const brand = await prisma.brand.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BrandCreateManyArgs>(args?: SelectSubset<T, BrandCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Brands and returns the data saved in the database.
+     * @param {BrandCreateManyAndReturnArgs} args - Arguments to create many Brands.
+     * @example
+     * // Create many Brands
+     * const brand = await prisma.brand.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Brands and only return the `id`
+     * const brandWithIdOnly = await prisma.brand.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BrandCreateManyAndReturnArgs>(args?: SelectSubset<T, BrandCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Brand.
+     * @param {BrandDeleteArgs} args - Arguments to delete one Brand.
+     * @example
+     * // Delete one Brand
+     * const Brand = await prisma.brand.delete({
+     *   where: {
+     *     // ... filter to delete one Brand
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BrandDeleteArgs>(args: SelectSubset<T, BrandDeleteArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Brand.
+     * @param {BrandUpdateArgs} args - Arguments to update one Brand.
+     * @example
+     * // Update one Brand
+     * const brand = await prisma.brand.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BrandUpdateArgs>(args: SelectSubset<T, BrandUpdateArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Brands.
+     * @param {BrandDeleteManyArgs} args - Arguments to filter Brands to delete.
+     * @example
+     * // Delete a few Brands
+     * const { count } = await prisma.brand.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BrandDeleteManyArgs>(args?: SelectSubset<T, BrandDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Brands.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Brands
+     * const brand = await prisma.brand.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BrandUpdateManyArgs>(args: SelectSubset<T, BrandUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Brand.
+     * @param {BrandUpsertArgs} args - Arguments to update or create a Brand.
+     * @example
+     * // Update or create a Brand
+     * const brand = await prisma.brand.upsert({
+     *   create: {
+     *     // ... data to create a Brand
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Brand we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BrandUpsertArgs>(args: SelectSubset<T, BrandUpsertArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Brands.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandCountArgs} args - Arguments to filter Brands to count.
+     * @example
+     * // Count the number of Brands
+     * const count = await prisma.brand.count({
+     *   where: {
+     *     // ... the filter for the Brands we want to count
+     *   }
+     * })
+    **/
+    count<T extends BrandCountArgs>(
+      args?: Subset<T, BrandCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BrandCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Brand.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BrandAggregateArgs>(args: Subset<T, BrandAggregateArgs>): Prisma.PrismaPromise<GetBrandAggregateType<T>>
+
+    /**
+     * Group by Brand.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BrandGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BrandGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BrandGroupByArgs['orderBy'] }
+        : { orderBy?: BrandGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BrandGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBrandGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Brand model
+   */
+  readonly fields: BrandFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Brand.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BrandClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    products<T extends Brand$productsArgs<ExtArgs> = {}>(args?: Subset<T, Brand$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Brand model
+   */ 
+  interface BrandFieldRefs {
+    readonly id: FieldRef<"Brand", 'String'>
+    readonly name: FieldRef<"Brand", 'String'>
+    readonly level: FieldRef<"Brand", 'Int'>
+    readonly productDesign: FieldRef<"Brand", 'ProductDesignTemplate'>
+    readonly logo: FieldRef<"Brand", 'String'>
+    readonly isActive: FieldRef<"Brand", 'Boolean'>
+    readonly createdAt: FieldRef<"Brand", 'DateTime'>
+    readonly updatedAt: FieldRef<"Brand", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Brand findUnique
+   */
+  export type BrandFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+    /**
+     * Filter, which Brand to fetch.
+     */
+    where: BrandWhereUniqueInput
+  }
+
+  /**
+   * Brand findUniqueOrThrow
+   */
+  export type BrandFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+    /**
+     * Filter, which Brand to fetch.
+     */
+    where: BrandWhereUniqueInput
+  }
+
+  /**
+   * Brand findFirst
+   */
+  export type BrandFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+    /**
+     * Filter, which Brand to fetch.
+     */
+    where?: BrandWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Brands to fetch.
+     */
+    orderBy?: BrandOrderByWithRelationInput | BrandOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Brands.
+     */
+    cursor?: BrandWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Brands from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Brands.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Brands.
+     */
+    distinct?: BrandScalarFieldEnum | BrandScalarFieldEnum[]
+  }
+
+  /**
+   * Brand findFirstOrThrow
+   */
+  export type BrandFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+    /**
+     * Filter, which Brand to fetch.
+     */
+    where?: BrandWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Brands to fetch.
+     */
+    orderBy?: BrandOrderByWithRelationInput | BrandOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Brands.
+     */
+    cursor?: BrandWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Brands from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Brands.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Brands.
+     */
+    distinct?: BrandScalarFieldEnum | BrandScalarFieldEnum[]
+  }
+
+  /**
+   * Brand findMany
+   */
+  export type BrandFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+    /**
+     * Filter, which Brands to fetch.
+     */
+    where?: BrandWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Brands to fetch.
+     */
+    orderBy?: BrandOrderByWithRelationInput | BrandOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Brands.
+     */
+    cursor?: BrandWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Brands from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Brands.
+     */
+    skip?: number
+    distinct?: BrandScalarFieldEnum | BrandScalarFieldEnum[]
+  }
+
+  /**
+   * Brand create
+   */
+  export type BrandCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Brand.
+     */
+    data: XOR<BrandCreateInput, BrandUncheckedCreateInput>
+  }
+
+  /**
+   * Brand createMany
+   */
+  export type BrandCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Brands.
+     */
+    data: BrandCreateManyInput | BrandCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Brand createManyAndReturn
+   */
+  export type BrandCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Brands.
+     */
+    data: BrandCreateManyInput | BrandCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Brand update
+   */
+  export type BrandUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Brand.
+     */
+    data: XOR<BrandUpdateInput, BrandUncheckedUpdateInput>
+    /**
+     * Choose, which Brand to update.
+     */
+    where: BrandWhereUniqueInput
+  }
+
+  /**
+   * Brand updateMany
+   */
+  export type BrandUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Brands.
+     */
+    data: XOR<BrandUpdateManyMutationInput, BrandUncheckedUpdateManyInput>
+    /**
+     * Filter which Brands to update
+     */
+    where?: BrandWhereInput
+  }
+
+  /**
+   * Brand upsert
+   */
+  export type BrandUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Brand to update in case it exists.
+     */
+    where: BrandWhereUniqueInput
+    /**
+     * In case the Brand found by the `where` argument doesn't exist, create a new Brand with this data.
+     */
+    create: XOR<BrandCreateInput, BrandUncheckedCreateInput>
+    /**
+     * In case the Brand was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BrandUpdateInput, BrandUncheckedUpdateInput>
+  }
+
+  /**
+   * Brand delete
+   */
+  export type BrandDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+    /**
+     * Filter which Brand to delete.
+     */
+    where: BrandWhereUniqueInput
+  }
+
+  /**
+   * Brand deleteMany
+   */
+  export type BrandDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Brands to delete
+     */
+    where?: BrandWhereInput
+  }
+
+  /**
+   * Brand.products
+   */
+  export type Brand$productsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    cursor?: ProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
+   * Brand without action
+   */
+  export type BrandDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Brand
+     */
+    select?: BrandSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BrandInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Product
+   */
+
+  export type AggregateProduct = {
+    _count: ProductCountAggregateOutputType | null
+    _avg: ProductAvgAggregateOutputType | null
+    _sum: ProductSumAggregateOutputType | null
+    _min: ProductMinAggregateOutputType | null
+    _max: ProductMaxAggregateOutputType | null
+  }
+
+  export type ProductAvgAggregateOutputType = {
+    salePrice: Decimal | null
+    buyPrice: Decimal | null
+    quantity: number | null
+    level: number | null
+    maxOrdersPerWindow: number | null
+    orderWindowHours: number | null
+    minAmountForPremium: Decimal | null
+  }
+
+  export type ProductSumAggregateOutputType = {
+    salePrice: Decimal | null
+    buyPrice: Decimal | null
+    quantity: number | null
+    level: number | null
+    maxOrdersPerWindow: number | null
+    orderWindowHours: number | null
+    minAmountForPremium: Decimal | null
+  }
+
+  export type ProductMinAggregateOutputType = {
+    id: string | null
+    brandId: string | null
+    name: string | null
+    userInputFieldName: string | null
+    orderInstructionsLink: string | null
+    salePrice: Decimal | null
+    buyPrice: Decimal | null
+    quantity: number | null
+    productType: $Enums.ProductType | null
+    accessType: $Enums.AccessType | null
+    logo: string | null
+    secondaryType: string | null
+    level: number | null
+    isAuto: boolean | null
+    isActive: boolean | null
+    productNote: string | null
+    slug: string | null
+    gameCheaterType: string | null
+    hasOrderTimeLimit: boolean | null
+    maxOrdersPerWindow: number | null
+    orderWindowHours: number | null
+    checkUniquePlayerId: boolean | null
+    isQuantityMinusOnOrder: boolean | null
+    isQuantityShowUser: boolean | null
+    isPremiumProduct: boolean | null
+    minAmountForPremium: Decimal | null
+    removeCharacters: string | null
+    redeemLink: string | null
+    isResellerProduct: boolean | null
+    isMysteryBox: boolean | null
+    description: string | null
+    packageDesign: $Enums.PackageDesignTemplate | null
+    serviceId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductMaxAggregateOutputType = {
+    id: string | null
+    brandId: string | null
+    name: string | null
+    userInputFieldName: string | null
+    orderInstructionsLink: string | null
+    salePrice: Decimal | null
+    buyPrice: Decimal | null
+    quantity: number | null
+    productType: $Enums.ProductType | null
+    accessType: $Enums.AccessType | null
+    logo: string | null
+    secondaryType: string | null
+    level: number | null
+    isAuto: boolean | null
+    isActive: boolean | null
+    productNote: string | null
+    slug: string | null
+    gameCheaterType: string | null
+    hasOrderTimeLimit: boolean | null
+    maxOrdersPerWindow: number | null
+    orderWindowHours: number | null
+    checkUniquePlayerId: boolean | null
+    isQuantityMinusOnOrder: boolean | null
+    isQuantityShowUser: boolean | null
+    isPremiumProduct: boolean | null
+    minAmountForPremium: Decimal | null
+    removeCharacters: string | null
+    redeemLink: string | null
+    isResellerProduct: boolean | null
+    isMysteryBox: boolean | null
+    description: string | null
+    packageDesign: $Enums.PackageDesignTemplate | null
+    serviceId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductCountAggregateOutputType = {
+    id: number
+    brandId: number
+    name: number
+    userInputFieldName: number
+    orderInstructionsLink: number
+    salePrice: number
+    buyPrice: number
+    quantity: number
+    productType: number
+    accessType: number
+    logo: number
+    secondaryType: number
+    level: number
+    isAuto: number
+    isActive: number
+    productNote: number
+    slug: number
+    gameCheaterType: number
+    hasOrderTimeLimit: number
+    maxOrdersPerWindow: number
+    orderWindowHours: number
+    checkUniquePlayerId: number
+    isQuantityMinusOnOrder: number
+    isQuantityShowUser: number
+    isPremiumProduct: number
+    minAmountForPremium: number
+    removeCharacters: number
+    redeemLink: number
+    isResellerProduct: number
+    isMysteryBox: number
+    description: number
+    packageDesign: number
+    serviceId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProductAvgAggregateInputType = {
+    salePrice?: true
+    buyPrice?: true
+    quantity?: true
+    level?: true
+    maxOrdersPerWindow?: true
+    orderWindowHours?: true
+    minAmountForPremium?: true
+  }
+
+  export type ProductSumAggregateInputType = {
+    salePrice?: true
+    buyPrice?: true
+    quantity?: true
+    level?: true
+    maxOrdersPerWindow?: true
+    orderWindowHours?: true
+    minAmountForPremium?: true
+  }
+
+  export type ProductMinAggregateInputType = {
+    id?: true
+    brandId?: true
+    name?: true
+    userInputFieldName?: true
+    orderInstructionsLink?: true
+    salePrice?: true
+    buyPrice?: true
+    quantity?: true
+    productType?: true
+    accessType?: true
+    logo?: true
+    secondaryType?: true
+    level?: true
+    isAuto?: true
+    isActive?: true
+    productNote?: true
+    slug?: true
+    gameCheaterType?: true
+    hasOrderTimeLimit?: true
+    maxOrdersPerWindow?: true
+    orderWindowHours?: true
+    checkUniquePlayerId?: true
+    isQuantityMinusOnOrder?: true
+    isQuantityShowUser?: true
+    isPremiumProduct?: true
+    minAmountForPremium?: true
+    removeCharacters?: true
+    redeemLink?: true
+    isResellerProduct?: true
+    isMysteryBox?: true
+    description?: true
+    packageDesign?: true
+    serviceId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductMaxAggregateInputType = {
+    id?: true
+    brandId?: true
+    name?: true
+    userInputFieldName?: true
+    orderInstructionsLink?: true
+    salePrice?: true
+    buyPrice?: true
+    quantity?: true
+    productType?: true
+    accessType?: true
+    logo?: true
+    secondaryType?: true
+    level?: true
+    isAuto?: true
+    isActive?: true
+    productNote?: true
+    slug?: true
+    gameCheaterType?: true
+    hasOrderTimeLimit?: true
+    maxOrdersPerWindow?: true
+    orderWindowHours?: true
+    checkUniquePlayerId?: true
+    isQuantityMinusOnOrder?: true
+    isQuantityShowUser?: true
+    isPremiumProduct?: true
+    minAmountForPremium?: true
+    removeCharacters?: true
+    redeemLink?: true
+    isResellerProduct?: true
+    isMysteryBox?: true
+    description?: true
+    packageDesign?: true
+    serviceId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductCountAggregateInputType = {
+    id?: true
+    brandId?: true
+    name?: true
+    userInputFieldName?: true
+    orderInstructionsLink?: true
+    salePrice?: true
+    buyPrice?: true
+    quantity?: true
+    productType?: true
+    accessType?: true
+    logo?: true
+    secondaryType?: true
+    level?: true
+    isAuto?: true
+    isActive?: true
+    productNote?: true
+    slug?: true
+    gameCheaterType?: true
+    hasOrderTimeLimit?: true
+    maxOrdersPerWindow?: true
+    orderWindowHours?: true
+    checkUniquePlayerId?: true
+    isQuantityMinusOnOrder?: true
+    isQuantityShowUser?: true
+    isPremiumProduct?: true
+    minAmountForPremium?: true
+    removeCharacters?: true
+    redeemLink?: true
+    isResellerProduct?: true
+    isMysteryBox?: true
+    description?: true
+    packageDesign?: true
+    serviceId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProductAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Product to aggregate.
+     */
+    where?: ProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Products to fetch.
+     */
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Products from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Products.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Products
+    **/
+    _count?: true | ProductCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProductAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductMaxAggregateInputType
+  }
+
+  export type GetProductAggregateType<T extends ProductAggregateArgs> = {
+        [P in keyof T & keyof AggregateProduct]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProduct[P]>
+      : GetScalarType<T[P], AggregateProduct[P]>
+  }
+
+
+
+
+  export type ProductGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductWhereInput
+    orderBy?: ProductOrderByWithAggregationInput | ProductOrderByWithAggregationInput[]
+    by: ProductScalarFieldEnum[] | ProductScalarFieldEnum
+    having?: ProductScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductCountAggregateInputType | true
+    _avg?: ProductAvgAggregateInputType
+    _sum?: ProductSumAggregateInputType
+    _min?: ProductMinAggregateInputType
+    _max?: ProductMaxAggregateInputType
+  }
+
+  export type ProductGroupByOutputType = {
+    id: string
+    brandId: string
+    name: string
+    userInputFieldName: string
+    orderInstructionsLink: string | null
+    salePrice: Decimal
+    buyPrice: Decimal
+    quantity: number
+    productType: $Enums.ProductType
+    accessType: $Enums.AccessType
+    logo: string | null
+    secondaryType: string | null
+    level: number
+    isAuto: boolean
+    isActive: boolean
+    productNote: string | null
+    slug: string
+    gameCheaterType: string | null
+    hasOrderTimeLimit: boolean
+    maxOrdersPerWindow: number | null
+    orderWindowHours: number | null
+    checkUniquePlayerId: boolean
+    isQuantityMinusOnOrder: boolean
+    isQuantityShowUser: boolean
+    isPremiumProduct: boolean
+    minAmountForPremium: Decimal | null
+    removeCharacters: string | null
+    redeemLink: string | null
+    isResellerProduct: boolean
+    isMysteryBox: boolean
+    description: string | null
+    packageDesign: $Enums.PackageDesignTemplate
+    serviceId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ProductCountAggregateOutputType | null
+    _avg: ProductAvgAggregateOutputType | null
+    _sum: ProductSumAggregateOutputType | null
+    _min: ProductMinAggregateOutputType | null
+    _max: ProductMaxAggregateOutputType | null
+  }
+
+  type GetProductGroupByPayload<T extends ProductGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProductGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    brandId?: boolean
+    name?: boolean
+    userInputFieldName?: boolean
+    orderInstructionsLink?: boolean
+    salePrice?: boolean
+    buyPrice?: boolean
+    quantity?: boolean
+    productType?: boolean
+    accessType?: boolean
+    logo?: boolean
+    secondaryType?: boolean
+    level?: boolean
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: boolean
+    slug?: boolean
+    gameCheaterType?: boolean
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: boolean
+    orderWindowHours?: boolean
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: boolean
+    removeCharacters?: boolean
+    redeemLink?: boolean
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: boolean
+    packageDesign?: boolean
+    serviceId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    service?: boolean | Product$serviceArgs<ExtArgs>
+    packages?: boolean | Product$packagesArgs<ExtArgs>
+    _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["product"]>
+
+  export type ProductSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    brandId?: boolean
+    name?: boolean
+    userInputFieldName?: boolean
+    orderInstructionsLink?: boolean
+    salePrice?: boolean
+    buyPrice?: boolean
+    quantity?: boolean
+    productType?: boolean
+    accessType?: boolean
+    logo?: boolean
+    secondaryType?: boolean
+    level?: boolean
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: boolean
+    slug?: boolean
+    gameCheaterType?: boolean
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: boolean
+    orderWindowHours?: boolean
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: boolean
+    removeCharacters?: boolean
+    redeemLink?: boolean
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: boolean
+    packageDesign?: boolean
+    serviceId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    service?: boolean | Product$serviceArgs<ExtArgs>
+  }, ExtArgs["result"]["product"]>
+
+  export type ProductSelectScalar = {
+    id?: boolean
+    brandId?: boolean
+    name?: boolean
+    userInputFieldName?: boolean
+    orderInstructionsLink?: boolean
+    salePrice?: boolean
+    buyPrice?: boolean
+    quantity?: boolean
+    productType?: boolean
+    accessType?: boolean
+    logo?: boolean
+    secondaryType?: boolean
+    level?: boolean
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: boolean
+    slug?: boolean
+    gameCheaterType?: boolean
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: boolean
+    orderWindowHours?: boolean
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: boolean
+    removeCharacters?: boolean
+    redeemLink?: boolean
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: boolean
+    packageDesign?: boolean
+    serviceId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    service?: boolean | Product$serviceArgs<ExtArgs>
+    packages?: boolean | Product$packagesArgs<ExtArgs>
+    _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    brand?: boolean | BrandDefaultArgs<ExtArgs>
+    service?: boolean | Product$serviceArgs<ExtArgs>
+  }
+
+  export type $ProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Product"
+    objects: {
+      brand: Prisma.$BrandPayload<ExtArgs>
+      service: Prisma.$ServicePayload<ExtArgs> | null
+      packages: Prisma.$PackagePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      brandId: string
+      name: string
+      userInputFieldName: string
+      orderInstructionsLink: string | null
+      salePrice: Prisma.Decimal
+      buyPrice: Prisma.Decimal
+      quantity: number
+      productType: $Enums.ProductType
+      accessType: $Enums.AccessType
+      logo: string | null
+      secondaryType: string | null
+      level: number
+      isAuto: boolean
+      isActive: boolean
+      productNote: string | null
+      slug: string
+      gameCheaterType: string | null
+      hasOrderTimeLimit: boolean
+      maxOrdersPerWindow: number | null
+      orderWindowHours: number | null
+      checkUniquePlayerId: boolean
+      isQuantityMinusOnOrder: boolean
+      isQuantityShowUser: boolean
+      isPremiumProduct: boolean
+      minAmountForPremium: Prisma.Decimal | null
+      removeCharacters: string | null
+      redeemLink: string | null
+      isResellerProduct: boolean
+      isMysteryBox: boolean
+      description: string | null
+      packageDesign: $Enums.PackageDesignTemplate
+      serviceId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["product"]>
+    composites: {}
+  }
+
+  type ProductGetPayload<S extends boolean | null | undefined | ProductDefaultArgs> = $Result.GetResult<Prisma.$ProductPayload, S>
+
+  type ProductCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ProductFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ProductCountAggregateInputType | true
+    }
+
+  export interface ProductDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Product'], meta: { name: 'Product' } }
+    /**
+     * Find zero or one Product that matches the filter.
+     * @param {ProductFindUniqueArgs} args - Arguments to find a Product
+     * @example
+     * // Get one Product
+     * const product = await prisma.product.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProductFindUniqueArgs>(args: SelectSubset<T, ProductFindUniqueArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Product that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ProductFindUniqueOrThrowArgs} args - Arguments to find a Product
+     * @example
+     * // Get one Product
+     * const product = await prisma.product.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProductFindUniqueOrThrowArgs>(args: SelectSubset<T, ProductFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Product that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductFindFirstArgs} args - Arguments to find a Product
+     * @example
+     * // Get one Product
+     * const product = await prisma.product.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProductFindFirstArgs>(args?: SelectSubset<T, ProductFindFirstArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Product that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductFindFirstOrThrowArgs} args - Arguments to find a Product
+     * @example
+     * // Get one Product
+     * const product = await prisma.product.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProductFindFirstOrThrowArgs>(args?: SelectSubset<T, ProductFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Products that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Products
+     * const products = await prisma.product.findMany()
+     * 
+     * // Get first 10 Products
+     * const products = await prisma.product.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productWithIdOnly = await prisma.product.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProductFindManyArgs>(args?: SelectSubset<T, ProductFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Product.
+     * @param {ProductCreateArgs} args - Arguments to create a Product.
+     * @example
+     * // Create one Product
+     * const Product = await prisma.product.create({
+     *   data: {
+     *     // ... data to create a Product
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProductCreateArgs>(args: SelectSubset<T, ProductCreateArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Products.
+     * @param {ProductCreateManyArgs} args - Arguments to create many Products.
+     * @example
+     * // Create many Products
+     * const product = await prisma.product.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProductCreateManyArgs>(args?: SelectSubset<T, ProductCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Products and returns the data saved in the database.
+     * @param {ProductCreateManyAndReturnArgs} args - Arguments to create many Products.
+     * @example
+     * // Create many Products
+     * const product = await prisma.product.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Products and only return the `id`
+     * const productWithIdOnly = await prisma.product.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProductCreateManyAndReturnArgs>(args?: SelectSubset<T, ProductCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Product.
+     * @param {ProductDeleteArgs} args - Arguments to delete one Product.
+     * @example
+     * // Delete one Product
+     * const Product = await prisma.product.delete({
+     *   where: {
+     *     // ... filter to delete one Product
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProductDeleteArgs>(args: SelectSubset<T, ProductDeleteArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Product.
+     * @param {ProductUpdateArgs} args - Arguments to update one Product.
+     * @example
+     * // Update one Product
+     * const product = await prisma.product.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProductUpdateArgs>(args: SelectSubset<T, ProductUpdateArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Products.
+     * @param {ProductDeleteManyArgs} args - Arguments to filter Products to delete.
+     * @example
+     * // Delete a few Products
+     * const { count } = await prisma.product.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProductDeleteManyArgs>(args?: SelectSubset<T, ProductDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Products.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Products
+     * const product = await prisma.product.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProductUpdateManyArgs>(args: SelectSubset<T, ProductUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Product.
+     * @param {ProductUpsertArgs} args - Arguments to update or create a Product.
+     * @example
+     * // Update or create a Product
+     * const product = await prisma.product.upsert({
+     *   create: {
+     *     // ... data to create a Product
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Product we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProductUpsertArgs>(args: SelectSubset<T, ProductUpsertArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Products.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductCountArgs} args - Arguments to filter Products to count.
+     * @example
+     * // Count the number of Products
+     * const count = await prisma.product.count({
+     *   where: {
+     *     // ... the filter for the Products we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductCountArgs>(
+      args?: Subset<T, ProductCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Product.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductAggregateArgs>(args: Subset<T, ProductAggregateArgs>): Prisma.PrismaPromise<GetProductAggregateType<T>>
+
+    /**
+     * Group by Product.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductGroupByArgs['orderBy'] }
+        : { orderBy?: ProductGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Product model
+   */
+  readonly fields: ProductFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Product.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    brand<T extends BrandDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BrandDefaultArgs<ExtArgs>>): Prisma__BrandClient<$Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    service<T extends Product$serviceArgs<ExtArgs> = {}>(args?: Subset<T, Product$serviceArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    packages<T extends Product$packagesArgs<ExtArgs> = {}>(args?: Subset<T, Product$packagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Product model
+   */ 
+  interface ProductFieldRefs {
+    readonly id: FieldRef<"Product", 'String'>
+    readonly brandId: FieldRef<"Product", 'String'>
+    readonly name: FieldRef<"Product", 'String'>
+    readonly userInputFieldName: FieldRef<"Product", 'String'>
+    readonly orderInstructionsLink: FieldRef<"Product", 'String'>
+    readonly salePrice: FieldRef<"Product", 'Decimal'>
+    readonly buyPrice: FieldRef<"Product", 'Decimal'>
+    readonly quantity: FieldRef<"Product", 'Int'>
+    readonly productType: FieldRef<"Product", 'ProductType'>
+    readonly accessType: FieldRef<"Product", 'AccessType'>
+    readonly logo: FieldRef<"Product", 'String'>
+    readonly secondaryType: FieldRef<"Product", 'String'>
+    readonly level: FieldRef<"Product", 'Int'>
+    readonly isAuto: FieldRef<"Product", 'Boolean'>
+    readonly isActive: FieldRef<"Product", 'Boolean'>
+    readonly productNote: FieldRef<"Product", 'String'>
+    readonly slug: FieldRef<"Product", 'String'>
+    readonly gameCheaterType: FieldRef<"Product", 'String'>
+    readonly hasOrderTimeLimit: FieldRef<"Product", 'Boolean'>
+    readonly maxOrdersPerWindow: FieldRef<"Product", 'Int'>
+    readonly orderWindowHours: FieldRef<"Product", 'Int'>
+    readonly checkUniquePlayerId: FieldRef<"Product", 'Boolean'>
+    readonly isQuantityMinusOnOrder: FieldRef<"Product", 'Boolean'>
+    readonly isQuantityShowUser: FieldRef<"Product", 'Boolean'>
+    readonly isPremiumProduct: FieldRef<"Product", 'Boolean'>
+    readonly minAmountForPremium: FieldRef<"Product", 'Decimal'>
+    readonly removeCharacters: FieldRef<"Product", 'String'>
+    readonly redeemLink: FieldRef<"Product", 'String'>
+    readonly isResellerProduct: FieldRef<"Product", 'Boolean'>
+    readonly isMysteryBox: FieldRef<"Product", 'Boolean'>
+    readonly description: FieldRef<"Product", 'String'>
+    readonly packageDesign: FieldRef<"Product", 'PackageDesignTemplate'>
+    readonly serviceId: FieldRef<"Product", 'String'>
+    readonly createdAt: FieldRef<"Product", 'DateTime'>
+    readonly updatedAt: FieldRef<"Product", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Product findUnique
+   */
+  export type ProductFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    /**
+     * Filter, which Product to fetch.
+     */
+    where: ProductWhereUniqueInput
+  }
+
+  /**
+   * Product findUniqueOrThrow
+   */
+  export type ProductFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    /**
+     * Filter, which Product to fetch.
+     */
+    where: ProductWhereUniqueInput
+  }
+
+  /**
+   * Product findFirst
+   */
+  export type ProductFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    /**
+     * Filter, which Product to fetch.
+     */
+    where?: ProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Products to fetch.
+     */
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Products.
+     */
+    cursor?: ProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Products from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Products.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Products.
+     */
+    distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
+   * Product findFirstOrThrow
+   */
+  export type ProductFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    /**
+     * Filter, which Product to fetch.
+     */
+    where?: ProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Products to fetch.
+     */
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Products.
+     */
+    cursor?: ProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Products from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Products.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Products.
+     */
+    distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
+   * Product findMany
+   */
+  export type ProductFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    /**
+     * Filter, which Products to fetch.
+     */
+    where?: ProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Products to fetch.
+     */
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Products.
+     */
+    cursor?: ProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Products from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Products.
+     */
+    skip?: number
+    distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
+   * Product create
+   */
+  export type ProductCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Product.
+     */
+    data: XOR<ProductCreateInput, ProductUncheckedCreateInput>
+  }
+
+  /**
+   * Product createMany
+   */
+  export type ProductCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Products.
+     */
+    data: ProductCreateManyInput | ProductCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Product createManyAndReturn
+   */
+  export type ProductCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Products.
+     */
+    data: ProductCreateManyInput | ProductCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Product update
+   */
+  export type ProductUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Product.
+     */
+    data: XOR<ProductUpdateInput, ProductUncheckedUpdateInput>
+    /**
+     * Choose, which Product to update.
+     */
+    where: ProductWhereUniqueInput
+  }
+
+  /**
+   * Product updateMany
+   */
+  export type ProductUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Products.
+     */
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyInput>
+    /**
+     * Filter which Products to update
+     */
+    where?: ProductWhereInput
+  }
+
+  /**
+   * Product upsert
+   */
+  export type ProductUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Product to update in case it exists.
+     */
+    where: ProductWhereUniqueInput
+    /**
+     * In case the Product found by the `where` argument doesn't exist, create a new Product with this data.
+     */
+    create: XOR<ProductCreateInput, ProductUncheckedCreateInput>
+    /**
+     * In case the Product was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProductUpdateInput, ProductUncheckedUpdateInput>
+  }
+
+  /**
+   * Product delete
+   */
+  export type ProductDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    /**
+     * Filter which Product to delete.
+     */
+    where: ProductWhereUniqueInput
+  }
+
+  /**
+   * Product deleteMany
+   */
+  export type ProductDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Products to delete
+     */
+    where?: ProductWhereInput
+  }
+
+  /**
+   * Product.service
+   */
+  export type Product$serviceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    where?: ServiceWhereInput
+  }
+
+  /**
+   * Product.packages
+   */
+  export type Product$packagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    where?: PackageWhereInput
+    orderBy?: PackageOrderByWithRelationInput | PackageOrderByWithRelationInput[]
+    cursor?: PackageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PackageScalarFieldEnum | PackageScalarFieldEnum[]
+  }
+
+  /**
+   * Product without action
+   */
+  export type ProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Package
+   */
+
+  export type AggregatePackage = {
+    _count: PackageCountAggregateOutputType | null
+    _avg: PackageAvgAggregateOutputType | null
+    _sum: PackageSumAggregateOutputType | null
+    _min: PackageMinAggregateOutputType | null
+    _max: PackageMaxAggregateOutputType | null
+  }
+
+  export type PackageAvgAggregateOutputType = {
+    amount: number | null
+    salePrice: Decimal | null
+    buyPrice: Decimal | null
+    commonPriceUsd: Decimal | null
+    extraFee: Decimal | null
+    level: number | null
+  }
+
+  export type PackageSumAggregateOutputType = {
+    amount: number | null
+    salePrice: Decimal | null
+    buyPrice: Decimal | null
+    commonPriceUsd: Decimal | null
+    extraFee: Decimal | null
+    level: number | null
+  }
+
+  export type PackageMinAggregateOutputType = {
+    id: string | null
+    productId: string | null
+    name: string | null
+    amount: number | null
+    salePrice: Decimal | null
+    buyPrice: Decimal | null
+    commonPriceUsd: Decimal | null
+    extraFee: Decimal | null
+    level: number | null
+    isAuto: boolean | null
+    isManual: boolean | null
+    server: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PackageMaxAggregateOutputType = {
+    id: string | null
+    productId: string | null
+    name: string | null
+    amount: number | null
+    salePrice: Decimal | null
+    buyPrice: Decimal | null
+    commonPriceUsd: Decimal | null
+    extraFee: Decimal | null
+    level: number | null
+    isAuto: boolean | null
+    isManual: boolean | null
+    server: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PackageCountAggregateOutputType = {
+    id: number
+    productId: number
+    name: number
+    amount: number
+    salePrice: number
+    buyPrice: number
+    commonPriceUsd: number
+    extraFee: number
+    level: number
+    isAuto: number
+    isManual: number
+    server: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PackageAvgAggregateInputType = {
+    amount?: true
+    salePrice?: true
+    buyPrice?: true
+    commonPriceUsd?: true
+    extraFee?: true
+    level?: true
+  }
+
+  export type PackageSumAggregateInputType = {
+    amount?: true
+    salePrice?: true
+    buyPrice?: true
+    commonPriceUsd?: true
+    extraFee?: true
+    level?: true
+  }
+
+  export type PackageMinAggregateInputType = {
+    id?: true
+    productId?: true
+    name?: true
+    amount?: true
+    salePrice?: true
+    buyPrice?: true
+    commonPriceUsd?: true
+    extraFee?: true
+    level?: true
+    isAuto?: true
+    isManual?: true
+    server?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PackageMaxAggregateInputType = {
+    id?: true
+    productId?: true
+    name?: true
+    amount?: true
+    salePrice?: true
+    buyPrice?: true
+    commonPriceUsd?: true
+    extraFee?: true
+    level?: true
+    isAuto?: true
+    isManual?: true
+    server?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PackageCountAggregateInputType = {
+    id?: true
+    productId?: true
+    name?: true
+    amount?: true
+    salePrice?: true
+    buyPrice?: true
+    commonPriceUsd?: true
+    extraFee?: true
+    level?: true
+    isAuto?: true
+    isManual?: true
+    server?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PackageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Package to aggregate.
+     */
+    where?: PackageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Packages to fetch.
+     */
+    orderBy?: PackageOrderByWithRelationInput | PackageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PackageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Packages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Packages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Packages
+    **/
+    _count?: true | PackageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PackageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PackageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PackageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PackageMaxAggregateInputType
+  }
+
+  export type GetPackageAggregateType<T extends PackageAggregateArgs> = {
+        [P in keyof T & keyof AggregatePackage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePackage[P]>
+      : GetScalarType<T[P], AggregatePackage[P]>
+  }
+
+
+
+
+  export type PackageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PackageWhereInput
+    orderBy?: PackageOrderByWithAggregationInput | PackageOrderByWithAggregationInput[]
+    by: PackageScalarFieldEnum[] | PackageScalarFieldEnum
+    having?: PackageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PackageCountAggregateInputType | true
+    _avg?: PackageAvgAggregateInputType
+    _sum?: PackageSumAggregateInputType
+    _min?: PackageMinAggregateInputType
+    _max?: PackageMaxAggregateInputType
+  }
+
+  export type PackageGroupByOutputType = {
+    id: string
+    productId: string
+    name: string
+    amount: number
+    salePrice: Decimal
+    buyPrice: Decimal
+    commonPriceUsd: Decimal
+    extraFee: Decimal
+    level: number
+    isAuto: boolean
+    isManual: boolean
+    server: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PackageCountAggregateOutputType | null
+    _avg: PackageAvgAggregateOutputType | null
+    _sum: PackageSumAggregateOutputType | null
+    _min: PackageMinAggregateOutputType | null
+    _max: PackageMaxAggregateOutputType | null
+  }
+
+  type GetPackageGroupByPayload<T extends PackageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PackageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PackageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PackageGroupByOutputType[P]>
+            : GetScalarType<T[P], PackageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PackageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    name?: boolean
+    amount?: boolean
+    salePrice?: boolean
+    buyPrice?: boolean
+    commonPriceUsd?: boolean
+    extraFee?: boolean
+    level?: boolean
+    isAuto?: boolean
+    isManual?: boolean
+    server?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    stockPoolLinks?: boolean | Package$stockPoolLinksArgs<ExtArgs>
+    orders?: boolean | Package$ordersArgs<ExtArgs>
+    _count?: boolean | PackageCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["package"]>
+
+  export type PackageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    name?: boolean
+    amount?: boolean
+    salePrice?: boolean
+    buyPrice?: boolean
+    commonPriceUsd?: boolean
+    extraFee?: boolean
+    level?: boolean
+    isAuto?: boolean
+    isManual?: boolean
+    server?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["package"]>
+
+  export type PackageSelectScalar = {
+    id?: boolean
+    productId?: boolean
+    name?: boolean
+    amount?: boolean
+    salePrice?: boolean
+    buyPrice?: boolean
+    commonPriceUsd?: boolean
+    extraFee?: boolean
+    level?: boolean
+    isAuto?: boolean
+    isManual?: boolean
+    server?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PackageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    stockPoolLinks?: boolean | Package$stockPoolLinksArgs<ExtArgs>
+    orders?: boolean | Package$ordersArgs<ExtArgs>
+    _count?: boolean | PackageCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PackageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $PackagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Package"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+      stockPoolLinks: Prisma.$PackageStockPoolPayload<ExtArgs>[]
+      orders: Prisma.$OrderPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      productId: string
+      name: string
+      amount: number
+      salePrice: Prisma.Decimal
+      buyPrice: Prisma.Decimal
+      commonPriceUsd: Prisma.Decimal
+      extraFee: Prisma.Decimal
+      level: number
+      isAuto: boolean
+      isManual: boolean
+      server: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["package"]>
+    composites: {}
+  }
+
+  type PackageGetPayload<S extends boolean | null | undefined | PackageDefaultArgs> = $Result.GetResult<Prisma.$PackagePayload, S>
+
+  type PackageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PackageFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PackageCountAggregateInputType | true
+    }
+
+  export interface PackageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Package'], meta: { name: 'Package' } }
+    /**
+     * Find zero or one Package that matches the filter.
+     * @param {PackageFindUniqueArgs} args - Arguments to find a Package
+     * @example
+     * // Get one Package
+     * const package = await prisma.package.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PackageFindUniqueArgs>(args: SelectSubset<T, PackageFindUniqueArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Package that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PackageFindUniqueOrThrowArgs} args - Arguments to find a Package
+     * @example
+     * // Get one Package
+     * const package = await prisma.package.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PackageFindUniqueOrThrowArgs>(args: SelectSubset<T, PackageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Package that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageFindFirstArgs} args - Arguments to find a Package
+     * @example
+     * // Get one Package
+     * const package = await prisma.package.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PackageFindFirstArgs>(args?: SelectSubset<T, PackageFindFirstArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Package that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageFindFirstOrThrowArgs} args - Arguments to find a Package
+     * @example
+     * // Get one Package
+     * const package = await prisma.package.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PackageFindFirstOrThrowArgs>(args?: SelectSubset<T, PackageFindFirstOrThrowArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Packages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Packages
+     * const packages = await prisma.package.findMany()
+     * 
+     * // Get first 10 Packages
+     * const packages = await prisma.package.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const packageWithIdOnly = await prisma.package.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PackageFindManyArgs>(args?: SelectSubset<T, PackageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Package.
+     * @param {PackageCreateArgs} args - Arguments to create a Package.
+     * @example
+     * // Create one Package
+     * const Package = await prisma.package.create({
+     *   data: {
+     *     // ... data to create a Package
+     *   }
+     * })
+     * 
+     */
+    create<T extends PackageCreateArgs>(args: SelectSubset<T, PackageCreateArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Packages.
+     * @param {PackageCreateManyArgs} args - Arguments to create many Packages.
+     * @example
+     * // Create many Packages
+     * const package = await prisma.package.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PackageCreateManyArgs>(args?: SelectSubset<T, PackageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Packages and returns the data saved in the database.
+     * @param {PackageCreateManyAndReturnArgs} args - Arguments to create many Packages.
+     * @example
+     * // Create many Packages
+     * const package = await prisma.package.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Packages and only return the `id`
+     * const packageWithIdOnly = await prisma.package.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PackageCreateManyAndReturnArgs>(args?: SelectSubset<T, PackageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Package.
+     * @param {PackageDeleteArgs} args - Arguments to delete one Package.
+     * @example
+     * // Delete one Package
+     * const Package = await prisma.package.delete({
+     *   where: {
+     *     // ... filter to delete one Package
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PackageDeleteArgs>(args: SelectSubset<T, PackageDeleteArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Package.
+     * @param {PackageUpdateArgs} args - Arguments to update one Package.
+     * @example
+     * // Update one Package
+     * const package = await prisma.package.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PackageUpdateArgs>(args: SelectSubset<T, PackageUpdateArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Packages.
+     * @param {PackageDeleteManyArgs} args - Arguments to filter Packages to delete.
+     * @example
+     * // Delete a few Packages
+     * const { count } = await prisma.package.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PackageDeleteManyArgs>(args?: SelectSubset<T, PackageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Packages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Packages
+     * const package = await prisma.package.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PackageUpdateManyArgs>(args: SelectSubset<T, PackageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Package.
+     * @param {PackageUpsertArgs} args - Arguments to update or create a Package.
+     * @example
+     * // Update or create a Package
+     * const package = await prisma.package.upsert({
+     *   create: {
+     *     // ... data to create a Package
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Package we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PackageUpsertArgs>(args: SelectSubset<T, PackageUpsertArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Packages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageCountArgs} args - Arguments to filter Packages to count.
+     * @example
+     * // Count the number of Packages
+     * const count = await prisma.package.count({
+     *   where: {
+     *     // ... the filter for the Packages we want to count
+     *   }
+     * })
+    **/
+    count<T extends PackageCountArgs>(
+      args?: Subset<T, PackageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PackageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Package.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PackageAggregateArgs>(args: Subset<T, PackageAggregateArgs>): Prisma.PrismaPromise<GetPackageAggregateType<T>>
+
+    /**
+     * Group by Package.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PackageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PackageGroupByArgs['orderBy'] }
+        : { orderBy?: PackageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PackageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPackageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Package model
+   */
+  readonly fields: PackageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Package.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PackageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    stockPoolLinks<T extends Package$stockPoolLinksArgs<ExtArgs> = {}>(args?: Subset<T, Package$stockPoolLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "findMany"> | Null>
+    orders<T extends Package$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Package$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Package model
+   */ 
+  interface PackageFieldRefs {
+    readonly id: FieldRef<"Package", 'String'>
+    readonly productId: FieldRef<"Package", 'String'>
+    readonly name: FieldRef<"Package", 'String'>
+    readonly amount: FieldRef<"Package", 'Int'>
+    readonly salePrice: FieldRef<"Package", 'Decimal'>
+    readonly buyPrice: FieldRef<"Package", 'Decimal'>
+    readonly commonPriceUsd: FieldRef<"Package", 'Decimal'>
+    readonly extraFee: FieldRef<"Package", 'Decimal'>
+    readonly level: FieldRef<"Package", 'Int'>
+    readonly isAuto: FieldRef<"Package", 'Boolean'>
+    readonly isManual: FieldRef<"Package", 'Boolean'>
+    readonly server: FieldRef<"Package", 'String'>
+    readonly createdAt: FieldRef<"Package", 'DateTime'>
+    readonly updatedAt: FieldRef<"Package", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Package findUnique
+   */
+  export type PackageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    /**
+     * Filter, which Package to fetch.
+     */
+    where: PackageWhereUniqueInput
+  }
+
+  /**
+   * Package findUniqueOrThrow
+   */
+  export type PackageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    /**
+     * Filter, which Package to fetch.
+     */
+    where: PackageWhereUniqueInput
+  }
+
+  /**
+   * Package findFirst
+   */
+  export type PackageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    /**
+     * Filter, which Package to fetch.
+     */
+    where?: PackageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Packages to fetch.
+     */
+    orderBy?: PackageOrderByWithRelationInput | PackageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Packages.
+     */
+    cursor?: PackageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Packages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Packages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Packages.
+     */
+    distinct?: PackageScalarFieldEnum | PackageScalarFieldEnum[]
+  }
+
+  /**
+   * Package findFirstOrThrow
+   */
+  export type PackageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    /**
+     * Filter, which Package to fetch.
+     */
+    where?: PackageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Packages to fetch.
+     */
+    orderBy?: PackageOrderByWithRelationInput | PackageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Packages.
+     */
+    cursor?: PackageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Packages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Packages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Packages.
+     */
+    distinct?: PackageScalarFieldEnum | PackageScalarFieldEnum[]
+  }
+
+  /**
+   * Package findMany
+   */
+  export type PackageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    /**
+     * Filter, which Packages to fetch.
+     */
+    where?: PackageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Packages to fetch.
+     */
+    orderBy?: PackageOrderByWithRelationInput | PackageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Packages.
+     */
+    cursor?: PackageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Packages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Packages.
+     */
+    skip?: number
+    distinct?: PackageScalarFieldEnum | PackageScalarFieldEnum[]
+  }
+
+  /**
+   * Package create
+   */
+  export type PackageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Package.
+     */
+    data: XOR<PackageCreateInput, PackageUncheckedCreateInput>
+  }
+
+  /**
+   * Package createMany
+   */
+  export type PackageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Packages.
+     */
+    data: PackageCreateManyInput | PackageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Package createManyAndReturn
+   */
+  export type PackageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Packages.
+     */
+    data: PackageCreateManyInput | PackageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Package update
+   */
+  export type PackageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Package.
+     */
+    data: XOR<PackageUpdateInput, PackageUncheckedUpdateInput>
+    /**
+     * Choose, which Package to update.
+     */
+    where: PackageWhereUniqueInput
+  }
+
+  /**
+   * Package updateMany
+   */
+  export type PackageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Packages.
+     */
+    data: XOR<PackageUpdateManyMutationInput, PackageUncheckedUpdateManyInput>
+    /**
+     * Filter which Packages to update
+     */
+    where?: PackageWhereInput
+  }
+
+  /**
+   * Package upsert
+   */
+  export type PackageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Package to update in case it exists.
+     */
+    where: PackageWhereUniqueInput
+    /**
+     * In case the Package found by the `where` argument doesn't exist, create a new Package with this data.
+     */
+    create: XOR<PackageCreateInput, PackageUncheckedCreateInput>
+    /**
+     * In case the Package was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PackageUpdateInput, PackageUncheckedUpdateInput>
+  }
+
+  /**
+   * Package delete
+   */
+  export type PackageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    /**
+     * Filter which Package to delete.
+     */
+    where: PackageWhereUniqueInput
+  }
+
+  /**
+   * Package deleteMany
+   */
+  export type PackageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Packages to delete
+     */
+    where?: PackageWhereInput
+  }
+
+  /**
+   * Package.stockPoolLinks
+   */
+  export type Package$stockPoolLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    where?: PackageStockPoolWhereInput
+    orderBy?: PackageStockPoolOrderByWithRelationInput | PackageStockPoolOrderByWithRelationInput[]
+    cursor?: PackageStockPoolWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PackageStockPoolScalarFieldEnum | PackageStockPoolScalarFieldEnum[]
+  }
+
+  /**
+   * Package.orders
+   */
+  export type Package$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+    orderBy?: OrderOrderByWithRelationInput | OrderOrderByWithRelationInput[]
+    cursor?: OrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * Package without action
+   */
+  export type PackageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StockPool
+   */
+
+  export type AggregateStockPool = {
+    _count: StockPoolCountAggregateOutputType | null
+    _min: StockPoolMinAggregateOutputType | null
+    _max: StockPoolMaxAggregateOutputType | null
+  }
+
+  export type StockPoolMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StockPoolMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StockPoolCountAggregateOutputType = {
+    id: number
+    name: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StockPoolMinAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StockPoolMaxAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StockPoolCountAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StockPoolAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockPool to aggregate.
+     */
+    where?: StockPoolWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockPools to fetch.
+     */
+    orderBy?: StockPoolOrderByWithRelationInput | StockPoolOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StockPoolWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockPools from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockPools.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StockPools
+    **/
+    _count?: true | StockPoolCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StockPoolMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StockPoolMaxAggregateInputType
+  }
+
+  export type GetStockPoolAggregateType<T extends StockPoolAggregateArgs> = {
+        [P in keyof T & keyof AggregateStockPool]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStockPool[P]>
+      : GetScalarType<T[P], AggregateStockPool[P]>
+  }
+
+
+
+
+  export type StockPoolGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockPoolWhereInput
+    orderBy?: StockPoolOrderByWithAggregationInput | StockPoolOrderByWithAggregationInput[]
+    by: StockPoolScalarFieldEnum[] | StockPoolScalarFieldEnum
+    having?: StockPoolScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StockPoolCountAggregateInputType | true
+    _min?: StockPoolMinAggregateInputType
+    _max?: StockPoolMaxAggregateInputType
+  }
+
+  export type StockPoolGroupByOutputType = {
+    id: string
+    name: string
+    createdAt: Date
+    updatedAt: Date
+    _count: StockPoolCountAggregateOutputType | null
+    _min: StockPoolMinAggregateOutputType | null
+    _max: StockPoolMaxAggregateOutputType | null
+  }
+
+  type GetStockPoolGroupByPayload<T extends StockPoolGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StockPoolGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StockPoolGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StockPoolGroupByOutputType[P]>
+            : GetScalarType<T[P], StockPoolGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StockPoolSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    codes?: boolean | StockPool$codesArgs<ExtArgs>
+    packageLinks?: boolean | StockPool$packageLinksArgs<ExtArgs>
+    _count?: boolean | StockPoolCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockPool"]>
+
+  export type StockPoolSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["stockPool"]>
+
+  export type StockPoolSelectScalar = {
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StockPoolInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    codes?: boolean | StockPool$codesArgs<ExtArgs>
+    packageLinks?: boolean | StockPool$packageLinksArgs<ExtArgs>
+    _count?: boolean | StockPoolCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type StockPoolIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $StockPoolPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StockPool"
+    objects: {
+      codes: Prisma.$StockCodePayload<ExtArgs>[]
+      packageLinks: Prisma.$PackageStockPoolPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["stockPool"]>
+    composites: {}
+  }
+
+  type StockPoolGetPayload<S extends boolean | null | undefined | StockPoolDefaultArgs> = $Result.GetResult<Prisma.$StockPoolPayload, S>
+
+  type StockPoolCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<StockPoolFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: StockPoolCountAggregateInputType | true
+    }
+
+  export interface StockPoolDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StockPool'], meta: { name: 'StockPool' } }
+    /**
+     * Find zero or one StockPool that matches the filter.
+     * @param {StockPoolFindUniqueArgs} args - Arguments to find a StockPool
+     * @example
+     * // Get one StockPool
+     * const stockPool = await prisma.stockPool.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StockPoolFindUniqueArgs>(args: SelectSubset<T, StockPoolFindUniqueArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one StockPool that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {StockPoolFindUniqueOrThrowArgs} args - Arguments to find a StockPool
+     * @example
+     * // Get one StockPool
+     * const stockPool = await prisma.stockPool.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StockPoolFindUniqueOrThrowArgs>(args: SelectSubset<T, StockPoolFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first StockPool that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPoolFindFirstArgs} args - Arguments to find a StockPool
+     * @example
+     * // Get one StockPool
+     * const stockPool = await prisma.stockPool.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StockPoolFindFirstArgs>(args?: SelectSubset<T, StockPoolFindFirstArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first StockPool that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPoolFindFirstOrThrowArgs} args - Arguments to find a StockPool
+     * @example
+     * // Get one StockPool
+     * const stockPool = await prisma.stockPool.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StockPoolFindFirstOrThrowArgs>(args?: SelectSubset<T, StockPoolFindFirstOrThrowArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more StockPools that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPoolFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StockPools
+     * const stockPools = await prisma.stockPool.findMany()
+     * 
+     * // Get first 10 StockPools
+     * const stockPools = await prisma.stockPool.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stockPoolWithIdOnly = await prisma.stockPool.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StockPoolFindManyArgs>(args?: SelectSubset<T, StockPoolFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a StockPool.
+     * @param {StockPoolCreateArgs} args - Arguments to create a StockPool.
+     * @example
+     * // Create one StockPool
+     * const StockPool = await prisma.stockPool.create({
+     *   data: {
+     *     // ... data to create a StockPool
+     *   }
+     * })
+     * 
+     */
+    create<T extends StockPoolCreateArgs>(args: SelectSubset<T, StockPoolCreateArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many StockPools.
+     * @param {StockPoolCreateManyArgs} args - Arguments to create many StockPools.
+     * @example
+     * // Create many StockPools
+     * const stockPool = await prisma.stockPool.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StockPoolCreateManyArgs>(args?: SelectSubset<T, StockPoolCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StockPools and returns the data saved in the database.
+     * @param {StockPoolCreateManyAndReturnArgs} args - Arguments to create many StockPools.
+     * @example
+     * // Create many StockPools
+     * const stockPool = await prisma.stockPool.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StockPools and only return the `id`
+     * const stockPoolWithIdOnly = await prisma.stockPool.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StockPoolCreateManyAndReturnArgs>(args?: SelectSubset<T, StockPoolCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a StockPool.
+     * @param {StockPoolDeleteArgs} args - Arguments to delete one StockPool.
+     * @example
+     * // Delete one StockPool
+     * const StockPool = await prisma.stockPool.delete({
+     *   where: {
+     *     // ... filter to delete one StockPool
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StockPoolDeleteArgs>(args: SelectSubset<T, StockPoolDeleteArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one StockPool.
+     * @param {StockPoolUpdateArgs} args - Arguments to update one StockPool.
+     * @example
+     * // Update one StockPool
+     * const stockPool = await prisma.stockPool.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StockPoolUpdateArgs>(args: SelectSubset<T, StockPoolUpdateArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more StockPools.
+     * @param {StockPoolDeleteManyArgs} args - Arguments to filter StockPools to delete.
+     * @example
+     * // Delete a few StockPools
+     * const { count } = await prisma.stockPool.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StockPoolDeleteManyArgs>(args?: SelectSubset<T, StockPoolDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockPools.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPoolUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StockPools
+     * const stockPool = await prisma.stockPool.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StockPoolUpdateManyArgs>(args: SelectSubset<T, StockPoolUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one StockPool.
+     * @param {StockPoolUpsertArgs} args - Arguments to update or create a StockPool.
+     * @example
+     * // Update or create a StockPool
+     * const stockPool = await prisma.stockPool.upsert({
+     *   create: {
+     *     // ... data to create a StockPool
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StockPool we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StockPoolUpsertArgs>(args: SelectSubset<T, StockPoolUpsertArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of StockPools.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPoolCountArgs} args - Arguments to filter StockPools to count.
+     * @example
+     * // Count the number of StockPools
+     * const count = await prisma.stockPool.count({
+     *   where: {
+     *     // ... the filter for the StockPools we want to count
+     *   }
+     * })
+    **/
+    count<T extends StockPoolCountArgs>(
+      args?: Subset<T, StockPoolCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StockPoolCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StockPool.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPoolAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StockPoolAggregateArgs>(args: Subset<T, StockPoolAggregateArgs>): Prisma.PrismaPromise<GetStockPoolAggregateType<T>>
+
+    /**
+     * Group by StockPool.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockPoolGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StockPoolGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StockPoolGroupByArgs['orderBy'] }
+        : { orderBy?: StockPoolGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StockPoolGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStockPoolGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StockPool model
+   */
+  readonly fields: StockPoolFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StockPool.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StockPoolClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    codes<T extends StockPool$codesArgs<ExtArgs> = {}>(args?: Subset<T, StockPool$codesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "findMany"> | Null>
+    packageLinks<T extends StockPool$packageLinksArgs<ExtArgs> = {}>(args?: Subset<T, StockPool$packageLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StockPool model
+   */ 
+  interface StockPoolFieldRefs {
+    readonly id: FieldRef<"StockPool", 'String'>
+    readonly name: FieldRef<"StockPool", 'String'>
+    readonly createdAt: FieldRef<"StockPool", 'DateTime'>
+    readonly updatedAt: FieldRef<"StockPool", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StockPool findUnique
+   */
+  export type StockPoolFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPool to fetch.
+     */
+    where: StockPoolWhereUniqueInput
+  }
+
+  /**
+   * StockPool findUniqueOrThrow
+   */
+  export type StockPoolFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPool to fetch.
+     */
+    where: StockPoolWhereUniqueInput
+  }
+
+  /**
+   * StockPool findFirst
+   */
+  export type StockPoolFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPool to fetch.
+     */
+    where?: StockPoolWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockPools to fetch.
+     */
+    orderBy?: StockPoolOrderByWithRelationInput | StockPoolOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockPools.
+     */
+    cursor?: StockPoolWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockPools from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockPools.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockPools.
+     */
+    distinct?: StockPoolScalarFieldEnum | StockPoolScalarFieldEnum[]
+  }
+
+  /**
+   * StockPool findFirstOrThrow
+   */
+  export type StockPoolFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPool to fetch.
+     */
+    where?: StockPoolWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockPools to fetch.
+     */
+    orderBy?: StockPoolOrderByWithRelationInput | StockPoolOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockPools.
+     */
+    cursor?: StockPoolWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockPools from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockPools.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockPools.
+     */
+    distinct?: StockPoolScalarFieldEnum | StockPoolScalarFieldEnum[]
+  }
+
+  /**
+   * StockPool findMany
+   */
+  export type StockPoolFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which StockPools to fetch.
+     */
+    where?: StockPoolWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockPools to fetch.
+     */
+    orderBy?: StockPoolOrderByWithRelationInput | StockPoolOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StockPools.
+     */
+    cursor?: StockPoolWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockPools from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockPools.
+     */
+    skip?: number
+    distinct?: StockPoolScalarFieldEnum | StockPoolScalarFieldEnum[]
+  }
+
+  /**
+   * StockPool create
+   */
+  export type StockPoolCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StockPool.
+     */
+    data: XOR<StockPoolCreateInput, StockPoolUncheckedCreateInput>
+  }
+
+  /**
+   * StockPool createMany
+   */
+  export type StockPoolCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StockPools.
+     */
+    data: StockPoolCreateManyInput | StockPoolCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockPool createManyAndReturn
+   */
+  export type StockPoolCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many StockPools.
+     */
+    data: StockPoolCreateManyInput | StockPoolCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockPool update
+   */
+  export type StockPoolUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StockPool.
+     */
+    data: XOR<StockPoolUpdateInput, StockPoolUncheckedUpdateInput>
+    /**
+     * Choose, which StockPool to update.
+     */
+    where: StockPoolWhereUniqueInput
+  }
+
+  /**
+   * StockPool updateMany
+   */
+  export type StockPoolUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StockPools.
+     */
+    data: XOR<StockPoolUpdateManyMutationInput, StockPoolUncheckedUpdateManyInput>
+    /**
+     * Filter which StockPools to update
+     */
+    where?: StockPoolWhereInput
+  }
+
+  /**
+   * StockPool upsert
+   */
+  export type StockPoolUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StockPool to update in case it exists.
+     */
+    where: StockPoolWhereUniqueInput
+    /**
+     * In case the StockPool found by the `where` argument doesn't exist, create a new StockPool with this data.
+     */
+    create: XOR<StockPoolCreateInput, StockPoolUncheckedCreateInput>
+    /**
+     * In case the StockPool was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StockPoolUpdateInput, StockPoolUncheckedUpdateInput>
+  }
+
+  /**
+   * StockPool delete
+   */
+  export type StockPoolDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+    /**
+     * Filter which StockPool to delete.
+     */
+    where: StockPoolWhereUniqueInput
+  }
+
+  /**
+   * StockPool deleteMany
+   */
+  export type StockPoolDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockPools to delete
+     */
+    where?: StockPoolWhereInput
+  }
+
+  /**
+   * StockPool.codes
+   */
+  export type StockPool$codesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    where?: StockCodeWhereInput
+    orderBy?: StockCodeOrderByWithRelationInput | StockCodeOrderByWithRelationInput[]
+    cursor?: StockCodeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockCodeScalarFieldEnum | StockCodeScalarFieldEnum[]
+  }
+
+  /**
+   * StockPool.packageLinks
+   */
+  export type StockPool$packageLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    where?: PackageStockPoolWhereInput
+    orderBy?: PackageStockPoolOrderByWithRelationInput | PackageStockPoolOrderByWithRelationInput[]
+    cursor?: PackageStockPoolWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PackageStockPoolScalarFieldEnum | PackageStockPoolScalarFieldEnum[]
+  }
+
+  /**
+   * StockPool without action
+   */
+  export type StockPoolDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockPool
+     */
+    select?: StockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockPoolInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PackageStockPool
+   */
+
+  export type AggregatePackageStockPool = {
+    _count: PackageStockPoolCountAggregateOutputType | null
+    _min: PackageStockPoolMinAggregateOutputType | null
+    _max: PackageStockPoolMaxAggregateOutputType | null
+  }
+
+  export type PackageStockPoolMinAggregateOutputType = {
+    packageId: string | null
+    poolId: string | null
+    createdAt: Date | null
+  }
+
+  export type PackageStockPoolMaxAggregateOutputType = {
+    packageId: string | null
+    poolId: string | null
+    createdAt: Date | null
+  }
+
+  export type PackageStockPoolCountAggregateOutputType = {
+    packageId: number
+    poolId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PackageStockPoolMinAggregateInputType = {
+    packageId?: true
+    poolId?: true
+    createdAt?: true
+  }
+
+  export type PackageStockPoolMaxAggregateInputType = {
+    packageId?: true
+    poolId?: true
+    createdAt?: true
+  }
+
+  export type PackageStockPoolCountAggregateInputType = {
+    packageId?: true
+    poolId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PackageStockPoolAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PackageStockPool to aggregate.
+     */
+    where?: PackageStockPoolWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PackageStockPools to fetch.
+     */
+    orderBy?: PackageStockPoolOrderByWithRelationInput | PackageStockPoolOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PackageStockPoolWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PackageStockPools from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PackageStockPools.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PackageStockPools
+    **/
+    _count?: true | PackageStockPoolCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PackageStockPoolMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PackageStockPoolMaxAggregateInputType
+  }
+
+  export type GetPackageStockPoolAggregateType<T extends PackageStockPoolAggregateArgs> = {
+        [P in keyof T & keyof AggregatePackageStockPool]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePackageStockPool[P]>
+      : GetScalarType<T[P], AggregatePackageStockPool[P]>
+  }
+
+
+
+
+  export type PackageStockPoolGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PackageStockPoolWhereInput
+    orderBy?: PackageStockPoolOrderByWithAggregationInput | PackageStockPoolOrderByWithAggregationInput[]
+    by: PackageStockPoolScalarFieldEnum[] | PackageStockPoolScalarFieldEnum
+    having?: PackageStockPoolScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PackageStockPoolCountAggregateInputType | true
+    _min?: PackageStockPoolMinAggregateInputType
+    _max?: PackageStockPoolMaxAggregateInputType
+  }
+
+  export type PackageStockPoolGroupByOutputType = {
+    packageId: string
+    poolId: string
+    createdAt: Date
+    _count: PackageStockPoolCountAggregateOutputType | null
+    _min: PackageStockPoolMinAggregateOutputType | null
+    _max: PackageStockPoolMaxAggregateOutputType | null
+  }
+
+  type GetPackageStockPoolGroupByPayload<T extends PackageStockPoolGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PackageStockPoolGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PackageStockPoolGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PackageStockPoolGroupByOutputType[P]>
+            : GetScalarType<T[P], PackageStockPoolGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PackageStockPoolSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    packageId?: boolean
+    poolId?: boolean
+    createdAt?: boolean
+    package?: boolean | PackageDefaultArgs<ExtArgs>
+    pool?: boolean | StockPoolDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["packageStockPool"]>
+
+  export type PackageStockPoolSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    packageId?: boolean
+    poolId?: boolean
+    createdAt?: boolean
+    package?: boolean | PackageDefaultArgs<ExtArgs>
+    pool?: boolean | StockPoolDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["packageStockPool"]>
+
+  export type PackageStockPoolSelectScalar = {
+    packageId?: boolean
+    poolId?: boolean
+    createdAt?: boolean
+  }
+
+  export type PackageStockPoolInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    package?: boolean | PackageDefaultArgs<ExtArgs>
+    pool?: boolean | StockPoolDefaultArgs<ExtArgs>
+  }
+  export type PackageStockPoolIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    package?: boolean | PackageDefaultArgs<ExtArgs>
+    pool?: boolean | StockPoolDefaultArgs<ExtArgs>
+  }
+
+  export type $PackageStockPoolPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PackageStockPool"
+    objects: {
+      package: Prisma.$PackagePayload<ExtArgs>
+      pool: Prisma.$StockPoolPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      packageId: string
+      poolId: string
+      createdAt: Date
+    }, ExtArgs["result"]["packageStockPool"]>
+    composites: {}
+  }
+
+  type PackageStockPoolGetPayload<S extends boolean | null | undefined | PackageStockPoolDefaultArgs> = $Result.GetResult<Prisma.$PackageStockPoolPayload, S>
+
+  type PackageStockPoolCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PackageStockPoolFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PackageStockPoolCountAggregateInputType | true
+    }
+
+  export interface PackageStockPoolDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PackageStockPool'], meta: { name: 'PackageStockPool' } }
+    /**
+     * Find zero or one PackageStockPool that matches the filter.
+     * @param {PackageStockPoolFindUniqueArgs} args - Arguments to find a PackageStockPool
+     * @example
+     * // Get one PackageStockPool
+     * const packageStockPool = await prisma.packageStockPool.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PackageStockPoolFindUniqueArgs>(args: SelectSubset<T, PackageStockPoolFindUniqueArgs<ExtArgs>>): Prisma__PackageStockPoolClient<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PackageStockPool that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PackageStockPoolFindUniqueOrThrowArgs} args - Arguments to find a PackageStockPool
+     * @example
+     * // Get one PackageStockPool
+     * const packageStockPool = await prisma.packageStockPool.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PackageStockPoolFindUniqueOrThrowArgs>(args: SelectSubset<T, PackageStockPoolFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PackageStockPoolClient<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PackageStockPool that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageStockPoolFindFirstArgs} args - Arguments to find a PackageStockPool
+     * @example
+     * // Get one PackageStockPool
+     * const packageStockPool = await prisma.packageStockPool.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PackageStockPoolFindFirstArgs>(args?: SelectSubset<T, PackageStockPoolFindFirstArgs<ExtArgs>>): Prisma__PackageStockPoolClient<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PackageStockPool that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageStockPoolFindFirstOrThrowArgs} args - Arguments to find a PackageStockPool
+     * @example
+     * // Get one PackageStockPool
+     * const packageStockPool = await prisma.packageStockPool.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PackageStockPoolFindFirstOrThrowArgs>(args?: SelectSubset<T, PackageStockPoolFindFirstOrThrowArgs<ExtArgs>>): Prisma__PackageStockPoolClient<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PackageStockPools that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageStockPoolFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PackageStockPools
+     * const packageStockPools = await prisma.packageStockPool.findMany()
+     * 
+     * // Get first 10 PackageStockPools
+     * const packageStockPools = await prisma.packageStockPool.findMany({ take: 10 })
+     * 
+     * // Only select the `packageId`
+     * const packageStockPoolWithPackageIdOnly = await prisma.packageStockPool.findMany({ select: { packageId: true } })
+     * 
+     */
+    findMany<T extends PackageStockPoolFindManyArgs>(args?: SelectSubset<T, PackageStockPoolFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PackageStockPool.
+     * @param {PackageStockPoolCreateArgs} args - Arguments to create a PackageStockPool.
+     * @example
+     * // Create one PackageStockPool
+     * const PackageStockPool = await prisma.packageStockPool.create({
+     *   data: {
+     *     // ... data to create a PackageStockPool
+     *   }
+     * })
+     * 
+     */
+    create<T extends PackageStockPoolCreateArgs>(args: SelectSubset<T, PackageStockPoolCreateArgs<ExtArgs>>): Prisma__PackageStockPoolClient<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PackageStockPools.
+     * @param {PackageStockPoolCreateManyArgs} args - Arguments to create many PackageStockPools.
+     * @example
+     * // Create many PackageStockPools
+     * const packageStockPool = await prisma.packageStockPool.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PackageStockPoolCreateManyArgs>(args?: SelectSubset<T, PackageStockPoolCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PackageStockPools and returns the data saved in the database.
+     * @param {PackageStockPoolCreateManyAndReturnArgs} args - Arguments to create many PackageStockPools.
+     * @example
+     * // Create many PackageStockPools
+     * const packageStockPool = await prisma.packageStockPool.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PackageStockPools and only return the `packageId`
+     * const packageStockPoolWithPackageIdOnly = await prisma.packageStockPool.createManyAndReturn({ 
+     *   select: { packageId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PackageStockPoolCreateManyAndReturnArgs>(args?: SelectSubset<T, PackageStockPoolCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PackageStockPool.
+     * @param {PackageStockPoolDeleteArgs} args - Arguments to delete one PackageStockPool.
+     * @example
+     * // Delete one PackageStockPool
+     * const PackageStockPool = await prisma.packageStockPool.delete({
+     *   where: {
+     *     // ... filter to delete one PackageStockPool
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PackageStockPoolDeleteArgs>(args: SelectSubset<T, PackageStockPoolDeleteArgs<ExtArgs>>): Prisma__PackageStockPoolClient<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PackageStockPool.
+     * @param {PackageStockPoolUpdateArgs} args - Arguments to update one PackageStockPool.
+     * @example
+     * // Update one PackageStockPool
+     * const packageStockPool = await prisma.packageStockPool.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PackageStockPoolUpdateArgs>(args: SelectSubset<T, PackageStockPoolUpdateArgs<ExtArgs>>): Prisma__PackageStockPoolClient<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PackageStockPools.
+     * @param {PackageStockPoolDeleteManyArgs} args - Arguments to filter PackageStockPools to delete.
+     * @example
+     * // Delete a few PackageStockPools
+     * const { count } = await prisma.packageStockPool.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PackageStockPoolDeleteManyArgs>(args?: SelectSubset<T, PackageStockPoolDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PackageStockPools.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageStockPoolUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PackageStockPools
+     * const packageStockPool = await prisma.packageStockPool.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PackageStockPoolUpdateManyArgs>(args: SelectSubset<T, PackageStockPoolUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PackageStockPool.
+     * @param {PackageStockPoolUpsertArgs} args - Arguments to update or create a PackageStockPool.
+     * @example
+     * // Update or create a PackageStockPool
+     * const packageStockPool = await prisma.packageStockPool.upsert({
+     *   create: {
+     *     // ... data to create a PackageStockPool
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PackageStockPool we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PackageStockPoolUpsertArgs>(args: SelectSubset<T, PackageStockPoolUpsertArgs<ExtArgs>>): Prisma__PackageStockPoolClient<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PackageStockPools.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageStockPoolCountArgs} args - Arguments to filter PackageStockPools to count.
+     * @example
+     * // Count the number of PackageStockPools
+     * const count = await prisma.packageStockPool.count({
+     *   where: {
+     *     // ... the filter for the PackageStockPools we want to count
+     *   }
+     * })
+    **/
+    count<T extends PackageStockPoolCountArgs>(
+      args?: Subset<T, PackageStockPoolCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PackageStockPoolCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PackageStockPool.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageStockPoolAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PackageStockPoolAggregateArgs>(args: Subset<T, PackageStockPoolAggregateArgs>): Prisma.PrismaPromise<GetPackageStockPoolAggregateType<T>>
+
+    /**
+     * Group by PackageStockPool.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PackageStockPoolGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PackageStockPoolGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PackageStockPoolGroupByArgs['orderBy'] }
+        : { orderBy?: PackageStockPoolGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PackageStockPoolGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPackageStockPoolGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PackageStockPool model
+   */
+  readonly fields: PackageStockPoolFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PackageStockPool.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PackageStockPoolClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    package<T extends PackageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PackageDefaultArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    pool<T extends StockPoolDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StockPoolDefaultArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PackageStockPool model
+   */ 
+  interface PackageStockPoolFieldRefs {
+    readonly packageId: FieldRef<"PackageStockPool", 'String'>
+    readonly poolId: FieldRef<"PackageStockPool", 'String'>
+    readonly createdAt: FieldRef<"PackageStockPool", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PackageStockPool findUnique
+   */
+  export type PackageStockPoolFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which PackageStockPool to fetch.
+     */
+    where: PackageStockPoolWhereUniqueInput
+  }
+
+  /**
+   * PackageStockPool findUniqueOrThrow
+   */
+  export type PackageStockPoolFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which PackageStockPool to fetch.
+     */
+    where: PackageStockPoolWhereUniqueInput
+  }
+
+  /**
+   * PackageStockPool findFirst
+   */
+  export type PackageStockPoolFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which PackageStockPool to fetch.
+     */
+    where?: PackageStockPoolWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PackageStockPools to fetch.
+     */
+    orderBy?: PackageStockPoolOrderByWithRelationInput | PackageStockPoolOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PackageStockPools.
+     */
+    cursor?: PackageStockPoolWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PackageStockPools from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PackageStockPools.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PackageStockPools.
+     */
+    distinct?: PackageStockPoolScalarFieldEnum | PackageStockPoolScalarFieldEnum[]
+  }
+
+  /**
+   * PackageStockPool findFirstOrThrow
+   */
+  export type PackageStockPoolFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which PackageStockPool to fetch.
+     */
+    where?: PackageStockPoolWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PackageStockPools to fetch.
+     */
+    orderBy?: PackageStockPoolOrderByWithRelationInput | PackageStockPoolOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PackageStockPools.
+     */
+    cursor?: PackageStockPoolWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PackageStockPools from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PackageStockPools.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PackageStockPools.
+     */
+    distinct?: PackageStockPoolScalarFieldEnum | PackageStockPoolScalarFieldEnum[]
+  }
+
+  /**
+   * PackageStockPool findMany
+   */
+  export type PackageStockPoolFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    /**
+     * Filter, which PackageStockPools to fetch.
+     */
+    where?: PackageStockPoolWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PackageStockPools to fetch.
+     */
+    orderBy?: PackageStockPoolOrderByWithRelationInput | PackageStockPoolOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PackageStockPools.
+     */
+    cursor?: PackageStockPoolWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PackageStockPools from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PackageStockPools.
+     */
+    skip?: number
+    distinct?: PackageStockPoolScalarFieldEnum | PackageStockPoolScalarFieldEnum[]
+  }
+
+  /**
+   * PackageStockPool create
+   */
+  export type PackageStockPoolCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PackageStockPool.
+     */
+    data: XOR<PackageStockPoolCreateInput, PackageStockPoolUncheckedCreateInput>
+  }
+
+  /**
+   * PackageStockPool createMany
+   */
+  export type PackageStockPoolCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PackageStockPools.
+     */
+    data: PackageStockPoolCreateManyInput | PackageStockPoolCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PackageStockPool createManyAndReturn
+   */
+  export type PackageStockPoolCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PackageStockPools.
+     */
+    data: PackageStockPoolCreateManyInput | PackageStockPoolCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PackageStockPool update
+   */
+  export type PackageStockPoolUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PackageStockPool.
+     */
+    data: XOR<PackageStockPoolUpdateInput, PackageStockPoolUncheckedUpdateInput>
+    /**
+     * Choose, which PackageStockPool to update.
+     */
+    where: PackageStockPoolWhereUniqueInput
+  }
+
+  /**
+   * PackageStockPool updateMany
+   */
+  export type PackageStockPoolUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PackageStockPools.
+     */
+    data: XOR<PackageStockPoolUpdateManyMutationInput, PackageStockPoolUncheckedUpdateManyInput>
+    /**
+     * Filter which PackageStockPools to update
+     */
+    where?: PackageStockPoolWhereInput
+  }
+
+  /**
+   * PackageStockPool upsert
+   */
+  export type PackageStockPoolUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PackageStockPool to update in case it exists.
+     */
+    where: PackageStockPoolWhereUniqueInput
+    /**
+     * In case the PackageStockPool found by the `where` argument doesn't exist, create a new PackageStockPool with this data.
+     */
+    create: XOR<PackageStockPoolCreateInput, PackageStockPoolUncheckedCreateInput>
+    /**
+     * In case the PackageStockPool was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PackageStockPoolUpdateInput, PackageStockPoolUncheckedUpdateInput>
+  }
+
+  /**
+   * PackageStockPool delete
+   */
+  export type PackageStockPoolDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+    /**
+     * Filter which PackageStockPool to delete.
+     */
+    where: PackageStockPoolWhereUniqueInput
+  }
+
+  /**
+   * PackageStockPool deleteMany
+   */
+  export type PackageStockPoolDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PackageStockPools to delete
+     */
+    where?: PackageStockPoolWhereInput
+  }
+
+  /**
+   * PackageStockPool without action
+   */
+  export type PackageStockPoolDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PackageStockPool
+     */
+    select?: PackageStockPoolSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageStockPoolInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StockCode
+   */
+
+  export type AggregateStockCode = {
+    _count: StockCodeCountAggregateOutputType | null
+    _min: StockCodeMinAggregateOutputType | null
+    _max: StockCodeMaxAggregateOutputType | null
+  }
+
+  export type StockCodeMinAggregateOutputType = {
+    id: string | null
+    poolId: string | null
+    codeCiphertext: string | null
+    status: $Enums.StockCodeStatus | null
+    orderId: string | null
+    consumedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type StockCodeMaxAggregateOutputType = {
+    id: string | null
+    poolId: string | null
+    codeCiphertext: string | null
+    status: $Enums.StockCodeStatus | null
+    orderId: string | null
+    consumedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type StockCodeCountAggregateOutputType = {
+    id: number
+    poolId: number
+    codeCiphertext: number
+    status: number
+    orderId: number
+    consumedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type StockCodeMinAggregateInputType = {
+    id?: true
+    poolId?: true
+    codeCiphertext?: true
+    status?: true
+    orderId?: true
+    consumedAt?: true
+    createdAt?: true
+  }
+
+  export type StockCodeMaxAggregateInputType = {
+    id?: true
+    poolId?: true
+    codeCiphertext?: true
+    status?: true
+    orderId?: true
+    consumedAt?: true
+    createdAt?: true
+  }
+
+  export type StockCodeCountAggregateInputType = {
+    id?: true
+    poolId?: true
+    codeCiphertext?: true
+    status?: true
+    orderId?: true
+    consumedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type StockCodeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockCode to aggregate.
+     */
+    where?: StockCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockCodes to fetch.
+     */
+    orderBy?: StockCodeOrderByWithRelationInput | StockCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StockCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StockCodes
+    **/
+    _count?: true | StockCodeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StockCodeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StockCodeMaxAggregateInputType
+  }
+
+  export type GetStockCodeAggregateType<T extends StockCodeAggregateArgs> = {
+        [P in keyof T & keyof AggregateStockCode]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStockCode[P]>
+      : GetScalarType<T[P], AggregateStockCode[P]>
+  }
+
+
+
+
+  export type StockCodeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockCodeWhereInput
+    orderBy?: StockCodeOrderByWithAggregationInput | StockCodeOrderByWithAggregationInput[]
+    by: StockCodeScalarFieldEnum[] | StockCodeScalarFieldEnum
+    having?: StockCodeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StockCodeCountAggregateInputType | true
+    _min?: StockCodeMinAggregateInputType
+    _max?: StockCodeMaxAggregateInputType
+  }
+
+  export type StockCodeGroupByOutputType = {
+    id: string
+    poolId: string
+    codeCiphertext: string
+    status: $Enums.StockCodeStatus
+    orderId: string | null
+    consumedAt: Date | null
+    createdAt: Date
+    _count: StockCodeCountAggregateOutputType | null
+    _min: StockCodeMinAggregateOutputType | null
+    _max: StockCodeMaxAggregateOutputType | null
+  }
+
+  type GetStockCodeGroupByPayload<T extends StockCodeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StockCodeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StockCodeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StockCodeGroupByOutputType[P]>
+            : GetScalarType<T[P], StockCodeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StockCodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    poolId?: boolean
+    codeCiphertext?: boolean
+    status?: boolean
+    orderId?: boolean
+    consumedAt?: boolean
+    createdAt?: boolean
+    pool?: boolean | StockPoolDefaultArgs<ExtArgs>
+    order?: boolean | StockCode$orderArgs<ExtArgs>
+  }, ExtArgs["result"]["stockCode"]>
+
+  export type StockCodeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    poolId?: boolean
+    codeCiphertext?: boolean
+    status?: boolean
+    orderId?: boolean
+    consumedAt?: boolean
+    createdAt?: boolean
+    pool?: boolean | StockPoolDefaultArgs<ExtArgs>
+    order?: boolean | StockCode$orderArgs<ExtArgs>
+  }, ExtArgs["result"]["stockCode"]>
+
+  export type StockCodeSelectScalar = {
+    id?: boolean
+    poolId?: boolean
+    codeCiphertext?: boolean
+    status?: boolean
+    orderId?: boolean
+    consumedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type StockCodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pool?: boolean | StockPoolDefaultArgs<ExtArgs>
+    order?: boolean | StockCode$orderArgs<ExtArgs>
+  }
+  export type StockCodeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pool?: boolean | StockPoolDefaultArgs<ExtArgs>
+    order?: boolean | StockCode$orderArgs<ExtArgs>
+  }
+
+  export type $StockCodePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StockCode"
+    objects: {
+      pool: Prisma.$StockPoolPayload<ExtArgs>
+      order: Prisma.$OrderPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      poolId: string
+      codeCiphertext: string
+      status: $Enums.StockCodeStatus
+      orderId: string | null
+      consumedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["stockCode"]>
+    composites: {}
+  }
+
+  type StockCodeGetPayload<S extends boolean | null | undefined | StockCodeDefaultArgs> = $Result.GetResult<Prisma.$StockCodePayload, S>
+
+  type StockCodeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<StockCodeFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: StockCodeCountAggregateInputType | true
+    }
+
+  export interface StockCodeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StockCode'], meta: { name: 'StockCode' } }
+    /**
+     * Find zero or one StockCode that matches the filter.
+     * @param {StockCodeFindUniqueArgs} args - Arguments to find a StockCode
+     * @example
+     * // Get one StockCode
+     * const stockCode = await prisma.stockCode.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StockCodeFindUniqueArgs>(args: SelectSubset<T, StockCodeFindUniqueArgs<ExtArgs>>): Prisma__StockCodeClient<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one StockCode that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {StockCodeFindUniqueOrThrowArgs} args - Arguments to find a StockCode
+     * @example
+     * // Get one StockCode
+     * const stockCode = await prisma.stockCode.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StockCodeFindUniqueOrThrowArgs>(args: SelectSubset<T, StockCodeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StockCodeClient<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first StockCode that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockCodeFindFirstArgs} args - Arguments to find a StockCode
+     * @example
+     * // Get one StockCode
+     * const stockCode = await prisma.stockCode.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StockCodeFindFirstArgs>(args?: SelectSubset<T, StockCodeFindFirstArgs<ExtArgs>>): Prisma__StockCodeClient<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first StockCode that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockCodeFindFirstOrThrowArgs} args - Arguments to find a StockCode
+     * @example
+     * // Get one StockCode
+     * const stockCode = await prisma.stockCode.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StockCodeFindFirstOrThrowArgs>(args?: SelectSubset<T, StockCodeFindFirstOrThrowArgs<ExtArgs>>): Prisma__StockCodeClient<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more StockCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockCodeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StockCodes
+     * const stockCodes = await prisma.stockCode.findMany()
+     * 
+     * // Get first 10 StockCodes
+     * const stockCodes = await prisma.stockCode.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stockCodeWithIdOnly = await prisma.stockCode.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StockCodeFindManyArgs>(args?: SelectSubset<T, StockCodeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a StockCode.
+     * @param {StockCodeCreateArgs} args - Arguments to create a StockCode.
+     * @example
+     * // Create one StockCode
+     * const StockCode = await prisma.stockCode.create({
+     *   data: {
+     *     // ... data to create a StockCode
+     *   }
+     * })
+     * 
+     */
+    create<T extends StockCodeCreateArgs>(args: SelectSubset<T, StockCodeCreateArgs<ExtArgs>>): Prisma__StockCodeClient<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many StockCodes.
+     * @param {StockCodeCreateManyArgs} args - Arguments to create many StockCodes.
+     * @example
+     * // Create many StockCodes
+     * const stockCode = await prisma.stockCode.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StockCodeCreateManyArgs>(args?: SelectSubset<T, StockCodeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StockCodes and returns the data saved in the database.
+     * @param {StockCodeCreateManyAndReturnArgs} args - Arguments to create many StockCodes.
+     * @example
+     * // Create many StockCodes
+     * const stockCode = await prisma.stockCode.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StockCodes and only return the `id`
+     * const stockCodeWithIdOnly = await prisma.stockCode.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StockCodeCreateManyAndReturnArgs>(args?: SelectSubset<T, StockCodeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a StockCode.
+     * @param {StockCodeDeleteArgs} args - Arguments to delete one StockCode.
+     * @example
+     * // Delete one StockCode
+     * const StockCode = await prisma.stockCode.delete({
+     *   where: {
+     *     // ... filter to delete one StockCode
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StockCodeDeleteArgs>(args: SelectSubset<T, StockCodeDeleteArgs<ExtArgs>>): Prisma__StockCodeClient<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one StockCode.
+     * @param {StockCodeUpdateArgs} args - Arguments to update one StockCode.
+     * @example
+     * // Update one StockCode
+     * const stockCode = await prisma.stockCode.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StockCodeUpdateArgs>(args: SelectSubset<T, StockCodeUpdateArgs<ExtArgs>>): Prisma__StockCodeClient<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more StockCodes.
+     * @param {StockCodeDeleteManyArgs} args - Arguments to filter StockCodes to delete.
+     * @example
+     * // Delete a few StockCodes
+     * const { count } = await prisma.stockCode.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StockCodeDeleteManyArgs>(args?: SelectSubset<T, StockCodeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockCodeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StockCodes
+     * const stockCode = await prisma.stockCode.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StockCodeUpdateManyArgs>(args: SelectSubset<T, StockCodeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one StockCode.
+     * @param {StockCodeUpsertArgs} args - Arguments to update or create a StockCode.
+     * @example
+     * // Update or create a StockCode
+     * const stockCode = await prisma.stockCode.upsert({
+     *   create: {
+     *     // ... data to create a StockCode
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StockCode we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StockCodeUpsertArgs>(args: SelectSubset<T, StockCodeUpsertArgs<ExtArgs>>): Prisma__StockCodeClient<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of StockCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockCodeCountArgs} args - Arguments to filter StockCodes to count.
+     * @example
+     * // Count the number of StockCodes
+     * const count = await prisma.stockCode.count({
+     *   where: {
+     *     // ... the filter for the StockCodes we want to count
+     *   }
+     * })
+    **/
+    count<T extends StockCodeCountArgs>(
+      args?: Subset<T, StockCodeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StockCodeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StockCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StockCodeAggregateArgs>(args: Subset<T, StockCodeAggregateArgs>): Prisma.PrismaPromise<GetStockCodeAggregateType<T>>
+
+    /**
+     * Group by StockCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockCodeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StockCodeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StockCodeGroupByArgs['orderBy'] }
+        : { orderBy?: StockCodeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StockCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStockCodeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StockCode model
+   */
+  readonly fields: StockCodeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StockCode.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StockCodeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    pool<T extends StockPoolDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StockPoolDefaultArgs<ExtArgs>>): Prisma__StockPoolClient<$Result.GetResult<Prisma.$StockPoolPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    order<T extends StockCode$orderArgs<ExtArgs> = {}>(args?: Subset<T, StockCode$orderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StockCode model
+   */ 
+  interface StockCodeFieldRefs {
+    readonly id: FieldRef<"StockCode", 'String'>
+    readonly poolId: FieldRef<"StockCode", 'String'>
+    readonly codeCiphertext: FieldRef<"StockCode", 'String'>
+    readonly status: FieldRef<"StockCode", 'StockCodeStatus'>
+    readonly orderId: FieldRef<"StockCode", 'String'>
+    readonly consumedAt: FieldRef<"StockCode", 'DateTime'>
+    readonly createdAt: FieldRef<"StockCode", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StockCode findUnique
+   */
+  export type StockCodeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which StockCode to fetch.
+     */
+    where: StockCodeWhereUniqueInput
+  }
+
+  /**
+   * StockCode findUniqueOrThrow
+   */
+  export type StockCodeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which StockCode to fetch.
+     */
+    where: StockCodeWhereUniqueInput
+  }
+
+  /**
+   * StockCode findFirst
+   */
+  export type StockCodeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which StockCode to fetch.
+     */
+    where?: StockCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockCodes to fetch.
+     */
+    orderBy?: StockCodeOrderByWithRelationInput | StockCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockCodes.
+     */
+    cursor?: StockCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockCodes.
+     */
+    distinct?: StockCodeScalarFieldEnum | StockCodeScalarFieldEnum[]
+  }
+
+  /**
+   * StockCode findFirstOrThrow
+   */
+  export type StockCodeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which StockCode to fetch.
+     */
+    where?: StockCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockCodes to fetch.
+     */
+    orderBy?: StockCodeOrderByWithRelationInput | StockCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockCodes.
+     */
+    cursor?: StockCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockCodes.
+     */
+    distinct?: StockCodeScalarFieldEnum | StockCodeScalarFieldEnum[]
+  }
+
+  /**
+   * StockCode findMany
+   */
+  export type StockCodeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which StockCodes to fetch.
+     */
+    where?: StockCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockCodes to fetch.
+     */
+    orderBy?: StockCodeOrderByWithRelationInput | StockCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StockCodes.
+     */
+    cursor?: StockCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockCodes.
+     */
+    skip?: number
+    distinct?: StockCodeScalarFieldEnum | StockCodeScalarFieldEnum[]
+  }
+
+  /**
+   * StockCode create
+   */
+  export type StockCodeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StockCode.
+     */
+    data: XOR<StockCodeCreateInput, StockCodeUncheckedCreateInput>
+  }
+
+  /**
+   * StockCode createMany
+   */
+  export type StockCodeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StockCodes.
+     */
+    data: StockCodeCreateManyInput | StockCodeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockCode createManyAndReturn
+   */
+  export type StockCodeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many StockCodes.
+     */
+    data: StockCodeCreateManyInput | StockCodeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockCode update
+   */
+  export type StockCodeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StockCode.
+     */
+    data: XOR<StockCodeUpdateInput, StockCodeUncheckedUpdateInput>
+    /**
+     * Choose, which StockCode to update.
+     */
+    where: StockCodeWhereUniqueInput
+  }
+
+  /**
+   * StockCode updateMany
+   */
+  export type StockCodeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StockCodes.
+     */
+    data: XOR<StockCodeUpdateManyMutationInput, StockCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which StockCodes to update
+     */
+    where?: StockCodeWhereInput
+  }
+
+  /**
+   * StockCode upsert
+   */
+  export type StockCodeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StockCode to update in case it exists.
+     */
+    where: StockCodeWhereUniqueInput
+    /**
+     * In case the StockCode found by the `where` argument doesn't exist, create a new StockCode with this data.
+     */
+    create: XOR<StockCodeCreateInput, StockCodeUncheckedCreateInput>
+    /**
+     * In case the StockCode was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StockCodeUpdateInput, StockCodeUncheckedUpdateInput>
+  }
+
+  /**
+   * StockCode delete
+   */
+  export type StockCodeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    /**
+     * Filter which StockCode to delete.
+     */
+    where: StockCodeWhereUniqueInput
+  }
+
+  /**
+   * StockCode deleteMany
+   */
+  export type StockCodeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockCodes to delete
+     */
+    where?: StockCodeWhereInput
+  }
+
+  /**
+   * StockCode.order
+   */
+  export type StockCode$orderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+  }
+
+  /**
+   * StockCode without action
+   */
+  export type StockCodeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model User
    */
 
@@ -4015,6 +11161,7 @@ export namespace Prisma {
     apiKeyHash: string | null
     apiKeyPrefix: string | null
     apiKeyCreatedAt: Date | null
+    isVip: boolean | null
     phone: string | null
     notifyEmail: boolean | null
     notifyOrderUpdates: boolean | null
@@ -4037,6 +11184,7 @@ export namespace Prisma {
     apiKeyHash: string | null
     apiKeyPrefix: string | null
     apiKeyCreatedAt: Date | null
+    isVip: boolean | null
     phone: string | null
     notifyEmail: boolean | null
     notifyOrderUpdates: boolean | null
@@ -4059,6 +11207,7 @@ export namespace Prisma {
     apiKeyHash: number
     apiKeyPrefix: number
     apiKeyCreatedAt: number
+    isVip: number
     phone: number
     notifyEmail: number
     notifyOrderUpdates: number
@@ -4083,6 +11232,7 @@ export namespace Prisma {
     apiKeyHash?: true
     apiKeyPrefix?: true
     apiKeyCreatedAt?: true
+    isVip?: true
     phone?: true
     notifyEmail?: true
     notifyOrderUpdates?: true
@@ -4105,6 +11255,7 @@ export namespace Prisma {
     apiKeyHash?: true
     apiKeyPrefix?: true
     apiKeyCreatedAt?: true
+    isVip?: true
     phone?: true
     notifyEmail?: true
     notifyOrderUpdates?: true
@@ -4127,6 +11278,7 @@ export namespace Prisma {
     apiKeyHash?: true
     apiKeyPrefix?: true
     apiKeyCreatedAt?: true
+    isVip?: true
     phone?: true
     notifyEmail?: true
     notifyOrderUpdates?: true
@@ -4222,6 +11374,7 @@ export namespace Prisma {
     apiKeyHash: string | null
     apiKeyPrefix: string | null
     apiKeyCreatedAt: Date | null
+    isVip: boolean
     phone: string | null
     notifyEmail: boolean
     notifyOrderUpdates: boolean
@@ -4261,6 +11414,7 @@ export namespace Prisma {
     apiKeyHash?: boolean
     apiKeyPrefix?: boolean
     apiKeyCreatedAt?: boolean
+    isVip?: boolean
     phone?: boolean
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -4297,6 +11451,7 @@ export namespace Prisma {
     apiKeyHash?: boolean
     apiKeyPrefix?: boolean
     apiKeyCreatedAt?: boolean
+    isVip?: boolean
     phone?: boolean
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -4319,6 +11474,7 @@ export namespace Prisma {
     apiKeyHash?: boolean
     apiKeyPrefix?: boolean
     apiKeyCreatedAt?: boolean
+    isVip?: boolean
     phone?: boolean
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -4376,6 +11532,7 @@ export namespace Prisma {
       apiKeyHash: string | null
       apiKeyPrefix: string | null
       apiKeyCreatedAt: Date | null
+      isVip: boolean
       phone: string | null
       notifyEmail: boolean
       notifyOrderUpdates: boolean
@@ -4801,6 +11958,7 @@ export namespace Prisma {
     readonly apiKeyHash: FieldRef<"User", 'String'>
     readonly apiKeyPrefix: FieldRef<"User", 'String'>
     readonly apiKeyCreatedAt: FieldRef<"User", 'DateTime'>
+    readonly isVip: FieldRef<"User", 'Boolean'>
     readonly phone: FieldRef<"User", 'String'>
     readonly notifyEmail: FieldRef<"User", 'Boolean'>
     readonly notifyOrderUpdates: FieldRef<"User", 'Boolean'>
@@ -15557,6 +22715,7 @@ export namespace Prisma {
     orders?: boolean | Service$ordersArgs<ExtArgs>
     dripFeeds?: boolean | Service$dripFeedsArgs<ExtArgs>
     orderIntents?: boolean | Service$orderIntentsArgs<ExtArgs>
+    products?: boolean | Service$productsArgs<ExtArgs>
     _count?: boolean | ServiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["service"]>
 
@@ -15614,6 +22773,7 @@ export namespace Prisma {
     orders?: boolean | Service$ordersArgs<ExtArgs>
     dripFeeds?: boolean | Service$dripFeedsArgs<ExtArgs>
     orderIntents?: boolean | Service$orderIntentsArgs<ExtArgs>
+    products?: boolean | Service$productsArgs<ExtArgs>
     _count?: boolean | ServiceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ServiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15631,6 +22791,7 @@ export namespace Prisma {
       orders: Prisma.$OrderPayload<ExtArgs>[]
       dripFeeds: Prisma.$DripFeedPayload<ExtArgs>[]
       orderIntents: Prisma.$OrderIntentPayload<ExtArgs>[]
+      products: Prisma.$ProductPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16022,6 +23183,7 @@ export namespace Prisma {
     orders<T extends Service$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Service$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany"> | Null>
     dripFeeds<T extends Service$dripFeedsArgs<ExtArgs> = {}>(args?: Subset<T, Service$dripFeedsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DripFeedPayload<ExtArgs>, T, "findMany"> | Null>
     orderIntents<T extends Service$orderIntentsArgs<ExtArgs> = {}>(args?: Subset<T, Service$orderIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany"> | Null>
+    products<T extends Service$productsArgs<ExtArgs> = {}>(args?: Subset<T, Service$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16478,6 +23640,26 @@ export namespace Prisma {
   }
 
   /**
+   * Service.products
+   */
+  export type Service$productsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    cursor?: ProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
    * Service without action
    */
   export type ServiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16524,6 +23706,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     serviceId: string | null
+    packageId: string | null
     link: string | null
     quantity: number | null
     charge: Decimal | null
@@ -16541,6 +23724,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     serviceId: string | null
+    packageId: string | null
     link: string | null
     quantity: number | null
     charge: Decimal | null
@@ -16558,6 +23742,7 @@ export namespace Prisma {
     id: number
     userId: number
     serviceId: number
+    packageId: number
     link: number
     quantity: number
     charge: number
@@ -16593,6 +23778,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     serviceId?: true
+    packageId?: true
     link?: true
     quantity?: true
     charge?: true
@@ -16610,6 +23796,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     serviceId?: true
+    packageId?: true
     link?: true
     quantity?: true
     charge?: true
@@ -16627,6 +23814,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     serviceId?: true
+    packageId?: true
     link?: true
     quantity?: true
     charge?: true
@@ -16730,7 +23918,8 @@ export namespace Prisma {
   export type OrderGroupByOutputType = {
     id: string
     userId: string
-    serviceId: string
+    serviceId: string | null
+    packageId: string | null
     link: string
     quantity: number
     charge: Decimal
@@ -16767,6 +23956,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     serviceId?: boolean
+    packageId?: boolean
     link?: boolean
     quantity?: boolean
     charge?: boolean
@@ -16779,7 +23969,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    service?: boolean | ServiceDefaultArgs<ExtArgs>
+    service?: boolean | Order$serviceArgs<ExtArgs>
+    package?: boolean | Order$packageArgs<ExtArgs>
+    stockCode?: boolean | Order$stockCodeArgs<ExtArgs>
     refillRequests?: boolean | Order$refillRequestsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -16788,6 +23980,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     serviceId?: boolean
+    packageId?: boolean
     link?: boolean
     quantity?: boolean
     charge?: boolean
@@ -16800,13 +23993,15 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    service?: boolean | ServiceDefaultArgs<ExtArgs>
+    service?: boolean | Order$serviceArgs<ExtArgs>
+    package?: boolean | Order$packageArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectScalar = {
     id?: boolean
     userId?: boolean
     serviceId?: boolean
+    packageId?: boolean
     link?: boolean
     quantity?: boolean
     charge?: boolean
@@ -16822,26 +24017,32 @@ export namespace Prisma {
 
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    service?: boolean | ServiceDefaultArgs<ExtArgs>
+    service?: boolean | Order$serviceArgs<ExtArgs>
+    package?: boolean | Order$packageArgs<ExtArgs>
+    stockCode?: boolean | Order$stockCodeArgs<ExtArgs>
     refillRequests?: boolean | Order$refillRequestsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    service?: boolean | ServiceDefaultArgs<ExtArgs>
+    service?: boolean | Order$serviceArgs<ExtArgs>
+    package?: boolean | Order$packageArgs<ExtArgs>
   }
 
   export type $OrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Order"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
-      service: Prisma.$ServicePayload<ExtArgs>
+      service: Prisma.$ServicePayload<ExtArgs> | null
+      package: Prisma.$PackagePayload<ExtArgs> | null
+      stockCode: Prisma.$StockCodePayload<ExtArgs> | null
       refillRequests: Prisma.$RefillRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      serviceId: string
+      serviceId: string | null
+      packageId: string | null
       link: string
       quantity: number
       charge: Prisma.Decimal
@@ -17218,7 +24419,9 @@ export namespace Prisma {
   export interface Prisma__OrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    service<T extends ServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceDefaultArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    service<T extends Order$serviceArgs<ExtArgs> = {}>(args?: Subset<T, Order$serviceArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    package<T extends Order$packageArgs<ExtArgs> = {}>(args?: Subset<T, Order$packageArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    stockCode<T extends Order$stockCodeArgs<ExtArgs> = {}>(args?: Subset<T, Order$stockCodeArgs<ExtArgs>>): Prisma__StockCodeClient<$Result.GetResult<Prisma.$StockCodePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     refillRequests<T extends Order$refillRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Order$refillRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefillRequestPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -17252,6 +24455,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Order", 'String'>
     readonly userId: FieldRef<"Order", 'String'>
     readonly serviceId: FieldRef<"Order", 'String'>
+    readonly packageId: FieldRef<"Order", 'String'>
     readonly link: FieldRef<"Order", 'String'>
     readonly quantity: FieldRef<"Order", 'Int'>
     readonly charge: FieldRef<"Order", 'Decimal'>
@@ -17578,6 +24782,51 @@ export namespace Prisma {
      * Filter which Orders to delete
      */
     where?: OrderWhereInput
+  }
+
+  /**
+   * Order.service
+   */
+  export type Order$serviceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    where?: ServiceWhereInput
+  }
+
+  /**
+   * Order.package
+   */
+  export type Order$packageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    where?: PackageWhereInput
+  }
+
+  /**
+   * Order.stockCode
+   */
+  export type Order$stockCodeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockCode
+     */
+    select?: StockCodeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockCodeInclude<ExtArgs> | null
+    where?: StockCodeWhereInput
   }
 
   /**
@@ -33663,6 +40912,113 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const BrandScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    level: 'level',
+    productDesign: 'productDesign',
+    logo: 'logo',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BrandScalarFieldEnum = (typeof BrandScalarFieldEnum)[keyof typeof BrandScalarFieldEnum]
+
+
+  export const ProductScalarFieldEnum: {
+    id: 'id',
+    brandId: 'brandId',
+    name: 'name',
+    userInputFieldName: 'userInputFieldName',
+    orderInstructionsLink: 'orderInstructionsLink',
+    salePrice: 'salePrice',
+    buyPrice: 'buyPrice',
+    quantity: 'quantity',
+    productType: 'productType',
+    accessType: 'accessType',
+    logo: 'logo',
+    secondaryType: 'secondaryType',
+    level: 'level',
+    isAuto: 'isAuto',
+    isActive: 'isActive',
+    productNote: 'productNote',
+    slug: 'slug',
+    gameCheaterType: 'gameCheaterType',
+    hasOrderTimeLimit: 'hasOrderTimeLimit',
+    maxOrdersPerWindow: 'maxOrdersPerWindow',
+    orderWindowHours: 'orderWindowHours',
+    checkUniquePlayerId: 'checkUniquePlayerId',
+    isQuantityMinusOnOrder: 'isQuantityMinusOnOrder',
+    isQuantityShowUser: 'isQuantityShowUser',
+    isPremiumProduct: 'isPremiumProduct',
+    minAmountForPremium: 'minAmountForPremium',
+    removeCharacters: 'removeCharacters',
+    redeemLink: 'redeemLink',
+    isResellerProduct: 'isResellerProduct',
+    isMysteryBox: 'isMysteryBox',
+    description: 'description',
+    packageDesign: 'packageDesign',
+    serviceId: 'serviceId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+  export const PackageScalarFieldEnum: {
+    id: 'id',
+    productId: 'productId',
+    name: 'name',
+    amount: 'amount',
+    salePrice: 'salePrice',
+    buyPrice: 'buyPrice',
+    commonPriceUsd: 'commonPriceUsd',
+    extraFee: 'extraFee',
+    level: 'level',
+    isAuto: 'isAuto',
+    isManual: 'isManual',
+    server: 'server',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PackageScalarFieldEnum = (typeof PackageScalarFieldEnum)[keyof typeof PackageScalarFieldEnum]
+
+
+  export const StockPoolScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StockPoolScalarFieldEnum = (typeof StockPoolScalarFieldEnum)[keyof typeof StockPoolScalarFieldEnum]
+
+
+  export const PackageStockPoolScalarFieldEnum: {
+    packageId: 'packageId',
+    poolId: 'poolId',
+    createdAt: 'createdAt'
+  };
+
+  export type PackageStockPoolScalarFieldEnum = (typeof PackageStockPoolScalarFieldEnum)[keyof typeof PackageStockPoolScalarFieldEnum]
+
+
+  export const StockCodeScalarFieldEnum: {
+    id: 'id',
+    poolId: 'poolId',
+    codeCiphertext: 'codeCiphertext',
+    status: 'status',
+    orderId: 'orderId',
+    consumedAt: 'consumedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type StockCodeScalarFieldEnum = (typeof StockCodeScalarFieldEnum)[keyof typeof StockCodeScalarFieldEnum]
+
+
   export const UserScalarFieldEnum: {
     id: 'id',
     username: 'username',
@@ -33677,6 +41033,7 @@ export namespace Prisma {
     apiKeyHash: 'apiKeyHash',
     apiKeyPrefix: 'apiKeyPrefix',
     apiKeyCreatedAt: 'apiKeyCreatedAt',
+    isVip: 'isVip',
     phone: 'phone',
     notifyEmail: 'notifyEmail',
     notifyOrderUpdates: 'notifyOrderUpdates',
@@ -33854,6 +41211,7 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     serviceId: 'serviceId',
+    packageId: 'packageId',
     link: 'link',
     quantity: 'quantity',
     charge: 'charge',
@@ -34162,30 +41520,30 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Role'
+   * Reference to a field of type 'Int'
    */
-  export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
   /**
-   * Reference to a field of type 'Role[]'
+   * Reference to a field of type 'Int[]'
    */
-  export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
   /**
-   * Reference to a field of type 'UserStatus'
+   * Reference to a field of type 'ProductDesignTemplate'
    */
-  export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
+  export type EnumProductDesignTemplateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductDesignTemplate'>
     
 
 
   /**
-   * Reference to a field of type 'UserStatus[]'
+   * Reference to a field of type 'ProductDesignTemplate[]'
    */
-  export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+  export type ListEnumProductDesignTemplateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductDesignTemplate[]'>
     
 
 
@@ -34221,6 +41579,90 @@ export namespace Prisma {
    * Reference to a field of type 'Decimal[]'
    */
   export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProductType'
+   */
+  export type EnumProductTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProductType[]'
+   */
+  export type ListEnumProductTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AccessType'
+   */
+  export type EnumAccessTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccessType'>
+    
+
+
+  /**
+   * Reference to a field of type 'AccessType[]'
+   */
+  export type ListEnumAccessTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccessType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PackageDesignTemplate'
+   */
+  export type EnumPackageDesignTemplateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PackageDesignTemplate'>
+    
+
+
+  /**
+   * Reference to a field of type 'PackageDesignTemplate[]'
+   */
+  export type ListEnumPackageDesignTemplateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PackageDesignTemplate[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'StockCodeStatus'
+   */
+  export type EnumStockCodeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockCodeStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'StockCodeStatus[]'
+   */
+  export type ListEnumStockCodeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockCodeStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Role'
+   */
+  export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+    
+
+
+  /**
+   * Reference to a field of type 'Role[]'
+   */
+  export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserStatus'
+   */
+  export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserStatus[]'
+   */
+  export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
     
 
 
@@ -34305,20 +41747,6 @@ export namespace Prisma {
    * Reference to a field of type 'PaymentMethodStatus[]'
    */
   export type ListEnumPaymentMethodStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethodStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -34549,6 +41977,569 @@ export namespace Prisma {
    */
 
 
+  export type BrandWhereInput = {
+    AND?: BrandWhereInput | BrandWhereInput[]
+    OR?: BrandWhereInput[]
+    NOT?: BrandWhereInput | BrandWhereInput[]
+    id?: StringFilter<"Brand"> | string
+    name?: StringFilter<"Brand"> | string
+    level?: IntFilter<"Brand"> | number
+    productDesign?: EnumProductDesignTemplateFilter<"Brand"> | $Enums.ProductDesignTemplate
+    logo?: StringNullableFilter<"Brand"> | string | null
+    isActive?: BoolFilter<"Brand"> | boolean
+    createdAt?: DateTimeFilter<"Brand"> | Date | string
+    updatedAt?: DateTimeFilter<"Brand"> | Date | string
+    products?: ProductListRelationFilter
+  }
+
+  export type BrandOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    level?: SortOrder
+    productDesign?: SortOrder
+    logo?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    products?: ProductOrderByRelationAggregateInput
+  }
+
+  export type BrandWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: BrandWhereInput | BrandWhereInput[]
+    OR?: BrandWhereInput[]
+    NOT?: BrandWhereInput | BrandWhereInput[]
+    name?: StringFilter<"Brand"> | string
+    level?: IntFilter<"Brand"> | number
+    productDesign?: EnumProductDesignTemplateFilter<"Brand"> | $Enums.ProductDesignTemplate
+    logo?: StringNullableFilter<"Brand"> | string | null
+    isActive?: BoolFilter<"Brand"> | boolean
+    createdAt?: DateTimeFilter<"Brand"> | Date | string
+    updatedAt?: DateTimeFilter<"Brand"> | Date | string
+    products?: ProductListRelationFilter
+  }, "id">
+
+  export type BrandOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    level?: SortOrder
+    productDesign?: SortOrder
+    logo?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BrandCountOrderByAggregateInput
+    _avg?: BrandAvgOrderByAggregateInput
+    _max?: BrandMaxOrderByAggregateInput
+    _min?: BrandMinOrderByAggregateInput
+    _sum?: BrandSumOrderByAggregateInput
+  }
+
+  export type BrandScalarWhereWithAggregatesInput = {
+    AND?: BrandScalarWhereWithAggregatesInput | BrandScalarWhereWithAggregatesInput[]
+    OR?: BrandScalarWhereWithAggregatesInput[]
+    NOT?: BrandScalarWhereWithAggregatesInput | BrandScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Brand"> | string
+    name?: StringWithAggregatesFilter<"Brand"> | string
+    level?: IntWithAggregatesFilter<"Brand"> | number
+    productDesign?: EnumProductDesignTemplateWithAggregatesFilter<"Brand"> | $Enums.ProductDesignTemplate
+    logo?: StringNullableWithAggregatesFilter<"Brand"> | string | null
+    isActive?: BoolWithAggregatesFilter<"Brand"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Brand"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Brand"> | Date | string
+  }
+
+  export type ProductWhereInput = {
+    AND?: ProductWhereInput | ProductWhereInput[]
+    OR?: ProductWhereInput[]
+    NOT?: ProductWhereInput | ProductWhereInput[]
+    id?: StringFilter<"Product"> | string
+    brandId?: StringFilter<"Product"> | string
+    name?: StringFilter<"Product"> | string
+    userInputFieldName?: StringFilter<"Product"> | string
+    orderInstructionsLink?: StringNullableFilter<"Product"> | string | null
+    salePrice?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    quantity?: IntFilter<"Product"> | number
+    productType?: EnumProductTypeFilter<"Product"> | $Enums.ProductType
+    accessType?: EnumAccessTypeFilter<"Product"> | $Enums.AccessType
+    logo?: StringNullableFilter<"Product"> | string | null
+    secondaryType?: StringNullableFilter<"Product"> | string | null
+    level?: IntFilter<"Product"> | number
+    isAuto?: BoolFilter<"Product"> | boolean
+    isActive?: BoolFilter<"Product"> | boolean
+    productNote?: StringNullableFilter<"Product"> | string | null
+    slug?: StringFilter<"Product"> | string
+    gameCheaterType?: StringNullableFilter<"Product"> | string | null
+    hasOrderTimeLimit?: BoolFilter<"Product"> | boolean
+    maxOrdersPerWindow?: IntNullableFilter<"Product"> | number | null
+    orderWindowHours?: IntNullableFilter<"Product"> | number | null
+    checkUniquePlayerId?: BoolFilter<"Product"> | boolean
+    isQuantityMinusOnOrder?: BoolFilter<"Product"> | boolean
+    isQuantityShowUser?: BoolFilter<"Product"> | boolean
+    isPremiumProduct?: BoolFilter<"Product"> | boolean
+    minAmountForPremium?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: StringNullableFilter<"Product"> | string | null
+    redeemLink?: StringNullableFilter<"Product"> | string | null
+    isResellerProduct?: BoolFilter<"Product"> | boolean
+    isMysteryBox?: BoolFilter<"Product"> | boolean
+    description?: StringNullableFilter<"Product"> | string | null
+    packageDesign?: EnumPackageDesignTemplateFilter<"Product"> | $Enums.PackageDesignTemplate
+    serviceId?: StringNullableFilter<"Product"> | string | null
+    createdAt?: DateTimeFilter<"Product"> | Date | string
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
+    brand?: XOR<BrandRelationFilter, BrandWhereInput>
+    service?: XOR<ServiceNullableRelationFilter, ServiceWhereInput> | null
+    packages?: PackageListRelationFilter
+  }
+
+  export type ProductOrderByWithRelationInput = {
+    id?: SortOrder
+    brandId?: SortOrder
+    name?: SortOrder
+    userInputFieldName?: SortOrder
+    orderInstructionsLink?: SortOrderInput | SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    quantity?: SortOrder
+    productType?: SortOrder
+    accessType?: SortOrder
+    logo?: SortOrderInput | SortOrder
+    secondaryType?: SortOrderInput | SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isActive?: SortOrder
+    productNote?: SortOrderInput | SortOrder
+    slug?: SortOrder
+    gameCheaterType?: SortOrderInput | SortOrder
+    hasOrderTimeLimit?: SortOrder
+    maxOrdersPerWindow?: SortOrderInput | SortOrder
+    orderWindowHours?: SortOrderInput | SortOrder
+    checkUniquePlayerId?: SortOrder
+    isQuantityMinusOnOrder?: SortOrder
+    isQuantityShowUser?: SortOrder
+    isPremiumProduct?: SortOrder
+    minAmountForPremium?: SortOrderInput | SortOrder
+    removeCharacters?: SortOrderInput | SortOrder
+    redeemLink?: SortOrderInput | SortOrder
+    isResellerProduct?: SortOrder
+    isMysteryBox?: SortOrder
+    description?: SortOrderInput | SortOrder
+    packageDesign?: SortOrder
+    serviceId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    brand?: BrandOrderByWithRelationInput
+    service?: ServiceOrderByWithRelationInput
+    packages?: PackageOrderByRelationAggregateInput
+  }
+
+  export type ProductWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    slug?: string
+    AND?: ProductWhereInput | ProductWhereInput[]
+    OR?: ProductWhereInput[]
+    NOT?: ProductWhereInput | ProductWhereInput[]
+    brandId?: StringFilter<"Product"> | string
+    name?: StringFilter<"Product"> | string
+    userInputFieldName?: StringFilter<"Product"> | string
+    orderInstructionsLink?: StringNullableFilter<"Product"> | string | null
+    salePrice?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    quantity?: IntFilter<"Product"> | number
+    productType?: EnumProductTypeFilter<"Product"> | $Enums.ProductType
+    accessType?: EnumAccessTypeFilter<"Product"> | $Enums.AccessType
+    logo?: StringNullableFilter<"Product"> | string | null
+    secondaryType?: StringNullableFilter<"Product"> | string | null
+    level?: IntFilter<"Product"> | number
+    isAuto?: BoolFilter<"Product"> | boolean
+    isActive?: BoolFilter<"Product"> | boolean
+    productNote?: StringNullableFilter<"Product"> | string | null
+    gameCheaterType?: StringNullableFilter<"Product"> | string | null
+    hasOrderTimeLimit?: BoolFilter<"Product"> | boolean
+    maxOrdersPerWindow?: IntNullableFilter<"Product"> | number | null
+    orderWindowHours?: IntNullableFilter<"Product"> | number | null
+    checkUniquePlayerId?: BoolFilter<"Product"> | boolean
+    isQuantityMinusOnOrder?: BoolFilter<"Product"> | boolean
+    isQuantityShowUser?: BoolFilter<"Product"> | boolean
+    isPremiumProduct?: BoolFilter<"Product"> | boolean
+    minAmountForPremium?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: StringNullableFilter<"Product"> | string | null
+    redeemLink?: StringNullableFilter<"Product"> | string | null
+    isResellerProduct?: BoolFilter<"Product"> | boolean
+    isMysteryBox?: BoolFilter<"Product"> | boolean
+    description?: StringNullableFilter<"Product"> | string | null
+    packageDesign?: EnumPackageDesignTemplateFilter<"Product"> | $Enums.PackageDesignTemplate
+    serviceId?: StringNullableFilter<"Product"> | string | null
+    createdAt?: DateTimeFilter<"Product"> | Date | string
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
+    brand?: XOR<BrandRelationFilter, BrandWhereInput>
+    service?: XOR<ServiceNullableRelationFilter, ServiceWhereInput> | null
+    packages?: PackageListRelationFilter
+  }, "id" | "slug">
+
+  export type ProductOrderByWithAggregationInput = {
+    id?: SortOrder
+    brandId?: SortOrder
+    name?: SortOrder
+    userInputFieldName?: SortOrder
+    orderInstructionsLink?: SortOrderInput | SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    quantity?: SortOrder
+    productType?: SortOrder
+    accessType?: SortOrder
+    logo?: SortOrderInput | SortOrder
+    secondaryType?: SortOrderInput | SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isActive?: SortOrder
+    productNote?: SortOrderInput | SortOrder
+    slug?: SortOrder
+    gameCheaterType?: SortOrderInput | SortOrder
+    hasOrderTimeLimit?: SortOrder
+    maxOrdersPerWindow?: SortOrderInput | SortOrder
+    orderWindowHours?: SortOrderInput | SortOrder
+    checkUniquePlayerId?: SortOrder
+    isQuantityMinusOnOrder?: SortOrder
+    isQuantityShowUser?: SortOrder
+    isPremiumProduct?: SortOrder
+    minAmountForPremium?: SortOrderInput | SortOrder
+    removeCharacters?: SortOrderInput | SortOrder
+    redeemLink?: SortOrderInput | SortOrder
+    isResellerProduct?: SortOrder
+    isMysteryBox?: SortOrder
+    description?: SortOrderInput | SortOrder
+    packageDesign?: SortOrder
+    serviceId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProductCountOrderByAggregateInput
+    _avg?: ProductAvgOrderByAggregateInput
+    _max?: ProductMaxOrderByAggregateInput
+    _min?: ProductMinOrderByAggregateInput
+    _sum?: ProductSumOrderByAggregateInput
+  }
+
+  export type ProductScalarWhereWithAggregatesInput = {
+    AND?: ProductScalarWhereWithAggregatesInput | ProductScalarWhereWithAggregatesInput[]
+    OR?: ProductScalarWhereWithAggregatesInput[]
+    NOT?: ProductScalarWhereWithAggregatesInput | ProductScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Product"> | string
+    brandId?: StringWithAggregatesFilter<"Product"> | string
+    name?: StringWithAggregatesFilter<"Product"> | string
+    userInputFieldName?: StringWithAggregatesFilter<"Product"> | string
+    orderInstructionsLink?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    salePrice?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    quantity?: IntWithAggregatesFilter<"Product"> | number
+    productType?: EnumProductTypeWithAggregatesFilter<"Product"> | $Enums.ProductType
+    accessType?: EnumAccessTypeWithAggregatesFilter<"Product"> | $Enums.AccessType
+    logo?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    secondaryType?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    level?: IntWithAggregatesFilter<"Product"> | number
+    isAuto?: BoolWithAggregatesFilter<"Product"> | boolean
+    isActive?: BoolWithAggregatesFilter<"Product"> | boolean
+    productNote?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    slug?: StringWithAggregatesFilter<"Product"> | string
+    gameCheaterType?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    hasOrderTimeLimit?: BoolWithAggregatesFilter<"Product"> | boolean
+    maxOrdersPerWindow?: IntNullableWithAggregatesFilter<"Product"> | number | null
+    orderWindowHours?: IntNullableWithAggregatesFilter<"Product"> | number | null
+    checkUniquePlayerId?: BoolWithAggregatesFilter<"Product"> | boolean
+    isQuantityMinusOnOrder?: BoolWithAggregatesFilter<"Product"> | boolean
+    isQuantityShowUser?: BoolWithAggregatesFilter<"Product"> | boolean
+    isPremiumProduct?: BoolWithAggregatesFilter<"Product"> | boolean
+    minAmountForPremium?: DecimalNullableWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    redeemLink?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    isResellerProduct?: BoolWithAggregatesFilter<"Product"> | boolean
+    isMysteryBox?: BoolWithAggregatesFilter<"Product"> | boolean
+    description?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    packageDesign?: EnumPackageDesignTemplateWithAggregatesFilter<"Product"> | $Enums.PackageDesignTemplate
+    serviceId?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
+  }
+
+  export type PackageWhereInput = {
+    AND?: PackageWhereInput | PackageWhereInput[]
+    OR?: PackageWhereInput[]
+    NOT?: PackageWhereInput | PackageWhereInput[]
+    id?: StringFilter<"Package"> | string
+    productId?: StringFilter<"Package"> | string
+    name?: StringFilter<"Package"> | string
+    amount?: IntFilter<"Package"> | number
+    salePrice?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    level?: IntFilter<"Package"> | number
+    isAuto?: BoolFilter<"Package"> | boolean
+    isManual?: BoolFilter<"Package"> | boolean
+    server?: StringNullableFilter<"Package"> | string | null
+    createdAt?: DateTimeFilter<"Package"> | Date | string
+    updatedAt?: DateTimeFilter<"Package"> | Date | string
+    product?: XOR<ProductRelationFilter, ProductWhereInput>
+    stockPoolLinks?: PackageStockPoolListRelationFilter
+    orders?: OrderListRelationFilter
+  }
+
+  export type PackageOrderByWithRelationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    amount?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    commonPriceUsd?: SortOrder
+    extraFee?: SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isManual?: SortOrder
+    server?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+    stockPoolLinks?: PackageStockPoolOrderByRelationAggregateInput
+    orders?: OrderOrderByRelationAggregateInput
+  }
+
+  export type PackageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PackageWhereInput | PackageWhereInput[]
+    OR?: PackageWhereInput[]
+    NOT?: PackageWhereInput | PackageWhereInput[]
+    productId?: StringFilter<"Package"> | string
+    name?: StringFilter<"Package"> | string
+    amount?: IntFilter<"Package"> | number
+    salePrice?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    level?: IntFilter<"Package"> | number
+    isAuto?: BoolFilter<"Package"> | boolean
+    isManual?: BoolFilter<"Package"> | boolean
+    server?: StringNullableFilter<"Package"> | string | null
+    createdAt?: DateTimeFilter<"Package"> | Date | string
+    updatedAt?: DateTimeFilter<"Package"> | Date | string
+    product?: XOR<ProductRelationFilter, ProductWhereInput>
+    stockPoolLinks?: PackageStockPoolListRelationFilter
+    orders?: OrderListRelationFilter
+  }, "id">
+
+  export type PackageOrderByWithAggregationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    amount?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    commonPriceUsd?: SortOrder
+    extraFee?: SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isManual?: SortOrder
+    server?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PackageCountOrderByAggregateInput
+    _avg?: PackageAvgOrderByAggregateInput
+    _max?: PackageMaxOrderByAggregateInput
+    _min?: PackageMinOrderByAggregateInput
+    _sum?: PackageSumOrderByAggregateInput
+  }
+
+  export type PackageScalarWhereWithAggregatesInput = {
+    AND?: PackageScalarWhereWithAggregatesInput | PackageScalarWhereWithAggregatesInput[]
+    OR?: PackageScalarWhereWithAggregatesInput[]
+    NOT?: PackageScalarWhereWithAggregatesInput | PackageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Package"> | string
+    productId?: StringWithAggregatesFilter<"Package"> | string
+    name?: StringWithAggregatesFilter<"Package"> | string
+    amount?: IntWithAggregatesFilter<"Package"> | number
+    salePrice?: DecimalWithAggregatesFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalWithAggregatesFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalWithAggregatesFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalWithAggregatesFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    level?: IntWithAggregatesFilter<"Package"> | number
+    isAuto?: BoolWithAggregatesFilter<"Package"> | boolean
+    isManual?: BoolWithAggregatesFilter<"Package"> | boolean
+    server?: StringNullableWithAggregatesFilter<"Package"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Package"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Package"> | Date | string
+  }
+
+  export type StockPoolWhereInput = {
+    AND?: StockPoolWhereInput | StockPoolWhereInput[]
+    OR?: StockPoolWhereInput[]
+    NOT?: StockPoolWhereInput | StockPoolWhereInput[]
+    id?: StringFilter<"StockPool"> | string
+    name?: StringFilter<"StockPool"> | string
+    createdAt?: DateTimeFilter<"StockPool"> | Date | string
+    updatedAt?: DateTimeFilter<"StockPool"> | Date | string
+    codes?: StockCodeListRelationFilter
+    packageLinks?: PackageStockPoolListRelationFilter
+  }
+
+  export type StockPoolOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    codes?: StockCodeOrderByRelationAggregateInput
+    packageLinks?: PackageStockPoolOrderByRelationAggregateInput
+  }
+
+  export type StockPoolWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: StockPoolWhereInput | StockPoolWhereInput[]
+    OR?: StockPoolWhereInput[]
+    NOT?: StockPoolWhereInput | StockPoolWhereInput[]
+    createdAt?: DateTimeFilter<"StockPool"> | Date | string
+    updatedAt?: DateTimeFilter<"StockPool"> | Date | string
+    codes?: StockCodeListRelationFilter
+    packageLinks?: PackageStockPoolListRelationFilter
+  }, "id" | "name">
+
+  export type StockPoolOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: StockPoolCountOrderByAggregateInput
+    _max?: StockPoolMaxOrderByAggregateInput
+    _min?: StockPoolMinOrderByAggregateInput
+  }
+
+  export type StockPoolScalarWhereWithAggregatesInput = {
+    AND?: StockPoolScalarWhereWithAggregatesInput | StockPoolScalarWhereWithAggregatesInput[]
+    OR?: StockPoolScalarWhereWithAggregatesInput[]
+    NOT?: StockPoolScalarWhereWithAggregatesInput | StockPoolScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StockPool"> | string
+    name?: StringWithAggregatesFilter<"StockPool"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"StockPool"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"StockPool"> | Date | string
+  }
+
+  export type PackageStockPoolWhereInput = {
+    AND?: PackageStockPoolWhereInput | PackageStockPoolWhereInput[]
+    OR?: PackageStockPoolWhereInput[]
+    NOT?: PackageStockPoolWhereInput | PackageStockPoolWhereInput[]
+    packageId?: StringFilter<"PackageStockPool"> | string
+    poolId?: StringFilter<"PackageStockPool"> | string
+    createdAt?: DateTimeFilter<"PackageStockPool"> | Date | string
+    package?: XOR<PackageRelationFilter, PackageWhereInput>
+    pool?: XOR<StockPoolRelationFilter, StockPoolWhereInput>
+  }
+
+  export type PackageStockPoolOrderByWithRelationInput = {
+    packageId?: SortOrder
+    poolId?: SortOrder
+    createdAt?: SortOrder
+    package?: PackageOrderByWithRelationInput
+    pool?: StockPoolOrderByWithRelationInput
+  }
+
+  export type PackageStockPoolWhereUniqueInput = Prisma.AtLeast<{
+    packageId_poolId?: PackageStockPoolPackageIdPoolIdCompoundUniqueInput
+    AND?: PackageStockPoolWhereInput | PackageStockPoolWhereInput[]
+    OR?: PackageStockPoolWhereInput[]
+    NOT?: PackageStockPoolWhereInput | PackageStockPoolWhereInput[]
+    packageId?: StringFilter<"PackageStockPool"> | string
+    poolId?: StringFilter<"PackageStockPool"> | string
+    createdAt?: DateTimeFilter<"PackageStockPool"> | Date | string
+    package?: XOR<PackageRelationFilter, PackageWhereInput>
+    pool?: XOR<StockPoolRelationFilter, StockPoolWhereInput>
+  }, "packageId_poolId">
+
+  export type PackageStockPoolOrderByWithAggregationInput = {
+    packageId?: SortOrder
+    poolId?: SortOrder
+    createdAt?: SortOrder
+    _count?: PackageStockPoolCountOrderByAggregateInput
+    _max?: PackageStockPoolMaxOrderByAggregateInput
+    _min?: PackageStockPoolMinOrderByAggregateInput
+  }
+
+  export type PackageStockPoolScalarWhereWithAggregatesInput = {
+    AND?: PackageStockPoolScalarWhereWithAggregatesInput | PackageStockPoolScalarWhereWithAggregatesInput[]
+    OR?: PackageStockPoolScalarWhereWithAggregatesInput[]
+    NOT?: PackageStockPoolScalarWhereWithAggregatesInput | PackageStockPoolScalarWhereWithAggregatesInput[]
+    packageId?: StringWithAggregatesFilter<"PackageStockPool"> | string
+    poolId?: StringWithAggregatesFilter<"PackageStockPool"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PackageStockPool"> | Date | string
+  }
+
+  export type StockCodeWhereInput = {
+    AND?: StockCodeWhereInput | StockCodeWhereInput[]
+    OR?: StockCodeWhereInput[]
+    NOT?: StockCodeWhereInput | StockCodeWhereInput[]
+    id?: StringFilter<"StockCode"> | string
+    poolId?: StringFilter<"StockCode"> | string
+    codeCiphertext?: StringFilter<"StockCode"> | string
+    status?: EnumStockCodeStatusFilter<"StockCode"> | $Enums.StockCodeStatus
+    orderId?: StringNullableFilter<"StockCode"> | string | null
+    consumedAt?: DateTimeNullableFilter<"StockCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"StockCode"> | Date | string
+    pool?: XOR<StockPoolRelationFilter, StockPoolWhereInput>
+    order?: XOR<OrderNullableRelationFilter, OrderWhereInput> | null
+  }
+
+  export type StockCodeOrderByWithRelationInput = {
+    id?: SortOrder
+    poolId?: SortOrder
+    codeCiphertext?: SortOrder
+    status?: SortOrder
+    orderId?: SortOrderInput | SortOrder
+    consumedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    pool?: StockPoolOrderByWithRelationInput
+    order?: OrderOrderByWithRelationInput
+  }
+
+  export type StockCodeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    orderId?: string
+    AND?: StockCodeWhereInput | StockCodeWhereInput[]
+    OR?: StockCodeWhereInput[]
+    NOT?: StockCodeWhereInput | StockCodeWhereInput[]
+    poolId?: StringFilter<"StockCode"> | string
+    codeCiphertext?: StringFilter<"StockCode"> | string
+    status?: EnumStockCodeStatusFilter<"StockCode"> | $Enums.StockCodeStatus
+    consumedAt?: DateTimeNullableFilter<"StockCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"StockCode"> | Date | string
+    pool?: XOR<StockPoolRelationFilter, StockPoolWhereInput>
+    order?: XOR<OrderNullableRelationFilter, OrderWhereInput> | null
+  }, "id" | "orderId">
+
+  export type StockCodeOrderByWithAggregationInput = {
+    id?: SortOrder
+    poolId?: SortOrder
+    codeCiphertext?: SortOrder
+    status?: SortOrder
+    orderId?: SortOrderInput | SortOrder
+    consumedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: StockCodeCountOrderByAggregateInput
+    _max?: StockCodeMaxOrderByAggregateInput
+    _min?: StockCodeMinOrderByAggregateInput
+  }
+
+  export type StockCodeScalarWhereWithAggregatesInput = {
+    AND?: StockCodeScalarWhereWithAggregatesInput | StockCodeScalarWhereWithAggregatesInput[]
+    OR?: StockCodeScalarWhereWithAggregatesInput[]
+    NOT?: StockCodeScalarWhereWithAggregatesInput | StockCodeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StockCode"> | string
+    poolId?: StringWithAggregatesFilter<"StockCode"> | string
+    codeCiphertext?: StringWithAggregatesFilter<"StockCode"> | string
+    status?: EnumStockCodeStatusWithAggregatesFilter<"StockCode"> | $Enums.StockCodeStatus
+    orderId?: StringNullableWithAggregatesFilter<"StockCode"> | string | null
+    consumedAt?: DateTimeNullableWithAggregatesFilter<"StockCode"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"StockCode"> | Date | string
+  }
+
   export type UserWhereInput = {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
@@ -34566,6 +42557,7 @@ export namespace Prisma {
     apiKeyHash?: StringNullableFilter<"User"> | string | null
     apiKeyPrefix?: StringNullableFilter<"User"> | string | null
     apiKeyCreatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    isVip?: BoolFilter<"User"> | boolean
     phone?: StringNullableFilter<"User"> | string | null
     notifyEmail?: BoolFilter<"User"> | boolean
     notifyOrderUpdates?: BoolFilter<"User"> | boolean
@@ -34601,6 +42593,7 @@ export namespace Prisma {
     apiKeyHash?: SortOrderInput | SortOrder
     apiKeyPrefix?: SortOrderInput | SortOrder
     apiKeyCreatedAt?: SortOrderInput | SortOrder
+    isVip?: SortOrder
     phone?: SortOrderInput | SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -34639,6 +42632,7 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFilter<"User"> | boolean
     apiKeyPrefix?: StringNullableFilter<"User"> | string | null
     apiKeyCreatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    isVip?: BoolFilter<"User"> | boolean
     phone?: StringNullableFilter<"User"> | string | null
     notifyEmail?: BoolFilter<"User"> | boolean
     notifyOrderUpdates?: BoolFilter<"User"> | boolean
@@ -34674,6 +42668,7 @@ export namespace Prisma {
     apiKeyHash?: SortOrderInput | SortOrder
     apiKeyPrefix?: SortOrderInput | SortOrder
     apiKeyCreatedAt?: SortOrderInput | SortOrder
+    isVip?: SortOrder
     phone?: SortOrderInput | SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -34702,6 +42697,7 @@ export namespace Prisma {
     apiKeyHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     apiKeyPrefix?: StringNullableWithAggregatesFilter<"User"> | string | null
     apiKeyCreatedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    isVip?: BoolWithAggregatesFilter<"User"> | boolean
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     notifyEmail?: BoolWithAggregatesFilter<"User"> | boolean
     notifyOrderUpdates?: BoolWithAggregatesFilter<"User"> | boolean
@@ -35438,6 +43434,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     dripFeeds?: DripFeedListRelationFilter
     orderIntents?: OrderIntentListRelationFilter
+    products?: ProductListRelationFilter
   }
 
   export type ServiceOrderByWithRelationInput = {
@@ -35466,6 +43463,7 @@ export namespace Prisma {
     orders?: OrderOrderByRelationAggregateInput
     dripFeeds?: DripFeedOrderByRelationAggregateInput
     orderIntents?: OrderIntentOrderByRelationAggregateInput
+    products?: ProductOrderByRelationAggregateInput
   }
 
   export type ServiceWhereUniqueInput = Prisma.AtLeast<{
@@ -35498,6 +43496,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     dripFeeds?: DripFeedListRelationFilter
     orderIntents?: OrderIntentListRelationFilter
+    products?: ProductListRelationFilter
   }, "id" | "providerId_providerServiceId">
 
   export type ServiceOrderByWithAggregationInput = {
@@ -35558,7 +43557,8 @@ export namespace Prisma {
     NOT?: OrderWhereInput | OrderWhereInput[]
     id?: StringFilter<"Order"> | string
     userId?: StringFilter<"Order"> | string
-    serviceId?: StringFilter<"Order"> | string
+    serviceId?: StringNullableFilter<"Order"> | string | null
+    packageId?: StringNullableFilter<"Order"> | string | null
     link?: StringFilter<"Order"> | string
     quantity?: IntFilter<"Order"> | number
     charge?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
@@ -35571,14 +43571,17 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
-    service?: XOR<ServiceRelationFilter, ServiceWhereInput>
+    service?: XOR<ServiceNullableRelationFilter, ServiceWhereInput> | null
+    package?: XOR<PackageNullableRelationFilter, PackageWhereInput> | null
+    stockCode?: XOR<StockCodeNullableRelationFilter, StockCodeWhereInput> | null
     refillRequests?: RefillRequestListRelationFilter
   }
 
   export type OrderOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    serviceId?: SortOrder
+    serviceId?: SortOrderInput | SortOrder
+    packageId?: SortOrderInput | SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -35592,6 +43595,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
     service?: ServiceOrderByWithRelationInput
+    package?: PackageOrderByWithRelationInput
+    stockCode?: StockCodeOrderByWithRelationInput
     refillRequests?: RefillRequestOrderByRelationAggregateInput
   }
 
@@ -35601,7 +43606,8 @@ export namespace Prisma {
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
     userId?: StringFilter<"Order"> | string
-    serviceId?: StringFilter<"Order"> | string
+    serviceId?: StringNullableFilter<"Order"> | string | null
+    packageId?: StringNullableFilter<"Order"> | string | null
     link?: StringFilter<"Order"> | string
     quantity?: IntFilter<"Order"> | number
     charge?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
@@ -35614,14 +43620,17 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
-    service?: XOR<ServiceRelationFilter, ServiceWhereInput>
+    service?: XOR<ServiceNullableRelationFilter, ServiceWhereInput> | null
+    package?: XOR<PackageNullableRelationFilter, PackageWhereInput> | null
+    stockCode?: XOR<StockCodeNullableRelationFilter, StockCodeWhereInput> | null
     refillRequests?: RefillRequestListRelationFilter
   }, "id">
 
   export type OrderOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    serviceId?: SortOrder
+    serviceId?: SortOrderInput | SortOrder
+    packageId?: SortOrderInput | SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -35646,7 +43655,8 @@ export namespace Prisma {
     NOT?: OrderScalarWhereWithAggregatesInput | OrderScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Order"> | string
     userId?: StringWithAggregatesFilter<"Order"> | string
-    serviceId?: StringWithAggregatesFilter<"Order"> | string
+    serviceId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    packageId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     link?: StringWithAggregatesFilter<"Order"> | string
     quantity?: IntWithAggregatesFilter<"Order"> | number
     charge?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
@@ -36932,6 +44942,646 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
   }
 
+  export type BrandCreateInput = {
+    id?: string
+    name: string
+    level?: number
+    productDesign?: $Enums.ProductDesignTemplate
+    logo?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductCreateNestedManyWithoutBrandInput
+  }
+
+  export type BrandUncheckedCreateInput = {
+    id?: string
+    name: string
+    level?: number
+    productDesign?: $Enums.ProductDesignTemplate
+    logo?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductUncheckedCreateNestedManyWithoutBrandInput
+  }
+
+  export type BrandUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    productDesign?: EnumProductDesignTemplateFieldUpdateOperationsInput | $Enums.ProductDesignTemplate
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUpdateManyWithoutBrandNestedInput
+  }
+
+  export type BrandUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    productDesign?: EnumProductDesignTemplateFieldUpdateOperationsInput | $Enums.ProductDesignTemplate
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUncheckedUpdateManyWithoutBrandNestedInput
+  }
+
+  export type BrandCreateManyInput = {
+    id?: string
+    name: string
+    level?: number
+    productDesign?: $Enums.ProductDesignTemplate
+    logo?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BrandUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    productDesign?: EnumProductDesignTemplateFieldUpdateOperationsInput | $Enums.ProductDesignTemplate
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BrandUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    productDesign?: EnumProductDesignTemplateFieldUpdateOperationsInput | $Enums.ProductDesignTemplate
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductCreateInput = {
+    id?: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brand: BrandCreateNestedOneWithoutProductsInput
+    service?: ServiceCreateNestedOneWithoutProductsInput
+    packages?: PackageCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateInput = {
+    id?: string
+    brandId: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    serviceId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    packages?: PackageUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brand?: BrandUpdateOneRequiredWithoutProductsNestedInput
+    service?: ServiceUpdateOneWithoutProductsNestedInput
+    packages?: PackageUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    packages?: PackageUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductCreateManyInput = {
+    id?: string
+    brandId: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    serviceId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageCreateInput = {
+    id?: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutPackagesInput
+    stockPoolLinks?: PackageStockPoolCreateNestedManyWithoutPackageInput
+    orders?: OrderCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageUncheckedCreateInput = {
+    id?: string
+    productId: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stockPoolLinks?: PackageStockPoolUncheckedCreateNestedManyWithoutPackageInput
+    orders?: OrderUncheckedCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutPackagesNestedInput
+    stockPoolLinks?: PackageStockPoolUpdateManyWithoutPackageNestedInput
+    orders?: OrderUpdateManyWithoutPackageNestedInput
+  }
+
+  export type PackageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockPoolLinks?: PackageStockPoolUncheckedUpdateManyWithoutPackageNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutPackageNestedInput
+  }
+
+  export type PackageCreateManyInput = {
+    id?: string
+    productId: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PackageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockPoolCreateInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    codes?: StockCodeCreateNestedManyWithoutPoolInput
+    packageLinks?: PackageStockPoolCreateNestedManyWithoutPoolInput
+  }
+
+  export type StockPoolUncheckedCreateInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    codes?: StockCodeUncheckedCreateNestedManyWithoutPoolInput
+    packageLinks?: PackageStockPoolUncheckedCreateNestedManyWithoutPoolInput
+  }
+
+  export type StockPoolUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    codes?: StockCodeUpdateManyWithoutPoolNestedInput
+    packageLinks?: PackageStockPoolUpdateManyWithoutPoolNestedInput
+  }
+
+  export type StockPoolUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    codes?: StockCodeUncheckedUpdateManyWithoutPoolNestedInput
+    packageLinks?: PackageStockPoolUncheckedUpdateManyWithoutPoolNestedInput
+  }
+
+  export type StockPoolCreateManyInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StockPoolUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockPoolUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageStockPoolCreateInput = {
+    createdAt?: Date | string
+    package: PackageCreateNestedOneWithoutStockPoolLinksInput
+    pool: StockPoolCreateNestedOneWithoutPackageLinksInput
+  }
+
+  export type PackageStockPoolUncheckedCreateInput = {
+    packageId: string
+    poolId: string
+    createdAt?: Date | string
+  }
+
+  export type PackageStockPoolUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    package?: PackageUpdateOneRequiredWithoutStockPoolLinksNestedInput
+    pool?: StockPoolUpdateOneRequiredWithoutPackageLinksNestedInput
+  }
+
+  export type PackageStockPoolUncheckedUpdateInput = {
+    packageId?: StringFieldUpdateOperationsInput | string
+    poolId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageStockPoolCreateManyInput = {
+    packageId: string
+    poolId: string
+    createdAt?: Date | string
+  }
+
+  export type PackageStockPoolUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageStockPoolUncheckedUpdateManyInput = {
+    packageId?: StringFieldUpdateOperationsInput | string
+    poolId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockCodeCreateInput = {
+    id?: string
+    codeCiphertext: string
+    status?: $Enums.StockCodeStatus
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+    pool: StockPoolCreateNestedOneWithoutCodesInput
+    order?: OrderCreateNestedOneWithoutStockCodeInput
+  }
+
+  export type StockCodeUncheckedCreateInput = {
+    id?: string
+    poolId: string
+    codeCiphertext: string
+    status?: $Enums.StockCodeStatus
+    orderId?: string | null
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type StockCodeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    codeCiphertext?: StringFieldUpdateOperationsInput | string
+    status?: EnumStockCodeStatusFieldUpdateOperationsInput | $Enums.StockCodeStatus
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pool?: StockPoolUpdateOneRequiredWithoutCodesNestedInput
+    order?: OrderUpdateOneWithoutStockCodeNestedInput
+  }
+
+  export type StockCodeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    poolId?: StringFieldUpdateOperationsInput | string
+    codeCiphertext?: StringFieldUpdateOperationsInput | string
+    status?: EnumStockCodeStatusFieldUpdateOperationsInput | $Enums.StockCodeStatus
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockCodeCreateManyInput = {
+    id?: string
+    poolId: string
+    codeCiphertext: string
+    status?: $Enums.StockCodeStatus
+    orderId?: string | null
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type StockCodeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    codeCiphertext?: StringFieldUpdateOperationsInput | string
+    status?: EnumStockCodeStatusFieldUpdateOperationsInput | $Enums.StockCodeStatus
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockCodeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    poolId?: StringFieldUpdateOperationsInput | string
+    codeCiphertext?: StringFieldUpdateOperationsInput | string
+    status?: EnumStockCodeStatusFieldUpdateOperationsInput | $Enums.StockCodeStatus
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     username: string
@@ -36946,6 +45596,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -36981,6 +45632,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -37016,6 +45668,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -37051,6 +45704,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -37086,6 +45740,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -37108,6 +45763,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -37130,6 +45786,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -37929,6 +46586,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentCreateNestedManyWithoutServiceInput
+    products?: ProductCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateInput = {
@@ -37954,6 +46612,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedUncheckedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutServiceInput
+    products?: ProductUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUpdateInput = {
@@ -37979,6 +46638,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutServiceNestedInput
+    products?: ProductUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateInput = {
@@ -38004,6 +46664,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUncheckedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutServiceNestedInput
+    products?: ProductUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceCreateManyInput = {
@@ -38083,14 +46744,17 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
-    service: ServiceCreateNestedOneWithoutOrdersInput
+    service?: ServiceCreateNestedOneWithoutOrdersInput
+    package?: PackageCreateNestedOneWithoutOrdersInput
+    stockCode?: StockCodeCreateNestedOneWithoutOrderInput
     refillRequests?: RefillRequestCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
     id?: string
     userId: string
-    serviceId: string
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -38102,6 +46766,7 @@ export namespace Prisma {
     providerOrderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    stockCode?: StockCodeUncheckedCreateNestedOneWithoutOrderInput
     refillRequests?: RefillRequestUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -38119,14 +46784,17 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
-    service?: ServiceUpdateOneRequiredWithoutOrdersNestedInput
+    service?: ServiceUpdateOneWithoutOrdersNestedInput
+    package?: PackageUpdateOneWithoutOrdersNestedInput
+    stockCode?: StockCodeUpdateOneWithoutOrderNestedInput
     refillRequests?: RefillRequestUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -38138,13 +46806,15 @@ export namespace Prisma {
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockCode?: StockCodeUncheckedUpdateOneWithoutOrderNestedInput
     refillRequests?: RefillRequestUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
     id?: string
     userId: string
-    serviceId: string
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -38176,7 +46846,8 @@ export namespace Prisma {
   export type OrderUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -39604,6 +48275,24 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type EnumProductDesignTemplateFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductDesignTemplate | EnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductDesignTemplate[] | ListEnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductDesignTemplate[] | ListEnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductDesignTemplateFilter<$PrismaModel> | $Enums.ProductDesignTemplate
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -39617,6 +48306,683 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type ProductListRelationFilter = {
+    every?: ProductWhereInput
+    some?: ProductWhereInput
+    none?: ProductWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type ProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BrandCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    level?: SortOrder
+    productDesign?: SortOrder
+    logo?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BrandAvgOrderByAggregateInput = {
+    level?: SortOrder
+  }
+
+  export type BrandMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    level?: SortOrder
+    productDesign?: SortOrder
+    logo?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BrandMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    level?: SortOrder
+    productDesign?: SortOrder
+    logo?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BrandSumOrderByAggregateInput = {
+    level?: SortOrder
+  }
+
+  export type StringWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumProductDesignTemplateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductDesignTemplate | EnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductDesignTemplate[] | ListEnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductDesignTemplate[] | ListEnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductDesignTemplateWithAggregatesFilter<$PrismaModel> | $Enums.ProductDesignTemplate
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProductDesignTemplateFilter<$PrismaModel>
+    _max?: NestedEnumProductDesignTemplateFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type EnumProductTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductType | EnumProductTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductTypeFilter<$PrismaModel> | $Enums.ProductType
+  }
+
+  export type EnumAccessTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AccessType | EnumAccessTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AccessType[] | ListEnumAccessTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AccessType[] | ListEnumAccessTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAccessTypeFilter<$PrismaModel> | $Enums.AccessType
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type EnumPackageDesignTemplateFilter<$PrismaModel = never> = {
+    equals?: $Enums.PackageDesignTemplate | EnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    in?: $Enums.PackageDesignTemplate[] | ListEnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PackageDesignTemplate[] | ListEnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    not?: NestedEnumPackageDesignTemplateFilter<$PrismaModel> | $Enums.PackageDesignTemplate
+  }
+
+  export type BrandRelationFilter = {
+    is?: BrandWhereInput
+    isNot?: BrandWhereInput
+  }
+
+  export type ServiceNullableRelationFilter = {
+    is?: ServiceWhereInput | null
+    isNot?: ServiceWhereInput | null
+  }
+
+  export type PackageListRelationFilter = {
+    every?: PackageWhereInput
+    some?: PackageWhereInput
+    none?: PackageWhereInput
+  }
+
+  export type PackageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProductCountOrderByAggregateInput = {
+    id?: SortOrder
+    brandId?: SortOrder
+    name?: SortOrder
+    userInputFieldName?: SortOrder
+    orderInstructionsLink?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    quantity?: SortOrder
+    productType?: SortOrder
+    accessType?: SortOrder
+    logo?: SortOrder
+    secondaryType?: SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isActive?: SortOrder
+    productNote?: SortOrder
+    slug?: SortOrder
+    gameCheaterType?: SortOrder
+    hasOrderTimeLimit?: SortOrder
+    maxOrdersPerWindow?: SortOrder
+    orderWindowHours?: SortOrder
+    checkUniquePlayerId?: SortOrder
+    isQuantityMinusOnOrder?: SortOrder
+    isQuantityShowUser?: SortOrder
+    isPremiumProduct?: SortOrder
+    minAmountForPremium?: SortOrder
+    removeCharacters?: SortOrder
+    redeemLink?: SortOrder
+    isResellerProduct?: SortOrder
+    isMysteryBox?: SortOrder
+    description?: SortOrder
+    packageDesign?: SortOrder
+    serviceId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductAvgOrderByAggregateInput = {
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    quantity?: SortOrder
+    level?: SortOrder
+    maxOrdersPerWindow?: SortOrder
+    orderWindowHours?: SortOrder
+    minAmountForPremium?: SortOrder
+  }
+
+  export type ProductMaxOrderByAggregateInput = {
+    id?: SortOrder
+    brandId?: SortOrder
+    name?: SortOrder
+    userInputFieldName?: SortOrder
+    orderInstructionsLink?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    quantity?: SortOrder
+    productType?: SortOrder
+    accessType?: SortOrder
+    logo?: SortOrder
+    secondaryType?: SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isActive?: SortOrder
+    productNote?: SortOrder
+    slug?: SortOrder
+    gameCheaterType?: SortOrder
+    hasOrderTimeLimit?: SortOrder
+    maxOrdersPerWindow?: SortOrder
+    orderWindowHours?: SortOrder
+    checkUniquePlayerId?: SortOrder
+    isQuantityMinusOnOrder?: SortOrder
+    isQuantityShowUser?: SortOrder
+    isPremiumProduct?: SortOrder
+    minAmountForPremium?: SortOrder
+    removeCharacters?: SortOrder
+    redeemLink?: SortOrder
+    isResellerProduct?: SortOrder
+    isMysteryBox?: SortOrder
+    description?: SortOrder
+    packageDesign?: SortOrder
+    serviceId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductMinOrderByAggregateInput = {
+    id?: SortOrder
+    brandId?: SortOrder
+    name?: SortOrder
+    userInputFieldName?: SortOrder
+    orderInstructionsLink?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    quantity?: SortOrder
+    productType?: SortOrder
+    accessType?: SortOrder
+    logo?: SortOrder
+    secondaryType?: SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isActive?: SortOrder
+    productNote?: SortOrder
+    slug?: SortOrder
+    gameCheaterType?: SortOrder
+    hasOrderTimeLimit?: SortOrder
+    maxOrdersPerWindow?: SortOrder
+    orderWindowHours?: SortOrder
+    checkUniquePlayerId?: SortOrder
+    isQuantityMinusOnOrder?: SortOrder
+    isQuantityShowUser?: SortOrder
+    isPremiumProduct?: SortOrder
+    minAmountForPremium?: SortOrder
+    removeCharacters?: SortOrder
+    redeemLink?: SortOrder
+    isResellerProduct?: SortOrder
+    isMysteryBox?: SortOrder
+    description?: SortOrder
+    packageDesign?: SortOrder
+    serviceId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductSumOrderByAggregateInput = {
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    quantity?: SortOrder
+    level?: SortOrder
+    maxOrdersPerWindow?: SortOrder
+    orderWindowHours?: SortOrder
+    minAmountForPremium?: SortOrder
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type EnumProductTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductType | EnumProductTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductTypeWithAggregatesFilter<$PrismaModel> | $Enums.ProductType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProductTypeFilter<$PrismaModel>
+    _max?: NestedEnumProductTypeFilter<$PrismaModel>
+  }
+
+  export type EnumAccessTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AccessType | EnumAccessTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AccessType[] | ListEnumAccessTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AccessType[] | ListEnumAccessTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAccessTypeWithAggregatesFilter<$PrismaModel> | $Enums.AccessType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAccessTypeFilter<$PrismaModel>
+    _max?: NestedEnumAccessTypeFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type EnumPackageDesignTemplateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PackageDesignTemplate | EnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    in?: $Enums.PackageDesignTemplate[] | ListEnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PackageDesignTemplate[] | ListEnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    not?: NestedEnumPackageDesignTemplateWithAggregatesFilter<$PrismaModel> | $Enums.PackageDesignTemplate
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPackageDesignTemplateFilter<$PrismaModel>
+    _max?: NestedEnumPackageDesignTemplateFilter<$PrismaModel>
+  }
+
+  export type ProductRelationFilter = {
+    is?: ProductWhereInput
+    isNot?: ProductWhereInput
+  }
+
+  export type PackageStockPoolListRelationFilter = {
+    every?: PackageStockPoolWhereInput
+    some?: PackageStockPoolWhereInput
+    none?: PackageStockPoolWhereInput
+  }
+
+  export type OrderListRelationFilter = {
+    every?: OrderWhereInput
+    some?: OrderWhereInput
+    none?: OrderWhereInput
+  }
+
+  export type PackageStockPoolOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PackageCountOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    amount?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    commonPriceUsd?: SortOrder
+    extraFee?: SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isManual?: SortOrder
+    server?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PackageAvgOrderByAggregateInput = {
+    amount?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    commonPriceUsd?: SortOrder
+    extraFee?: SortOrder
+    level?: SortOrder
+  }
+
+  export type PackageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    amount?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    commonPriceUsd?: SortOrder
+    extraFee?: SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isManual?: SortOrder
+    server?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PackageMinOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    amount?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    commonPriceUsd?: SortOrder
+    extraFee?: SortOrder
+    level?: SortOrder
+    isAuto?: SortOrder
+    isManual?: SortOrder
+    server?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PackageSumOrderByAggregateInput = {
+    amount?: SortOrder
+    salePrice?: SortOrder
+    buyPrice?: SortOrder
+    commonPriceUsd?: SortOrder
+    extraFee?: SortOrder
+    level?: SortOrder
+  }
+
+  export type StockCodeListRelationFilter = {
+    every?: StockCodeWhereInput
+    some?: StockCodeWhereInput
+    none?: StockCodeWhereInput
+  }
+
+  export type StockCodeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StockPoolCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StockPoolMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StockPoolMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PackageRelationFilter = {
+    is?: PackageWhereInput
+    isNot?: PackageWhereInput
+  }
+
+  export type StockPoolRelationFilter = {
+    is?: StockPoolWhereInput
+    isNot?: StockPoolWhereInput
+  }
+
+  export type PackageStockPoolPackageIdPoolIdCompoundUniqueInput = {
+    packageId: string
+    poolId: string
+  }
+
+  export type PackageStockPoolCountOrderByAggregateInput = {
+    packageId?: SortOrder
+    poolId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PackageStockPoolMaxOrderByAggregateInput = {
+    packageId?: SortOrder
+    poolId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PackageStockPoolMinOrderByAggregateInput = {
+    packageId?: SortOrder
+    poolId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumStockCodeStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.StockCodeStatus | EnumStockCodeStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StockCodeStatus[] | ListEnumStockCodeStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.StockCodeStatus[] | ListEnumStockCodeStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumStockCodeStatusFilter<$PrismaModel> | $Enums.StockCodeStatus
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type OrderNullableRelationFilter = {
+    is?: OrderWhereInput | null
+    isNot?: OrderWhereInput | null
+  }
+
+  export type StockCodeCountOrderByAggregateInput = {
+    id?: SortOrder
+    poolId?: SortOrder
+    codeCiphertext?: SortOrder
+    status?: SortOrder
+    orderId?: SortOrder
+    consumedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockCodeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    poolId?: SortOrder
+    codeCiphertext?: SortOrder
+    status?: SortOrder
+    orderId?: SortOrder
+    consumedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockCodeMinOrderByAggregateInput = {
+    id?: SortOrder
+    poolId?: SortOrder
+    codeCiphertext?: SortOrder
+    status?: SortOrder
+    orderId?: SortOrder
+    consumedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumStockCodeStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StockCodeStatus | EnumStockCodeStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StockCodeStatus[] | ListEnumStockCodeStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.StockCodeStatus[] | ListEnumStockCodeStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumStockCodeStatusWithAggregatesFilter<$PrismaModel> | $Enums.StockCodeStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStockCodeStatusFilter<$PrismaModel>
+    _max?: NestedEnumStockCodeStatusFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type EnumRoleFilter<$PrismaModel = never> = {
@@ -39633,33 +48999,6 @@ export namespace Prisma {
     not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type WalletNullableRelationFilter = {
     is?: WalletWhereInput | null
     isNot?: WalletWhereInput | null
@@ -39669,12 +49008,6 @@ export namespace Prisma {
     every?: RefreshTokenWhereInput
     some?: RefreshTokenWhereInput
     none?: RefreshTokenWhereInput
-  }
-
-  export type OrderListRelationFilter = {
-    every?: OrderWhereInput
-    some?: OrderWhereInput
-    none?: OrderWhereInput
   }
 
   export type TicketListRelationFilter = {
@@ -39729,16 +49062,7 @@ export namespace Prisma {
     none?: OrderIntentWhereInput
   }
 
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
-  }
-
   export type RefreshTokenOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type OrderOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -39784,6 +49108,7 @@ export namespace Prisma {
     apiKeyHash?: SortOrder
     apiKeyPrefix?: SortOrder
     apiKeyCreatedAt?: SortOrder
+    isVip?: SortOrder
     phone?: SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -39806,6 +49131,7 @@ export namespace Prisma {
     apiKeyHash?: SortOrder
     apiKeyPrefix?: SortOrder
     apiKeyCreatedAt?: SortOrder
+    isVip?: SortOrder
     phone?: SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -39828,48 +49154,13 @@ export namespace Prisma {
     apiKeyHash?: SortOrder
     apiKeyPrefix?: SortOrder
     apiKeyCreatedAt?: SortOrder
+    isVip?: SortOrder
     phone?: SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
     notifyPromotions?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type StringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type EnumRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -39890,42 +49181,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserStatusFilter<$PrismaModel>
     _max?: NestedEnumUserStatusFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type UserRelationFilter = {
@@ -39996,17 +49251,6 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type DecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
   export type WalletTransactionListRelationFilter = {
     every?: WalletTransactionWhereInput
     some?: WalletTransactionWhereInput
@@ -40047,22 +49291,6 @@ export namespace Prisma {
 
   export type WalletSumOrderByAggregateInput = {
     balance?: SortOrder
-  }
-
-  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type EnumWalletTxTypeFilter<$PrismaModel = never> = {
@@ -40349,17 +49577,6 @@ export namespace Prisma {
     not?: NestedEnumPaymentMethodStatusFilter<$PrismaModel> | $Enums.PaymentMethodStatus
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type PaymentMethodCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -40453,22 +49670,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentMethodStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentMethodStatusFilter<$PrismaModel>
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type ServiceCategoryCountOrderByAggregateInput = {
@@ -40625,17 +49826,6 @@ export namespace Prisma {
     _max?: NestedEnumServiceStatusFilter<$PrismaModel>
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type EnumOrderStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -40650,9 +49840,14 @@ export namespace Prisma {
     not?: NestedEnumOrderModeFilter<$PrismaModel> | $Enums.OrderMode
   }
 
-  export type ServiceRelationFilter = {
-    is?: ServiceWhereInput
-    isNot?: ServiceWhereInput
+  export type PackageNullableRelationFilter = {
+    is?: PackageWhereInput | null
+    isNot?: PackageWhereInput | null
+  }
+
+  export type StockCodeNullableRelationFilter = {
+    is?: StockCodeWhereInput | null
+    isNot?: StockCodeWhereInput | null
   }
 
   export type RefillRequestListRelationFilter = {
@@ -40669,6 +49864,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     serviceId?: SortOrder
+    packageId?: SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -40694,6 +49890,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     serviceId?: SortOrder
+    packageId?: SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -40711,6 +49908,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     serviceId?: SortOrder
+    packageId?: SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -40730,22 +49928,6 @@ export namespace Prisma {
     providerCost?: SortOrder
     startCount?: SortOrder
     remains?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -40773,6 +49955,11 @@ export namespace Prisma {
     in?: $Enums.OrderIntentStatus[] | ListEnumOrderIntentStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.OrderIntentStatus[] | ListEnumOrderIntentStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumOrderIntentStatusFilter<$PrismaModel> | $Enums.OrderIntentStatus
+  }
+
+  export type ServiceRelationFilter = {
+    is?: ServiceWhereInput
+    isNot?: ServiceWhereInput
   }
 
   export type OrderIntentCountOrderByAggregateInput = {
@@ -40992,17 +50179,6 @@ export namespace Prisma {
     not?: NestedEnumDepositStatusFilter<$PrismaModel> | $Enums.DepositStatus
   }
 
-  export type DecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -41112,22 +50288,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDepositStatusFilter<$PrismaModel>
     _max?: NestedEnumDepositStatusFilter<$PrismaModel>
-  }
-
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type AdminAuditLogCountOrderByAggregateInput = {
@@ -41729,6 +50889,432 @@ export namespace Prisma {
     _max?: NestedEnumPostStatusFilter<$PrismaModel>
   }
 
+  export type ProductCreateNestedManyWithoutBrandInput = {
+    create?: XOR<ProductCreateWithoutBrandInput, ProductUncheckedCreateWithoutBrandInput> | ProductCreateWithoutBrandInput[] | ProductUncheckedCreateWithoutBrandInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutBrandInput | ProductCreateOrConnectWithoutBrandInput[]
+    createMany?: ProductCreateManyBrandInputEnvelope
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type ProductUncheckedCreateNestedManyWithoutBrandInput = {
+    create?: XOR<ProductCreateWithoutBrandInput, ProductUncheckedCreateWithoutBrandInput> | ProductCreateWithoutBrandInput[] | ProductUncheckedCreateWithoutBrandInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutBrandInput | ProductCreateOrConnectWithoutBrandInput[]
+    createMany?: ProductCreateManyBrandInputEnvelope
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type EnumProductDesignTemplateFieldUpdateOperationsInput = {
+    set?: $Enums.ProductDesignTemplate
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type ProductUpdateManyWithoutBrandNestedInput = {
+    create?: XOR<ProductCreateWithoutBrandInput, ProductUncheckedCreateWithoutBrandInput> | ProductCreateWithoutBrandInput[] | ProductUncheckedCreateWithoutBrandInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutBrandInput | ProductCreateOrConnectWithoutBrandInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutBrandInput | ProductUpsertWithWhereUniqueWithoutBrandInput[]
+    createMany?: ProductCreateManyBrandInputEnvelope
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutBrandInput | ProductUpdateWithWhereUniqueWithoutBrandInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutBrandInput | ProductUpdateManyWithWhereWithoutBrandInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type ProductUncheckedUpdateManyWithoutBrandNestedInput = {
+    create?: XOR<ProductCreateWithoutBrandInput, ProductUncheckedCreateWithoutBrandInput> | ProductCreateWithoutBrandInput[] | ProductUncheckedCreateWithoutBrandInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutBrandInput | ProductCreateOrConnectWithoutBrandInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutBrandInput | ProductUpsertWithWhereUniqueWithoutBrandInput[]
+    createMany?: ProductCreateManyBrandInputEnvelope
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutBrandInput | ProductUpdateWithWhereUniqueWithoutBrandInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutBrandInput | ProductUpdateManyWithWhereWithoutBrandInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type BrandCreateNestedOneWithoutProductsInput = {
+    create?: XOR<BrandCreateWithoutProductsInput, BrandUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: BrandCreateOrConnectWithoutProductsInput
+    connect?: BrandWhereUniqueInput
+  }
+
+  export type ServiceCreateNestedOneWithoutProductsInput = {
+    create?: XOR<ServiceCreateWithoutProductsInput, ServiceUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: ServiceCreateOrConnectWithoutProductsInput
+    connect?: ServiceWhereUniqueInput
+  }
+
+  export type PackageCreateNestedManyWithoutProductInput = {
+    create?: XOR<PackageCreateWithoutProductInput, PackageUncheckedCreateWithoutProductInput> | PackageCreateWithoutProductInput[] | PackageUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: PackageCreateOrConnectWithoutProductInput | PackageCreateOrConnectWithoutProductInput[]
+    createMany?: PackageCreateManyProductInputEnvelope
+    connect?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+  }
+
+  export type PackageUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<PackageCreateWithoutProductInput, PackageUncheckedCreateWithoutProductInput> | PackageCreateWithoutProductInput[] | PackageUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: PackageCreateOrConnectWithoutProductInput | PackageCreateOrConnectWithoutProductInput[]
+    createMany?: PackageCreateManyProductInputEnvelope
+    connect?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+  }
+
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type EnumProductTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ProductType
+  }
+
+  export type EnumAccessTypeFieldUpdateOperationsInput = {
+    set?: $Enums.AccessType
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type EnumPackageDesignTemplateFieldUpdateOperationsInput = {
+    set?: $Enums.PackageDesignTemplate
+  }
+
+  export type BrandUpdateOneRequiredWithoutProductsNestedInput = {
+    create?: XOR<BrandCreateWithoutProductsInput, BrandUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: BrandCreateOrConnectWithoutProductsInput
+    upsert?: BrandUpsertWithoutProductsInput
+    connect?: BrandWhereUniqueInput
+    update?: XOR<XOR<BrandUpdateToOneWithWhereWithoutProductsInput, BrandUpdateWithoutProductsInput>, BrandUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type ServiceUpdateOneWithoutProductsNestedInput = {
+    create?: XOR<ServiceCreateWithoutProductsInput, ServiceUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: ServiceCreateOrConnectWithoutProductsInput
+    upsert?: ServiceUpsertWithoutProductsInput
+    disconnect?: ServiceWhereInput | boolean
+    delete?: ServiceWhereInput | boolean
+    connect?: ServiceWhereUniqueInput
+    update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutProductsInput, ServiceUpdateWithoutProductsInput>, ServiceUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type PackageUpdateManyWithoutProductNestedInput = {
+    create?: XOR<PackageCreateWithoutProductInput, PackageUncheckedCreateWithoutProductInput> | PackageCreateWithoutProductInput[] | PackageUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: PackageCreateOrConnectWithoutProductInput | PackageCreateOrConnectWithoutProductInput[]
+    upsert?: PackageUpsertWithWhereUniqueWithoutProductInput | PackageUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: PackageCreateManyProductInputEnvelope
+    set?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+    disconnect?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+    delete?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+    connect?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+    update?: PackageUpdateWithWhereUniqueWithoutProductInput | PackageUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: PackageUpdateManyWithWhereWithoutProductInput | PackageUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: PackageScalarWhereInput | PackageScalarWhereInput[]
+  }
+
+  export type PackageUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<PackageCreateWithoutProductInput, PackageUncheckedCreateWithoutProductInput> | PackageCreateWithoutProductInput[] | PackageUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: PackageCreateOrConnectWithoutProductInput | PackageCreateOrConnectWithoutProductInput[]
+    upsert?: PackageUpsertWithWhereUniqueWithoutProductInput | PackageUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: PackageCreateManyProductInputEnvelope
+    set?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+    disconnect?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+    delete?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+    connect?: PackageWhereUniqueInput | PackageWhereUniqueInput[]
+    update?: PackageUpdateWithWhereUniqueWithoutProductInput | PackageUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: PackageUpdateManyWithWhereWithoutProductInput | PackageUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: PackageScalarWhereInput | PackageScalarWhereInput[]
+  }
+
+  export type ProductCreateNestedOneWithoutPackagesInput = {
+    create?: XOR<ProductCreateWithoutPackagesInput, ProductUncheckedCreateWithoutPackagesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutPackagesInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type PackageStockPoolCreateNestedManyWithoutPackageInput = {
+    create?: XOR<PackageStockPoolCreateWithoutPackageInput, PackageStockPoolUncheckedCreateWithoutPackageInput> | PackageStockPoolCreateWithoutPackageInput[] | PackageStockPoolUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPackageInput | PackageStockPoolCreateOrConnectWithoutPackageInput[]
+    createMany?: PackageStockPoolCreateManyPackageInputEnvelope
+    connect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+  }
+
+  export type OrderCreateNestedManyWithoutPackageInput = {
+    create?: XOR<OrderCreateWithoutPackageInput, OrderUncheckedCreateWithoutPackageInput> | OrderCreateWithoutPackageInput[] | OrderUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutPackageInput | OrderCreateOrConnectWithoutPackageInput[]
+    createMany?: OrderCreateManyPackageInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type PackageStockPoolUncheckedCreateNestedManyWithoutPackageInput = {
+    create?: XOR<PackageStockPoolCreateWithoutPackageInput, PackageStockPoolUncheckedCreateWithoutPackageInput> | PackageStockPoolCreateWithoutPackageInput[] | PackageStockPoolUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPackageInput | PackageStockPoolCreateOrConnectWithoutPackageInput[]
+    createMany?: PackageStockPoolCreateManyPackageInputEnvelope
+    connect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+  }
+
+  export type OrderUncheckedCreateNestedManyWithoutPackageInput = {
+    create?: XOR<OrderCreateWithoutPackageInput, OrderUncheckedCreateWithoutPackageInput> | OrderCreateWithoutPackageInput[] | OrderUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutPackageInput | OrderCreateOrConnectWithoutPackageInput[]
+    createMany?: OrderCreateManyPackageInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type ProductUpdateOneRequiredWithoutPackagesNestedInput = {
+    create?: XOR<ProductCreateWithoutPackagesInput, ProductUncheckedCreateWithoutPackagesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutPackagesInput
+    upsert?: ProductUpsertWithoutPackagesInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutPackagesInput, ProductUpdateWithoutPackagesInput>, ProductUncheckedUpdateWithoutPackagesInput>
+  }
+
+  export type PackageStockPoolUpdateManyWithoutPackageNestedInput = {
+    create?: XOR<PackageStockPoolCreateWithoutPackageInput, PackageStockPoolUncheckedCreateWithoutPackageInput> | PackageStockPoolCreateWithoutPackageInput[] | PackageStockPoolUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPackageInput | PackageStockPoolCreateOrConnectWithoutPackageInput[]
+    upsert?: PackageStockPoolUpsertWithWhereUniqueWithoutPackageInput | PackageStockPoolUpsertWithWhereUniqueWithoutPackageInput[]
+    createMany?: PackageStockPoolCreateManyPackageInputEnvelope
+    set?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    disconnect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    delete?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    connect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    update?: PackageStockPoolUpdateWithWhereUniqueWithoutPackageInput | PackageStockPoolUpdateWithWhereUniqueWithoutPackageInput[]
+    updateMany?: PackageStockPoolUpdateManyWithWhereWithoutPackageInput | PackageStockPoolUpdateManyWithWhereWithoutPackageInput[]
+    deleteMany?: PackageStockPoolScalarWhereInput | PackageStockPoolScalarWhereInput[]
+  }
+
+  export type OrderUpdateManyWithoutPackageNestedInput = {
+    create?: XOR<OrderCreateWithoutPackageInput, OrderUncheckedCreateWithoutPackageInput> | OrderCreateWithoutPackageInput[] | OrderUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutPackageInput | OrderCreateOrConnectWithoutPackageInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutPackageInput | OrderUpsertWithWhereUniqueWithoutPackageInput[]
+    createMany?: OrderCreateManyPackageInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutPackageInput | OrderUpdateWithWhereUniqueWithoutPackageInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutPackageInput | OrderUpdateManyWithWhereWithoutPackageInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type PackageStockPoolUncheckedUpdateManyWithoutPackageNestedInput = {
+    create?: XOR<PackageStockPoolCreateWithoutPackageInput, PackageStockPoolUncheckedCreateWithoutPackageInput> | PackageStockPoolCreateWithoutPackageInput[] | PackageStockPoolUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPackageInput | PackageStockPoolCreateOrConnectWithoutPackageInput[]
+    upsert?: PackageStockPoolUpsertWithWhereUniqueWithoutPackageInput | PackageStockPoolUpsertWithWhereUniqueWithoutPackageInput[]
+    createMany?: PackageStockPoolCreateManyPackageInputEnvelope
+    set?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    disconnect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    delete?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    connect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    update?: PackageStockPoolUpdateWithWhereUniqueWithoutPackageInput | PackageStockPoolUpdateWithWhereUniqueWithoutPackageInput[]
+    updateMany?: PackageStockPoolUpdateManyWithWhereWithoutPackageInput | PackageStockPoolUpdateManyWithWhereWithoutPackageInput[]
+    deleteMany?: PackageStockPoolScalarWhereInput | PackageStockPoolScalarWhereInput[]
+  }
+
+  export type OrderUncheckedUpdateManyWithoutPackageNestedInput = {
+    create?: XOR<OrderCreateWithoutPackageInput, OrderUncheckedCreateWithoutPackageInput> | OrderCreateWithoutPackageInput[] | OrderUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutPackageInput | OrderCreateOrConnectWithoutPackageInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutPackageInput | OrderUpsertWithWhereUniqueWithoutPackageInput[]
+    createMany?: OrderCreateManyPackageInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutPackageInput | OrderUpdateWithWhereUniqueWithoutPackageInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutPackageInput | OrderUpdateManyWithWhereWithoutPackageInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type StockCodeCreateNestedManyWithoutPoolInput = {
+    create?: XOR<StockCodeCreateWithoutPoolInput, StockCodeUncheckedCreateWithoutPoolInput> | StockCodeCreateWithoutPoolInput[] | StockCodeUncheckedCreateWithoutPoolInput[]
+    connectOrCreate?: StockCodeCreateOrConnectWithoutPoolInput | StockCodeCreateOrConnectWithoutPoolInput[]
+    createMany?: StockCodeCreateManyPoolInputEnvelope
+    connect?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+  }
+
+  export type PackageStockPoolCreateNestedManyWithoutPoolInput = {
+    create?: XOR<PackageStockPoolCreateWithoutPoolInput, PackageStockPoolUncheckedCreateWithoutPoolInput> | PackageStockPoolCreateWithoutPoolInput[] | PackageStockPoolUncheckedCreateWithoutPoolInput[]
+    connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPoolInput | PackageStockPoolCreateOrConnectWithoutPoolInput[]
+    createMany?: PackageStockPoolCreateManyPoolInputEnvelope
+    connect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+  }
+
+  export type StockCodeUncheckedCreateNestedManyWithoutPoolInput = {
+    create?: XOR<StockCodeCreateWithoutPoolInput, StockCodeUncheckedCreateWithoutPoolInput> | StockCodeCreateWithoutPoolInput[] | StockCodeUncheckedCreateWithoutPoolInput[]
+    connectOrCreate?: StockCodeCreateOrConnectWithoutPoolInput | StockCodeCreateOrConnectWithoutPoolInput[]
+    createMany?: StockCodeCreateManyPoolInputEnvelope
+    connect?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+  }
+
+  export type PackageStockPoolUncheckedCreateNestedManyWithoutPoolInput = {
+    create?: XOR<PackageStockPoolCreateWithoutPoolInput, PackageStockPoolUncheckedCreateWithoutPoolInput> | PackageStockPoolCreateWithoutPoolInput[] | PackageStockPoolUncheckedCreateWithoutPoolInput[]
+    connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPoolInput | PackageStockPoolCreateOrConnectWithoutPoolInput[]
+    createMany?: PackageStockPoolCreateManyPoolInputEnvelope
+    connect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+  }
+
+  export type StockCodeUpdateManyWithoutPoolNestedInput = {
+    create?: XOR<StockCodeCreateWithoutPoolInput, StockCodeUncheckedCreateWithoutPoolInput> | StockCodeCreateWithoutPoolInput[] | StockCodeUncheckedCreateWithoutPoolInput[]
+    connectOrCreate?: StockCodeCreateOrConnectWithoutPoolInput | StockCodeCreateOrConnectWithoutPoolInput[]
+    upsert?: StockCodeUpsertWithWhereUniqueWithoutPoolInput | StockCodeUpsertWithWhereUniqueWithoutPoolInput[]
+    createMany?: StockCodeCreateManyPoolInputEnvelope
+    set?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+    disconnect?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+    delete?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+    connect?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+    update?: StockCodeUpdateWithWhereUniqueWithoutPoolInput | StockCodeUpdateWithWhereUniqueWithoutPoolInput[]
+    updateMany?: StockCodeUpdateManyWithWhereWithoutPoolInput | StockCodeUpdateManyWithWhereWithoutPoolInput[]
+    deleteMany?: StockCodeScalarWhereInput | StockCodeScalarWhereInput[]
+  }
+
+  export type PackageStockPoolUpdateManyWithoutPoolNestedInput = {
+    create?: XOR<PackageStockPoolCreateWithoutPoolInput, PackageStockPoolUncheckedCreateWithoutPoolInput> | PackageStockPoolCreateWithoutPoolInput[] | PackageStockPoolUncheckedCreateWithoutPoolInput[]
+    connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPoolInput | PackageStockPoolCreateOrConnectWithoutPoolInput[]
+    upsert?: PackageStockPoolUpsertWithWhereUniqueWithoutPoolInput | PackageStockPoolUpsertWithWhereUniqueWithoutPoolInput[]
+    createMany?: PackageStockPoolCreateManyPoolInputEnvelope
+    set?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    disconnect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    delete?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    connect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    update?: PackageStockPoolUpdateWithWhereUniqueWithoutPoolInput | PackageStockPoolUpdateWithWhereUniqueWithoutPoolInput[]
+    updateMany?: PackageStockPoolUpdateManyWithWhereWithoutPoolInput | PackageStockPoolUpdateManyWithWhereWithoutPoolInput[]
+    deleteMany?: PackageStockPoolScalarWhereInput | PackageStockPoolScalarWhereInput[]
+  }
+
+  export type StockCodeUncheckedUpdateManyWithoutPoolNestedInput = {
+    create?: XOR<StockCodeCreateWithoutPoolInput, StockCodeUncheckedCreateWithoutPoolInput> | StockCodeCreateWithoutPoolInput[] | StockCodeUncheckedCreateWithoutPoolInput[]
+    connectOrCreate?: StockCodeCreateOrConnectWithoutPoolInput | StockCodeCreateOrConnectWithoutPoolInput[]
+    upsert?: StockCodeUpsertWithWhereUniqueWithoutPoolInput | StockCodeUpsertWithWhereUniqueWithoutPoolInput[]
+    createMany?: StockCodeCreateManyPoolInputEnvelope
+    set?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+    disconnect?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+    delete?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+    connect?: StockCodeWhereUniqueInput | StockCodeWhereUniqueInput[]
+    update?: StockCodeUpdateWithWhereUniqueWithoutPoolInput | StockCodeUpdateWithWhereUniqueWithoutPoolInput[]
+    updateMany?: StockCodeUpdateManyWithWhereWithoutPoolInput | StockCodeUpdateManyWithWhereWithoutPoolInput[]
+    deleteMany?: StockCodeScalarWhereInput | StockCodeScalarWhereInput[]
+  }
+
+  export type PackageStockPoolUncheckedUpdateManyWithoutPoolNestedInput = {
+    create?: XOR<PackageStockPoolCreateWithoutPoolInput, PackageStockPoolUncheckedCreateWithoutPoolInput> | PackageStockPoolCreateWithoutPoolInput[] | PackageStockPoolUncheckedCreateWithoutPoolInput[]
+    connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPoolInput | PackageStockPoolCreateOrConnectWithoutPoolInput[]
+    upsert?: PackageStockPoolUpsertWithWhereUniqueWithoutPoolInput | PackageStockPoolUpsertWithWhereUniqueWithoutPoolInput[]
+    createMany?: PackageStockPoolCreateManyPoolInputEnvelope
+    set?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    disconnect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    delete?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    connect?: PackageStockPoolWhereUniqueInput | PackageStockPoolWhereUniqueInput[]
+    update?: PackageStockPoolUpdateWithWhereUniqueWithoutPoolInput | PackageStockPoolUpdateWithWhereUniqueWithoutPoolInput[]
+    updateMany?: PackageStockPoolUpdateManyWithWhereWithoutPoolInput | PackageStockPoolUpdateManyWithWhereWithoutPoolInput[]
+    deleteMany?: PackageStockPoolScalarWhereInput | PackageStockPoolScalarWhereInput[]
+  }
+
+  export type PackageCreateNestedOneWithoutStockPoolLinksInput = {
+    create?: XOR<PackageCreateWithoutStockPoolLinksInput, PackageUncheckedCreateWithoutStockPoolLinksInput>
+    connectOrCreate?: PackageCreateOrConnectWithoutStockPoolLinksInput
+    connect?: PackageWhereUniqueInput
+  }
+
+  export type StockPoolCreateNestedOneWithoutPackageLinksInput = {
+    create?: XOR<StockPoolCreateWithoutPackageLinksInput, StockPoolUncheckedCreateWithoutPackageLinksInput>
+    connectOrCreate?: StockPoolCreateOrConnectWithoutPackageLinksInput
+    connect?: StockPoolWhereUniqueInput
+  }
+
+  export type PackageUpdateOneRequiredWithoutStockPoolLinksNestedInput = {
+    create?: XOR<PackageCreateWithoutStockPoolLinksInput, PackageUncheckedCreateWithoutStockPoolLinksInput>
+    connectOrCreate?: PackageCreateOrConnectWithoutStockPoolLinksInput
+    upsert?: PackageUpsertWithoutStockPoolLinksInput
+    connect?: PackageWhereUniqueInput
+    update?: XOR<XOR<PackageUpdateToOneWithWhereWithoutStockPoolLinksInput, PackageUpdateWithoutStockPoolLinksInput>, PackageUncheckedUpdateWithoutStockPoolLinksInput>
+  }
+
+  export type StockPoolUpdateOneRequiredWithoutPackageLinksNestedInput = {
+    create?: XOR<StockPoolCreateWithoutPackageLinksInput, StockPoolUncheckedCreateWithoutPackageLinksInput>
+    connectOrCreate?: StockPoolCreateOrConnectWithoutPackageLinksInput
+    upsert?: StockPoolUpsertWithoutPackageLinksInput
+    connect?: StockPoolWhereUniqueInput
+    update?: XOR<XOR<StockPoolUpdateToOneWithWhereWithoutPackageLinksInput, StockPoolUpdateWithoutPackageLinksInput>, StockPoolUncheckedUpdateWithoutPackageLinksInput>
+  }
+
+  export type StockPoolCreateNestedOneWithoutCodesInput = {
+    create?: XOR<StockPoolCreateWithoutCodesInput, StockPoolUncheckedCreateWithoutCodesInput>
+    connectOrCreate?: StockPoolCreateOrConnectWithoutCodesInput
+    connect?: StockPoolWhereUniqueInput
+  }
+
+  export type OrderCreateNestedOneWithoutStockCodeInput = {
+    create?: XOR<OrderCreateWithoutStockCodeInput, OrderUncheckedCreateWithoutStockCodeInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutStockCodeInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type EnumStockCodeStatusFieldUpdateOperationsInput = {
+    set?: $Enums.StockCodeStatus
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type StockPoolUpdateOneRequiredWithoutCodesNestedInput = {
+    create?: XOR<StockPoolCreateWithoutCodesInput, StockPoolUncheckedCreateWithoutCodesInput>
+    connectOrCreate?: StockPoolCreateOrConnectWithoutCodesInput
+    upsert?: StockPoolUpsertWithoutCodesInput
+    connect?: StockPoolWhereUniqueInput
+    update?: XOR<XOR<StockPoolUpdateToOneWithWhereWithoutCodesInput, StockPoolUpdateWithoutCodesInput>, StockPoolUncheckedUpdateWithoutCodesInput>
+  }
+
+  export type OrderUpdateOneWithoutStockCodeNestedInput = {
+    create?: XOR<OrderCreateWithoutStockCodeInput, OrderUncheckedCreateWithoutStockCodeInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutStockCodeInput
+    upsert?: OrderUpsertWithoutStockCodeInput
+    disconnect?: OrderWhereInput | boolean
+    delete?: OrderWhereInput | boolean
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutStockCodeInput, OrderUpdateWithoutStockCodeInput>, OrderUncheckedUpdateWithoutStockCodeInput>
+  }
+
   export type WalletCreateNestedOneWithoutUserInput = {
     create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
     connectOrCreate?: WalletCreateOrConnectWithoutUserInput
@@ -41905,32 +51491,12 @@ export namespace Prisma {
     connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
   }
 
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type EnumRoleFieldUpdateOperationsInput = {
     set?: $Enums.Role
   }
 
   export type EnumUserStatusFieldUpdateOperationsInput = {
     set?: $Enums.UserStatus
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type WalletUpdateOneWithoutUserNestedInput = {
@@ -42321,14 +51887,6 @@ export namespace Prisma {
     connect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
   }
 
-  export type DecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
   export type UserUpdateOneRequiredWithoutWalletNestedInput = {
     create?: XOR<UserCreateWithoutWalletInput, UserUncheckedCreateWithoutWalletInput>
     connectOrCreate?: UserCreateOrConnectWithoutWalletInput
@@ -42557,14 +52115,6 @@ export namespace Prisma {
     set?: $Enums.PaymentMethodStatus
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type DepositUpdateManyWithoutPaymentMethodNestedInput = {
     create?: XOR<DepositCreateWithoutPaymentMethodInput, DepositUncheckedCreateWithoutPaymentMethodInput> | DepositCreateWithoutPaymentMethodInput[] | DepositUncheckedCreateWithoutPaymentMethodInput[]
     connectOrCreate?: DepositCreateOrConnectWithoutPaymentMethodInput | DepositCreateOrConnectWithoutPaymentMethodInput[]
@@ -42674,6 +52224,13 @@ export namespace Prisma {
     connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
   }
 
+  export type ProductCreateNestedManyWithoutServiceInput = {
+    create?: XOR<ProductCreateWithoutServiceInput, ProductUncheckedCreateWithoutServiceInput> | ProductCreateWithoutServiceInput[] | ProductUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutServiceInput | ProductCreateOrConnectWithoutServiceInput[]
+    createMany?: ProductCreateManyServiceInputEnvelope
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutServiceInput = {
     create?: XOR<OrderCreateWithoutServiceInput, OrderUncheckedCreateWithoutServiceInput> | OrderCreateWithoutServiceInput[] | OrderUncheckedCreateWithoutServiceInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutServiceInput | OrderCreateOrConnectWithoutServiceInput[]
@@ -42693,6 +52250,13 @@ export namespace Prisma {
     connectOrCreate?: OrderIntentCreateOrConnectWithoutServiceInput | OrderIntentCreateOrConnectWithoutServiceInput[]
     createMany?: OrderIntentCreateManyServiceInputEnvelope
     connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+  }
+
+  export type ProductUncheckedCreateNestedManyWithoutServiceInput = {
+    create?: XOR<ProductCreateWithoutServiceInput, ProductUncheckedCreateWithoutServiceInput> | ProductCreateWithoutServiceInput[] | ProductUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutServiceInput | ProductCreateOrConnectWithoutServiceInput[]
+    createMany?: ProductCreateManyServiceInputEnvelope
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
   }
 
   export type EnumServiceStatusFieldUpdateOperationsInput = {
@@ -42769,6 +52333,20 @@ export namespace Prisma {
     deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
   }
 
+  export type ProductUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<ProductCreateWithoutServiceInput, ProductUncheckedCreateWithoutServiceInput> | ProductCreateWithoutServiceInput[] | ProductUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutServiceInput | ProductCreateOrConnectWithoutServiceInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutServiceInput | ProductUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: ProductCreateManyServiceInputEnvelope
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutServiceInput | ProductUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutServiceInput | ProductUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutServiceNestedInput = {
     create?: XOR<OrderCreateWithoutServiceInput, OrderUncheckedCreateWithoutServiceInput> | OrderCreateWithoutServiceInput[] | OrderUncheckedCreateWithoutServiceInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutServiceInput | OrderCreateOrConnectWithoutServiceInput[]
@@ -42811,6 +52389,20 @@ export namespace Prisma {
     deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
   }
 
+  export type ProductUncheckedUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<ProductCreateWithoutServiceInput, ProductUncheckedCreateWithoutServiceInput> | ProductCreateWithoutServiceInput[] | ProductUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutServiceInput | ProductCreateOrConnectWithoutServiceInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutServiceInput | ProductUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: ProductCreateManyServiceInputEnvelope
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutServiceInput | ProductUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutServiceInput | ProductUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutOrdersInput = {
     create?: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
     connectOrCreate?: UserCreateOrConnectWithoutOrdersInput
@@ -42823,6 +52415,18 @@ export namespace Prisma {
     connect?: ServiceWhereUniqueInput
   }
 
+  export type PackageCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<PackageCreateWithoutOrdersInput, PackageUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: PackageCreateOrConnectWithoutOrdersInput
+    connect?: PackageWhereUniqueInput
+  }
+
+  export type StockCodeCreateNestedOneWithoutOrderInput = {
+    create?: XOR<StockCodeCreateWithoutOrderInput, StockCodeUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: StockCodeCreateOrConnectWithoutOrderInput
+    connect?: StockCodeWhereUniqueInput
+  }
+
   export type RefillRequestCreateNestedManyWithoutOrderInput = {
     create?: XOR<RefillRequestCreateWithoutOrderInput, RefillRequestUncheckedCreateWithoutOrderInput> | RefillRequestCreateWithoutOrderInput[] | RefillRequestUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: RefillRequestCreateOrConnectWithoutOrderInput | RefillRequestCreateOrConnectWithoutOrderInput[]
@@ -42830,19 +52434,17 @@ export namespace Prisma {
     connect?: RefillRequestWhereUniqueInput | RefillRequestWhereUniqueInput[]
   }
 
+  export type StockCodeUncheckedCreateNestedOneWithoutOrderInput = {
+    create?: XOR<StockCodeCreateWithoutOrderInput, StockCodeUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: StockCodeCreateOrConnectWithoutOrderInput
+    connect?: StockCodeWhereUniqueInput
+  }
+
   export type RefillRequestUncheckedCreateNestedManyWithoutOrderInput = {
     create?: XOR<RefillRequestCreateWithoutOrderInput, RefillRequestUncheckedCreateWithoutOrderInput> | RefillRequestCreateWithoutOrderInput[] | RefillRequestUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: RefillRequestCreateOrConnectWithoutOrderInput | RefillRequestCreateOrConnectWithoutOrderInput[]
     createMany?: RefillRequestCreateManyOrderInputEnvelope
     connect?: RefillRequestWhereUniqueInput | RefillRequestWhereUniqueInput[]
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type EnumOrderStatusFieldUpdateOperationsInput = {
@@ -42861,12 +52463,34 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOrdersInput, UserUpdateWithoutOrdersInput>, UserUncheckedUpdateWithoutOrdersInput>
   }
 
-  export type ServiceUpdateOneRequiredWithoutOrdersNestedInput = {
+  export type ServiceUpdateOneWithoutOrdersNestedInput = {
     create?: XOR<ServiceCreateWithoutOrdersInput, ServiceUncheckedCreateWithoutOrdersInput>
     connectOrCreate?: ServiceCreateOrConnectWithoutOrdersInput
     upsert?: ServiceUpsertWithoutOrdersInput
+    disconnect?: ServiceWhereInput | boolean
+    delete?: ServiceWhereInput | boolean
     connect?: ServiceWhereUniqueInput
     update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutOrdersInput, ServiceUpdateWithoutOrdersInput>, ServiceUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type PackageUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<PackageCreateWithoutOrdersInput, PackageUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: PackageCreateOrConnectWithoutOrdersInput
+    upsert?: PackageUpsertWithoutOrdersInput
+    disconnect?: PackageWhereInput | boolean
+    delete?: PackageWhereInput | boolean
+    connect?: PackageWhereUniqueInput
+    update?: XOR<XOR<PackageUpdateToOneWithWhereWithoutOrdersInput, PackageUpdateWithoutOrdersInput>, PackageUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type StockCodeUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<StockCodeCreateWithoutOrderInput, StockCodeUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: StockCodeCreateOrConnectWithoutOrderInput
+    upsert?: StockCodeUpsertWithoutOrderInput
+    disconnect?: StockCodeWhereInput | boolean
+    delete?: StockCodeWhereInput | boolean
+    connect?: StockCodeWhereUniqueInput
+    update?: XOR<XOR<StockCodeUpdateToOneWithWhereWithoutOrderInput, StockCodeUpdateWithoutOrderInput>, StockCodeUncheckedUpdateWithoutOrderInput>
   }
 
   export type RefillRequestUpdateManyWithoutOrderNestedInput = {
@@ -42881,6 +52505,16 @@ export namespace Prisma {
     update?: RefillRequestUpdateWithWhereUniqueWithoutOrderInput | RefillRequestUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: RefillRequestUpdateManyWithWhereWithoutOrderInput | RefillRequestUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: RefillRequestScalarWhereInput | RefillRequestScalarWhereInput[]
+  }
+
+  export type StockCodeUncheckedUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<StockCodeCreateWithoutOrderInput, StockCodeUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: StockCodeCreateOrConnectWithoutOrderInput
+    upsert?: StockCodeUpsertWithoutOrderInput
+    disconnect?: StockCodeWhereInput | boolean
+    delete?: StockCodeWhereInput | boolean
+    connect?: StockCodeWhereUniqueInput
+    update?: XOR<XOR<StockCodeUpdateToOneWithWhereWithoutOrderInput, StockCodeUpdateWithoutOrderInput>, StockCodeUncheckedUpdateWithoutOrderInput>
   }
 
   export type RefillRequestUncheckedUpdateManyWithoutOrderNestedInput = {
@@ -43113,14 +52747,6 @@ export namespace Prisma {
 
   export type EnumDepositStatusFieldUpdateOperationsInput = {
     set?: $Enums.DepositStatus
-  }
-
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type UserUpdateOneRequiredWithoutDepositsNestedInput = {
@@ -43381,6 +53007,24 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumProductDesignTemplateFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductDesignTemplate | EnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductDesignTemplate[] | ListEnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductDesignTemplate[] | ListEnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductDesignTemplateFilter<$PrismaModel> | $Enums.ProductDesignTemplate
+  }
+
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -43395,34 +53039,9 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedEnumRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
-  }
-
-  export type NestedEnumUserStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
-  }
-
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -43453,7 +53072,7 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedIntFilter<$PrismaModel = never> = {
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -43461,7 +53080,33 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumProductDesignTemplateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductDesignTemplate | EnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductDesignTemplate[] | ListEnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductDesignTemplate[] | ListEnumProductDesignTemplateFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductDesignTemplateWithAggregatesFilter<$PrismaModel> | $Enums.ProductDesignTemplate
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProductDesignTemplateFilter<$PrismaModel>
+    _max?: NestedEnumProductDesignTemplateFilter<$PrismaModel>
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -43492,46 +53137,12 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
-    not?: NestedEnumRoleWithAggregatesFilter<$PrismaModel> | $Enums.Role
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRoleFilter<$PrismaModel>
-    _max?: NestedEnumRoleFilter<$PrismaModel>
-  }
-
-  export type NestedEnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumUserStatusFilter<$PrismaModel>
-    _max?: NestedEnumUserStatusFilter<$PrismaModel>
-  }
-
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -43559,6 +53170,38 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
+  export type NestedEnumProductTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductType | EnumProductTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductTypeFilter<$PrismaModel> | $Enums.ProductType
+  }
+
+  export type NestedEnumAccessTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AccessType | EnumAccessTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AccessType[] | ListEnumAccessTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AccessType[] | ListEnumAccessTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAccessTypeFilter<$PrismaModel> | $Enums.AccessType
+  }
+
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedEnumPackageDesignTemplateFilter<$PrismaModel = never> = {
+    equals?: $Enums.PackageDesignTemplate | EnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    in?: $Enums.PackageDesignTemplate[] | ListEnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PackageDesignTemplate[] | ListEnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    not?: NestedEnumPackageDesignTemplateFilter<$PrismaModel> | $Enums.PackageDesignTemplate
+  }
+
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -43573,6 +53216,155 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type NestedEnumProductTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductType | EnumProductTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductTypeWithAggregatesFilter<$PrismaModel> | $Enums.ProductType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProductTypeFilter<$PrismaModel>
+    _max?: NestedEnumProductTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAccessTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AccessType | EnumAccessTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AccessType[] | ListEnumAccessTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AccessType[] | ListEnumAccessTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAccessTypeWithAggregatesFilter<$PrismaModel> | $Enums.AccessType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAccessTypeFilter<$PrismaModel>
+    _max?: NestedEnumAccessTypeFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPackageDesignTemplateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PackageDesignTemplate | EnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    in?: $Enums.PackageDesignTemplate[] | ListEnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PackageDesignTemplate[] | ListEnumPackageDesignTemplateFieldRefInput<$PrismaModel>
+    not?: NestedEnumPackageDesignTemplateWithAggregatesFilter<$PrismaModel> | $Enums.PackageDesignTemplate
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPackageDesignTemplateFilter<$PrismaModel>
+    _max?: NestedEnumPackageDesignTemplateFilter<$PrismaModel>
+  }
+
+  export type NestedEnumStockCodeStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.StockCodeStatus | EnumStockCodeStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StockCodeStatus[] | ListEnumStockCodeStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.StockCodeStatus[] | ListEnumStockCodeStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumStockCodeStatusFilter<$PrismaModel> | $Enums.StockCodeStatus
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedEnumStockCodeStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StockCodeStatus | EnumStockCodeStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StockCodeStatus[] | ListEnumStockCodeStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.StockCodeStatus[] | ListEnumStockCodeStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumStockCodeStatusWithAggregatesFilter<$PrismaModel> | $Enums.StockCodeStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStockCodeStatusFilter<$PrismaModel>
+    _max?: NestedEnumStockCodeStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
+  }
+
+  export type NestedEnumUserStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
+  }
+
+  export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleWithAggregatesFilter<$PrismaModel> | $Enums.Role
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRoleFilter<$PrismaModel>
+    _max?: NestedEnumRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserStatusFilter<$PrismaModel>
+    _max?: NestedEnumUserStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumWalletTxTypeFilter<$PrismaModel = never> = {
@@ -43677,33 +53469,6 @@ export namespace Prisma {
     _max?: NestedEnumPaymentMethodStatusFilter<$PrismaModel>
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type NestedEnumServiceStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.ServiceStatus | EnumServiceStatusFieldRefInput<$PrismaModel>
     in?: $Enums.ServiceStatus[] | ListEnumServiceStatusFieldRefInput<$PrismaModel>
@@ -43733,33 +53498,6 @@ export namespace Prisma {
     in?: $Enums.OrderMode[] | ListEnumOrderModeFieldRefInput<$PrismaModel>
     notIn?: $Enums.OrderMode[] | ListEnumOrderModeFieldRefInput<$PrismaModel>
     not?: NestedEnumOrderModeFilter<$PrismaModel> | $Enums.OrderMode
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -43857,17 +53595,6 @@ export namespace Prisma {
     not?: NestedEnumDepositStatusFilter<$PrismaModel> | $Enums.DepositStatus
   }
 
-  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type NestedEnumDepositStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.DepositStatus | EnumDepositStatusFieldRefInput<$PrismaModel>
     in?: $Enums.DepositStatus[] | ListEnumDepositStatusFieldRefInput<$PrismaModel>
@@ -43876,22 +53603,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDepositStatusFilter<$PrismaModel>
     _max?: NestedEnumDepositStatusFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumChildPanelStatusFilter<$PrismaModel = never> = {
@@ -44013,6 +53724,1074 @@ export namespace Prisma {
     _max?: NestedEnumPostStatusFilter<$PrismaModel>
   }
 
+  export type ProductCreateWithoutBrandInput = {
+    id?: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    service?: ServiceCreateNestedOneWithoutProductsInput
+    packages?: PackageCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutBrandInput = {
+    id?: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    serviceId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    packages?: PackageUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutBrandInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutBrandInput, ProductUncheckedCreateWithoutBrandInput>
+  }
+
+  export type ProductCreateManyBrandInputEnvelope = {
+    data: ProductCreateManyBrandInput | ProductCreateManyBrandInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductUpsertWithWhereUniqueWithoutBrandInput = {
+    where: ProductWhereUniqueInput
+    update: XOR<ProductUpdateWithoutBrandInput, ProductUncheckedUpdateWithoutBrandInput>
+    create: XOR<ProductCreateWithoutBrandInput, ProductUncheckedCreateWithoutBrandInput>
+  }
+
+  export type ProductUpdateWithWhereUniqueWithoutBrandInput = {
+    where: ProductWhereUniqueInput
+    data: XOR<ProductUpdateWithoutBrandInput, ProductUncheckedUpdateWithoutBrandInput>
+  }
+
+  export type ProductUpdateManyWithWhereWithoutBrandInput = {
+    where: ProductScalarWhereInput
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutBrandInput>
+  }
+
+  export type ProductScalarWhereInput = {
+    AND?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    OR?: ProductScalarWhereInput[]
+    NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    id?: StringFilter<"Product"> | string
+    brandId?: StringFilter<"Product"> | string
+    name?: StringFilter<"Product"> | string
+    userInputFieldName?: StringFilter<"Product"> | string
+    orderInstructionsLink?: StringNullableFilter<"Product"> | string | null
+    salePrice?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    quantity?: IntFilter<"Product"> | number
+    productType?: EnumProductTypeFilter<"Product"> | $Enums.ProductType
+    accessType?: EnumAccessTypeFilter<"Product"> | $Enums.AccessType
+    logo?: StringNullableFilter<"Product"> | string | null
+    secondaryType?: StringNullableFilter<"Product"> | string | null
+    level?: IntFilter<"Product"> | number
+    isAuto?: BoolFilter<"Product"> | boolean
+    isActive?: BoolFilter<"Product"> | boolean
+    productNote?: StringNullableFilter<"Product"> | string | null
+    slug?: StringFilter<"Product"> | string
+    gameCheaterType?: StringNullableFilter<"Product"> | string | null
+    hasOrderTimeLimit?: BoolFilter<"Product"> | boolean
+    maxOrdersPerWindow?: IntNullableFilter<"Product"> | number | null
+    orderWindowHours?: IntNullableFilter<"Product"> | number | null
+    checkUniquePlayerId?: BoolFilter<"Product"> | boolean
+    isQuantityMinusOnOrder?: BoolFilter<"Product"> | boolean
+    isQuantityShowUser?: BoolFilter<"Product"> | boolean
+    isPremiumProduct?: BoolFilter<"Product"> | boolean
+    minAmountForPremium?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: StringNullableFilter<"Product"> | string | null
+    redeemLink?: StringNullableFilter<"Product"> | string | null
+    isResellerProduct?: BoolFilter<"Product"> | boolean
+    isMysteryBox?: BoolFilter<"Product"> | boolean
+    description?: StringNullableFilter<"Product"> | string | null
+    packageDesign?: EnumPackageDesignTemplateFilter<"Product"> | $Enums.PackageDesignTemplate
+    serviceId?: StringNullableFilter<"Product"> | string | null
+    createdAt?: DateTimeFilter<"Product"> | Date | string
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
+  }
+
+  export type BrandCreateWithoutProductsInput = {
+    id?: string
+    name: string
+    level?: number
+    productDesign?: $Enums.ProductDesignTemplate
+    logo?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BrandUncheckedCreateWithoutProductsInput = {
+    id?: string
+    name: string
+    level?: number
+    productDesign?: $Enums.ProductDesignTemplate
+    logo?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BrandCreateOrConnectWithoutProductsInput = {
+    where: BrandWhereUniqueInput
+    create: XOR<BrandCreateWithoutProductsInput, BrandUncheckedCreateWithoutProductsInput>
+  }
+
+  export type ServiceCreateWithoutProductsInput = {
+    id?: string
+    providerServiceId?: string | null
+    name: string
+    description?: string | null
+    nameBn?: string | null
+    descriptionBn?: string | null
+    sellPricePer1000: Decimal | DecimalJsLike | number | string
+    providerCostPer1000?: Decimal | DecimalJsLike | number | string
+    minQuantity: number
+    maxQuantity: number
+    refillEnabled?: boolean
+    cancelEnabled?: boolean
+    status?: $Enums.ServiceStatus
+    autoSubmit?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category: ServiceCategoryCreateNestedOneWithoutServicesInput
+    provider?: ProviderCreateNestedOneWithoutServicesInput
+    backupProvider?: ProviderCreateNestedOneWithoutBackupServicesInput
+    orders?: OrderCreateNestedManyWithoutServiceInput
+    dripFeeds?: DripFeedCreateNestedManyWithoutServiceInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceUncheckedCreateWithoutProductsInput = {
+    id?: string
+    categoryId: string
+    providerId?: string | null
+    providerServiceId?: string | null
+    backupProviderId?: string | null
+    name: string
+    description?: string | null
+    nameBn?: string | null
+    descriptionBn?: string | null
+    sellPricePer1000: Decimal | DecimalJsLike | number | string
+    providerCostPer1000?: Decimal | DecimalJsLike | number | string
+    minQuantity: number
+    maxQuantity: number
+    refillEnabled?: boolean
+    cancelEnabled?: boolean
+    status?: $Enums.ServiceStatus
+    autoSubmit?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
+    dripFeeds?: DripFeedUncheckedCreateNestedManyWithoutServiceInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceCreateOrConnectWithoutProductsInput = {
+    where: ServiceWhereUniqueInput
+    create: XOR<ServiceCreateWithoutProductsInput, ServiceUncheckedCreateWithoutProductsInput>
+  }
+
+  export type PackageCreateWithoutProductInput = {
+    id?: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stockPoolLinks?: PackageStockPoolCreateNestedManyWithoutPackageInput
+    orders?: OrderCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageUncheckedCreateWithoutProductInput = {
+    id?: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stockPoolLinks?: PackageStockPoolUncheckedCreateNestedManyWithoutPackageInput
+    orders?: OrderUncheckedCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageCreateOrConnectWithoutProductInput = {
+    where: PackageWhereUniqueInput
+    create: XOR<PackageCreateWithoutProductInput, PackageUncheckedCreateWithoutProductInput>
+  }
+
+  export type PackageCreateManyProductInputEnvelope = {
+    data: PackageCreateManyProductInput | PackageCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BrandUpsertWithoutProductsInput = {
+    update: XOR<BrandUpdateWithoutProductsInput, BrandUncheckedUpdateWithoutProductsInput>
+    create: XOR<BrandCreateWithoutProductsInput, BrandUncheckedCreateWithoutProductsInput>
+    where?: BrandWhereInput
+  }
+
+  export type BrandUpdateToOneWithWhereWithoutProductsInput = {
+    where?: BrandWhereInput
+    data: XOR<BrandUpdateWithoutProductsInput, BrandUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type BrandUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    productDesign?: EnumProductDesignTemplateFieldUpdateOperationsInput | $Enums.ProductDesignTemplate
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BrandUncheckedUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    level?: IntFieldUpdateOperationsInput | number
+    productDesign?: EnumProductDesignTemplateFieldUpdateOperationsInput | $Enums.ProductDesignTemplate
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceUpsertWithoutProductsInput = {
+    update: XOR<ServiceUpdateWithoutProductsInput, ServiceUncheckedUpdateWithoutProductsInput>
+    create: XOR<ServiceCreateWithoutProductsInput, ServiceUncheckedCreateWithoutProductsInput>
+    where?: ServiceWhereInput
+  }
+
+  export type ServiceUpdateToOneWithWhereWithoutProductsInput = {
+    where?: ServiceWhereInput
+    data: XOR<ServiceUpdateWithoutProductsInput, ServiceUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type ServiceUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    providerServiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    nameBn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionBn?: NullableStringFieldUpdateOperationsInput | string | null
+    sellPricePer1000?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    providerCostPer1000?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    maxQuantity?: IntFieldUpdateOperationsInput | number
+    refillEnabled?: BoolFieldUpdateOperationsInput | boolean
+    cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: ServiceCategoryUpdateOneRequiredWithoutServicesNestedInput
+    provider?: ProviderUpdateOneWithoutServicesNestedInput
+    backupProvider?: ProviderUpdateOneWithoutBackupServicesNestedInput
+    orders?: OrderUpdateManyWithoutServiceNestedInput
+    dripFeeds?: DripFeedUpdateManyWithoutServiceNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutServiceNestedInput
+  }
+
+  export type ServiceUncheckedUpdateWithoutProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    providerId?: NullableStringFieldUpdateOperationsInput | string | null
+    providerServiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    backupProviderId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    nameBn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionBn?: NullableStringFieldUpdateOperationsInput | string | null
+    sellPricePer1000?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    providerCostPer1000?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minQuantity?: IntFieldUpdateOperationsInput | number
+    maxQuantity?: IntFieldUpdateOperationsInput | number
+    refillEnabled?: BoolFieldUpdateOperationsInput | boolean
+    cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
+    dripFeeds?: DripFeedUncheckedUpdateManyWithoutServiceNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutServiceNestedInput
+  }
+
+  export type PackageUpsertWithWhereUniqueWithoutProductInput = {
+    where: PackageWhereUniqueInput
+    update: XOR<PackageUpdateWithoutProductInput, PackageUncheckedUpdateWithoutProductInput>
+    create: XOR<PackageCreateWithoutProductInput, PackageUncheckedCreateWithoutProductInput>
+  }
+
+  export type PackageUpdateWithWhereUniqueWithoutProductInput = {
+    where: PackageWhereUniqueInput
+    data: XOR<PackageUpdateWithoutProductInput, PackageUncheckedUpdateWithoutProductInput>
+  }
+
+  export type PackageUpdateManyWithWhereWithoutProductInput = {
+    where: PackageScalarWhereInput
+    data: XOR<PackageUpdateManyMutationInput, PackageUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type PackageScalarWhereInput = {
+    AND?: PackageScalarWhereInput | PackageScalarWhereInput[]
+    OR?: PackageScalarWhereInput[]
+    NOT?: PackageScalarWhereInput | PackageScalarWhereInput[]
+    id?: StringFilter<"Package"> | string
+    productId?: StringFilter<"Package"> | string
+    name?: StringFilter<"Package"> | string
+    amount?: IntFilter<"Package"> | number
+    salePrice?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFilter<"Package"> | Decimal | DecimalJsLike | number | string
+    level?: IntFilter<"Package"> | number
+    isAuto?: BoolFilter<"Package"> | boolean
+    isManual?: BoolFilter<"Package"> | boolean
+    server?: StringNullableFilter<"Package"> | string | null
+    createdAt?: DateTimeFilter<"Package"> | Date | string
+    updatedAt?: DateTimeFilter<"Package"> | Date | string
+  }
+
+  export type ProductCreateWithoutPackagesInput = {
+    id?: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brand: BrandCreateNestedOneWithoutProductsInput
+    service?: ServiceCreateNestedOneWithoutProductsInput
+  }
+
+  export type ProductUncheckedCreateWithoutPackagesInput = {
+    id?: string
+    brandId: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    serviceId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductCreateOrConnectWithoutPackagesInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutPackagesInput, ProductUncheckedCreateWithoutPackagesInput>
+  }
+
+  export type PackageStockPoolCreateWithoutPackageInput = {
+    createdAt?: Date | string
+    pool: StockPoolCreateNestedOneWithoutPackageLinksInput
+  }
+
+  export type PackageStockPoolUncheckedCreateWithoutPackageInput = {
+    poolId: string
+    createdAt?: Date | string
+  }
+
+  export type PackageStockPoolCreateOrConnectWithoutPackageInput = {
+    where: PackageStockPoolWhereUniqueInput
+    create: XOR<PackageStockPoolCreateWithoutPackageInput, PackageStockPoolUncheckedCreateWithoutPackageInput>
+  }
+
+  export type PackageStockPoolCreateManyPackageInputEnvelope = {
+    data: PackageStockPoolCreateManyPackageInput | PackageStockPoolCreateManyPackageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderCreateWithoutPackageInput = {
+    id?: string
+    link: string
+    quantity: number
+    charge: Decimal | DecimalJsLike | number | string
+    providerCost: Decimal | DecimalJsLike | number | string
+    startCount?: number | null
+    remains?: number | null
+    status?: $Enums.OrderStatus
+    mode?: $Enums.OrderMode
+    providerOrderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutOrdersInput
+    service?: ServiceCreateNestedOneWithoutOrdersInput
+    stockCode?: StockCodeCreateNestedOneWithoutOrderInput
+    refillRequests?: RefillRequestCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutPackageInput = {
+    id?: string
+    userId: string
+    serviceId?: string | null
+    link: string
+    quantity: number
+    charge: Decimal | DecimalJsLike | number | string
+    providerCost: Decimal | DecimalJsLike | number | string
+    startCount?: number | null
+    remains?: number | null
+    status?: $Enums.OrderStatus
+    mode?: $Enums.OrderMode
+    providerOrderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stockCode?: StockCodeUncheckedCreateNestedOneWithoutOrderInput
+    refillRequests?: RefillRequestUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutPackageInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutPackageInput, OrderUncheckedCreateWithoutPackageInput>
+  }
+
+  export type OrderCreateManyPackageInputEnvelope = {
+    data: OrderCreateManyPackageInput | OrderCreateManyPackageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductUpsertWithoutPackagesInput = {
+    update: XOR<ProductUpdateWithoutPackagesInput, ProductUncheckedUpdateWithoutPackagesInput>
+    create: XOR<ProductCreateWithoutPackagesInput, ProductUncheckedCreateWithoutPackagesInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutPackagesInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutPackagesInput, ProductUncheckedUpdateWithoutPackagesInput>
+  }
+
+  export type ProductUpdateWithoutPackagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brand?: BrandUpdateOneRequiredWithoutProductsNestedInput
+    service?: ServiceUpdateOneWithoutProductsNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutPackagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageStockPoolUpsertWithWhereUniqueWithoutPackageInput = {
+    where: PackageStockPoolWhereUniqueInput
+    update: XOR<PackageStockPoolUpdateWithoutPackageInput, PackageStockPoolUncheckedUpdateWithoutPackageInput>
+    create: XOR<PackageStockPoolCreateWithoutPackageInput, PackageStockPoolUncheckedCreateWithoutPackageInput>
+  }
+
+  export type PackageStockPoolUpdateWithWhereUniqueWithoutPackageInput = {
+    where: PackageStockPoolWhereUniqueInput
+    data: XOR<PackageStockPoolUpdateWithoutPackageInput, PackageStockPoolUncheckedUpdateWithoutPackageInput>
+  }
+
+  export type PackageStockPoolUpdateManyWithWhereWithoutPackageInput = {
+    where: PackageStockPoolScalarWhereInput
+    data: XOR<PackageStockPoolUpdateManyMutationInput, PackageStockPoolUncheckedUpdateManyWithoutPackageInput>
+  }
+
+  export type PackageStockPoolScalarWhereInput = {
+    AND?: PackageStockPoolScalarWhereInput | PackageStockPoolScalarWhereInput[]
+    OR?: PackageStockPoolScalarWhereInput[]
+    NOT?: PackageStockPoolScalarWhereInput | PackageStockPoolScalarWhereInput[]
+    packageId?: StringFilter<"PackageStockPool"> | string
+    poolId?: StringFilter<"PackageStockPool"> | string
+    createdAt?: DateTimeFilter<"PackageStockPool"> | Date | string
+  }
+
+  export type OrderUpsertWithWhereUniqueWithoutPackageInput = {
+    where: OrderWhereUniqueInput
+    update: XOR<OrderUpdateWithoutPackageInput, OrderUncheckedUpdateWithoutPackageInput>
+    create: XOR<OrderCreateWithoutPackageInput, OrderUncheckedCreateWithoutPackageInput>
+  }
+
+  export type OrderUpdateWithWhereUniqueWithoutPackageInput = {
+    where: OrderWhereUniqueInput
+    data: XOR<OrderUpdateWithoutPackageInput, OrderUncheckedUpdateWithoutPackageInput>
+  }
+
+  export type OrderUpdateManyWithWhereWithoutPackageInput = {
+    where: OrderScalarWhereInput
+    data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutPackageInput>
+  }
+
+  export type OrderScalarWhereInput = {
+    AND?: OrderScalarWhereInput | OrderScalarWhereInput[]
+    OR?: OrderScalarWhereInput[]
+    NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
+    id?: StringFilter<"Order"> | string
+    userId?: StringFilter<"Order"> | string
+    serviceId?: StringNullableFilter<"Order"> | string | null
+    packageId?: StringNullableFilter<"Order"> | string | null
+    link?: StringFilter<"Order"> | string
+    quantity?: IntFilter<"Order"> | number
+    charge?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
+    providerCost?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
+    startCount?: IntNullableFilter<"Order"> | number | null
+    remains?: IntNullableFilter<"Order"> | number | null
+    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
+    providerOrderId?: StringNullableFilter<"Order"> | string | null
+    createdAt?: DateTimeFilter<"Order"> | Date | string
+    updatedAt?: DateTimeFilter<"Order"> | Date | string
+  }
+
+  export type StockCodeCreateWithoutPoolInput = {
+    id?: string
+    codeCiphertext: string
+    status?: $Enums.StockCodeStatus
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+    order?: OrderCreateNestedOneWithoutStockCodeInput
+  }
+
+  export type StockCodeUncheckedCreateWithoutPoolInput = {
+    id?: string
+    codeCiphertext: string
+    status?: $Enums.StockCodeStatus
+    orderId?: string | null
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type StockCodeCreateOrConnectWithoutPoolInput = {
+    where: StockCodeWhereUniqueInput
+    create: XOR<StockCodeCreateWithoutPoolInput, StockCodeUncheckedCreateWithoutPoolInput>
+  }
+
+  export type StockCodeCreateManyPoolInputEnvelope = {
+    data: StockCodeCreateManyPoolInput | StockCodeCreateManyPoolInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PackageStockPoolCreateWithoutPoolInput = {
+    createdAt?: Date | string
+    package: PackageCreateNestedOneWithoutStockPoolLinksInput
+  }
+
+  export type PackageStockPoolUncheckedCreateWithoutPoolInput = {
+    packageId: string
+    createdAt?: Date | string
+  }
+
+  export type PackageStockPoolCreateOrConnectWithoutPoolInput = {
+    where: PackageStockPoolWhereUniqueInput
+    create: XOR<PackageStockPoolCreateWithoutPoolInput, PackageStockPoolUncheckedCreateWithoutPoolInput>
+  }
+
+  export type PackageStockPoolCreateManyPoolInputEnvelope = {
+    data: PackageStockPoolCreateManyPoolInput | PackageStockPoolCreateManyPoolInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StockCodeUpsertWithWhereUniqueWithoutPoolInput = {
+    where: StockCodeWhereUniqueInput
+    update: XOR<StockCodeUpdateWithoutPoolInput, StockCodeUncheckedUpdateWithoutPoolInput>
+    create: XOR<StockCodeCreateWithoutPoolInput, StockCodeUncheckedCreateWithoutPoolInput>
+  }
+
+  export type StockCodeUpdateWithWhereUniqueWithoutPoolInput = {
+    where: StockCodeWhereUniqueInput
+    data: XOR<StockCodeUpdateWithoutPoolInput, StockCodeUncheckedUpdateWithoutPoolInput>
+  }
+
+  export type StockCodeUpdateManyWithWhereWithoutPoolInput = {
+    where: StockCodeScalarWhereInput
+    data: XOR<StockCodeUpdateManyMutationInput, StockCodeUncheckedUpdateManyWithoutPoolInput>
+  }
+
+  export type StockCodeScalarWhereInput = {
+    AND?: StockCodeScalarWhereInput | StockCodeScalarWhereInput[]
+    OR?: StockCodeScalarWhereInput[]
+    NOT?: StockCodeScalarWhereInput | StockCodeScalarWhereInput[]
+    id?: StringFilter<"StockCode"> | string
+    poolId?: StringFilter<"StockCode"> | string
+    codeCiphertext?: StringFilter<"StockCode"> | string
+    status?: EnumStockCodeStatusFilter<"StockCode"> | $Enums.StockCodeStatus
+    orderId?: StringNullableFilter<"StockCode"> | string | null
+    consumedAt?: DateTimeNullableFilter<"StockCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"StockCode"> | Date | string
+  }
+
+  export type PackageStockPoolUpsertWithWhereUniqueWithoutPoolInput = {
+    where: PackageStockPoolWhereUniqueInput
+    update: XOR<PackageStockPoolUpdateWithoutPoolInput, PackageStockPoolUncheckedUpdateWithoutPoolInput>
+    create: XOR<PackageStockPoolCreateWithoutPoolInput, PackageStockPoolUncheckedCreateWithoutPoolInput>
+  }
+
+  export type PackageStockPoolUpdateWithWhereUniqueWithoutPoolInput = {
+    where: PackageStockPoolWhereUniqueInput
+    data: XOR<PackageStockPoolUpdateWithoutPoolInput, PackageStockPoolUncheckedUpdateWithoutPoolInput>
+  }
+
+  export type PackageStockPoolUpdateManyWithWhereWithoutPoolInput = {
+    where: PackageStockPoolScalarWhereInput
+    data: XOR<PackageStockPoolUpdateManyMutationInput, PackageStockPoolUncheckedUpdateManyWithoutPoolInput>
+  }
+
+  export type PackageCreateWithoutStockPoolLinksInput = {
+    id?: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutPackagesInput
+    orders?: OrderCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageUncheckedCreateWithoutStockPoolLinksInput = {
+    id?: string
+    productId: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageCreateOrConnectWithoutStockPoolLinksInput = {
+    where: PackageWhereUniqueInput
+    create: XOR<PackageCreateWithoutStockPoolLinksInput, PackageUncheckedCreateWithoutStockPoolLinksInput>
+  }
+
+  export type StockPoolCreateWithoutPackageLinksInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    codes?: StockCodeCreateNestedManyWithoutPoolInput
+  }
+
+  export type StockPoolUncheckedCreateWithoutPackageLinksInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    codes?: StockCodeUncheckedCreateNestedManyWithoutPoolInput
+  }
+
+  export type StockPoolCreateOrConnectWithoutPackageLinksInput = {
+    where: StockPoolWhereUniqueInput
+    create: XOR<StockPoolCreateWithoutPackageLinksInput, StockPoolUncheckedCreateWithoutPackageLinksInput>
+  }
+
+  export type PackageUpsertWithoutStockPoolLinksInput = {
+    update: XOR<PackageUpdateWithoutStockPoolLinksInput, PackageUncheckedUpdateWithoutStockPoolLinksInput>
+    create: XOR<PackageCreateWithoutStockPoolLinksInput, PackageUncheckedCreateWithoutStockPoolLinksInput>
+    where?: PackageWhereInput
+  }
+
+  export type PackageUpdateToOneWithWhereWithoutStockPoolLinksInput = {
+    where?: PackageWhereInput
+    data: XOR<PackageUpdateWithoutStockPoolLinksInput, PackageUncheckedUpdateWithoutStockPoolLinksInput>
+  }
+
+  export type PackageUpdateWithoutStockPoolLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutPackagesNestedInput
+    orders?: OrderUpdateManyWithoutPackageNestedInput
+  }
+
+  export type PackageUncheckedUpdateWithoutStockPoolLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutPackageNestedInput
+  }
+
+  export type StockPoolUpsertWithoutPackageLinksInput = {
+    update: XOR<StockPoolUpdateWithoutPackageLinksInput, StockPoolUncheckedUpdateWithoutPackageLinksInput>
+    create: XOR<StockPoolCreateWithoutPackageLinksInput, StockPoolUncheckedCreateWithoutPackageLinksInput>
+    where?: StockPoolWhereInput
+  }
+
+  export type StockPoolUpdateToOneWithWhereWithoutPackageLinksInput = {
+    where?: StockPoolWhereInput
+    data: XOR<StockPoolUpdateWithoutPackageLinksInput, StockPoolUncheckedUpdateWithoutPackageLinksInput>
+  }
+
+  export type StockPoolUpdateWithoutPackageLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    codes?: StockCodeUpdateManyWithoutPoolNestedInput
+  }
+
+  export type StockPoolUncheckedUpdateWithoutPackageLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    codes?: StockCodeUncheckedUpdateManyWithoutPoolNestedInput
+  }
+
+  export type StockPoolCreateWithoutCodesInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    packageLinks?: PackageStockPoolCreateNestedManyWithoutPoolInput
+  }
+
+  export type StockPoolUncheckedCreateWithoutCodesInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    packageLinks?: PackageStockPoolUncheckedCreateNestedManyWithoutPoolInput
+  }
+
+  export type StockPoolCreateOrConnectWithoutCodesInput = {
+    where: StockPoolWhereUniqueInput
+    create: XOR<StockPoolCreateWithoutCodesInput, StockPoolUncheckedCreateWithoutCodesInput>
+  }
+
+  export type OrderCreateWithoutStockCodeInput = {
+    id?: string
+    link: string
+    quantity: number
+    charge: Decimal | DecimalJsLike | number | string
+    providerCost: Decimal | DecimalJsLike | number | string
+    startCount?: number | null
+    remains?: number | null
+    status?: $Enums.OrderStatus
+    mode?: $Enums.OrderMode
+    providerOrderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutOrdersInput
+    service?: ServiceCreateNestedOneWithoutOrdersInput
+    package?: PackageCreateNestedOneWithoutOrdersInput
+    refillRequests?: RefillRequestCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutStockCodeInput = {
+    id?: string
+    userId: string
+    serviceId?: string | null
+    packageId?: string | null
+    link: string
+    quantity: number
+    charge: Decimal | DecimalJsLike | number | string
+    providerCost: Decimal | DecimalJsLike | number | string
+    startCount?: number | null
+    remains?: number | null
+    status?: $Enums.OrderStatus
+    mode?: $Enums.OrderMode
+    providerOrderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refillRequests?: RefillRequestUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutStockCodeInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutStockCodeInput, OrderUncheckedCreateWithoutStockCodeInput>
+  }
+
+  export type StockPoolUpsertWithoutCodesInput = {
+    update: XOR<StockPoolUpdateWithoutCodesInput, StockPoolUncheckedUpdateWithoutCodesInput>
+    create: XOR<StockPoolCreateWithoutCodesInput, StockPoolUncheckedCreateWithoutCodesInput>
+    where?: StockPoolWhereInput
+  }
+
+  export type StockPoolUpdateToOneWithWhereWithoutCodesInput = {
+    where?: StockPoolWhereInput
+    data: XOR<StockPoolUpdateWithoutCodesInput, StockPoolUncheckedUpdateWithoutCodesInput>
+  }
+
+  export type StockPoolUpdateWithoutCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    packageLinks?: PackageStockPoolUpdateManyWithoutPoolNestedInput
+  }
+
+  export type StockPoolUncheckedUpdateWithoutCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    packageLinks?: PackageStockPoolUncheckedUpdateManyWithoutPoolNestedInput
+  }
+
+  export type OrderUpsertWithoutStockCodeInput = {
+    update: XOR<OrderUpdateWithoutStockCodeInput, OrderUncheckedUpdateWithoutStockCodeInput>
+    create: XOR<OrderCreateWithoutStockCodeInput, OrderUncheckedCreateWithoutStockCodeInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutStockCodeInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutStockCodeInput, OrderUncheckedUpdateWithoutStockCodeInput>
+  }
+
+  export type OrderUpdateWithoutStockCodeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    link?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    providerCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startCount?: NullableIntFieldUpdateOperationsInput | number | null
+    remains?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
+    providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    service?: ServiceUpdateOneWithoutOrdersNestedInput
+    package?: PackageUpdateOneWithoutOrdersNestedInput
+    refillRequests?: RefillRequestUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutStockCodeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    providerCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startCount?: NullableIntFieldUpdateOperationsInput | number | null
+    remains?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
+    providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refillRequests?: RefillRequestUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
   export type WalletCreateWithoutUserInput = {
     id?: string
     balance?: Decimal | DecimalJsLike | number | string
@@ -44079,13 +54858,16 @@ export namespace Prisma {
     providerOrderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    service: ServiceCreateNestedOneWithoutOrdersInput
+    service?: ServiceCreateNestedOneWithoutOrdersInput
+    package?: PackageCreateNestedOneWithoutOrdersInput
+    stockCode?: StockCodeCreateNestedOneWithoutOrderInput
     refillRequests?: RefillRequestCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutUserInput = {
     id?: string
-    serviceId: string
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -44097,6 +54879,7 @@ export namespace Prisma {
     providerOrderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    stockCode?: StockCodeUncheckedCreateNestedOneWithoutOrderInput
     refillRequests?: RefillRequestUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -44518,26 +55301,6 @@ export namespace Prisma {
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type OrderScalarWhereInput = {
-    AND?: OrderScalarWhereInput | OrderScalarWhereInput[]
-    OR?: OrderScalarWhereInput[]
-    NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
-    id?: StringFilter<"Order"> | string
-    userId?: StringFilter<"Order"> | string
-    serviceId?: StringFilter<"Order"> | string
-    link?: StringFilter<"Order"> | string
-    quantity?: IntFilter<"Order"> | number
-    charge?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    providerCost?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    startCount?: IntNullableFilter<"Order"> | number | null
-    remains?: IntNullableFilter<"Order"> | number | null
-    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
-    mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
-    providerOrderId?: StringNullableFilter<"Order"> | string | null
-    createdAt?: DateTimeFilter<"Order"> | Date | string
-    updatedAt?: DateTimeFilter<"Order"> | Date | string
-  }
-
   export type TicketUpsertWithWhereUniqueWithoutUserInput = {
     where: TicketWhereUniqueInput
     update: XOR<TicketUpdateWithoutUserInput, TicketUncheckedUpdateWithoutUserInput>
@@ -44848,6 +55611,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -44882,6 +55646,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -44932,6 +55697,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -44966,6 +55732,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -45000,6 +55767,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -45034,6 +55802,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -45084,6 +55853,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -45118,6 +55888,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -45152,6 +55923,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -45186,6 +55958,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -45268,6 +56041,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -45302,6 +56076,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -45423,6 +56198,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentCreateNestedManyWithoutServiceInput
+    products?: ProductCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateWithoutProviderInput = {
@@ -45447,6 +56223,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedUncheckedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutServiceInput
+    products?: ProductUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceCreateOrConnectWithoutProviderInput = {
@@ -45481,6 +56258,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentCreateNestedManyWithoutServiceInput
+    products?: ProductCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateWithoutBackupProviderInput = {
@@ -45505,6 +56283,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedUncheckedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutServiceInput
+    products?: ProductUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceCreateOrConnectWithoutBackupProviderInput = {
@@ -45792,6 +56571,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentCreateNestedManyWithoutServiceInput
+    products?: ProductCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateWithoutCategoryInput = {
@@ -45816,6 +56596,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedUncheckedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutServiceInput
+    products?: ProductUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceCreateOrConnectWithoutCategoryInput = {
@@ -45945,12 +56726,15 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
+    package?: PackageCreateNestedOneWithoutOrdersInput
+    stockCode?: StockCodeCreateNestedOneWithoutOrderInput
     refillRequests?: RefillRequestCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutServiceInput = {
     id?: string
     userId: string
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -45962,6 +56746,7 @@ export namespace Prisma {
     providerOrderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    stockCode?: StockCodeUncheckedCreateNestedOneWithoutOrderInput
     refillRequests?: RefillRequestUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -46046,6 +56831,92 @@ export namespace Prisma {
 
   export type OrderIntentCreateManyServiceInputEnvelope = {
     data: OrderIntentCreateManyServiceInput | OrderIntentCreateManyServiceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductCreateWithoutServiceInput = {
+    id?: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    brand: BrandCreateNestedOneWithoutProductsInput
+    packages?: PackageCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutServiceInput = {
+    id?: string
+    brandId: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    packages?: PackageUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutServiceInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutServiceInput, ProductUncheckedCreateWithoutServiceInput>
+  }
+
+  export type ProductCreateManyServiceInputEnvelope = {
+    data: ProductCreateManyServiceInput | ProductCreateManyServiceInput[]
     skipDuplicates?: boolean
   }
 
@@ -46218,6 +57089,22 @@ export namespace Prisma {
     data: XOR<OrderIntentUpdateManyMutationInput, OrderIntentUncheckedUpdateManyWithoutServiceInput>
   }
 
+  export type ProductUpsertWithWhereUniqueWithoutServiceInput = {
+    where: ProductWhereUniqueInput
+    update: XOR<ProductUpdateWithoutServiceInput, ProductUncheckedUpdateWithoutServiceInput>
+    create: XOR<ProductCreateWithoutServiceInput, ProductUncheckedCreateWithoutServiceInput>
+  }
+
+  export type ProductUpdateWithWhereUniqueWithoutServiceInput = {
+    where: ProductWhereUniqueInput
+    data: XOR<ProductUpdateWithoutServiceInput, ProductUncheckedUpdateWithoutServiceInput>
+  }
+
+  export type ProductUpdateManyWithWhereWithoutServiceInput = {
+    where: ProductScalarWhereInput
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutServiceInput>
+  }
+
   export type UserCreateWithoutOrdersInput = {
     id?: string
     username: string
@@ -46232,6 +57119,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -46266,6 +57154,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -46313,6 +57202,7 @@ export namespace Prisma {
     backupProvider?: ProviderCreateNestedOneWithoutBackupServicesInput
     dripFeeds?: DripFeedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentCreateNestedManyWithoutServiceInput
+    products?: ProductCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateWithoutOrdersInput = {
@@ -46337,11 +57227,76 @@ export namespace Prisma {
     updatedAt?: Date | string
     dripFeeds?: DripFeedUncheckedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutServiceInput
+    products?: ProductUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceCreateOrConnectWithoutOrdersInput = {
     where: ServiceWhereUniqueInput
     create: XOR<ServiceCreateWithoutOrdersInput, ServiceUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type PackageCreateWithoutOrdersInput = {
+    id?: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutPackagesInput
+    stockPoolLinks?: PackageStockPoolCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageUncheckedCreateWithoutOrdersInput = {
+    id?: string
+    productId: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stockPoolLinks?: PackageStockPoolUncheckedCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageCreateOrConnectWithoutOrdersInput = {
+    where: PackageWhereUniqueInput
+    create: XOR<PackageCreateWithoutOrdersInput, PackageUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type StockCodeCreateWithoutOrderInput = {
+    id?: string
+    codeCiphertext: string
+    status?: $Enums.StockCodeStatus
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+    pool: StockPoolCreateNestedOneWithoutCodesInput
+  }
+
+  export type StockCodeUncheckedCreateWithoutOrderInput = {
+    id?: string
+    poolId: string
+    codeCiphertext: string
+    status?: $Enums.StockCodeStatus
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type StockCodeCreateOrConnectWithoutOrderInput = {
+    where: StockCodeWhereUniqueInput
+    create: XOR<StockCodeCreateWithoutOrderInput, StockCodeUncheckedCreateWithoutOrderInput>
   }
 
   export type RefillRequestCreateWithoutOrderInput = {
@@ -46397,6 +57352,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -46431,6 +57387,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -46484,6 +57441,7 @@ export namespace Prisma {
     backupProvider?: ProviderUpdateOneWithoutBackupServicesNestedInput
     dripFeeds?: DripFeedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutServiceNestedInput
+    products?: ProductUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateWithoutOrdersInput = {
@@ -46508,6 +57466,83 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dripFeeds?: DripFeedUncheckedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutServiceNestedInput
+    products?: ProductUncheckedUpdateManyWithoutServiceNestedInput
+  }
+
+  export type PackageUpsertWithoutOrdersInput = {
+    update: XOR<PackageUpdateWithoutOrdersInput, PackageUncheckedUpdateWithoutOrdersInput>
+    create: XOR<PackageCreateWithoutOrdersInput, PackageUncheckedCreateWithoutOrdersInput>
+    where?: PackageWhereInput
+  }
+
+  export type PackageUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: PackageWhereInput
+    data: XOR<PackageUpdateWithoutOrdersInput, PackageUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type PackageUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutPackagesNestedInput
+    stockPoolLinks?: PackageStockPoolUpdateManyWithoutPackageNestedInput
+  }
+
+  export type PackageUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockPoolLinks?: PackageStockPoolUncheckedUpdateManyWithoutPackageNestedInput
+  }
+
+  export type StockCodeUpsertWithoutOrderInput = {
+    update: XOR<StockCodeUpdateWithoutOrderInput, StockCodeUncheckedUpdateWithoutOrderInput>
+    create: XOR<StockCodeCreateWithoutOrderInput, StockCodeUncheckedCreateWithoutOrderInput>
+    where?: StockCodeWhereInput
+  }
+
+  export type StockCodeUpdateToOneWithWhereWithoutOrderInput = {
+    where?: StockCodeWhereInput
+    data: XOR<StockCodeUpdateWithoutOrderInput, StockCodeUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type StockCodeUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    codeCiphertext?: StringFieldUpdateOperationsInput | string
+    status?: EnumStockCodeStatusFieldUpdateOperationsInput | $Enums.StockCodeStatus
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pool?: StockPoolUpdateOneRequiredWithoutCodesNestedInput
+  }
+
+  export type StockCodeUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    poolId?: StringFieldUpdateOperationsInput | string
+    codeCiphertext?: StringFieldUpdateOperationsInput | string
+    status?: EnumStockCodeStatusFieldUpdateOperationsInput | $Enums.StockCodeStatus
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RefillRequestUpsertWithWhereUniqueWithoutOrderInput = {
@@ -46553,6 +57588,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -46587,6 +57623,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -46634,6 +57671,7 @@ export namespace Prisma {
     backupProvider?: ProviderCreateNestedOneWithoutBackupServicesInput
     orders?: OrderCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedCreateNestedManyWithoutServiceInput
+    products?: ProductCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateWithoutOrderIntentsInput = {
@@ -46658,6 +57696,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
     dripFeeds?: DripFeedUncheckedCreateNestedManyWithoutServiceInput
+    products?: ProductUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceCreateOrConnectWithoutOrderIntentsInput = {
@@ -46744,6 +57783,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -46778,6 +57818,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -46831,6 +57872,7 @@ export namespace Prisma {
     backupProvider?: ProviderUpdateOneWithoutBackupServicesNestedInput
     orders?: OrderUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUpdateManyWithoutServiceNestedInput
+    products?: ProductUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateWithoutOrderIntentsInput = {
@@ -46855,6 +57897,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUncheckedUpdateManyWithoutServiceNestedInput
+    products?: ProductUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type DepositUpsertWithWhereUniqueWithoutOrderIntentInput = {
@@ -46887,13 +57930,16 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
-    service: ServiceCreateNestedOneWithoutOrdersInput
+    service?: ServiceCreateNestedOneWithoutOrdersInput
+    package?: PackageCreateNestedOneWithoutOrdersInput
+    stockCode?: StockCodeCreateNestedOneWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutRefillRequestsInput = {
     id?: string
     userId: string
-    serviceId: string
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -46905,6 +57951,7 @@ export namespace Prisma {
     providerOrderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    stockCode?: StockCodeUncheckedCreateNestedOneWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutRefillRequestsInput = {
@@ -46937,13 +57984,16 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
-    service?: ServiceUpdateOneRequiredWithoutOrdersNestedInput
+    service?: ServiceUpdateOneWithoutOrdersNestedInput
+    package?: PackageUpdateOneWithoutOrdersNestedInput
+    stockCode?: StockCodeUpdateOneWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutRefillRequestsInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -46955,6 +58005,7 @@ export namespace Prisma {
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockCode?: StockCodeUncheckedUpdateOneWithoutOrderNestedInput
   }
 
   export type UserCreateWithoutTicketsInput = {
@@ -46971,6 +58022,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47005,6 +58057,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47081,6 +58134,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -47115,6 +58169,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -47188,6 +58243,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47222,6 +58278,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47301,6 +58358,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -47335,6 +58393,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -47369,6 +58428,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47403,6 +58463,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47442,6 +58503,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47476,6 +58538,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47631,6 +58694,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -47665,6 +58729,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -47710,6 +58775,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -47744,6 +58810,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -47901,6 +58968,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47935,6 +59003,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -47985,6 +59054,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -48019,6 +59089,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -48061,6 +59132,7 @@ export namespace Prisma {
     backupProvider?: ProviderCreateNestedOneWithoutBackupServicesInput
     orders?: OrderCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentCreateNestedManyWithoutServiceInput
+    products?: ProductCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateWithoutDripFeedsInput = {
@@ -48085,6 +59157,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutServiceInput
+    products?: ProductUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceCreateOrConnectWithoutDripFeedsInput = {
@@ -48125,6 +59198,7 @@ export namespace Prisma {
     backupProvider?: ProviderUpdateOneWithoutBackupServicesNestedInput
     orders?: OrderUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutServiceNestedInput
+    products?: ProductUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateWithoutDripFeedsInput = {
@@ -48149,6 +59223,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutServiceNestedInput
+    products?: ProductUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type UserCreateWithoutAffiliateInput = {
@@ -48165,6 +59240,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -48199,6 +59275,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -48249,6 +59326,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -48283,6 +59361,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -48317,6 +59396,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -48351,6 +59431,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -48401,6 +59482,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -48435,6 +59517,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -48610,6 +59693,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -48644,6 +59728,7 @@ export namespace Prisma {
     apiKeyHash?: string | null
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -48731,6 +59816,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -48765,6 +59851,7 @@ export namespace Prisma {
     apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -48785,6 +59872,372 @@ export namespace Prisma {
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type ProductCreateManyBrandInput = {
+    id?: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    serviceId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductUpdateWithoutBrandInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    service?: ServiceUpdateOneWithoutProductsNestedInput
+    packages?: PackageUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutBrandInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    packages?: PackageUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateManyWithoutBrandInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageCreateManyProductInput = {
+    id?: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PackageUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockPoolLinks?: PackageStockPoolUpdateManyWithoutPackageNestedInput
+    orders?: OrderUpdateManyWithoutPackageNestedInput
+  }
+
+  export type PackageUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockPoolLinks?: PackageStockPoolUncheckedUpdateManyWithoutPackageNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutPackageNestedInput
+  }
+
+  export type PackageUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageStockPoolCreateManyPackageInput = {
+    poolId: string
+    createdAt?: Date | string
+  }
+
+  export type OrderCreateManyPackageInput = {
+    id?: string
+    userId: string
+    serviceId?: string | null
+    link: string
+    quantity: number
+    charge: Decimal | DecimalJsLike | number | string
+    providerCost: Decimal | DecimalJsLike | number | string
+    startCount?: number | null
+    remains?: number | null
+    status?: $Enums.OrderStatus
+    mode?: $Enums.OrderMode
+    providerOrderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PackageStockPoolUpdateWithoutPackageInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pool?: StockPoolUpdateOneRequiredWithoutPackageLinksNestedInput
+  }
+
+  export type PackageStockPoolUncheckedUpdateWithoutPackageInput = {
+    poolId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageStockPoolUncheckedUpdateManyWithoutPackageInput = {
+    poolId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderUpdateWithoutPackageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    link?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    providerCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startCount?: NullableIntFieldUpdateOperationsInput | number | null
+    remains?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
+    providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    service?: ServiceUpdateOneWithoutOrdersNestedInput
+    stockCode?: StockCodeUpdateOneWithoutOrderNestedInput
+    refillRequests?: RefillRequestUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutPackageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    providerCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startCount?: NullableIntFieldUpdateOperationsInput | number | null
+    remains?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
+    providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockCode?: StockCodeUncheckedUpdateOneWithoutOrderNestedInput
+    refillRequests?: RefillRequestUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateManyWithoutPackageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    providerCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startCount?: NullableIntFieldUpdateOperationsInput | number | null
+    remains?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
+    providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockCodeCreateManyPoolInput = {
+    id?: string
+    codeCiphertext: string
+    status?: $Enums.StockCodeStatus
+    orderId?: string | null
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type PackageStockPoolCreateManyPoolInput = {
+    packageId: string
+    createdAt?: Date | string
+  }
+
+  export type StockCodeUpdateWithoutPoolInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    codeCiphertext?: StringFieldUpdateOperationsInput | string
+    status?: EnumStockCodeStatusFieldUpdateOperationsInput | $Enums.StockCodeStatus
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    order?: OrderUpdateOneWithoutStockCodeNestedInput
+  }
+
+  export type StockCodeUncheckedUpdateWithoutPoolInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    codeCiphertext?: StringFieldUpdateOperationsInput | string
+    status?: EnumStockCodeStatusFieldUpdateOperationsInput | $Enums.StockCodeStatus
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockCodeUncheckedUpdateManyWithoutPoolInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    codeCiphertext?: StringFieldUpdateOperationsInput | string
+    status?: EnumStockCodeStatusFieldUpdateOperationsInput | $Enums.StockCodeStatus
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageStockPoolUpdateWithoutPoolInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    package?: PackageUpdateOneRequiredWithoutStockPoolLinksNestedInput
+  }
+
+  export type PackageStockPoolUncheckedUpdateWithoutPoolInput = {
+    packageId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PackageStockPoolUncheckedUpdateManyWithoutPoolInput = {
+    packageId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RefreshTokenCreateManyUserInput = {
     id?: string
     tokenHash: string
@@ -48798,7 +60251,8 @@ export namespace Prisma {
 
   export type OrderCreateManyUserInput = {
     id?: string
-    serviceId: string
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -48958,13 +60412,16 @@ export namespace Prisma {
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    service?: ServiceUpdateOneRequiredWithoutOrdersNestedInput
+    service?: ServiceUpdateOneWithoutOrdersNestedInput
+    package?: PackageUpdateOneWithoutOrdersNestedInput
+    stockCode?: StockCodeUpdateOneWithoutOrderNestedInput
     refillRequests?: RefillRequestUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -48976,12 +60433,14 @@ export namespace Prisma {
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockCode?: StockCodeUncheckedUpdateOneWithoutOrderNestedInput
     refillRequests?: RefillRequestUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -49415,6 +60874,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutServiceNestedInput
+    products?: ProductUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateWithoutProviderInput = {
@@ -49439,6 +60899,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUncheckedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutServiceNestedInput
+    products?: ProductUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateManyWithoutProviderInput = {
@@ -49484,6 +60945,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutServiceNestedInput
+    products?: ProductUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateWithoutBackupProviderInput = {
@@ -49508,6 +60970,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUncheckedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutServiceNestedInput
+    products?: ProductUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateManyWithoutBackupProviderInput = {
@@ -49686,6 +61149,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutServiceNestedInput
+    products?: ProductUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateWithoutCategoryInput = {
@@ -49710,6 +61174,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUncheckedUpdateManyWithoutServiceNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutServiceNestedInput
+    products?: ProductUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateManyWithoutCategoryInput = {
@@ -49736,6 +61201,7 @@ export namespace Prisma {
   export type OrderCreateManyServiceInput = {
     id?: string
     userId: string
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -49775,6 +61241,43 @@ export namespace Prisma {
     expiresAt: Date | string
   }
 
+  export type ProductCreateManyServiceInput = {
+    id?: string
+    brandId: string
+    name: string
+    userInputFieldName?: string
+    orderInstructionsLink?: string | null
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    quantity?: number
+    productType: $Enums.ProductType
+    accessType?: $Enums.AccessType
+    logo?: string | null
+    secondaryType?: string | null
+    level?: number
+    isAuto?: boolean
+    isActive?: boolean
+    productNote?: string | null
+    slug: string
+    gameCheaterType?: string | null
+    hasOrderTimeLimit?: boolean
+    maxOrdersPerWindow?: number | null
+    orderWindowHours?: number | null
+    checkUniquePlayerId?: boolean
+    isQuantityMinusOnOrder?: boolean
+    isQuantityShowUser?: boolean
+    isPremiumProduct?: boolean
+    minAmountForPremium?: Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: string | null
+    redeemLink?: string | null
+    isResellerProduct?: boolean
+    isMysteryBox?: boolean
+    description?: string | null
+    packageDesign?: $Enums.PackageDesignTemplate
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type OrderUpdateWithoutServiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     link?: StringFieldUpdateOperationsInput | string
@@ -49789,12 +61292,15 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    package?: PackageUpdateOneWithoutOrdersNestedInput
+    stockCode?: StockCodeUpdateOneWithoutOrderNestedInput
     refillRequests?: RefillRequestUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutServiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -49806,12 +61312,14 @@ export namespace Prisma {
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockCode?: StockCodeUncheckedUpdateOneWithoutOrderNestedInput
     refillRequests?: RefillRequestUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutServiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -49903,6 +61411,119 @@ export namespace Prisma {
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductUpdateWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    brand?: BrandUpdateOneRequiredWithoutProductsNestedInput
+    packages?: PackageUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    packages?: PackageUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateManyWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    brandId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userInputFieldName?: StringFieldUpdateOperationsInput | string
+    orderInstructionsLink?: NullableStringFieldUpdateOperationsInput | string | null
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    productType?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    secondaryType?: NullableStringFieldUpdateOperationsInput | string | null
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    productNote?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: StringFieldUpdateOperationsInput | string
+    gameCheaterType?: NullableStringFieldUpdateOperationsInput | string | null
+    hasOrderTimeLimit?: BoolFieldUpdateOperationsInput | boolean
+    maxOrdersPerWindow?: NullableIntFieldUpdateOperationsInput | number | null
+    orderWindowHours?: NullableIntFieldUpdateOperationsInput | number | null
+    checkUniquePlayerId?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityMinusOnOrder?: BoolFieldUpdateOperationsInput | boolean
+    isQuantityShowUser?: BoolFieldUpdateOperationsInput | boolean
+    isPremiumProduct?: BoolFieldUpdateOperationsInput | boolean
+    minAmountForPremium?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    removeCharacters?: NullableStringFieldUpdateOperationsInput | string | null
+    redeemLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isResellerProduct?: BoolFieldUpdateOperationsInput | boolean
+    isMysteryBox?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    packageDesign?: EnumPackageDesignTemplateFieldUpdateOperationsInput | $Enums.PackageDesignTemplate
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RefillRequestCreateManyOrderInput = {
@@ -50183,6 +61804,22 @@ export namespace Prisma {
    * Aliases for legacy arg types
    */
     /**
+     * @deprecated Use BrandCountOutputTypeDefaultArgs instead
+     */
+    export type BrandCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BrandCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ProductCountOutputTypeDefaultArgs instead
+     */
+    export type ProductCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProductCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PackageCountOutputTypeDefaultArgs instead
+     */
+    export type PackageCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PackageCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use StockPoolCountOutputTypeDefaultArgs instead
+     */
+    export type StockPoolCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = StockPoolCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use UserCountOutputTypeDefaultArgs instead
      */
     export type UserCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -50222,6 +61859,30 @@ export namespace Prisma {
      * @deprecated Use CouponCountOutputTypeDefaultArgs instead
      */
     export type CouponCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CouponCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BrandDefaultArgs instead
+     */
+    export type BrandArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BrandDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ProductDefaultArgs instead
+     */
+    export type ProductArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProductDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PackageDefaultArgs instead
+     */
+    export type PackageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PackageDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use StockPoolDefaultArgs instead
+     */
+    export type StockPoolArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = StockPoolDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PackageStockPoolDefaultArgs instead
+     */
+    export type PackageStockPoolArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PackageStockPoolDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use StockCodeDefaultArgs instead
+     */
+    export type StockCodeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = StockCodeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserDefaultArgs instead
      */
