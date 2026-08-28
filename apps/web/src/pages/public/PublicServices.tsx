@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getPublicCategories, getPublicServices } from "../../api/resources.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
+import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
 
 interface Category {
   id: string;
@@ -28,6 +29,7 @@ export default function PublicServices() {
   const { formatCurrency } = useCurrency();
   const [platform, setPlatform] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [detailsService, setDetailsService] = useState<PublicService | null>(null);
 
   const { data: categories } = useQuery({ queryKey: ["public-categories"], queryFn: getPublicCategories });
   const { data: servicesPage, isLoading } = useQuery({
@@ -100,7 +102,7 @@ export default function PublicServices() {
               <p className="font-medium text-on-surface">{s.name}</p>
               <span className="whitespace-nowrap font-mono text-sm text-primary">{formatCurrency(s.sellPricePer1000)}</span>
             </div>
-            {s.description && <p className="mt-1 text-xs text-on-surface-variant">{s.description}</p>}
+            {s.description && <p className="mt-1 line-clamp-2 whitespace-pre-line text-xs text-on-surface-variant">{s.description}</p>}
             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-on-surface-variant">
               <span>{s.category.platform}</span>
               <span className="font-mono">Min/Max: {s.minQuantity} – {s.maxQuantity}</span>
@@ -111,6 +113,13 @@ export default function PublicServices() {
                 {s.cancelEnabled && <span className="badge bg-warning/15 text-warning">Cancel</span>}
               </div>
             )}
+            <button
+              type="button"
+              onClick={() => setDetailsService(s)}
+              className="btn-ghost mt-3 w-full justify-center !min-h-[38px] !px-3 !py-2 text-xs"
+            >
+              Details
+            </button>
           </div>
         ))}
         {!isLoading && filtered.length === 0 && (
@@ -120,7 +129,7 @@ export default function PublicServices() {
 
       {/* Desktop/tablet: full table. */}
       <div className="mt-6 hidden overflow-x-auto rounded-lg border border-outline-variant md:block">
-        <table className="w-full min-w-[640px] text-sm">
+        <table className="w-full min-w-[720px] text-sm">
           <thead className="bg-surface-container-high text-left text-xs uppercase text-on-surface-variant">
             <tr>
               <th className="px-4 py-3">Service</th>
@@ -128,14 +137,15 @@ export default function PublicServices() {
               <th className="px-4 py-3">Rate / 1K</th>
               <th className="px-4 py-3">Min / Max</th>
               <th className="px-4 py-3">Badges</th>
+              <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
             {filtered.map((s) => (
               <tr key={s.id} className="hover:bg-surface-container/40">
-                <td className="px-4 py-3">
+                <td className="max-w-[320px] px-4 py-3">
                   <p className="font-medium text-on-surface">{s.name}</p>
-                  {s.description && <p className="text-xs text-on-surface-variant">{s.description}</p>}
+                  {s.description && <p className="truncate text-xs text-on-surface-variant" title={s.description}>{s.description}</p>}
                 </td>
                 <td className="px-4 py-3 text-on-surface-variant">{s.category.platform}</td>
                 <td className="px-4 py-3 font-mono text-primary">{formatCurrency(s.sellPricePer1000)}</td>
@@ -146,11 +156,16 @@ export default function PublicServices() {
                     {s.cancelEnabled && <span className="badge bg-warning/15 text-warning">Cancel</span>}
                   </div>
                 </td>
+                <td className="px-4 py-3 text-right">
+                  <button type="button" onClick={() => setDetailsService(s)} className="btn-ghost !min-h-0 !px-3 !py-1.5 text-xs">
+                    Details
+                  </button>
+                </td>
               </tr>
             ))}
             {!isLoading && filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-on-surface-variant">No services match your filters.</td>
+                <td colSpan={6} className="px-4 py-8 text-center text-on-surface-variant">No services match your filters.</td>
               </tr>
             )}
           </tbody>
@@ -162,6 +177,28 @@ export default function PublicServices() {
         <p className="mt-1 text-sm text-on-surface-variant">Create a free account and fund your wallet in seconds.</p>
         <Link to="/register" className="btn-primary mt-4 inline-block">Sign up</Link>
       </div>
+
+      {detailsService && (
+        <ServiceDetailsModal
+          service={{
+            name: detailsService.name,
+            description: detailsService.description,
+            sellPricePer1000: detailsService.sellPricePer1000,
+            minQuantity: detailsService.minQuantity,
+            maxQuantity: detailsService.maxQuantity,
+            refillEnabled: detailsService.refillEnabled,
+            cancelEnabled: detailsService.cancelEnabled,
+            platform: detailsService.category.platform,
+            category: detailsService.category.name,
+          }}
+          onClose={() => setDetailsService(null)}
+          footer={
+            <Link to="/register" className="btn-primary w-full justify-center" onClick={() => setDetailsService(null)}>
+              Sign up to order
+            </Link>
+          }
+        />
+      )}
     </div>
   );
 }

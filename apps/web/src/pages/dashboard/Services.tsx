@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { getCategories, getServices } from "../../api/resources.js";
+import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
 
 interface ServiceRow {
   id: string;
@@ -10,10 +11,12 @@ interface ServiceRow {
   minQuantity: number;
   maxQuantity: number;
   sellPricePer1000: string;
+  refillEnabled: boolean;
+  cancelEnabled: boolean;
   providerServiceId: string | null;
 }
 
-function ServiceCard({ s }: { s: ServiceRow }) {
+function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void }) {
   return (
     <div className="rounded-lg border border-outline-variant bg-surface-container p-4">
       <div className="flex items-start justify-between gap-3">
@@ -32,15 +35,19 @@ function ServiceCard({ s }: { s: ServiceRow }) {
       </div>
 
       {s.description && (
-        <p className="mt-2 whitespace-pre-line text-xs text-on-surface-variant">{s.description}</p>
+        <p className="mt-2 line-clamp-2 whitespace-pre-line text-xs text-on-surface-variant">{s.description}</p>
       )}
 
-      <div className="mt-3 flex items-center justify-between gap-3 border-t border-outline-variant pt-3">
-        <p className="text-xs text-on-surface-variant">
-          Min <span className="font-mono text-on-surface">{s.minQuantity}</span> · Max{" "}
-          <span className="font-mono text-on-surface">{s.maxQuantity}</span>
-        </p>
-        <Link to={`/dashboard/new-order?serviceId=${s.id}`} className="btn-primary !min-h-[38px] shrink-0 !px-4 !py-2 text-xs">
+      <div className="mt-3 border-t border-outline-variant pt-3 text-xs text-on-surface-variant">
+        Min <span className="font-mono text-on-surface">{s.minQuantity}</span> · Max{" "}
+        <span className="font-mono text-on-surface">{s.maxQuantity}</span>
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <button type="button" onClick={onDetails} className="btn-ghost !min-h-[38px] justify-center !px-3 !py-2 text-xs">
+          Details
+        </button>
+        <Link to={`/dashboard/new-order?serviceId=${s.id}`} className="btn-primary !min-h-[38px] justify-center !px-3 !py-2 text-xs">
           Order now
         </Link>
       </div>
@@ -51,6 +58,7 @@ function ServiceCard({ s }: { s: ServiceRow }) {
 export default function Services() {
   const [categoryId, setCategoryId] = useState("");
   const [search, setSearch] = useState("");
+  const [detailsService, setDetailsService] = useState<ServiceRow | null>(null);
   const { data: categories } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
   const { data, isLoading } = useQuery({
     queryKey: ["services-catalog", categoryId, search],
@@ -97,13 +105,13 @@ export default function Services() {
           <p className="card text-center text-sm text-on-surface-variant">No services match your search.</p>
         )}
         {items.map((s) => (
-          <ServiceCard key={s.id} s={s} />
+          <ServiceCard key={s.id} s={s} onDetails={() => setDetailsService(s)} />
         ))}
       </div>
 
       {/* Desktop / tablet: table */}
       <div className="card hidden overflow-x-auto p-0 md:block">
-        <table className="w-full min-w-[640px] text-sm">
+        <table className="w-full min-w-[720px] text-sm">
           <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
             <tr>
               <th className="px-4 py-3">ID</th>
@@ -135,16 +143,37 @@ export default function Services() {
                 </td>
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">{s.minQuantity} / {s.maxQuantity}</td>
                 <td className="px-4 py-3 font-mono text-success">${s.sellPricePer1000}</td>
-                <td className="px-4 py-3 text-right">
-                  <Link to={`/dashboard/new-order?serviceId=${s.id}`} className="btn-primary !min-h-0 !px-3 !py-1.5 text-xs">
-                    Order now
-                  </Link>
+                <td className="px-4 py-3">
+                  <div className="flex justify-end gap-2">
+                    <button type="button" onClick={() => setDetailsService(s)} className="btn-ghost !min-h-0 !px-3 !py-1.5 text-xs">
+                      Details
+                    </button>
+                    <Link to={`/dashboard/new-order?serviceId=${s.id}`} className="btn-primary !min-h-0 !px-3 !py-1.5 text-xs">
+                      Order now
+                    </Link>
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {detailsService && (
+        <ServiceDetailsModal
+          service={detailsService}
+          onClose={() => setDetailsService(null)}
+          footer={
+            <Link
+              to={`/dashboard/new-order?serviceId=${detailsService.id}`}
+              className="btn-primary w-full justify-center"
+              onClick={() => setDetailsService(null)}
+            >
+              Order now
+            </Link>
+          }
+        />
+      )}
     </div>
   );
 }
