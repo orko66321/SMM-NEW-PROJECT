@@ -3,6 +3,7 @@ import request from "supertest";
 import { app, createUser, resetDb } from "./helpers.js";
 import { updateSettings } from "../src/services/settings.service.js";
 import { createNotice } from "../src/services/notice.service.js";
+import { getAdminSiteNotice, updateSiteNotice } from "../src/services/siteNotice.service.js";
 
 beforeEach(resetDb);
 afterEach(resetDb);
@@ -84,6 +85,39 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
     expect(res.status).toBe(200);
     expect(res.body.totalUsers).toBe(2);
     expect(typeof res.body.totalOrdersCompleted).toBe("number");
+  });
+
+  it("/api/public/notice is seeded with the same copy the New Order sidebar always had, in both languages", async () => {
+    const res = await request(app).get("/api/public/notice");
+    expect(res.status).toBe(200);
+    expect(res.body.titleEn).toBe("Important");
+    expect(res.body.titleBn).toBe("গুরুত্বপূর্ণ তথ্য");
+    expect(res.body.bodyEn).toContain("Please double-check the link and quantity");
+    expect(res.body.bodyBn).toContain("লিংক ও কোয়ান্টিটি");
+  });
+
+  it("/api/public/notice returns null once an admin turns it off, but admin GET still returns the content for editing", async () => {
+    await updateSiteNotice({ titleEn: "Kept", titleBn: null, bodyEn: "Body", bodyBn: null, isActive: false });
+
+    const publicRes = await request(app).get("/api/public/notice");
+    expect(publicRes.status).toBe(200);
+    expect(publicRes.body).toBeNull();
+
+    const admin = await getAdminSiteNotice();
+    expect(admin.isActive).toBe(false);
+    expect(admin.titleEn).toBe("Kept");
+  });
+
+  it("/api/public/notice falls back to the other language when only one is filled in", async () => {
+    await updateSiteNotice({ titleEn: "English only title", titleBn: null, bodyEn: "English only body", bodyBn: null, isActive: true });
+
+    const res = await request(app).get("/api/public/notice");
+    expect(res.status).toBe(200);
+    expect(res.body.titleEn).toBe("English only title");
+    expect(res.body.titleBn).toBeNull();
+    // The frontend does the actual fallback (dashboard/NewOrder.tsx) — this
+    // just proves the API is honest about what's actually stored per
+    // language rather than merging them server-side.
   });
 
   it("/api/public/services and /api/public/categories work without auth (the authenticated /api/services does not)", async () => {

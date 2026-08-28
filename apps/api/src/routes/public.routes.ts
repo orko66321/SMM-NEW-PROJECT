@@ -5,6 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { listCategories, listServices } from "../services/catalog.service.js";
 import { getPublicSettings } from "../services/settings.service.js";
 import { listActiveNotices } from "../services/notice.service.js";
+import { getPublicSiteNotice } from "../services/siteNotice.service.js";
 import { getPublicStats } from "../services/stats.service.js";
 
 // Unauthenticated — powers the landing page, public services catalog, and
@@ -25,6 +26,13 @@ publicRouter.get(
   "/notices",
   asyncHandler(async (_req, res) => {
     res.json({ items: await listActiveNotices() });
+  }),
+);
+
+publicRouter.get(
+  "/notice",
+  asyncHandler(async (_req, res) => {
+    res.json(await getPublicSiteNotice());
   }),
 );
 

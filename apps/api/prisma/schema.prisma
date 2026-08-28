@@ -751,3 +751,24 @@ model Notice {
 
   @@index([active])
 }
+
+// Singleton (fixed id "default", same pattern as SiteSettings) — the one
+// bilingual "Important Notice" box shown in the New Order sidebar. Distinct
+// from Notice above (a dismissible list of timestamped banner announcements
+// shown site-wide); this is a single, always-in-place block of admin-edited
+// rules text. Body fields are plain text with newlines (rendered
+// whitespace-pre-line client-side), same convention as Service.description
+// and Notice.message — no HTML/Markdown, so there's nothing here that ever
+// needs sanitizing before render.
+model SiteNotice {
+  id       String  @id @default("default")
+  titleBn  String?
+  titleEn  String?
+  bodyBn   String?
+  bodyEn   String?
+  isActive Boolean @default(true)
+
+  updatedAt DateTime @updatedAt
+
+  @@map("site_notices")
+}

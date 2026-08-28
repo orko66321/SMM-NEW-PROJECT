@@ -438,6 +438,36 @@ export const publicSettingsSchema = z.object({
 });
 export type PublicSettings = z.infer<typeof publicSettingsSchema>;
 
+// Bilingual "Important Notice" box on the New Order sidebar — singleton
+// (see SiteNotice model). All content fields optional/nullable: an admin
+// may fill in only one language, and the frontend falls back to whichever
+// language actually has content (see dashboard/NewOrder.tsx).
+export const updateSiteNoticeSchema = z.object({
+  titleBn: z.string().trim().max(200).nullable().optional(),
+  titleEn: z.string().trim().max(200).nullable().optional(),
+  bodyBn: z.string().trim().max(5000).nullable().optional(),
+  bodyEn: z.string().trim().max(5000).nullable().optional(),
+  isActive: z.boolean(),
+});
+export type UpdateSiteNoticeInput = z.infer<typeof updateSiteNoticeSchema>;
+
+export const siteNoticeSchema = z.object({
+  titleBn: z.string().nullable(),
+  titleEn: z.string().nullable(),
+  bodyBn: z.string().nullable(),
+  bodyEn: z.string().nullable(),
+  isActive: z.boolean(),
+});
+export type SiteNotice = z.infer<typeof siteNoticeSchema>;
+
+export const publicSiteNoticeSchema = z.object({
+  titleBn: z.string().nullable(),
+  titleEn: z.string().nullable(),
+  bodyBn: z.string().nullable(),
+  bodyEn: z.string().nullable(),
+});
+export type PublicSiteNotice = z.infer<typeof publicSiteNoticeSchema>;
+
 export const noticeInputSchema = z.object({
   message: z.string().trim().min(1).max(500),
   level: z.enum(NoticeLevelValues).default("INFO"),

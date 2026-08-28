@@ -143,6 +143,11 @@ export type SiteSettings = $Result.DefaultSelection<Prisma.$SiteSettingsPayload>
  * 
  */
 export type Notice = $Result.DefaultSelection<Prisma.$NoticePayload>
+/**
+ * Model SiteNotice
+ * 
+ */
+export type SiteNotice = $Result.DefaultSelection<Prisma.$SiteNoticePayload>
 
 /**
  * Enums
@@ -806,6 +811,16 @@ export class PrismaClient<
     * ```
     */
   get notice(): Prisma.NoticeDelegate<ExtArgs>;
+
+  /**
+   * `prisma.siteNotice`: Exposes CRUD operations for the **SiteNotice** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SiteNotices
+    * const siteNotices = await prisma.siteNotice.findMany()
+    * ```
+    */
+  get siteNotice(): Prisma.SiteNoticeDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1272,7 +1287,8 @@ export namespace Prisma {
     Coupon: 'Coupon',
     CouponRedemption: 'CouponRedemption',
     SiteSettings: 'SiteSettings',
-    Notice: 'Notice'
+    Notice: 'Notice',
+    SiteNotice: 'SiteNotice'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1288,7 +1304,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticket" | "ticketMessage" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "notice"
+      modelProps: "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticket" | "ticketMessage" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "notice" | "siteNotice"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3109,6 +3125,76 @@ export namespace Prisma {
           count: {
             args: Prisma.NoticeCountArgs<ExtArgs>
             result: $Utils.Optional<NoticeCountAggregateOutputType> | number
+          }
+        }
+      }
+      SiteNotice: {
+        payload: Prisma.$SiteNoticePayload<ExtArgs>
+        fields: Prisma.SiteNoticeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SiteNoticeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SiteNoticeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload>
+          }
+          findFirst: {
+            args: Prisma.SiteNoticeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SiteNoticeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload>
+          }
+          findMany: {
+            args: Prisma.SiteNoticeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload>[]
+          }
+          create: {
+            args: Prisma.SiteNoticeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload>
+          }
+          createMany: {
+            args: Prisma.SiteNoticeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SiteNoticeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload>[]
+          }
+          delete: {
+            args: Prisma.SiteNoticeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload>
+          }
+          update: {
+            args: Prisma.SiteNoticeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload>
+          }
+          deleteMany: {
+            args: Prisma.SiteNoticeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SiteNoticeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SiteNoticeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SiteNoticePayload>
+          }
+          aggregate: {
+            args: Prisma.SiteNoticeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSiteNotice>
+          }
+          groupBy: {
+            args: Prisma.SiteNoticeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SiteNoticeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SiteNoticeCountArgs<ExtArgs>
+            result: $Utils.Optional<SiteNoticeCountAggregateOutputType> | number
           }
         }
       }
@@ -30507,6 +30593,908 @@ export namespace Prisma {
 
 
   /**
+   * Model SiteNotice
+   */
+
+  export type AggregateSiteNotice = {
+    _count: SiteNoticeCountAggregateOutputType | null
+    _min: SiteNoticeMinAggregateOutputType | null
+    _max: SiteNoticeMaxAggregateOutputType | null
+  }
+
+  export type SiteNoticeMinAggregateOutputType = {
+    id: string | null
+    titleBn: string | null
+    titleEn: string | null
+    bodyBn: string | null
+    bodyEn: string | null
+    isActive: boolean | null
+    updatedAt: Date | null
+  }
+
+  export type SiteNoticeMaxAggregateOutputType = {
+    id: string | null
+    titleBn: string | null
+    titleEn: string | null
+    bodyBn: string | null
+    bodyEn: string | null
+    isActive: boolean | null
+    updatedAt: Date | null
+  }
+
+  export type SiteNoticeCountAggregateOutputType = {
+    id: number
+    titleBn: number
+    titleEn: number
+    bodyBn: number
+    bodyEn: number
+    isActive: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SiteNoticeMinAggregateInputType = {
+    id?: true
+    titleBn?: true
+    titleEn?: true
+    bodyBn?: true
+    bodyEn?: true
+    isActive?: true
+    updatedAt?: true
+  }
+
+  export type SiteNoticeMaxAggregateInputType = {
+    id?: true
+    titleBn?: true
+    titleEn?: true
+    bodyBn?: true
+    bodyEn?: true
+    isActive?: true
+    updatedAt?: true
+  }
+
+  export type SiteNoticeCountAggregateInputType = {
+    id?: true
+    titleBn?: true
+    titleEn?: true
+    bodyBn?: true
+    bodyEn?: true
+    isActive?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SiteNoticeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SiteNotice to aggregate.
+     */
+    where?: SiteNoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteNotices to fetch.
+     */
+    orderBy?: SiteNoticeOrderByWithRelationInput | SiteNoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SiteNoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteNotices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteNotices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SiteNotices
+    **/
+    _count?: true | SiteNoticeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SiteNoticeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SiteNoticeMaxAggregateInputType
+  }
+
+  export type GetSiteNoticeAggregateType<T extends SiteNoticeAggregateArgs> = {
+        [P in keyof T & keyof AggregateSiteNotice]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSiteNotice[P]>
+      : GetScalarType<T[P], AggregateSiteNotice[P]>
+  }
+
+
+
+
+  export type SiteNoticeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SiteNoticeWhereInput
+    orderBy?: SiteNoticeOrderByWithAggregationInput | SiteNoticeOrderByWithAggregationInput[]
+    by: SiteNoticeScalarFieldEnum[] | SiteNoticeScalarFieldEnum
+    having?: SiteNoticeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SiteNoticeCountAggregateInputType | true
+    _min?: SiteNoticeMinAggregateInputType
+    _max?: SiteNoticeMaxAggregateInputType
+  }
+
+  export type SiteNoticeGroupByOutputType = {
+    id: string
+    titleBn: string | null
+    titleEn: string | null
+    bodyBn: string | null
+    bodyEn: string | null
+    isActive: boolean
+    updatedAt: Date
+    _count: SiteNoticeCountAggregateOutputType | null
+    _min: SiteNoticeMinAggregateOutputType | null
+    _max: SiteNoticeMaxAggregateOutputType | null
+  }
+
+  type GetSiteNoticeGroupByPayload<T extends SiteNoticeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SiteNoticeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SiteNoticeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SiteNoticeGroupByOutputType[P]>
+            : GetScalarType<T[P], SiteNoticeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SiteNoticeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    titleBn?: boolean
+    titleEn?: boolean
+    bodyBn?: boolean
+    bodyEn?: boolean
+    isActive?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["siteNotice"]>
+
+  export type SiteNoticeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    titleBn?: boolean
+    titleEn?: boolean
+    bodyBn?: boolean
+    bodyEn?: boolean
+    isActive?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["siteNotice"]>
+
+  export type SiteNoticeSelectScalar = {
+    id?: boolean
+    titleBn?: boolean
+    titleEn?: boolean
+    bodyBn?: boolean
+    bodyEn?: boolean
+    isActive?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $SiteNoticePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SiteNotice"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      titleBn: string | null
+      titleEn: string | null
+      bodyBn: string | null
+      bodyEn: string | null
+      isActive: boolean
+      updatedAt: Date
+    }, ExtArgs["result"]["siteNotice"]>
+    composites: {}
+  }
+
+  type SiteNoticeGetPayload<S extends boolean | null | undefined | SiteNoticeDefaultArgs> = $Result.GetResult<Prisma.$SiteNoticePayload, S>
+
+  type SiteNoticeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SiteNoticeFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SiteNoticeCountAggregateInputType | true
+    }
+
+  export interface SiteNoticeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SiteNotice'], meta: { name: 'SiteNotice' } }
+    /**
+     * Find zero or one SiteNotice that matches the filter.
+     * @param {SiteNoticeFindUniqueArgs} args - Arguments to find a SiteNotice
+     * @example
+     * // Get one SiteNotice
+     * const siteNotice = await prisma.siteNotice.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SiteNoticeFindUniqueArgs>(args: SelectSubset<T, SiteNoticeFindUniqueArgs<ExtArgs>>): Prisma__SiteNoticeClient<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SiteNotice that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SiteNoticeFindUniqueOrThrowArgs} args - Arguments to find a SiteNotice
+     * @example
+     * // Get one SiteNotice
+     * const siteNotice = await prisma.siteNotice.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SiteNoticeFindUniqueOrThrowArgs>(args: SelectSubset<T, SiteNoticeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SiteNoticeClient<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SiteNotice that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteNoticeFindFirstArgs} args - Arguments to find a SiteNotice
+     * @example
+     * // Get one SiteNotice
+     * const siteNotice = await prisma.siteNotice.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SiteNoticeFindFirstArgs>(args?: SelectSubset<T, SiteNoticeFindFirstArgs<ExtArgs>>): Prisma__SiteNoticeClient<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SiteNotice that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteNoticeFindFirstOrThrowArgs} args - Arguments to find a SiteNotice
+     * @example
+     * // Get one SiteNotice
+     * const siteNotice = await prisma.siteNotice.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SiteNoticeFindFirstOrThrowArgs>(args?: SelectSubset<T, SiteNoticeFindFirstOrThrowArgs<ExtArgs>>): Prisma__SiteNoticeClient<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SiteNotices that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteNoticeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SiteNotices
+     * const siteNotices = await prisma.siteNotice.findMany()
+     * 
+     * // Get first 10 SiteNotices
+     * const siteNotices = await prisma.siteNotice.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const siteNoticeWithIdOnly = await prisma.siteNotice.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SiteNoticeFindManyArgs>(args?: SelectSubset<T, SiteNoticeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SiteNotice.
+     * @param {SiteNoticeCreateArgs} args - Arguments to create a SiteNotice.
+     * @example
+     * // Create one SiteNotice
+     * const SiteNotice = await prisma.siteNotice.create({
+     *   data: {
+     *     // ... data to create a SiteNotice
+     *   }
+     * })
+     * 
+     */
+    create<T extends SiteNoticeCreateArgs>(args: SelectSubset<T, SiteNoticeCreateArgs<ExtArgs>>): Prisma__SiteNoticeClient<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SiteNotices.
+     * @param {SiteNoticeCreateManyArgs} args - Arguments to create many SiteNotices.
+     * @example
+     * // Create many SiteNotices
+     * const siteNotice = await prisma.siteNotice.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SiteNoticeCreateManyArgs>(args?: SelectSubset<T, SiteNoticeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SiteNotices and returns the data saved in the database.
+     * @param {SiteNoticeCreateManyAndReturnArgs} args - Arguments to create many SiteNotices.
+     * @example
+     * // Create many SiteNotices
+     * const siteNotice = await prisma.siteNotice.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SiteNotices and only return the `id`
+     * const siteNoticeWithIdOnly = await prisma.siteNotice.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SiteNoticeCreateManyAndReturnArgs>(args?: SelectSubset<T, SiteNoticeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SiteNotice.
+     * @param {SiteNoticeDeleteArgs} args - Arguments to delete one SiteNotice.
+     * @example
+     * // Delete one SiteNotice
+     * const SiteNotice = await prisma.siteNotice.delete({
+     *   where: {
+     *     // ... filter to delete one SiteNotice
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SiteNoticeDeleteArgs>(args: SelectSubset<T, SiteNoticeDeleteArgs<ExtArgs>>): Prisma__SiteNoticeClient<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SiteNotice.
+     * @param {SiteNoticeUpdateArgs} args - Arguments to update one SiteNotice.
+     * @example
+     * // Update one SiteNotice
+     * const siteNotice = await prisma.siteNotice.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SiteNoticeUpdateArgs>(args: SelectSubset<T, SiteNoticeUpdateArgs<ExtArgs>>): Prisma__SiteNoticeClient<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SiteNotices.
+     * @param {SiteNoticeDeleteManyArgs} args - Arguments to filter SiteNotices to delete.
+     * @example
+     * // Delete a few SiteNotices
+     * const { count } = await prisma.siteNotice.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SiteNoticeDeleteManyArgs>(args?: SelectSubset<T, SiteNoticeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SiteNotices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteNoticeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SiteNotices
+     * const siteNotice = await prisma.siteNotice.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SiteNoticeUpdateManyArgs>(args: SelectSubset<T, SiteNoticeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SiteNotice.
+     * @param {SiteNoticeUpsertArgs} args - Arguments to update or create a SiteNotice.
+     * @example
+     * // Update or create a SiteNotice
+     * const siteNotice = await prisma.siteNotice.upsert({
+     *   create: {
+     *     // ... data to create a SiteNotice
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SiteNotice we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SiteNoticeUpsertArgs>(args: SelectSubset<T, SiteNoticeUpsertArgs<ExtArgs>>): Prisma__SiteNoticeClient<$Result.GetResult<Prisma.$SiteNoticePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SiteNotices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteNoticeCountArgs} args - Arguments to filter SiteNotices to count.
+     * @example
+     * // Count the number of SiteNotices
+     * const count = await prisma.siteNotice.count({
+     *   where: {
+     *     // ... the filter for the SiteNotices we want to count
+     *   }
+     * })
+    **/
+    count<T extends SiteNoticeCountArgs>(
+      args?: Subset<T, SiteNoticeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SiteNoticeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SiteNotice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteNoticeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SiteNoticeAggregateArgs>(args: Subset<T, SiteNoticeAggregateArgs>): Prisma.PrismaPromise<GetSiteNoticeAggregateType<T>>
+
+    /**
+     * Group by SiteNotice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SiteNoticeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SiteNoticeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SiteNoticeGroupByArgs['orderBy'] }
+        : { orderBy?: SiteNoticeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SiteNoticeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSiteNoticeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SiteNotice model
+   */
+  readonly fields: SiteNoticeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SiteNotice.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SiteNoticeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SiteNotice model
+   */ 
+  interface SiteNoticeFieldRefs {
+    readonly id: FieldRef<"SiteNotice", 'String'>
+    readonly titleBn: FieldRef<"SiteNotice", 'String'>
+    readonly titleEn: FieldRef<"SiteNotice", 'String'>
+    readonly bodyBn: FieldRef<"SiteNotice", 'String'>
+    readonly bodyEn: FieldRef<"SiteNotice", 'String'>
+    readonly isActive: FieldRef<"SiteNotice", 'Boolean'>
+    readonly updatedAt: FieldRef<"SiteNotice", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SiteNotice findUnique
+   */
+  export type SiteNoticeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+    /**
+     * Filter, which SiteNotice to fetch.
+     */
+    where: SiteNoticeWhereUniqueInput
+  }
+
+  /**
+   * SiteNotice findUniqueOrThrow
+   */
+  export type SiteNoticeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+    /**
+     * Filter, which SiteNotice to fetch.
+     */
+    where: SiteNoticeWhereUniqueInput
+  }
+
+  /**
+   * SiteNotice findFirst
+   */
+  export type SiteNoticeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+    /**
+     * Filter, which SiteNotice to fetch.
+     */
+    where?: SiteNoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteNotices to fetch.
+     */
+    orderBy?: SiteNoticeOrderByWithRelationInput | SiteNoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SiteNotices.
+     */
+    cursor?: SiteNoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteNotices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteNotices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SiteNotices.
+     */
+    distinct?: SiteNoticeScalarFieldEnum | SiteNoticeScalarFieldEnum[]
+  }
+
+  /**
+   * SiteNotice findFirstOrThrow
+   */
+  export type SiteNoticeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+    /**
+     * Filter, which SiteNotice to fetch.
+     */
+    where?: SiteNoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteNotices to fetch.
+     */
+    orderBy?: SiteNoticeOrderByWithRelationInput | SiteNoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SiteNotices.
+     */
+    cursor?: SiteNoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteNotices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteNotices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SiteNotices.
+     */
+    distinct?: SiteNoticeScalarFieldEnum | SiteNoticeScalarFieldEnum[]
+  }
+
+  /**
+   * SiteNotice findMany
+   */
+  export type SiteNoticeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+    /**
+     * Filter, which SiteNotices to fetch.
+     */
+    where?: SiteNoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SiteNotices to fetch.
+     */
+    orderBy?: SiteNoticeOrderByWithRelationInput | SiteNoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SiteNotices.
+     */
+    cursor?: SiteNoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SiteNotices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SiteNotices.
+     */
+    skip?: number
+    distinct?: SiteNoticeScalarFieldEnum | SiteNoticeScalarFieldEnum[]
+  }
+
+  /**
+   * SiteNotice create
+   */
+  export type SiteNoticeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+    /**
+     * The data needed to create a SiteNotice.
+     */
+    data: XOR<SiteNoticeCreateInput, SiteNoticeUncheckedCreateInput>
+  }
+
+  /**
+   * SiteNotice createMany
+   */
+  export type SiteNoticeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SiteNotices.
+     */
+    data: SiteNoticeCreateManyInput | SiteNoticeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SiteNotice createManyAndReturn
+   */
+  export type SiteNoticeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SiteNotices.
+     */
+    data: SiteNoticeCreateManyInput | SiteNoticeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SiteNotice update
+   */
+  export type SiteNoticeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+    /**
+     * The data needed to update a SiteNotice.
+     */
+    data: XOR<SiteNoticeUpdateInput, SiteNoticeUncheckedUpdateInput>
+    /**
+     * Choose, which SiteNotice to update.
+     */
+    where: SiteNoticeWhereUniqueInput
+  }
+
+  /**
+   * SiteNotice updateMany
+   */
+  export type SiteNoticeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SiteNotices.
+     */
+    data: XOR<SiteNoticeUpdateManyMutationInput, SiteNoticeUncheckedUpdateManyInput>
+    /**
+     * Filter which SiteNotices to update
+     */
+    where?: SiteNoticeWhereInput
+  }
+
+  /**
+   * SiteNotice upsert
+   */
+  export type SiteNoticeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+    /**
+     * The filter to search for the SiteNotice to update in case it exists.
+     */
+    where: SiteNoticeWhereUniqueInput
+    /**
+     * In case the SiteNotice found by the `where` argument doesn't exist, create a new SiteNotice with this data.
+     */
+    create: XOR<SiteNoticeCreateInput, SiteNoticeUncheckedCreateInput>
+    /**
+     * In case the SiteNotice was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SiteNoticeUpdateInput, SiteNoticeUncheckedUpdateInput>
+  }
+
+  /**
+   * SiteNotice delete
+   */
+  export type SiteNoticeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+    /**
+     * Filter which SiteNotice to delete.
+     */
+    where: SiteNoticeWhereUniqueInput
+  }
+
+  /**
+   * SiteNotice deleteMany
+   */
+  export type SiteNoticeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SiteNotices to delete
+     */
+    where?: SiteNoticeWhereInput
+  }
+
+  /**
+   * SiteNotice without action
+   */
+  export type SiteNoticeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SiteNotice
+     */
+    select?: SiteNoticeSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -30924,6 +31912,19 @@ export namespace Prisma {
   };
 
   export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
+
+
+  export const SiteNoticeScalarFieldEnum: {
+    id: 'id',
+    titleBn: 'titleBn',
+    titleEn: 'titleEn',
+    bodyBn: 'bodyBn',
+    bodyEn: 'bodyEn',
+    isActive: 'isActive',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SiteNoticeScalarFieldEnum = (typeof SiteNoticeScalarFieldEnum)[keyof typeof SiteNoticeScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -33474,6 +34475,68 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Notice"> | Date | string
   }
 
+  export type SiteNoticeWhereInput = {
+    AND?: SiteNoticeWhereInput | SiteNoticeWhereInput[]
+    OR?: SiteNoticeWhereInput[]
+    NOT?: SiteNoticeWhereInput | SiteNoticeWhereInput[]
+    id?: StringFilter<"SiteNotice"> | string
+    titleBn?: StringNullableFilter<"SiteNotice"> | string | null
+    titleEn?: StringNullableFilter<"SiteNotice"> | string | null
+    bodyBn?: StringNullableFilter<"SiteNotice"> | string | null
+    bodyEn?: StringNullableFilter<"SiteNotice"> | string | null
+    isActive?: BoolFilter<"SiteNotice"> | boolean
+    updatedAt?: DateTimeFilter<"SiteNotice"> | Date | string
+  }
+
+  export type SiteNoticeOrderByWithRelationInput = {
+    id?: SortOrder
+    titleBn?: SortOrderInput | SortOrder
+    titleEn?: SortOrderInput | SortOrder
+    bodyBn?: SortOrderInput | SortOrder
+    bodyEn?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SiteNoticeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SiteNoticeWhereInput | SiteNoticeWhereInput[]
+    OR?: SiteNoticeWhereInput[]
+    NOT?: SiteNoticeWhereInput | SiteNoticeWhereInput[]
+    titleBn?: StringNullableFilter<"SiteNotice"> | string | null
+    titleEn?: StringNullableFilter<"SiteNotice"> | string | null
+    bodyBn?: StringNullableFilter<"SiteNotice"> | string | null
+    bodyEn?: StringNullableFilter<"SiteNotice"> | string | null
+    isActive?: BoolFilter<"SiteNotice"> | boolean
+    updatedAt?: DateTimeFilter<"SiteNotice"> | Date | string
+  }, "id">
+
+  export type SiteNoticeOrderByWithAggregationInput = {
+    id?: SortOrder
+    titleBn?: SortOrderInput | SortOrder
+    titleEn?: SortOrderInput | SortOrder
+    bodyBn?: SortOrderInput | SortOrder
+    bodyEn?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SiteNoticeCountOrderByAggregateInput
+    _max?: SiteNoticeMaxOrderByAggregateInput
+    _min?: SiteNoticeMinOrderByAggregateInput
+  }
+
+  export type SiteNoticeScalarWhereWithAggregatesInput = {
+    AND?: SiteNoticeScalarWhereWithAggregatesInput | SiteNoticeScalarWhereWithAggregatesInput[]
+    OR?: SiteNoticeScalarWhereWithAggregatesInput[]
+    NOT?: SiteNoticeScalarWhereWithAggregatesInput | SiteNoticeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SiteNotice"> | string
+    titleBn?: StringNullableWithAggregatesFilter<"SiteNotice"> | string | null
+    titleEn?: StringNullableWithAggregatesFilter<"SiteNotice"> | string | null
+    bodyBn?: StringNullableWithAggregatesFilter<"SiteNotice"> | string | null
+    bodyEn?: StringNullableWithAggregatesFilter<"SiteNotice"> | string | null
+    isActive?: BoolWithAggregatesFilter<"SiteNotice"> | boolean
+    updatedAt?: DateTimeWithAggregatesFilter<"SiteNotice"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     username: string
@@ -35851,6 +36914,76 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SiteNoticeCreateInput = {
+    id?: string
+    titleBn?: string | null
+    titleEn?: string | null
+    bodyBn?: string | null
+    bodyEn?: string | null
+    isActive?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type SiteNoticeUncheckedCreateInput = {
+    id?: string
+    titleBn?: string | null
+    titleEn?: string | null
+    bodyBn?: string | null
+    bodyEn?: string | null
+    isActive?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type SiteNoticeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleBn?: NullableStringFieldUpdateOperationsInput | string | null
+    titleEn?: NullableStringFieldUpdateOperationsInput | string | null
+    bodyBn?: NullableStringFieldUpdateOperationsInput | string | null
+    bodyEn?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SiteNoticeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleBn?: NullableStringFieldUpdateOperationsInput | string | null
+    titleEn?: NullableStringFieldUpdateOperationsInput | string | null
+    bodyBn?: NullableStringFieldUpdateOperationsInput | string | null
+    bodyEn?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SiteNoticeCreateManyInput = {
+    id?: string
+    titleBn?: string | null
+    titleEn?: string | null
+    bodyBn?: string | null
+    bodyEn?: string | null
+    isActive?: boolean
+    updatedAt?: Date | string
+  }
+
+  export type SiteNoticeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleBn?: NullableStringFieldUpdateOperationsInput | string | null
+    titleEn?: NullableStringFieldUpdateOperationsInput | string | null
+    bodyBn?: NullableStringFieldUpdateOperationsInput | string | null
+    bodyEn?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SiteNoticeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleBn?: NullableStringFieldUpdateOperationsInput | string | null
+    titleEn?: NullableStringFieldUpdateOperationsInput | string | null
+    bodyBn?: NullableStringFieldUpdateOperationsInput | string | null
+    bodyEn?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -37827,6 +38960,36 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumNoticeLevelFilter<$PrismaModel>
     _max?: NestedEnumNoticeLevelFilter<$PrismaModel>
+  }
+
+  export type SiteNoticeCountOrderByAggregateInput = {
+    id?: SortOrder
+    titleBn?: SortOrder
+    titleEn?: SortOrder
+    bodyBn?: SortOrder
+    bodyEn?: SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SiteNoticeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    titleBn?: SortOrder
+    titleEn?: SortOrder
+    bodyBn?: SortOrder
+    bodyEn?: SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SiteNoticeMinOrderByAggregateInput = {
+    id?: SortOrder
+    titleBn?: SortOrder
+    titleEn?: SortOrder
+    bodyBn?: SortOrder
+    bodyEn?: SortOrder
+    isActive?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WalletCreateNestedOneWithoutUserInput = {
@@ -46322,6 +47485,10 @@ export namespace Prisma {
      * @deprecated Use NoticeDefaultArgs instead
      */
     export type NoticeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NoticeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SiteNoticeDefaultArgs instead
+     */
+    export type SiteNoticeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SiteNoticeDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

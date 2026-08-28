@@ -12,6 +12,7 @@ import { adminPaymentGatewaysRouter } from "./paymentGateways.routes.js";
 import { adminPaymentMethodsRouter } from "./paymentMethods.routes.js";
 import { adminSettingsRouter } from "./settings.routes.js";
 import { adminNoticesRouter } from "./notices.routes.js";
+import { adminSiteNoticeRouter } from "./siteNotice.routes.js";
 import { adminCouponsRouter } from "./coupons.routes.js";
 export const adminRouter = Router();
 // Every single route under /api/admin/* passes through both of these,
@@ -37,4 +38,5 @@ adminRouter.use("/payment-gateways", adminPaymentGatewaysRouter);
 adminRouter.use("/payment-methods", adminPaymentMethodsRouter);
 adminRouter.use("/settings", adminSettingsRouter);
 adminRouter.use("/notices", adminNoticesRouter);
+adminRouter.use("/site-notice", adminSiteNoticeRouter);
 adminRouter.use("/coupons", adminCouponsRouter);

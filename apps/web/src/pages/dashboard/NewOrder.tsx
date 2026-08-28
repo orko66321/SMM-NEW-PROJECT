@@ -2,7 +2,7 @@ import { useMemo, useState, type FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { getCategories, getServices, placeOrder } from "../../api/resources.js";
+import { getCategories, getPublicSiteNotice, getServices, placeOrder } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useLanguage } from "../../context/LanguageContext.js";
@@ -33,7 +33,8 @@ export default function NewOrder() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { data: siteNotice } = useQuery({ queryKey: ["public-site-notice"], queryFn: getPublicSiteNotice, staleTime: 60_000 });
 
   const { data: categories } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
   const [categoryId, setCategoryId] = useState<string>("");
@@ -54,6 +55,15 @@ export default function NewOrder() {
     if (!selectedService || !quantity) return "0.00";
     return ((Number(selectedService.sellPricePer1000) * Number(quantity)) / 1000).toFixed(4);
   }, [selectedService, quantity]);
+
+  // Falls back to whichever language actually has content, rather than
+  // showing a blank box when an admin has only filled in one language.
+  const noticeTitle = lang === "bn"
+    ? siteNotice?.titleBn || siteNotice?.titleEn
+    : siteNotice?.titleEn || siteNotice?.titleBn;
+  const noticeBody = lang === "bn"
+    ? siteNotice?.bodyBn || siteNotice?.bodyEn
+    : siteNotice?.bodyEn || siteNotice?.bodyBn;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -180,13 +190,12 @@ export default function NewOrder() {
         </button>
       </form>
 
-      <aside className="card space-y-3 break-words text-sm text-on-surface-variant">
-        <h2 className="font-semibold text-on-surface">{t("newOrder.important")}</h2>
-        <p>{t("newOrder.note1")}</p>
-        <p><strong className="text-on-surface">{t("newOrder.note2Label")}</strong>: {t("newOrder.note2")}</p>
-        <p><strong className="text-on-surface">{t("newOrder.note3Label")}</strong>: {t("newOrder.note3")}</p>
-        <p>{t("newOrder.note4")}</p>
-      </aside>
+      {(noticeTitle || noticeBody) && (
+        <aside className="card space-y-3 break-words text-sm text-on-surface-variant">
+          {noticeTitle && <h2 className="font-semibold text-on-surface">{noticeTitle}</h2>}
+          {noticeBody && <p className="whitespace-pre-line">{noticeBody}</p>}
+        </aside>
+      )}
     </div>
   );
 }

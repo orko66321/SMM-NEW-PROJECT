@@ -326,6 +326,30 @@ export const publicSettingsSchema = z.object({
     // rather than show one that always fails. See env.ts's googleAuthEnabled.
     googleAuthEnabled: z.boolean(),
 });
+// Bilingual "Important Notice" box on the New Order sidebar — singleton
+// (see SiteNotice model). All content fields optional/nullable: an admin
+// may fill in only one language, and the frontend falls back to whichever
+// language actually has content (see dashboard/NewOrder.tsx).
+export const updateSiteNoticeSchema = z.object({
+    titleBn: z.string().trim().max(200).nullable().optional(),
+    titleEn: z.string().trim().max(200).nullable().optional(),
+    bodyBn: z.string().trim().max(5000).nullable().optional(),
+    bodyEn: z.string().trim().max(5000).nullable().optional(),
+    isActive: z.boolean(),
+});
+export const siteNoticeSchema = z.object({
+    titleBn: z.string().nullable(),
+    titleEn: z.string().nullable(),
+    bodyBn: z.string().nullable(),
+    bodyEn: z.string().nullable(),
+    isActive: z.boolean(),
+});
+export const publicSiteNoticeSchema = z.object({
+    titleBn: z.string().nullable(),
+    titleEn: z.string().nullable(),
+    bodyBn: z.string().nullable(),
+    bodyEn: z.string().nullable(),
+});
 export const noticeInputSchema = z.object({
     message: z.string().trim().min(1).max(500),
     level: z.enum(NoticeLevelValues).default("INFO"),

@@ -13,6 +13,7 @@ import type {
   PaymentMethodInput,
   ResolveManualRefillInput,
   ServiceInput,
+  UpdateSiteNoticeInput,
   UpdateGatewayConfigInput,
   UpdateOrderStatusInput,
   UpdateProfileInput,
@@ -137,6 +138,7 @@ export const getPublicStats = () => apiClient.get("/public/stats").then((r) => r
 export const getPublicCategories = () => apiClient.get("/public/categories").then((r) => r.data.items);
 export const getPublicServices = (params: { page?: number; pageSize?: number; categoryId?: string; search?: string }) =>
   apiClient.get("/public/services", { params }).then((r) => r.data);
+export const getPublicSiteNotice = () => apiClient.get("/public/notice").then((r) => r.data);
 
 // ── Coupons (Phase 4) ────────────────────────────────────────────────────
 export const validateCoupon = (code: string, amount: number) =>
@@ -157,6 +159,8 @@ export const deleteAdminNotice = (id: string) => apiClient.delete(`/admin/notice
 // ── Site settings (Phase 4, admin) ──────────────────────────────────────
 export const getAdminSettings = () => apiClient.get("/admin/settings").then((r) => r.data);
 export const updateAdminSettings = (input: UpdateSettingsInput) => apiClient.put("/admin/settings", input);
+export const getAdminSiteNotice = () => apiClient.get("/admin/site-notice").then((r) => r.data);
+export const updateAdminSiteNotice = (input: UpdateSiteNoticeInput) => apiClient.put("/admin/site-notice", input);
 
 // ── Analytics (Phase 4, admin) ───────────────────────────────────────────
 export const getAdminDailyStats = (days = 30) =>

@@ -814,6 +814,63 @@ export declare const publicSettingsSchema: z.ZodObject<{
     googleAuthEnabled: boolean;
 }>;
 export type PublicSettings = z.infer<typeof publicSettingsSchema>;
+export declare const updateSiteNoticeSchema: z.ZodObject<{
+    titleBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    titleEn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    bodyBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    bodyEn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    isActive: z.ZodBoolean;
+}, "strip", z.ZodTypeAny, {
+    isActive: boolean;
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    bodyBn?: string | null | undefined;
+    bodyEn?: string | null | undefined;
+}, {
+    isActive: boolean;
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    bodyBn?: string | null | undefined;
+    bodyEn?: string | null | undefined;
+}>;
+export type UpdateSiteNoticeInput = z.infer<typeof updateSiteNoticeSchema>;
+export declare const siteNoticeSchema: z.ZodObject<{
+    titleBn: z.ZodNullable<z.ZodString>;
+    titleEn: z.ZodNullable<z.ZodString>;
+    bodyBn: z.ZodNullable<z.ZodString>;
+    bodyEn: z.ZodNullable<z.ZodString>;
+    isActive: z.ZodBoolean;
+}, "strip", z.ZodTypeAny, {
+    titleBn: string | null;
+    titleEn: string | null;
+    bodyBn: string | null;
+    bodyEn: string | null;
+    isActive: boolean;
+}, {
+    titleBn: string | null;
+    titleEn: string | null;
+    bodyBn: string | null;
+    bodyEn: string | null;
+    isActive: boolean;
+}>;
+export type SiteNotice = z.infer<typeof siteNoticeSchema>;
+export declare const publicSiteNoticeSchema: z.ZodObject<{
+    titleBn: z.ZodNullable<z.ZodString>;
+    titleEn: z.ZodNullable<z.ZodString>;
+    bodyBn: z.ZodNullable<z.ZodString>;
+    bodyEn: z.ZodNullable<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    titleBn: string | null;
+    titleEn: string | null;
+    bodyBn: string | null;
+    bodyEn: string | null;
+}, {
+    titleBn: string | null;
+    titleEn: string | null;
+    bodyBn: string | null;
+    bodyEn: string | null;
+}>;
+export type PublicSiteNotice = z.infer<typeof publicSiteNoticeSchema>;
 export declare const noticeInputSchema: z.ZodObject<{
     message: z.ZodString;
     level: z.ZodDefault<z.ZodEnum<["INFO", "WARNING", "SUCCESS", "ERROR"]>>;

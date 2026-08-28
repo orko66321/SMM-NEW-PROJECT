@@ -37,6 +37,8 @@ describe("admin RBAC boundary", () => {
     ["delete", "/api/admin/payment-methods/does-not-matter"],
     ["get", "/api/admin/orders/refills"],
     ["patch", "/api/admin/orders/refills/does-not-matter"],
+    ["get", "/api/admin/site-notice"],
+    ["put", "/api/admin/site-notice"],
   ];
 
   it.each(adminRoutes)("a plain USER gets 403 on %s %s — even with a well-formed body", async (method, path) => {
