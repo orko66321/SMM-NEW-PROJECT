@@ -521,6 +521,7 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   whatsappNumber: 'whatsappNumber',
   liveChatProvider: 'liveChatProvider',
   liveChatWidgetId: 'liveChatWidgetId',
+  howToOrderVideoUrl: 'howToOrderVideoUrl',
   usdToBdtRate: 'usdToBdtRate',
   defaultCurrency: 'defaultCurrency',
   smtpEnabled: 'smtpEnabled',

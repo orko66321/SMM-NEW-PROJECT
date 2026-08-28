@@ -1012,6 +1012,11 @@ model SiteSettings {
   liveChatProvider LiveChatProvider @default(NONE)
   liveChatWidgetId String?
 
+  // Optional external "How to order?" tutorial link (typically a YouTube
+  // video) shown at the bottom of the New Order form via <HowToOrderLink />.
+  // Null/empty ⇒ the frontend renders nothing at all.
+  howToOrderVideoUrl String?
+
   // Admin-set display-only conversion rate — never affects any stored
   // balance or price, which stay USD everywhere server-side (see
   // apps/web/src/context/CurrencyContext.tsx).

@@ -11,6 +11,7 @@ interface AdminSettings {
   whatsappNumber: string | null;
   liveChatProvider: LiveChatProvider;
   liveChatWidgetId: string | null;
+  howToOrderVideoUrl: string | null;
   usdToBdtRate: string;
   defaultCurrency: DisplayCurrency;
   smtpEnabled: boolean;
@@ -32,6 +33,7 @@ export default function AdminSettingsPage() {
     whatsappNumber: "",
     liveChatProvider: "NONE" as LiveChatProvider,
     liveChatWidgetId: "",
+    howToOrderVideoUrl: "",
     usdToBdtRate: "110",
     defaultCurrency: "USD" as DisplayCurrency,
     smtpEnabled: false,
@@ -52,6 +54,7 @@ export default function AdminSettingsPage() {
       whatsappNumber: s.whatsappNumber ?? "",
       liveChatProvider: s.liveChatProvider,
       liveChatWidgetId: s.liveChatWidgetId ?? "",
+      howToOrderVideoUrl: s.howToOrderVideoUrl ?? "",
       usdToBdtRate: s.usdToBdtRate,
       defaultCurrency: s.defaultCurrency,
       smtpEnabled: s.smtpEnabled,
@@ -73,6 +76,7 @@ export default function AdminSettingsPage() {
         whatsappNumber: form.whatsappNumber || null,
         liveChatProvider: form.liveChatProvider,
         liveChatWidgetId: form.liveChatWidgetId || null,
+        howToOrderVideoUrl: form.howToOrderVideoUrl.trim() || null,
         usdToBdtRate: Number(form.usdToBdtRate),
         defaultCurrency: form.defaultCurrency,
         smtpEnabled: form.smtpEnabled,
@@ -147,6 +151,22 @@ export default function AdminSettingsPage() {
             onChange={(e) => setForm((f) => ({ ...f, liveChatWidgetId: e.target.value }))}
           />
         )}
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold">Order Page</h2>
+        <div>
+          <label className="label" htmlFor="howToOrderVideoUrl">How to Order — Video Link</label>
+          <input
+            id="howToOrderVideoUrl"
+            type="url"
+            className="input-field"
+            placeholder="https://youtube.com/watch?v=…"
+            value={form.howToOrderVideoUrl}
+            onChange={(e) => setForm((f) => ({ ...f, howToOrderVideoUrl: e.target.value }))}
+          />
+          <p className="mt-1 text-xs text-on-surface-variant">Leave empty to hide this link on the order page.</p>
+        </div>
       </div>
 
       <div className="card space-y-3">

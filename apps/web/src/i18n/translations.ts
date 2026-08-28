@@ -19,6 +19,7 @@ const en = {
     cancelBadge: "Cancel",
     yes: "Yes",
     copied: "Copied!",
+    howToOrder: "How to order?",
     orderStatus: {
       PENDING: "Pending",
       PROCESSING: "Processing",
@@ -487,6 +488,7 @@ const bn: Translations = {
     cancelBadge: "ক্যানসেল",
     yes: "হ্যাঁ",
     copied: "কপি হয়েছে!",
+    howToOrder: "কিভাবে অর্ডার করবেন?",
     orderStatus: {
       PENDING: "পেন্ডিং",
       PROCESSING: "প্রসেসিং চলছে",
