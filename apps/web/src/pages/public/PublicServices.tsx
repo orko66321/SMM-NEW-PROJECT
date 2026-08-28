@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getPublicCategories, getPublicServices } from "../../api/resources.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { pickLang } from "../../i18n/pickLang.js";
 import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
 
 interface Category {
@@ -16,6 +17,8 @@ interface PublicService {
   id: string;
   name: string;
   description: string | null;
+  nameBn: string | null;
+  descriptionBn: string | null;
   sellPricePer1000: string;
   minQuantity: number;
   maxQuantity: number;
@@ -28,7 +31,7 @@ const PLATFORM_ORDER = ["Facebook", "Instagram", "TikTok", "YouTube", "Telegram"
 
 export default function PublicServices() {
   const { formatCurrency } = useCurrency();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [platform, setPlatform] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [detailsService, setDetailsService] = useState<PublicService | null>(null);
@@ -52,7 +55,8 @@ export default function PublicServices() {
   const filtered = useMemo(() => {
     return services.filter((s) => {
       const matchesPlatform = !platform || s.category.platform === platform;
-      const matchesSearch = !search.trim() || s.name.toLowerCase().includes(search.toLowerCase());
+      const haystack = `${s.name} ${s.nameBn ?? ""}`.toLowerCase();
+      const matchesSearch = !search.trim() || haystack.includes(search.toLowerCase());
       return matchesPlatform && matchesSearch;
     });
   }, [services, platform, search]);
@@ -101,10 +105,14 @@ export default function PublicServices() {
         {filtered.map((s) => (
           <div key={s.id} className="card">
             <div className="flex items-start justify-between gap-3">
-              <p className="font-medium text-on-surface">{s.name}</p>
+              <p className="font-medium text-on-surface">{pickLang(lang, s.nameBn, s.name)}</p>
               <span className="whitespace-nowrap font-mono text-sm text-primary">{formatCurrency(s.sellPricePer1000)}</span>
             </div>
-            {s.description && <p className="mt-1 line-clamp-2 whitespace-pre-line text-xs text-on-surface-variant">{s.description}</p>}
+            {pickLang(lang, s.descriptionBn, s.description) && (
+              <p className="mt-1 line-clamp-2 whitespace-pre-line text-xs text-on-surface-variant">
+                {pickLang(lang, s.descriptionBn, s.description)}
+              </p>
+            )}
             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-on-surface-variant">
               <span>{s.category.platform}</span>
               <span className="font-mono">{t("publicServices.tableMinMax")}: {s.minQuantity} – {s.maxQuantity}</span>
@@ -146,8 +154,12 @@ export default function PublicServices() {
             {filtered.map((s) => (
               <tr key={s.id} className="hover:bg-surface-container/40">
                 <td className="max-w-[320px] px-4 py-3">
-                  <p className="font-medium text-on-surface">{s.name}</p>
-                  {s.description && <p className="truncate text-xs text-on-surface-variant" title={s.description}>{s.description}</p>}
+                  <p className="font-medium text-on-surface">{pickLang(lang, s.nameBn, s.name)}</p>
+                  {pickLang(lang, s.descriptionBn, s.description) && (
+                    <p className="truncate text-xs text-on-surface-variant" title={pickLang(lang, s.descriptionBn, s.description)}>
+                      {pickLang(lang, s.descriptionBn, s.description)}
+                    </p>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-on-surface-variant">{s.category.platform}</td>
                 <td className="px-4 py-3 font-mono text-primary">{formatCurrency(s.sellPricePer1000)}</td>
@@ -183,8 +195,8 @@ export default function PublicServices() {
       {detailsService && (
         <ServiceDetailsModal
           service={{
-            name: detailsService.name,
-            description: detailsService.description,
+            name: pickLang(lang, detailsService.nameBn, detailsService.name),
+            description: pickLang(lang, detailsService.descriptionBn, detailsService.description) || null,
             sellPricePer1000: detailsService.sellPricePer1000,
             minQuantity: detailsService.minQuantity,
             maxQuantity: detailsService.maxQuantity,

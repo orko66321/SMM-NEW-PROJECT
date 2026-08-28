@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getMyOrders, getPublicStats, getWallet } from "../../api/resources.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { pickLang } from "../../i18n/pickLang.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
 
 // Guest-facing variant of the Overview landing view — no wallet/order
@@ -66,7 +67,7 @@ function GuestOverview() {
 
 export default function Overview() {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet, enabled: !!user });
   const { data: orders } = useQuery({
     queryKey: ["orders", "recent"],
@@ -103,9 +104,9 @@ export default function Overview() {
         <h2 className="mb-3 text-sm font-semibold text-on-surface-variant">{t("overview.recentOrders")}</h2>
         {orders?.items.length ? (
           <ul className="divide-y divide-outline-variant">
-            {orders.items.map((o: { id: string; service: { name: string }; quantity: number; charge: string; status: string }) => (
+            {orders.items.map((o: { id: string; service: { name: string; nameBn: string | null }; quantity: number; charge: string; status: string }) => (
               <li key={o.id} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-2 text-sm">
-                <span className="min-w-0 flex-1 basis-full truncate sm:basis-auto">{o.service.name}</span>
+                <span className="min-w-0 flex-1 basis-full truncate sm:basis-auto">{pickLang(lang, o.service.nameBn, o.service.name)}</span>
                 <span className="font-mono text-on-surface-variant">{o.quantity}</span>
                 <span className="font-mono">${o.charge}</span>
                 <span className="badge bg-primary/15 text-primary">{t(`common.orderStatus.${o.status}`)}</span>

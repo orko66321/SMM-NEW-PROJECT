@@ -7,6 +7,7 @@ import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { pickLang } from "../../i18n/pickLang.js";
 import { AuthPromptModal } from "../../components/auth/GuestGate.js";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
@@ -22,6 +23,8 @@ interface ServiceItem {
   id: string;
   name: string;
   description: string | null;
+  nameBn: string | null;
+  descriptionBn: string | null;
   categoryId: string;
   sellPricePer1000: string;
   minQuantity: number;
@@ -212,7 +215,7 @@ export default function NewOrder() {
           <select id="service" className="input-field" value={serviceId} onChange={(e) => setServiceId(e.target.value)} required>
             <option value="" disabled>{t("newOrder.selectService")}</option>
             {services.map((s) => (
-              <option key={s.id} value={s.id}>{s.name} — ${s.sellPricePer1000}/1000</option>
+              <option key={s.id} value={s.id}>{pickLang(lang, s.nameBn, s.name)} — ${s.sellPricePer1000}/1000</option>
             ))}
           </select>
           {selectedService && (
@@ -221,9 +224,9 @@ export default function NewOrder() {
               {!selectedService.cancelEnabled && <span className="badge bg-outline-variant/40 text-on-surface-variant">{t("serviceDetails.noCancel")}</span>}
             </div>
           )}
-          {selectedService?.description && (
+          {selectedService && pickLang(lang, selectedService.descriptionBn, selectedService.description) && (
             <p className="mt-2 whitespace-pre-line rounded-md bg-surface-container-high px-3 py-2 text-xs text-on-surface-variant">
-              {selectedService.description}
+              {pickLang(lang, selectedService.descriptionBn, selectedService.description)}
             </p>
           )}
         </div>

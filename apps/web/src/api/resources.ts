@@ -13,6 +13,7 @@ import type {
   PaymentMethodInput,
   ResolveManualRefillInput,
   BannerInput,
+  PostInput,
   ServiceInput,
   UpdateSiteNoticeInput,
   UpdateGatewayConfigInput,
@@ -142,6 +143,9 @@ export const getPublicServices = (params: { page?: number; pageSize?: number; ca
   apiClient.get("/public/services", { params }).then((r) => r.data);
 export const getPublicSiteNotice = () => apiClient.get("/public/notice").then((r) => r.data);
 export const getPublicBanners = () => apiClient.get("/public/banners").then((r) => r.data.items);
+export const getPublicPosts = (params?: { category?: string }) =>
+  apiClient.get("/public/posts", { params }).then((r) => r.data.items);
+export const getPublicPost = (slug: string) => apiClient.get(`/public/posts/${slug}`).then((r) => r.data.post);
 
 // ── Coupons (Phase 4) ────────────────────────────────────────────────────
 export const validateCoupon = (code: string, amount: number) =>
@@ -172,6 +176,15 @@ export const createAdminBanner = (input: BannerInput) => apiClient.post("/admin/
 export const updateAdminBanner = (id: string, input: Partial<BannerInput>) =>
   apiClient.put(`/admin/banners/${id}`, input).then((r) => r.data.banner);
 export const deleteAdminBanner = (id: string) => apiClient.delete(`/admin/banners/${id}`);
+
+// ── Documentation / Blog posts (admin) ──────────────────────────────────
+export const getAdminPosts = (params: { page?: number; pageSize?: number; category?: string; status?: string }) =>
+  apiClient.get("/admin/posts", { params }).then((r) => r.data);
+export const getAdminPost = (id: string) => apiClient.get(`/admin/posts/${id}`).then((r) => r.data.post);
+export const createAdminPost = (input: PostInput) => apiClient.post("/admin/posts", input).then((r) => r.data.post);
+export const updateAdminPost = (id: string, input: Partial<PostInput>) =>
+  apiClient.put(`/admin/posts/${id}`, input).then((r) => r.data.post);
+export const deleteAdminPost = (id: string) => apiClient.delete(`/admin/posts/${id}`);
 
 // ── Analytics (Phase 4, admin) ───────────────────────────────────────────
 export const getAdminDailyStats = (days = 30) =>

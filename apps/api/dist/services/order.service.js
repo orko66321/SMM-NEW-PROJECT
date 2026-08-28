@@ -191,7 +191,7 @@ export async function listOrdersForUser(userId, page, pageSize, status) {
     const [items, total] = await Promise.all([
         prisma.order.findMany({
             where,
-            include: { service: { select: { name: true, refillEnabled: true } } },
+            include: { service: { select: { name: true, nameBn: true, refillEnabled: true } } },
             orderBy: { createdAt: "desc" },
             skip: (page - 1) * pageSize,
             take: pageSize,

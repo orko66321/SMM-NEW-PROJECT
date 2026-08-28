@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { serviceListQuerySchema } from "@smm/shared";
+import { publicPostListQuerySchema, serviceListQuerySchema, type PostCategory } from "@smm/shared";
 import { validate } from "../middleware/validate.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { listCategories, listServices } from "../services/catalog.service.js";
@@ -7,6 +7,7 @@ import { getPublicSettings } from "../services/settings.service.js";
 import { listActiveNotices } from "../services/notice.service.js";
 import { getPublicSiteNotice } from "../services/siteNotice.service.js";
 import { listBannersPublic } from "../services/banner.service.js";
+import { getPublishedPostBySlug, listPublishedPostsPublic } from "../services/post.service.js";
 import { getPublicStats } from "../services/stats.service.js";
 
 // Unauthenticated — powers the landing page, public services catalog, and
@@ -48,6 +49,22 @@ publicRouter.get(
   "/stats",
   asyncHandler(async (_req, res) => {
     res.json(await getPublicStats());
+  }),
+);
+
+publicRouter.get(
+  "/posts",
+  validate(publicPostListQuerySchema, "query"),
+  asyncHandler(async (req, res) => {
+    const category = (req.query as { category?: PostCategory }).category;
+    res.json({ items: await listPublishedPostsPublic(category) });
+  }),
+);
+
+publicRouter.get(
+  "/posts/:slug",
+  asyncHandler(async (req, res) => {
+    res.json({ post: await getPublishedPostBySlug(req.params.slug!) });
   }),
 );
 

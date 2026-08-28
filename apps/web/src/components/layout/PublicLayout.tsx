@@ -17,6 +17,7 @@ export default function PublicLayout() {
     { to: "/", label: t("nav.home"), end: true },
     { to: "/services", label: t("nav.services") },
     { to: "/api-docs", label: t("nav.api") },
+    { to: "/docs", label: t("nav.docs") },
   ];
 
   useEffect(() => {
@@ -138,6 +139,7 @@ export default function PublicLayout() {
             <div className="flex gap-5 text-sm text-on-surface-variant">
               <Link to="/services" className="hover:text-on-surface">{t("nav.services")}</Link>
               <Link to="/api-docs" className="hover:text-on-surface">{t("nav.apiDocs")}</Link>
+              <Link to="/docs" className="hover:text-on-surface">{t("nav.docs")}</Link>
               <Link to="/login" className="hover:text-on-surface">{t("nav.signIn")}</Link>
             </div>
           </div>

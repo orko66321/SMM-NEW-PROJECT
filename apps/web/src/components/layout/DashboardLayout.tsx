@@ -32,6 +32,7 @@ export default function DashboardLayout() {
     { to: "/dashboard/wallet", label: t("dashboardLayout.nav.addFunds") },
     { to: "/dashboard/tickets", label: t("dashboardLayout.nav.tickets") },
     { to: "/dashboard/profile", label: t("dashboardLayout.nav.profile") },
+    { to: "/docs", label: t("dashboardLayout.nav.docs") },
   ];
 
   const bottomNavItems = [

@@ -44,6 +44,10 @@ describe("admin RBAC boundary", () => {
     ["post", "/api/admin/banners"],
     ["put", "/api/admin/banners/does-not-matter"],
     ["delete", "/api/admin/banners/does-not-matter"],
+    ["get", "/api/admin/posts"],
+    ["post", "/api/admin/posts"],
+    ["put", "/api/admin/posts/does-not-matter"],
+    ["delete", "/api/admin/posts/does-not-matter"],
   ];
 
   it.each(adminRoutes)("a plain USER gets 403 on %s %s — even with a well-formed body", async (method, path) => {

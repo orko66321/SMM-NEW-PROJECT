@@ -6,6 +6,7 @@ import { getMyOrders, requestOrderRefill } from "../../api/resources.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { pickLang } from "../../i18n/pickLang.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 
 const statusTabs = ["ALL", ...OrderStatusValues] as const;
@@ -13,7 +14,7 @@ const statusTabs = ["ALL", ...OrderStatusValues] as const;
 type OrderRow = {
   id: string;
   createdAt: string;
-  service: { name: string; refillEnabled: boolean };
+  service: { name: string; nameBn: string | null; refillEnabled: boolean };
   link: string;
   charge: string;
   quantity: number;
@@ -96,12 +97,12 @@ function CopyIdButton({ id }: { id: string }) {
 }
 
 function OrderCard({ o }: { o: OrderRow }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   return (
     <div className="rounded-lg border border-outline-variant bg-surface-container p-4">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-on-surface">{o.service.name}</p>
+          <p className="truncate text-sm font-semibold text-on-surface">{pickLang(lang, o.service.nameBn, o.service.name)}</p>
           <p className="mt-0.5 text-xs text-on-surface-variant">{new Date(o.createdAt).toLocaleDateString()}</p>
         </div>
         <span className="badge shrink-0 bg-primary/15 text-primary">{t(`common.orderStatus.${o.status}`)}</span>
@@ -138,7 +139,7 @@ function OrderCard({ o }: { o: OrderRow }) {
 }
 
 export default function OrdersHistory() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { user } = useAuth();
   const [status, setStatus] = useState<(typeof statusTabs)[number]>("ALL");
   const [page, setPage] = useState(1);
@@ -220,7 +221,7 @@ export default function OrdersHistory() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-xs">{new Date(o.createdAt).toLocaleDateString()}</td>
-                <td className="px-4 py-3">{o.service.name}</td>
+                <td className="px-4 py-3">{pickLang(lang, o.service.nameBn, o.service.name)}</td>
                 <td className="max-w-[200px] truncate px-4 py-3 text-xs text-on-surface-variant">{o.link}</td>
                 <td className="px-4 py-3 font-mono">${o.charge}</td>
                 <td className="px-4 py-3 font-mono">{o.quantity}</td>

@@ -15,6 +15,8 @@ const emptyForm = {
   categoryId: "",
   name: "",
   description: "",
+  nameBn: "",
+  descriptionBn: "",
   sellPricePer1000: "",
   providerCostPer1000: "",
   minQuantity: "100",
@@ -46,6 +48,32 @@ export default function AdminServices() {
   const [newCategory, setNewCategory] = useState({ name: "", platform: "" });
   const [submitting, setSubmitting] = useState(false);
 
+  // Per-row Bengali name/description editor — the only way to add
+  // translations to already-imported services (the create form above only
+  // covers new ones).
+  const [translating, setTranslating] = useState<
+    { id: string; name: string; nameBn: string; descriptionBn: string } | null
+  >(null);
+  const [savingTranslation, setSavingTranslation] = useState(false);
+
+  async function saveTranslation() {
+    if (!translating) return;
+    setSavingTranslation(true);
+    try {
+      await updateAdminService(translating.id, {
+        nameBn: translating.nameBn.trim() || null,
+        descriptionBn: translating.descriptionBn.trim() || null,
+      });
+      toast.push("Translation saved.", "success");
+      setTranslating(null);
+      refresh();
+    } catch (err) {
+      toast.push(apiErrorMessage(err, "Failed to save translation"), "error");
+    } finally {
+      setSavingTranslation(false);
+    }
+  }
+
   function refresh() {
     queryClient.invalidateQueries({ queryKey: ["admin-services"] });
     queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
@@ -73,6 +101,8 @@ export default function AdminServices() {
         categoryId: form.categoryId,
         name: form.name,
         description: form.description.trim() || undefined,
+        nameBn: form.nameBn.trim() || null,
+        descriptionBn: form.descriptionBn.trim() || null,
         sellPricePer1000: Number(form.sellPricePer1000),
         providerCostPer1000: Number(form.providerCostPer1000),
         minQuantity: Number(form.minQuantity),
@@ -160,7 +190,7 @@ export default function AdminServices() {
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
-            {services?.items.map((s: { id: string; name: string; description: string | null; category: { name: string }; sellPricePer1000: string; providerCostPer1000: string; minQuantity: number; maxQuantity: number; status: string; autoSubmit: boolean; providerId: string | null; providerServiceId: string | null }) => (
+            {services?.items.map((s: { id: string; name: string; description: string | null; nameBn: string | null; descriptionBn: string | null; category: { name: string }; sellPricePer1000: string; providerCostPer1000: string; minQuantity: number; maxQuantity: number; status: string; autoSubmit: boolean; providerId: string | null; providerServiceId: string | null }) => (
               <tr key={s.id}>
                 <td className="px-4 py-3">
                   {s.providerServiceId ? (
@@ -171,6 +201,7 @@ export default function AdminServices() {
                 </td>
                 <td className="max-w-[220px] px-4 py-3">
                   <p>{s.name}</p>
+                  {s.nameBn && <p className="mt-0.5 truncate text-xs text-primary-container" title={s.nameBn}>{s.nameBn}</p>}
                   {s.description && <p className="mt-0.5 truncate text-xs text-on-surface-variant" title={s.description}>{s.description}</p>}
                 </td>
                 <td className="px-4 py-3 text-on-surface-variant">{s.category.name}</td>
@@ -194,9 +225,24 @@ export default function AdminServices() {
                   )}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={() => toggleServiceStatus(s.id, s.status)}>
-                    {s.status === "ACTIVE" ? "Disable" : "Enable"}
-                  </button>
+                  <div className="flex justify-end gap-2">
+                    <button
+                      className="btn-ghost !px-3 !py-1.5 text-xs"
+                      onClick={() =>
+                        setTranslating({
+                          id: s.id,
+                          name: s.name,
+                          nameBn: s.nameBn ?? "",
+                          descriptionBn: s.descriptionBn ?? "",
+                        })
+                      }
+                    >
+                      বাং
+                    </button>
+                    <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={() => toggleServiceStatus(s.id, s.status)}>
+                      {s.status === "ACTIVE" ? "Disable" : "Enable"}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -237,6 +283,20 @@ export default function AdminServices() {
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
             maxLength={2000}
           />
+          <input
+            className="input-field"
+            placeholder="Service name — বাংলা (optional, falls back to the name above)"
+            value={form.nameBn}
+            onChange={(e) => setForm((f) => ({ ...f, nameBn: e.target.value }))}
+            maxLength={200}
+          />
+          <textarea
+            className="input-field min-h-20"
+            placeholder="Description — বাংলা (optional)"
+            value={form.descriptionBn}
+            onChange={(e) => setForm((f) => ({ ...f, descriptionBn: e.target.value }))}
+            maxLength={2000}
+          />
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <input className="input-field" type="number" step="0.0001" placeholder="Sell price/1000" value={form.sellPricePer1000} onChange={(e) => setForm((f) => ({ ...f, sellPricePer1000: e.target.value }))} required />
             <input className="input-field" type="number" step="0.0001" placeholder="Provider cost/1000" value={form.providerCostPer1000} onChange={(e) => setForm((f) => ({ ...f, providerCostPer1000: e.target.value }))} required />
@@ -271,6 +331,51 @@ export default function AdminServices() {
           <button type="submit" className="btn-primary w-full" disabled={submitting}>{submitting ? "Creating…" : "Create service"}</button>
         </form>
       </div>
+
+      {translating && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-surface-deep/70 p-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setTranslating(null)}
+        >
+          <div className="card w-full max-w-lg space-y-4" onClick={(e) => e.stopPropagation()}>
+            <div>
+              <h2 className="text-sm font-semibold">Bengali translation</h2>
+              <p className="mt-1 text-xs text-on-surface-variant">English: {translating.name}</p>
+            </div>
+            <div>
+              <label className="label" htmlFor="tr-name">Name — বাংলা</label>
+              <input
+                id="tr-name"
+                className="input-field"
+                value={translating.nameBn}
+                onChange={(e) => setTranslating((t) => (t ? { ...t, nameBn: e.target.value } : t))}
+                maxLength={200}
+              />
+            </div>
+            <div>
+              <label className="label" htmlFor="tr-desc">Description — বাংলা</label>
+              <textarea
+                id="tr-desc"
+                className="input-field min-h-24"
+                value={translating.descriptionBn}
+                onChange={(e) => setTranslating((t) => (t ? { ...t, descriptionBn: e.target.value } : t))}
+                maxLength={2000}
+              />
+            </div>
+            <p className="text-xs text-on-surface-variant">
+              Left blank, Bengali viewers fall back to the English name/description.
+            </p>
+            <div className="flex gap-2">
+              <button type="button" className="btn-primary" disabled={savingTranslation} onClick={saveTranslation}>
+                {savingTranslation ? "Saving…" : "Save"}
+              </button>
+              <button type="button" className="btn-ghost" onClick={() => setTranslating(null)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

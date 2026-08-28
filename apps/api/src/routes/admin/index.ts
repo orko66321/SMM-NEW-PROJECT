@@ -14,6 +14,7 @@ import { adminSettingsRouter } from "./settings.routes.js";
 import { adminNoticesRouter } from "./notices.routes.js";
 import { adminSiteNoticeRouter } from "./siteNotice.routes.js";
 import { adminBannersRouter } from "./banners.routes.js";
+import { adminPostsRouter } from "./posts.routes.js";
 import { adminCouponsRouter } from "./coupons.routes.js";
 
 export const adminRouter = Router();
@@ -44,4 +45,5 @@ adminRouter.use("/settings", adminSettingsRouter);
 adminRouter.use("/notices", adminNoticesRouter);
 adminRouter.use("/site-notice", adminSiteNoticeRouter);
 adminRouter.use("/banners", adminBannersRouter);
+adminRouter.use("/posts", adminPostsRouter);
 adminRouter.use("/coupons", adminCouponsRouter);

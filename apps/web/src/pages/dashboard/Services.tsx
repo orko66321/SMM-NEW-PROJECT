@@ -4,11 +4,14 @@ import { Link } from "react-router-dom";
 import { getPublicCategories, getPublicServices } from "../../api/resources.js";
 import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { pickLang } from "../../i18n/pickLang.js";
 
 interface ServiceRow {
   id: string;
   name: string;
   description: string | null;
+  nameBn: string | null;
+  descriptionBn: string | null;
   minQuantity: number;
   maxQuantity: number;
   sellPricePer1000: string;
@@ -18,12 +21,12 @@ interface ServiceRow {
 }
 
 function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   return (
     <div className="rounded-lg border border-outline-variant bg-surface-container p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm font-semibold leading-snug text-on-surface">{s.name}</p>
+          <p className="text-sm font-semibold leading-snug text-on-surface">{pickLang(lang, s.nameBn, s.name)}</p>
           {s.providerServiceId && (
             <span className="badge mt-1.5 bg-surface-container-high font-mono text-[11px] text-on-surface-variant">
               ID {s.providerServiceId}
@@ -36,8 +39,10 @@ function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void })
         </p>
       </div>
 
-      {s.description && (
-        <p className="mt-2 line-clamp-2 whitespace-pre-line text-xs text-on-surface-variant">{s.description}</p>
+      {pickLang(lang, s.descriptionBn, s.description) && (
+        <p className="mt-2 line-clamp-2 whitespace-pre-line text-xs text-on-surface-variant">
+          {pickLang(lang, s.descriptionBn, s.description)}
+        </p>
       )}
 
       <div className="mt-3 border-t border-outline-variant pt-3 text-xs text-on-surface-variant">
@@ -57,7 +62,7 @@ function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void })
 }
 
 export default function Services() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [categoryId, setCategoryId] = useState("");
   const [search, setSearch] = useState("");
   const [detailsService, setDetailsService] = useState<ServiceRow | null>(null);
@@ -142,8 +147,12 @@ export default function Services() {
                   )}
                 </td>
                 <td className="max-w-[320px] px-4 py-3">
-                  <p>{s.name}</p>
-                  {s.description && <p className="mt-0.5 truncate text-xs text-on-surface-variant" title={s.description}>{s.description}</p>}
+                  <p>{pickLang(lang, s.nameBn, s.name)}</p>
+                  {pickLang(lang, s.descriptionBn, s.description) && (
+                    <p className="mt-0.5 truncate text-xs text-on-surface-variant" title={pickLang(lang, s.descriptionBn, s.description)}>
+                      {pickLang(lang, s.descriptionBn, s.description)}
+                    </p>
+                  )}
                 </td>
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">{s.minQuantity} / {s.maxQuantity}</td>
                 <td className="px-4 py-3 font-mono text-success">${s.sellPricePer1000}</td>
@@ -173,8 +182,8 @@ export default function Services() {
           // `category?: string` field and React crashes trying to render an
           // object as a child.
           service={{
-            name: detailsService.name,
-            description: detailsService.description,
+            name: pickLang(lang, detailsService.nameBn, detailsService.name),
+            description: pickLang(lang, detailsService.descriptionBn, detailsService.description) || null,
             sellPricePer1000: detailsService.sellPricePer1000,
             minQuantity: detailsService.minQuantity,
             maxQuantity: detailsService.maxQuantity,

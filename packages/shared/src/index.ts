@@ -195,6 +195,11 @@ export const serviceObjectSchema = z.object({
   categoryId: z.string(),
   name: z.string().trim().min(2).max(200),
   description: z.string().trim().max(2000).optional(),
+  // Optional Bengali overrides shown to viewers on the Bengali language
+  // setting; blank/omitted falls back to name/description (see
+  // apps/web/src/i18n/pickLang.ts). Nullable so an admin can clear one.
+  nameBn: z.string().trim().max(200).nullable().optional(),
+  descriptionBn: z.string().trim().max(2000).nullable().optional(),
   sellPricePer1000: z.coerce.number().positive().max(1_000_000),
   providerCostPer1000: z.coerce.number().nonnegative().max(1_000_000),
   minQuantity: z.coerce.number().int().positive(),
@@ -570,3 +575,92 @@ export const dailyStatsQuerySchema = z.object({
   days: z.coerce.number().int().positive().max(365).default(30),
 });
 export type DailyStatsQuery = z.infer<typeof dailyStatsQuerySchema>;
+
+// ── Documentation / Blog / Update posts ──────────────────────────────────
+
+export const PostCategoryValues = ["DOCUMENTATION", "BLOG", "UPDATE"] as const;
+export type PostCategory = (typeof PostCategoryValues)[number];
+
+export const PostStatusValues = ["DRAFT", "PUBLISHED"] as const;
+export type PostStatus = (typeof PostStatusValues)[number];
+
+/**
+ * Pull the 11-character video id out of any YouTube URL form an admin might
+ * paste — watch?v=, youtu.be/, /embed/, /shorts/, or a bare id — ignoring
+ * extra query params (&t=, &list=, …). Also accepts a full <iframe …> embed
+ * snippet (grabs the src). Returns null for anything that isn't YouTube.
+ */
+export function parseYouTubeId(input: string): string | null {
+  const raw = input.trim();
+  if (!raw) return null;
+  const idPattern = /^[a-zA-Z0-9_-]{11}$/;
+  if (idPattern.test(raw)) return raw;
+
+  const patterns = [
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+    /youtube(?:-nocookie)?\.com\/watch\?(?:.*&)?v=([a-zA-Z0-9_-]{11})/,
+    /youtube(?:-nocookie)?\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+    /youtube(?:-nocookie)?\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+    /youtube(?:-nocookie)?\.com\/v\/([a-zA-Z0-9_-]{11})/,
+  ];
+  for (const pattern of patterns) {
+    const match = raw.match(pattern);
+    if (match?.[1]) return match[1];
+  }
+  return null;
+}
+
+const postDataUriImage = z.string().trim().min(1).max(3_000_000);
+// ~15MB of base64 ≈ ~11MB of actual PDF — a real ceiling against a
+// malformed/oversized upload, not a capacity target. Stored in-row for the
+// same no-persistent-filesystem reason as Banner.image.
+const postPdfDataUri = z
+  .string()
+  .trim()
+  .max(15_000_000)
+  .regex(/^data:application\/pdf;base64,/, "PDF must be an uploaded application/pdf file");
+
+// Plain ZodObject (no .refine()) so the admin PUT route can call .partial()
+// — same reasoning as serviceObjectSchema/noticeObjectSchema above.
+export const postObjectSchema = z.object({
+  slug: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(1)
+    .max(120)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug may only contain lowercase letters, numbers, and hyphens"),
+  category: z.enum(PostCategoryValues).default("BLOG"),
+  status: z.enum(PostStatusValues).default("DRAFT"),
+  coverImage: postDataUriImage.nullable().optional(),
+  // Raw admin input — the server parses it to a bare id (parseYouTubeId)
+  // and rejects a non-YouTube link before storing.
+  youtubeUrl: z.string().trim().max(600).nullable().optional(),
+  pdfFile: postPdfDataUri.nullable().optional(),
+  pdfName: z.string().trim().max(255).nullable().optional(),
+  titleEn: z.string().trim().max(200).nullable().optional(),
+  titleBn: z.string().trim().max(200).nullable().optional(),
+  contentEn: z.string().trim().max(50_000).nullable().optional(),
+  contentBn: z.string().trim().max(50_000).nullable().optional(),
+});
+
+export const postInputSchema = postObjectSchema
+  .refine((p) => !!p.titleEn?.trim() || !!p.titleBn?.trim(), {
+    message: "A title in at least one language is required",
+    path: ["titleEn"],
+  })
+  .refine(
+    (p) => !!p.contentEn?.trim() || !!p.contentBn?.trim() || !!p.pdfFile?.trim() || !!p.youtubeUrl?.trim(),
+    { message: "Add body content, a PDF, or a YouTube video", path: ["contentEn"] },
+  );
+export type PostInput = z.infer<typeof postInputSchema>;
+
+export const postListQuerySchema = paginationQuerySchema.extend({
+  category: z.enum(PostCategoryValues).optional(),
+  status: z.enum(PostStatusValues).optional(),
+});
+export type PostListQuery = z.infer<typeof postListQuerySchema>;
+
+export const publicPostListQuerySchema = z.object({
+  category: z.enum(PostCategoryValues).optional(),
+});

@@ -17,6 +17,7 @@ const navItems = [
   { to: "/admin/coupons", label: "Coupons" },
   { to: "/admin/notice-settings", label: "Notice Settings" },
   { to: "/admin/banner", label: "Banner Slider" },
+  { to: "/admin/posts", label: "Documentation" },
   { to: "/admin/settings", label: "Settings" },
 ];
 

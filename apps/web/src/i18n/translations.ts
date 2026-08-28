@@ -52,6 +52,7 @@ const en = {
     services: "Services",
     api: "API",
     apiDocs: "API Docs",
+    docs: "Docs",
     dashboard: "Dashboard",
     signIn: "Sign In",
     signUp: "Sign Up",
@@ -122,6 +123,24 @@ const en = {
     placeOrderIdempotency: "is required and prevents accidental double-orders if a request is retried.",
     orderStatusHeading: "Check order status",
     walletBalanceHeading: "Wallet balance",
+  },
+
+  docs: {
+    title: "Documentation & Updates",
+    subtitle: "Guides on using the panel, product updates, and announcements.",
+    tabs: {
+      all: "All",
+      DOCUMENTATION: "Documentation",
+      BLOG: "Blog",
+      UPDATE: "Updates",
+    },
+    empty: "Nothing here yet — check back soon.",
+    backToList: "← All posts",
+    notFound: "This post doesn't exist or hasn't been published.",
+    watchVideo: "Watch video",
+    openPdf: "Open PDF in a new tab",
+    publishedOn: "Published {{date}}",
+    readMore: "Read more",
   },
 
   auth: {
@@ -202,6 +221,7 @@ const en = {
       addFunds: "Add Funds",
       tickets: "Tickets Support",
       profile: "Profile & Settings",
+      docs: "Docs & Updates",
     },
     bottomNav: {
       home: "Home",
@@ -470,6 +490,7 @@ const bn: Translations = {
     services: "সার্ভিসেস",
     api: "এপিআই",
     apiDocs: "এপিআই ডকস",
+    docs: "ডকস",
     dashboard: "ড্যাশবোর্ড",
     signIn: "সাইন ইন",
     signUp: "সাইন আপ",
@@ -540,6 +561,24 @@ const bn: Translations = {
     placeOrderIdempotency: "আবশ্যক, আর রিকোয়েস্ট রিট্রাই হলেও ভুলবশত ডাবল-অর্ডার হওয়া ঠেকায়।",
     orderStatusHeading: "অর্ডার স্ট্যাটাস চেক করুন",
     walletBalanceHeading: "ওয়ালেট ব্যালেন্স",
+  },
+
+  docs: {
+    title: "ডকুমেন্টেশন ও আপডেট",
+    subtitle: "প্যানেল ব্যবহারের গাইড, নতুন ফিচার আপডেট আর ঘোষণা।",
+    tabs: {
+      all: "সব",
+      DOCUMENTATION: "ডকুমেন্টেশন",
+      BLOG: "ব্লগ",
+      UPDATE: "আপডেট",
+    },
+    empty: "এখনো কিছু নেই — একটু পরে আবার দেখুন।",
+    backToList: "← সব পোস্ট",
+    notFound: "এই পোস্টটা নেই অথবা এখনো পাবলিশ করা হয়নি।",
+    watchVideo: "ভিডিও দেখুন",
+    openPdf: "নতুন ট্যাবে PDF খুলুন",
+    publishedOn: "পাবলিশ: {{date}}",
+    readMore: "বিস্তারিত পড়ুন",
   },
 
   auth: {
@@ -620,6 +659,7 @@ const bn: Translations = {
       addFunds: "ফান্ড যোগ করুন",
       tickets: "টিকেট সাপোর্ট",
       profile: "প্রোফাইল ও সেটিংস",
+      docs: "ডকস ও আপডেট",
     },
     bottomNav: {
       home: "হোম",

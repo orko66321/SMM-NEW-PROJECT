@@ -10,6 +10,8 @@ import LiveChatLoader from "./components/support/LiveChatLoader.js";
 import Landing from "./pages/public/Landing.js";
 import PublicServices from "./pages/public/PublicServices.js";
 import ApiDocs from "./pages/public/ApiDocs.js";
+import Docs from "./pages/public/Docs.js";
+import DocDetail from "./pages/public/DocDetail.js";
 
 import Login from "./pages/auth/Login.js";
 import Register from "./pages/auth/Register.js";
@@ -39,6 +41,7 @@ import AdminPaymentMethods from "./pages/admin/PaymentMethods.js";
 import AdminSettings from "./pages/admin/Settings.js";
 import AdminNoticeSettings from "./pages/admin/NoticeSettings.js";
 import AdminBanner from "./pages/admin/Banner.js";
+import AdminPosts from "./pages/admin/Posts.js";
 import AdminCoupons from "./pages/admin/Coupons.js";
 
 export default function App() {
@@ -51,6 +54,8 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/services" element={<PublicServices />} />
           <Route path="/api-docs" element={<ApiDocs />} />
+          <Route path="/docs" element={<Docs />} />
+          <Route path="/docs/:slug" element={<DocDetail />} />
         </Route>
 
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
@@ -99,6 +104,7 @@ export default function App() {
           <Route path="settings" element={<AdminSettings />} />
           <Route path="notice-settings" element={<AdminNoticeSettings />} />
           <Route path="banner" element={<AdminBanner />} />
+          <Route path="posts" element={<AdminPosts />} />
           <Route path="coupons" element={<AdminCoupons />} />
         </Route>
 

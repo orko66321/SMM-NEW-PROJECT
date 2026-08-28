@@ -272,6 +272,8 @@ export declare const serviceObjectSchema: z.ZodObject<{
     categoryId: z.ZodString;
     name: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
+    nameBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    descriptionBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     sellPricePer1000: z.ZodNumber;
     providerCostPer1000: z.ZodNumber;
     minQuantity: z.ZodNumber;
@@ -295,6 +297,8 @@ export declare const serviceObjectSchema: z.ZodObject<{
     cancelEnabled: boolean;
     autoSubmit: boolean;
     description?: string | undefined;
+    nameBn?: string | null | undefined;
+    descriptionBn?: string | null | undefined;
     providerId?: string | null | undefined;
     providerServiceId?: string | null | undefined;
     backupProviderId?: string | null | undefined;
@@ -307,6 +311,8 @@ export declare const serviceObjectSchema: z.ZodObject<{
     maxQuantity: number;
     status?: "ACTIVE" | "DISABLED" | undefined;
     description?: string | undefined;
+    nameBn?: string | null | undefined;
+    descriptionBn?: string | null | undefined;
     refillEnabled?: boolean | undefined;
     cancelEnabled?: boolean | undefined;
     providerId?: string | null | undefined;
@@ -318,6 +324,8 @@ export declare const serviceInputSchema: z.ZodEffects<z.ZodObject<{
     categoryId: z.ZodString;
     name: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
+    nameBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    descriptionBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     sellPricePer1000: z.ZodNumber;
     providerCostPer1000: z.ZodNumber;
     minQuantity: z.ZodNumber;
@@ -341,6 +349,8 @@ export declare const serviceInputSchema: z.ZodEffects<z.ZodObject<{
     cancelEnabled: boolean;
     autoSubmit: boolean;
     description?: string | undefined;
+    nameBn?: string | null | undefined;
+    descriptionBn?: string | null | undefined;
     providerId?: string | null | undefined;
     providerServiceId?: string | null | undefined;
     backupProviderId?: string | null | undefined;
@@ -353,6 +363,8 @@ export declare const serviceInputSchema: z.ZodEffects<z.ZodObject<{
     maxQuantity: number;
     status?: "ACTIVE" | "DISABLED" | undefined;
     description?: string | undefined;
+    nameBn?: string | null | undefined;
+    descriptionBn?: string | null | undefined;
     refillEnabled?: boolean | undefined;
     cancelEnabled?: boolean | undefined;
     providerId?: string | null | undefined;
@@ -371,6 +383,8 @@ export declare const serviceInputSchema: z.ZodEffects<z.ZodObject<{
     cancelEnabled: boolean;
     autoSubmit: boolean;
     description?: string | undefined;
+    nameBn?: string | null | undefined;
+    descriptionBn?: string | null | undefined;
     providerId?: string | null | undefined;
     providerServiceId?: string | null | undefined;
     backupProviderId?: string | null | undefined;
@@ -383,6 +397,8 @@ export declare const serviceInputSchema: z.ZodEffects<z.ZodObject<{
     maxQuantity: number;
     status?: "ACTIVE" | "DISABLED" | undefined;
     description?: string | undefined;
+    nameBn?: string | null | undefined;
+    descriptionBn?: string | null | undefined;
     refillEnabled?: boolean | undefined;
     cancelEnabled?: boolean | undefined;
     providerId?: string | null | undefined;
@@ -1050,3 +1066,162 @@ export declare const dailyStatsQuerySchema: z.ZodObject<{
     days?: number | undefined;
 }>;
 export type DailyStatsQuery = z.infer<typeof dailyStatsQuerySchema>;
+export declare const PostCategoryValues: readonly ["DOCUMENTATION", "BLOG", "UPDATE"];
+export type PostCategory = (typeof PostCategoryValues)[number];
+export declare const PostStatusValues: readonly ["DRAFT", "PUBLISHED"];
+export type PostStatus = (typeof PostStatusValues)[number];
+/**
+ * Pull the 11-character video id out of any YouTube URL form an admin might
+ * paste — watch?v=, youtu.be/, /embed/, /shorts/, or a bare id — ignoring
+ * extra query params (&t=, &list=, …). Also accepts a full <iframe …> embed
+ * snippet (grabs the src). Returns null for anything that isn't YouTube.
+ */
+export declare function parseYouTubeId(input: string): string | null;
+export declare const postObjectSchema: z.ZodObject<{
+    slug: z.ZodString;
+    category: z.ZodDefault<z.ZodEnum<["DOCUMENTATION", "BLOG", "UPDATE"]>>;
+    status: z.ZodDefault<z.ZodEnum<["DRAFT", "PUBLISHED"]>>;
+    coverImage: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    youtubeUrl: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    pdfFile: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    pdfName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    titleEn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    titleBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    contentEn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    contentBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, "strip", z.ZodTypeAny, {
+    status: "DRAFT" | "PUBLISHED";
+    slug: string;
+    category: "DOCUMENTATION" | "BLOG" | "UPDATE";
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    coverImage?: string | null | undefined;
+    youtubeUrl?: string | null | undefined;
+    pdfFile?: string | null | undefined;
+    pdfName?: string | null | undefined;
+    contentEn?: string | null | undefined;
+    contentBn?: string | null | undefined;
+}, {
+    slug: string;
+    status?: "DRAFT" | "PUBLISHED" | undefined;
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    category?: "DOCUMENTATION" | "BLOG" | "UPDATE" | undefined;
+    coverImage?: string | null | undefined;
+    youtubeUrl?: string | null | undefined;
+    pdfFile?: string | null | undefined;
+    pdfName?: string | null | undefined;
+    contentEn?: string | null | undefined;
+    contentBn?: string | null | undefined;
+}>;
+export declare const postInputSchema: z.ZodEffects<z.ZodEffects<z.ZodObject<{
+    slug: z.ZodString;
+    category: z.ZodDefault<z.ZodEnum<["DOCUMENTATION", "BLOG", "UPDATE"]>>;
+    status: z.ZodDefault<z.ZodEnum<["DRAFT", "PUBLISHED"]>>;
+    coverImage: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    youtubeUrl: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    pdfFile: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    pdfName: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    titleEn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    titleBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    contentEn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    contentBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}, "strip", z.ZodTypeAny, {
+    status: "DRAFT" | "PUBLISHED";
+    slug: string;
+    category: "DOCUMENTATION" | "BLOG" | "UPDATE";
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    coverImage?: string | null | undefined;
+    youtubeUrl?: string | null | undefined;
+    pdfFile?: string | null | undefined;
+    pdfName?: string | null | undefined;
+    contentEn?: string | null | undefined;
+    contentBn?: string | null | undefined;
+}, {
+    slug: string;
+    status?: "DRAFT" | "PUBLISHED" | undefined;
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    category?: "DOCUMENTATION" | "BLOG" | "UPDATE" | undefined;
+    coverImage?: string | null | undefined;
+    youtubeUrl?: string | null | undefined;
+    pdfFile?: string | null | undefined;
+    pdfName?: string | null | undefined;
+    contentEn?: string | null | undefined;
+    contentBn?: string | null | undefined;
+}>, {
+    status: "DRAFT" | "PUBLISHED";
+    slug: string;
+    category: "DOCUMENTATION" | "BLOG" | "UPDATE";
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    coverImage?: string | null | undefined;
+    youtubeUrl?: string | null | undefined;
+    pdfFile?: string | null | undefined;
+    pdfName?: string | null | undefined;
+    contentEn?: string | null | undefined;
+    contentBn?: string | null | undefined;
+}, {
+    slug: string;
+    status?: "DRAFT" | "PUBLISHED" | undefined;
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    category?: "DOCUMENTATION" | "BLOG" | "UPDATE" | undefined;
+    coverImage?: string | null | undefined;
+    youtubeUrl?: string | null | undefined;
+    pdfFile?: string | null | undefined;
+    pdfName?: string | null | undefined;
+    contentEn?: string | null | undefined;
+    contentBn?: string | null | undefined;
+}>, {
+    status: "DRAFT" | "PUBLISHED";
+    slug: string;
+    category: "DOCUMENTATION" | "BLOG" | "UPDATE";
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    coverImage?: string | null | undefined;
+    youtubeUrl?: string | null | undefined;
+    pdfFile?: string | null | undefined;
+    pdfName?: string | null | undefined;
+    contentEn?: string | null | undefined;
+    contentBn?: string | null | undefined;
+}, {
+    slug: string;
+    status?: "DRAFT" | "PUBLISHED" | undefined;
+    titleBn?: string | null | undefined;
+    titleEn?: string | null | undefined;
+    category?: "DOCUMENTATION" | "BLOG" | "UPDATE" | undefined;
+    coverImage?: string | null | undefined;
+    youtubeUrl?: string | null | undefined;
+    pdfFile?: string | null | undefined;
+    pdfName?: string | null | undefined;
+    contentEn?: string | null | undefined;
+    contentBn?: string | null | undefined;
+}>;
+export type PostInput = z.infer<typeof postInputSchema>;
+export declare const postListQuerySchema: z.ZodObject<{
+    page: z.ZodDefault<z.ZodNumber>;
+    pageSize: z.ZodDefault<z.ZodNumber>;
+} & {
+    category: z.ZodOptional<z.ZodEnum<["DOCUMENTATION", "BLOG", "UPDATE"]>>;
+    status: z.ZodOptional<z.ZodEnum<["DRAFT", "PUBLISHED"]>>;
+}, "strip", z.ZodTypeAny, {
+    page: number;
+    pageSize: number;
+    status?: "DRAFT" | "PUBLISHED" | undefined;
+    category?: "DOCUMENTATION" | "BLOG" | "UPDATE" | undefined;
+}, {
+    page?: number | undefined;
+    pageSize?: number | undefined;
+    status?: "DRAFT" | "PUBLISHED" | undefined;
+    category?: "DOCUMENTATION" | "BLOG" | "UPDATE" | undefined;
+}>;
+export type PostListQuery = z.infer<typeof postListQuerySchema>;
+export declare const publicPostListQuerySchema: z.ZodObject<{
+    category: z.ZodOptional<z.ZodEnum<["DOCUMENTATION", "BLOG", "UPDATE"]>>;
+}, "strip", z.ZodTypeAny, {
+    category?: "DOCUMENTATION" | "BLOG" | "UPDATE" | undefined;
+}, {
+    category?: "DOCUMENTATION" | "BLOG" | "UPDATE" | undefined;
+}>;

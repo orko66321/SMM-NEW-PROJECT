@@ -259,6 +259,8 @@ exports.Prisma.ServiceScalarFieldEnum = {
   backupProviderId: 'backupProviderId',
   name: 'name',
   description: 'description',
+  nameBn: 'nameBn',
+  descriptionBn: 'descriptionBn',
   sellPricePer1000: 'sellPricePer1000',
   providerCostPer1000: 'providerCostPer1000',
   minQuantity: 'minQuantity',
@@ -470,6 +472,24 @@ exports.Prisma.BannerScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  category: 'category',
+  status: 'status',
+  coverImage: 'coverImage',
+  youtubeVideoId: 'youtubeVideoId',
+  pdfFile: 'pdfFile',
+  pdfName: 'pdfName',
+  titleEn: 'titleEn',
+  titleBn: 'titleBn',
+  contentEn: 'contentEn',
+  contentBn: 'contentBn',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -612,6 +632,17 @@ exports.NoticeLevel = exports.$Enums.NoticeLevel = {
   ERROR: 'ERROR'
 };
 
+exports.PostCategory = exports.$Enums.PostCategory = {
+  DOCUMENTATION: 'DOCUMENTATION',
+  BLOG: 'BLOG',
+  UPDATE: 'UPDATE'
+};
+
+exports.PostStatus = exports.$Enums.PostStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
@@ -640,7 +671,8 @@ exports.Prisma.ModelName = {
   SiteSettings: 'SiteSettings',
   Notice: 'Notice',
   SiteNotice: 'SiteNotice',
-  Banner: 'Banner'
+  Banner: 'Banner',
+  Post: 'Post'
 };
 
 /**
