@@ -6,6 +6,7 @@ import { getCategories, getServices } from "../../api/resources.js";
 interface ServiceRow {
   id: string;
   name: string;
+  description: string | null;
   minQuantity: number;
   maxQuantity: number;
   sellPricePer1000: string;
@@ -29,6 +30,10 @@ function ServiceCard({ s }: { s: ServiceRow }) {
           <span className="ml-0.5 block text-[10px] font-normal text-on-surface-variant">/1000</span>
         </p>
       </div>
+
+      {s.description && (
+        <p className="mt-2 whitespace-pre-line text-xs text-on-surface-variant">{s.description}</p>
+      )}
 
       <div className="mt-3 flex items-center justify-between gap-3 border-t border-outline-variant pt-3">
         <p className="text-xs text-on-surface-variant">
@@ -124,7 +129,10 @@ export default function Services() {
                     <span className="text-xs text-on-surface-variant">—</span>
                   )}
                 </td>
-                <td className="px-4 py-3">{s.name}</td>
+                <td className="max-w-[320px] px-4 py-3">
+                  <p>{s.name}</p>
+                  {s.description && <p className="mt-0.5 truncate text-xs text-on-surface-variant" title={s.description}>{s.description}</p>}
+                </td>
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">{s.minQuantity} / {s.maxQuantity}</td>
                 <td className="px-4 py-3 font-mono text-success">${s.sellPricePer1000}</td>
                 <td className="px-4 py-3 text-right">

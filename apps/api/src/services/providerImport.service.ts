@@ -56,6 +56,18 @@ interface ParsedEntry {
   max: number;
   refill: boolean;
   cancel: boolean;
+  description: string | null;
+}
+
+// Matches serviceObjectSchema's description cap (packages/shared) — a
+// provider's desc can run long (some paste full marketing copy), so this
+// is a sanity ceiling, not a validation the import should ever fail on.
+const MAX_DESCRIPTION_LENGTH = 2000;
+
+function parseDescription(desc: string | undefined): string | null {
+  const trimmed = desc?.trim();
+  if (!trimmed) return null;
+  return trimmed.slice(0, MAX_DESCRIPTION_LENGTH);
 }
 
 /** Returns null (instead of throwing) for a row that can't be imported as-is, so one bad row never blocks the rest of a bulk import. */
@@ -76,12 +88,14 @@ function parseEntry(entry: ProviderServiceEntry): ParsedEntry | null {
     max,
     refill: toBool(entry.refill),
     cancel: toBool(entry.cancel),
+    description: parseDescription(entry.desc),
   };
 }
 
 export interface ProviderImportPreviewRow {
   providerServiceId: string;
   name: string;
+  description: string | null;
   category: string;
   platform: string;
   providerCostPer1000: string;
@@ -110,6 +124,7 @@ export async function previewProviderImport(providerId: string) {
     return {
       providerServiceId: entry.service,
       name: entry.name,
+      description: parsed?.description ?? parseDescription(entry.desc),
       category: parsed?.categoryName ?? entry.category ?? "Uncategorized",
       platform: parsed?.platform ?? "Other",
       providerCostPer1000: parsed ? parsed.rate.toString() : entry.rate,
@@ -202,6 +217,7 @@ export async function bulkImportProviderServices(
       providerId,
       providerServiceId: id,
       name: parsed.raw.name.slice(0, 200),
+      description: parsed.description,
       sellPricePer1000: new Prisma.Decimal(sellPricePer1000),
       providerCostPer1000: new Prisma.Decimal(parsed.rate),
       minQuantity: parsed.min,

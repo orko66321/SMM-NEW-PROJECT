@@ -15,7 +15,7 @@ beforeEach(resetDb);
 afterEach(resetDb);
 
 const CATALOG = [
-  { service: "101", name: "Instagram Followers | Real", category: "Instagram Followers", rate: "1.50", min: "100", max: "50000", refill: true, cancel: false },
+  { service: "101", name: "Instagram Followers | Real", category: "Instagram Followers", rate: "1.50", min: "100", max: "50000", refill: true, cancel: false, desc: "High-quality real followers, no drop guarantee, gradual delivery over 24-48h." },
   { service: "102", name: "Instagram Likes", category: "Instagram Followers", rate: "0.80", min: "50", max: "20000", refill: false, cancel: true },
   { service: "103", name: "YouTube Views", category: "YouTube Views", rate: "3.20", min: "1000", max: "1000000", refill: false, cancel: false },
   // Deliberately malformed — a real mega-panel catalog of a few thousand
@@ -37,6 +37,11 @@ describe("provider bulk import (mysmmgen.com-style JAP catalog)", () => {
 
       const brokenRow = preview.items.find((i) => i.providerServiceId === "104");
       expect(brokenRow?.invalidReason).toMatch(/invalid/i);
+
+      const followersRow = preview.items.find((i) => i.providerServiceId === "101");
+      expect(followersRow?.description).toBe("High-quality real followers, no drop guarantee, gradual delivery over 24-48h.");
+      const likesRow = preview.items.find((i) => i.providerServiceId === "102");
+      expect(likesRow?.description).toBeNull();
 
       // Nothing created yet — preview is read-only.
       const count = await prisma.service.count();
@@ -68,6 +73,7 @@ describe("provider bulk import (mysmmgen.com-style JAP catalog)", () => {
 
       const followers = services.find((s) => s.providerServiceId === "101")!;
       expect(followers.name).toBe("Instagram Followers | Real");
+      expect(followers.description).toBe("High-quality real followers, no drop guarantee, gradual delivery over 24-48h.");
       expect(followers.providerCostPer1000.toString()).toBe("1.5");
       expect(followers.sellPricePer1000.toString()).toBe("1.8"); // 1.50 * 1.20
       expect(followers.minQuantity).toBe(100);

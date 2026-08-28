@@ -20,6 +20,8 @@ export interface ProviderServiceEntry {
   max: string;
   refill?: boolean;
   cancel?: boolean;
+  /** The provider's own package description — JAP-standard dialect calls this `desc`. */
+  desc?: string;
 }
 
 export interface ProviderOrderStatus {
@@ -87,6 +89,13 @@ function normalizeServiceEntry(raw: Record<string, unknown>): ProviderServiceEnt
     max: String(raw.max),
     refill: raw.refill as ProviderServiceEntry["refill"],
     cancel: raw.cancel as ProviderServiceEntry["cancel"],
+    // A few providers use `description` instead of the JAP-standard `desc`
+    // — accept either rather than silently dropping the detail.
+    desc: raw.desc !== undefined && raw.desc !== null
+      ? String(raw.desc)
+      : raw.description !== undefined && raw.description !== null
+        ? String(raw.description)
+        : undefined,
   };
 }
 

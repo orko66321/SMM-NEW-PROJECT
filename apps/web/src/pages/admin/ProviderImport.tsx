@@ -12,6 +12,7 @@ import { useToast } from "../../components/ui/Toast.js";
 interface PreviewRow {
   providerServiceId: string;
   name: string;
+  description: string | null;
   category: string;
   platform: string;
   providerCostPer1000: string;
@@ -237,7 +238,12 @@ export default function AdminProviderImport() {
                           onChange={() => toggle(item.providerServiceId)}
                         />
                       </td>
-                      <td className="max-w-[260px] truncate px-3 py-2">{item.name}</td>
+                      <td className="max-w-[260px] px-3 py-2">
+                        <p className="truncate">{item.name}</p>
+                        {item.description && (
+                          <p className="truncate text-xs text-on-surface-variant" title={item.description}>{item.description}</p>
+                        )}
+                      </td>
                       <td className="px-3 py-2 text-xs text-on-surface-variant">
                         {item.category}
                         <br />

@@ -18,6 +18,7 @@ interface InsufficientFundsDetails {
 interface ServiceItem {
   id: string;
   name: string;
+  description: string | null;
   categoryId: string;
   sellPricePer1000: string;
   minQuantity: number;
@@ -122,10 +123,15 @@ export default function NewOrder() {
             ))}
           </select>
           {selectedService && (
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2 flex flex-wrap gap-2">
               {selectedService.refillEnabled && <span className="badge bg-success/15 text-success">Refill</span>}
               {!selectedService.cancelEnabled && <span className="badge bg-outline-variant/40 text-on-surface-variant">No Cancel</span>}
             </div>
+          )}
+          {selectedService?.description && (
+            <p className="mt-2 whitespace-pre-line rounded-md bg-surface-container-high px-3 py-2 text-xs text-on-surface-variant">
+              {selectedService.description}
+            </p>
           )}
         </div>
 

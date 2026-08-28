@@ -51,6 +51,13 @@ function normalizeServiceEntry(raw) {
         max: String(raw.max),
         refill: raw.refill,
         cancel: raw.cancel,
+        // A few providers use `description` instead of the JAP-standard `desc`
+        // — accept either rather than silently dropping the detail.
+        desc: raw.desc !== undefined && raw.desc !== null
+            ? String(raw.desc)
+            : raw.description !== undefined && raw.description !== null
+                ? String(raw.description)
+                : undefined,
     };
 }
 export async function listProviderServices(provider) {

@@ -14,6 +14,7 @@ import { useToast } from "../../components/ui/Toast.js";
 const emptyForm = {
   categoryId: "",
   name: "",
+  description: "",
   sellPricePer1000: "",
   providerCostPer1000: "",
   minQuantity: "100",
@@ -71,6 +72,7 @@ export default function AdminServices() {
       await createAdminService({
         categoryId: form.categoryId,
         name: form.name,
+        description: form.description.trim() || undefined,
         sellPricePer1000: Number(form.sellPricePer1000),
         providerCostPer1000: Number(form.providerCostPer1000),
         minQuantity: Number(form.minQuantity),
@@ -158,7 +160,7 @@ export default function AdminServices() {
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
-            {services?.items.map((s: { id: string; name: string; category: { name: string }; sellPricePer1000: string; providerCostPer1000: string; minQuantity: number; maxQuantity: number; status: string; autoSubmit: boolean; providerId: string | null; providerServiceId: string | null }) => (
+            {services?.items.map((s: { id: string; name: string; description: string | null; category: { name: string }; sellPricePer1000: string; providerCostPer1000: string; minQuantity: number; maxQuantity: number; status: string; autoSubmit: boolean; providerId: string | null; providerServiceId: string | null }) => (
               <tr key={s.id}>
                 <td className="px-4 py-3">
                   {s.providerServiceId ? (
@@ -167,7 +169,10 @@ export default function AdminServices() {
                     <span className="text-xs text-on-surface-variant">—</span>
                   )}
                 </td>
-                <td className="px-4 py-3">{s.name}</td>
+                <td className="max-w-[220px] px-4 py-3">
+                  <p>{s.name}</p>
+                  {s.description && <p className="mt-0.5 truncate text-xs text-on-surface-variant" title={s.description}>{s.description}</p>}
+                </td>
                 <td className="px-4 py-3 text-on-surface-variant">{s.category.name}</td>
                 <td className="px-4 py-3 font-mono text-success">${s.sellPricePer1000}</td>
                 <td className="px-4 py-3 font-mono text-on-surface-variant">${s.providerCostPer1000}</td>
@@ -225,6 +230,13 @@ export default function AdminServices() {
             {categories?.map((c: { id: string; name: string }) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
           <input className="input-field" placeholder="Service name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required />
+          <textarea
+            className="input-field min-h-20"
+            placeholder="Package details / description (optional) — shown to customers on the Services and New Order pages"
+            value={form.description}
+            onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+            maxLength={2000}
+          />
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <input className="input-field" type="number" step="0.0001" placeholder="Sell price/1000" value={form.sellPricePer1000} onChange={(e) => setForm((f) => ({ ...f, sellPricePer1000: e.target.value }))} required />
             <input className="input-field" type="number" step="0.0001" placeholder="Provider cost/1000" value={form.providerCostPer1000} onChange={(e) => setForm((f) => ({ ...f, providerCostPer1000: e.target.value }))} required />
