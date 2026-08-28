@@ -5,7 +5,8 @@ import { useLanguage } from "../../context/LanguageContext.js";
 
 interface Notice {
   id: string;
-  message: string;
+  messageBn: string | null;
+  messageEn: string | null;
   level: "INFO" | "WARNING" | "SUCCESS" | "ERROR";
 }
 
@@ -27,7 +28,7 @@ function readDismissed(): string[] {
 }
 
 export default function NoticeBar() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { data: notices } = useQuery({ queryKey: ["public-notices"], queryFn: getPublicNotices, staleTime: 60_000 });
   const [dismissed, setDismissed] = useState<string[]>(readDismissed);
 
@@ -48,7 +49,7 @@ export default function NoticeBar() {
     <div className="flex flex-col gap-1 p-2">
       {visible.map((notice: Notice) => (
         <div key={notice.id} className={`flex items-center justify-between rounded-md border px-3 py-2 text-sm ${LEVEL_STYLES[notice.level]}`}>
-          <span>{notice.message}</span>
+          <span>{lang === "bn" ? notice.messageBn || notice.messageEn : notice.messageEn || notice.messageBn}</span>
           <button type="button" onClick={() => dismiss(notice.id)} aria-label={t("noticeBar.dismiss")} className="ml-3 shrink-0 opacity-70 hover:opacity-100">
             ✕
           </button>

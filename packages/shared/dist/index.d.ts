@@ -871,20 +871,59 @@ export declare const publicSiteNoticeSchema: z.ZodObject<{
     bodyEn: string | null;
 }>;
 export type PublicSiteNotice = z.infer<typeof publicSiteNoticeSchema>;
-export declare const noticeInputSchema: z.ZodObject<{
-    message: z.ZodString;
+export declare const noticeObjectSchema: z.ZodObject<{
+    messageBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    messageEn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     level: z.ZodDefault<z.ZodEnum<["INFO", "WARNING", "SUCCESS", "ERROR"]>>;
     active: z.ZodDefault<z.ZodBoolean>;
     startsAt: z.ZodOptional<z.ZodNullable<z.ZodDate>>;
     endsAt: z.ZodOptional<z.ZodNullable<z.ZodDate>>;
 }, "strip", z.ZodTypeAny, {
-    message: string;
     level: "INFO" | "WARNING" | "SUCCESS" | "ERROR";
     active: boolean;
+    messageBn?: string | null | undefined;
+    messageEn?: string | null | undefined;
     startsAt?: Date | null | undefined;
     endsAt?: Date | null | undefined;
 }, {
-    message: string;
+    messageBn?: string | null | undefined;
+    messageEn?: string | null | undefined;
+    level?: "INFO" | "WARNING" | "SUCCESS" | "ERROR" | undefined;
+    active?: boolean | undefined;
+    startsAt?: Date | null | undefined;
+    endsAt?: Date | null | undefined;
+}>;
+export declare const noticeInputSchema: z.ZodEffects<z.ZodObject<{
+    messageBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    messageEn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    level: z.ZodDefault<z.ZodEnum<["INFO", "WARNING", "SUCCESS", "ERROR"]>>;
+    active: z.ZodDefault<z.ZodBoolean>;
+    startsAt: z.ZodOptional<z.ZodNullable<z.ZodDate>>;
+    endsAt: z.ZodOptional<z.ZodNullable<z.ZodDate>>;
+}, "strip", z.ZodTypeAny, {
+    level: "INFO" | "WARNING" | "SUCCESS" | "ERROR";
+    active: boolean;
+    messageBn?: string | null | undefined;
+    messageEn?: string | null | undefined;
+    startsAt?: Date | null | undefined;
+    endsAt?: Date | null | undefined;
+}, {
+    messageBn?: string | null | undefined;
+    messageEn?: string | null | undefined;
+    level?: "INFO" | "WARNING" | "SUCCESS" | "ERROR" | undefined;
+    active?: boolean | undefined;
+    startsAt?: Date | null | undefined;
+    endsAt?: Date | null | undefined;
+}>, {
+    level: "INFO" | "WARNING" | "SUCCESS" | "ERROR";
+    active: boolean;
+    messageBn?: string | null | undefined;
+    messageEn?: string | null | undefined;
+    startsAt?: Date | null | undefined;
+    endsAt?: Date | null | undefined;
+}, {
+    messageBn?: string | null | undefined;
+    messageEn?: string | null | undefined;
     level?: "INFO" | "WARNING" | "SUCCESS" | "ERROR" | undefined;
     active?: boolean | undefined;
     startsAt?: Date | null | undefined;

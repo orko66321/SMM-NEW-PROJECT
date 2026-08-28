@@ -739,15 +739,19 @@ model SiteSettings {
   updatedAt DateTime @updatedAt
 }
 
+// Bilingual — same fallback-to-other-language convention as SiteNotice
+// (see below). At least one of messageBn/messageEn is enforced non-empty
+// at the zod layer (noticeInputSchema), not here.
 model Notice {
-  id        String      @id @default(cuid())
-  message   String
-  level     NoticeLevel @default(INFO)
-  active    Boolean     @default(true)
-  startsAt  DateTime?
-  endsAt    DateTime?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id         String      @id @default(cuid())
+  messageBn  String?
+  messageEn  String?
+  level      NoticeLevel @default(INFO)
+  active     Boolean     @default(true)
+  startsAt   DateTime?
+  endsAt     DateTime?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   @@index([active])
 }

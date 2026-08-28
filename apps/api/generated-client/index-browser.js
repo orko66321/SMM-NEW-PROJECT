@@ -441,7 +441,8 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
 
 exports.Prisma.NoticeScalarFieldEnum = {
   id: 'id',
-  message: 'message',
+  messageBn: 'messageBn',
+  messageEn: 'messageEn',
   level: 'level',
   active: 'active',
   startsAt: 'startsAt',

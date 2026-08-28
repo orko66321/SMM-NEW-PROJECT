@@ -468,12 +468,22 @@ export const publicSiteNoticeSchema = z.object({
 });
 export type PublicSiteNotice = z.infer<typeof publicSiteNoticeSchema>;
 
-export const noticeInputSchema = z.object({
-  message: z.string().trim().min(1).max(500),
+// Kept as a plain ZodObject (not the refined version below) so the admin
+// PUT route can call `.partial()` on it — same reasoning as
+// serviceObjectSchema/serviceInputSchema above (`.refine()` returns a
+// ZodEffects, which doesn't support `.partial()`).
+export const noticeObjectSchema = z.object({
+  messageBn: z.string().trim().max(500).nullable().optional(),
+  messageEn: z.string().trim().max(500).nullable().optional(),
   level: z.enum(NoticeLevelValues).default("INFO"),
   active: z.boolean().default(true),
   startsAt: z.coerce.date().nullable().optional(),
   endsAt: z.coerce.date().nullable().optional(),
+});
+
+export const noticeInputSchema = noticeObjectSchema.refine((n) => !!n.messageBn?.trim() || !!n.messageEn?.trim(), {
+  message: "At least one of messageBn or messageEn is required",
+  path: ["messageEn"],
 });
 export type NoticeInput = z.infer<typeof noticeInputSchema>;
 

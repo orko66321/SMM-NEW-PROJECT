@@ -15,7 +15,6 @@ const navItems = [
   { to: "/admin/payment-gateways", label: "Payment Gateways" },
   { to: "/admin/payment-methods", label: "Payment Methods" },
   { to: "/admin/coupons", label: "Coupons" },
-  { to: "/admin/notices", label: "Notices" },
   { to: "/admin/notice-settings", label: "Notice Settings" },
   { to: "/admin/settings", label: "Settings" },
 ];

@@ -67,14 +67,21 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
     expect(JSON.stringify(admin)).not.toContain("super-secret-password");
   });
 
-  it("/api/public/notices only returns active notices", async () => {
-    await createNotice({ message: "Active notice", level: "INFO", active: true });
-    await createNotice({ message: "Inactive notice", level: "WARNING", active: false });
+  it("/api/public/notices only returns active notices, both language fields intact", async () => {
+    await createNotice({ messageEn: "Active notice", messageBn: "সক্রিয় নোটিশ", level: "INFO", active: true });
+    await createNotice({ messageEn: "Inactive notice", level: "WARNING", active: false });
 
     const res = await request(app).get("/api/public/notices");
     expect(res.status).toBe(200);
     expect(res.body.items).toHaveLength(1);
-    expect(res.body.items[0].message).toBe("Active notice");
+    expect(res.body.items[0].messageEn).toBe("Active notice");
+    expect(res.body.items[0].messageBn).toBe("সক্রিয় নোটিশ");
+  });
+
+  it("a banner notice with only one language filled in is still accepted", async () => {
+    const notice = await createNotice({ messageEn: "English only", level: "INFO", active: true });
+    expect(notice.messageEn).toBe("English only");
+    expect(notice.messageBn).toBeNull();
   });
 
   it("/api/public/stats returns real counts, requires no auth", async () => {

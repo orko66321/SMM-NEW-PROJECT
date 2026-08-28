@@ -29690,7 +29690,8 @@ export namespace Prisma {
 
   export type NoticeMinAggregateOutputType = {
     id: string | null
-    message: string | null
+    messageBn: string | null
+    messageEn: string | null
     level: $Enums.NoticeLevel | null
     active: boolean | null
     startsAt: Date | null
@@ -29701,7 +29702,8 @@ export namespace Prisma {
 
   export type NoticeMaxAggregateOutputType = {
     id: string | null
-    message: string | null
+    messageBn: string | null
+    messageEn: string | null
     level: $Enums.NoticeLevel | null
     active: boolean | null
     startsAt: Date | null
@@ -29712,7 +29714,8 @@ export namespace Prisma {
 
   export type NoticeCountAggregateOutputType = {
     id: number
-    message: number
+    messageBn: number
+    messageEn: number
     level: number
     active: number
     startsAt: number
@@ -29725,7 +29728,8 @@ export namespace Prisma {
 
   export type NoticeMinAggregateInputType = {
     id?: true
-    message?: true
+    messageBn?: true
+    messageEn?: true
     level?: true
     active?: true
     startsAt?: true
@@ -29736,7 +29740,8 @@ export namespace Prisma {
 
   export type NoticeMaxAggregateInputType = {
     id?: true
-    message?: true
+    messageBn?: true
+    messageEn?: true
     level?: true
     active?: true
     startsAt?: true
@@ -29747,7 +29752,8 @@ export namespace Prisma {
 
   export type NoticeCountAggregateInputType = {
     id?: true
-    message?: true
+    messageBn?: true
+    messageEn?: true
     level?: true
     active?: true
     startsAt?: true
@@ -29831,7 +29837,8 @@ export namespace Prisma {
 
   export type NoticeGroupByOutputType = {
     id: string
-    message: string
+    messageBn: string | null
+    messageEn: string | null
     level: $Enums.NoticeLevel
     active: boolean
     startsAt: Date | null
@@ -29859,7 +29866,8 @@ export namespace Prisma {
 
   export type NoticeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    message?: boolean
+    messageBn?: boolean
+    messageEn?: boolean
     level?: boolean
     active?: boolean
     startsAt?: boolean
@@ -29870,7 +29878,8 @@ export namespace Prisma {
 
   export type NoticeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    message?: boolean
+    messageBn?: boolean
+    messageEn?: boolean
     level?: boolean
     active?: boolean
     startsAt?: boolean
@@ -29881,7 +29890,8 @@ export namespace Prisma {
 
   export type NoticeSelectScalar = {
     id?: boolean
-    message?: boolean
+    messageBn?: boolean
+    messageEn?: boolean
     level?: boolean
     active?: boolean
     startsAt?: boolean
@@ -29896,7 +29906,8 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      message: string
+      messageBn: string | null
+      messageEn: string | null
       level: $Enums.NoticeLevel
       active: boolean
       startsAt: Date | null
@@ -30297,7 +30308,8 @@ export namespace Prisma {
    */ 
   interface NoticeFieldRefs {
     readonly id: FieldRef<"Notice", 'String'>
-    readonly message: FieldRef<"Notice", 'String'>
+    readonly messageBn: FieldRef<"Notice", 'String'>
+    readonly messageEn: FieldRef<"Notice", 'String'>
     readonly level: FieldRef<"Notice", 'NoticeLevel'>
     readonly active: FieldRef<"Notice", 'Boolean'>
     readonly startsAt: FieldRef<"Notice", 'DateTime'>
@@ -31902,7 +31914,8 @@ export namespace Prisma {
 
   export const NoticeScalarFieldEnum: {
     id: 'id',
-    message: 'message',
+    messageBn: 'messageBn',
+    messageEn: 'messageEn',
     level: 'level',
     active: 'active',
     startsAt: 'startsAt',
@@ -34413,7 +34426,8 @@ export namespace Prisma {
     OR?: NoticeWhereInput[]
     NOT?: NoticeWhereInput | NoticeWhereInput[]
     id?: StringFilter<"Notice"> | string
-    message?: StringFilter<"Notice"> | string
+    messageBn?: StringNullableFilter<"Notice"> | string | null
+    messageEn?: StringNullableFilter<"Notice"> | string | null
     level?: EnumNoticeLevelFilter<"Notice"> | $Enums.NoticeLevel
     active?: BoolFilter<"Notice"> | boolean
     startsAt?: DateTimeNullableFilter<"Notice"> | Date | string | null
@@ -34424,7 +34438,8 @@ export namespace Prisma {
 
   export type NoticeOrderByWithRelationInput = {
     id?: SortOrder
-    message?: SortOrder
+    messageBn?: SortOrderInput | SortOrder
+    messageEn?: SortOrderInput | SortOrder
     level?: SortOrder
     active?: SortOrder
     startsAt?: SortOrderInput | SortOrder
@@ -34438,7 +34453,8 @@ export namespace Prisma {
     AND?: NoticeWhereInput | NoticeWhereInput[]
     OR?: NoticeWhereInput[]
     NOT?: NoticeWhereInput | NoticeWhereInput[]
-    message?: StringFilter<"Notice"> | string
+    messageBn?: StringNullableFilter<"Notice"> | string | null
+    messageEn?: StringNullableFilter<"Notice"> | string | null
     level?: EnumNoticeLevelFilter<"Notice"> | $Enums.NoticeLevel
     active?: BoolFilter<"Notice"> | boolean
     startsAt?: DateTimeNullableFilter<"Notice"> | Date | string | null
@@ -34449,7 +34465,8 @@ export namespace Prisma {
 
   export type NoticeOrderByWithAggregationInput = {
     id?: SortOrder
-    message?: SortOrder
+    messageBn?: SortOrderInput | SortOrder
+    messageEn?: SortOrderInput | SortOrder
     level?: SortOrder
     active?: SortOrder
     startsAt?: SortOrderInput | SortOrder
@@ -34466,7 +34483,8 @@ export namespace Prisma {
     OR?: NoticeScalarWhereWithAggregatesInput[]
     NOT?: NoticeScalarWhereWithAggregatesInput | NoticeScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Notice"> | string
-    message?: StringWithAggregatesFilter<"Notice"> | string
+    messageBn?: StringNullableWithAggregatesFilter<"Notice"> | string | null
+    messageEn?: StringNullableWithAggregatesFilter<"Notice"> | string | null
     level?: EnumNoticeLevelWithAggregatesFilter<"Notice"> | $Enums.NoticeLevel
     active?: BoolWithAggregatesFilter<"Notice"> | boolean
     startsAt?: DateTimeNullableWithAggregatesFilter<"Notice"> | Date | string | null
@@ -36839,7 +36857,8 @@ export namespace Prisma {
 
   export type NoticeCreateInput = {
     id?: string
-    message: string
+    messageBn?: string | null
+    messageEn?: string | null
     level?: $Enums.NoticeLevel
     active?: boolean
     startsAt?: Date | string | null
@@ -36850,7 +36869,8 @@ export namespace Prisma {
 
   export type NoticeUncheckedCreateInput = {
     id?: string
-    message: string
+    messageBn?: string | null
+    messageEn?: string | null
     level?: $Enums.NoticeLevel
     active?: boolean
     startsAt?: Date | string | null
@@ -36861,7 +36881,8 @@ export namespace Prisma {
 
   export type NoticeUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
+    messageBn?: NullableStringFieldUpdateOperationsInput | string | null
+    messageEn?: NullableStringFieldUpdateOperationsInput | string | null
     level?: EnumNoticeLevelFieldUpdateOperationsInput | $Enums.NoticeLevel
     active?: BoolFieldUpdateOperationsInput | boolean
     startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36872,7 +36893,8 @@ export namespace Prisma {
 
   export type NoticeUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
+    messageBn?: NullableStringFieldUpdateOperationsInput | string | null
+    messageEn?: NullableStringFieldUpdateOperationsInput | string | null
     level?: EnumNoticeLevelFieldUpdateOperationsInput | $Enums.NoticeLevel
     active?: BoolFieldUpdateOperationsInput | boolean
     startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36883,7 +36905,8 @@ export namespace Prisma {
 
   export type NoticeCreateManyInput = {
     id?: string
-    message: string
+    messageBn?: string | null
+    messageEn?: string | null
     level?: $Enums.NoticeLevel
     active?: boolean
     startsAt?: Date | string | null
@@ -36894,7 +36917,8 @@ export namespace Prisma {
 
   export type NoticeUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
+    messageBn?: NullableStringFieldUpdateOperationsInput | string | null
+    messageEn?: NullableStringFieldUpdateOperationsInput | string | null
     level?: EnumNoticeLevelFieldUpdateOperationsInput | $Enums.NoticeLevel
     active?: BoolFieldUpdateOperationsInput | boolean
     startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36905,7 +36929,8 @@ export namespace Prisma {
 
   export type NoticeUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
+    messageBn?: NullableStringFieldUpdateOperationsInput | string | null
+    messageEn?: NullableStringFieldUpdateOperationsInput | string | null
     level?: EnumNoticeLevelFieldUpdateOperationsInput | $Enums.NoticeLevel
     active?: BoolFieldUpdateOperationsInput | boolean
     startsAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38921,7 +38946,8 @@ export namespace Prisma {
 
   export type NoticeCountOrderByAggregateInput = {
     id?: SortOrder
-    message?: SortOrder
+    messageBn?: SortOrder
+    messageEn?: SortOrder
     level?: SortOrder
     active?: SortOrder
     startsAt?: SortOrder
@@ -38932,7 +38958,8 @@ export namespace Prisma {
 
   export type NoticeMaxOrderByAggregateInput = {
     id?: SortOrder
-    message?: SortOrder
+    messageBn?: SortOrder
+    messageEn?: SortOrder
     level?: SortOrder
     active?: SortOrder
     startsAt?: SortOrder
@@ -38943,7 +38970,8 @@ export namespace Prisma {
 
   export type NoticeMinOrderByAggregateInput = {
     id?: SortOrder
-    message?: SortOrder
+    messageBn?: SortOrder
+    messageEn?: SortOrder
     level?: SortOrder
     active?: SortOrder
     startsAt?: SortOrder

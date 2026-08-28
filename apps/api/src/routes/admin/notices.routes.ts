@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { noticeInputSchema } from "@smm/shared";
+import { noticeInputSchema, noticeObjectSchema } from "@smm/shared";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { createNotice, deleteNotice, listNoticesForAdmin, updateNotice } from "../../services/notice.service.js";
@@ -26,7 +26,7 @@ adminNoticesRouter.post(
 
 adminNoticesRouter.put(
   "/:id",
-  validate(noticeInputSchema.partial()),
+  validate(noticeObjectSchema.partial()),
   asyncHandler(async (req, res) => {
     const notice = await updateNotice(req.params.id!, req.body);
     await writeAuditLog({ actorId: req.user!.id, action: "notice.update", targetType: "Notice", targetId: req.params.id!, after: req.body, ip: req.ip });
