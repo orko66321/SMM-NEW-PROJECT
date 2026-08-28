@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { getCategories, getServices } from "../../api/resources.js";
 import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 
 interface ServiceRow {
   id: string;
@@ -17,6 +18,7 @@ interface ServiceRow {
 }
 
 function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void }) {
+  const { t } = useLanguage();
   return (
     <div className="rounded-lg border border-outline-variant bg-surface-container p-4">
       <div className="flex items-start justify-between gap-3">
@@ -39,16 +41,15 @@ function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void })
       )}
 
       <div className="mt-3 border-t border-outline-variant pt-3 text-xs text-on-surface-variant">
-        Min <span className="font-mono text-on-surface">{s.minQuantity}</span> · Max{" "}
-        <span className="font-mono text-on-surface">{s.maxQuantity}</span>
+        {t("servicesPage.minMaxLabel", { min: s.minQuantity, max: s.maxQuantity })}
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
         <button type="button" onClick={onDetails} className="btn-ghost !min-h-[38px] justify-center !px-3 !py-2 text-xs">
-          Details
+          {t("common.details")}
         </button>
         <Link to={`/dashboard/new-order?serviceId=${s.id}`} className="btn-primary !min-h-[38px] justify-center !px-3 !py-2 text-xs">
-          Order now
+          {t("common.orderNow")}
         </Link>
       </div>
     </div>
@@ -56,6 +57,7 @@ function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void })
 }
 
 export default function Services() {
+  const { t } = useLanguage();
   const [categoryId, setCategoryId] = useState("");
   const [search, setSearch] = useState("");
   const [detailsService, setDetailsService] = useState<ServiceRow | null>(null);
@@ -70,8 +72,8 @@ export default function Services() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-bold sm:text-2xl">Services</h1>
-        <p className="mt-1 text-sm text-on-surface-variant">Browse the full catalog and jump straight into ordering.</p>
+        <h1 className="text-xl font-bold sm:text-2xl">{t("servicesPage.title")}</h1>
+        <p className="mt-1 text-sm text-on-surface-variant">{t("servicesPage.subtitle")}</p>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
@@ -79,13 +81,13 @@ export default function Services() {
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
           <input
             className="input-field pl-9"
-            placeholder="Search by name or exact ID…"
+            placeholder={t("servicesPage.searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <select className="input-field sm:max-w-xs" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-          <option value="">All categories</option>
+          <option value="">{t("newOrder.allCategories")}</option>
           {categories?.map((c: { id: string; name: string; platform: string }) => (
             <option key={c.id} value={c.id}>{c.platform} — {c.name}</option>
           ))}
@@ -94,15 +96,15 @@ export default function Services() {
 
       {!isLoading && (
         <p className="text-xs text-on-surface-variant">
-          {items.length} service{items.length === 1 ? "" : "s"} found
+          {t(items.length === 1 ? "servicesPage.countFound" : "servicesPage.countFoundPlural", { count: items.length })}
         </p>
       )}
 
       {/* Mobile: stacked cards */}
       <div className="space-y-3 md:hidden">
-        {isLoading && <p className="card text-center text-sm text-on-surface-variant">Loading…</p>}
+        {isLoading && <p className="card text-center text-sm text-on-surface-variant">{t("common.loading")}</p>}
         {!isLoading && items.length === 0 && (
-          <p className="card text-center text-sm text-on-surface-variant">No services match your search.</p>
+          <p className="card text-center text-sm text-on-surface-variant">{t("servicesPage.noMatch")}</p>
         )}
         {items.map((s) => (
           <ServiceCard key={s.id} s={s} onDetails={() => setDetailsService(s)} />
@@ -114,19 +116,19 @@ export default function Services() {
         <table className="w-full min-w-[720px] text-sm">
           <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
             <tr>
-              <th className="px-4 py-3">ID</th>
-              <th className="px-4 py-3">Service</th>
-              <th className="px-4 py-3">Min / Max</th>
-              <th className="px-4 py-3">Price / 1000</th>
+              <th className="px-4 py-3">{t("servicesPage.tableId")}</th>
+              <th className="px-4 py-3">{t("servicesPage.tableService")}</th>
+              <th className="px-4 py-3">{t("servicesPage.tableMinMax")}</th>
+              <th className="px-4 py-3">{t("servicesPage.tablePrice")}</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
             {isLoading && (
-              <tr><td colSpan={5} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>
+              <tr><td colSpan={5} className="px-4 py-6 text-center text-on-surface-variant">{t("common.loading")}</td></tr>
             )}
             {!isLoading && items.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-6 text-center text-on-surface-variant">No services match your search.</td></tr>
+              <tr><td colSpan={5} className="px-4 py-6 text-center text-on-surface-variant">{t("servicesPage.noMatch")}</td></tr>
             )}
             {items.map((s) => (
               <tr key={s.id} className="transition hover:bg-surface-container-high/60">
@@ -146,10 +148,10 @@ export default function Services() {
                 <td className="px-4 py-3">
                   <div className="flex justify-end gap-2">
                     <button type="button" onClick={() => setDetailsService(s)} className="btn-ghost !min-h-0 !px-3 !py-1.5 text-xs">
-                      Details
+                      {t("common.details")}
                     </button>
                     <Link to={`/dashboard/new-order?serviceId=${s.id}`} className="btn-primary !min-h-0 !px-3 !py-1.5 text-xs">
-                      Order now
+                      {t("common.orderNow")}
                     </Link>
                   </div>
                 </td>
@@ -161,7 +163,23 @@ export default function Services() {
 
       {detailsService && (
         <ServiceDetailsModal
-          service={detailsService}
+          // Built explicitly rather than spreading detailsService directly —
+          // the real API response also carries a `category: {name, platform}`
+          // object (see catalog.service.ts's `include`) that this page's
+          // ServiceRow type doesn't declare but is present at runtime; passed
+          // through as-is it collides with ServiceDetailsData's unrelated
+          // `category?: string` field and React crashes trying to render an
+          // object as a child.
+          service={{
+            name: detailsService.name,
+            description: detailsService.description,
+            sellPricePer1000: detailsService.sellPricePer1000,
+            minQuantity: detailsService.minQuantity,
+            maxQuantity: detailsService.maxQuantity,
+            refillEnabled: detailsService.refillEnabled,
+            cancelEnabled: detailsService.cancelEnabled,
+            providerServiceId: detailsService.providerServiceId,
+          }}
           onClose={() => setDetailsService(null)}
           footer={
             <Link
@@ -169,7 +187,7 @@ export default function Services() {
               className="btn-primary w-full justify-center"
               onClick={() => setDetailsService(null)}
             >
-              Order now
+              {t("common.orderNow")}
             </Link>
           }
         />

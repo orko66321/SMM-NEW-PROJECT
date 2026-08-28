@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../context/AuthContext.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 import { getMyProfile } from "../../api/resources.js";
 
 type Lang = "curl" | "js" | "php";
@@ -80,6 +81,7 @@ function endpointSnippets(method: "GET" | "POST", path: string, body?: Record<st
 
 export default function ApiDocs() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { data: profile } = useQuery({ queryKey: ["my-profile"], queryFn: getMyProfile, enabled: !!user });
 
   const placeOrder = endpointSnippets(
@@ -94,64 +96,60 @@ export default function ApiDocs() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <h1 className="font-display text-3xl font-bold text-on-surface">API Documentation</h1>
+      <h1 className="font-display text-3xl font-bold text-on-surface">{t("apiDocs.title")}</h1>
       <p className="mt-2 text-sm text-on-surface-variant">
-        A REST API for resellers — the exact same endpoints the dashboard itself uses, authenticated with a
-        personal API key instead of a login session.
+        {t("apiDocs.subtitle")}
       </p>
 
       <div className="mt-6 card">
-        <h2 className="text-sm font-semibold">Your API key</h2>
+        <h2 className="text-sm font-semibold">{t("apiDocs.yourApiKey")}</h2>
         {user ? (
           profile?.apiKeyPrefix ? (
             <p className="mt-1 font-mono text-sm text-on-surface-variant">{profile.apiKeyPrefix}••••••••••••••••••••••••</p>
           ) : (
             <p className="mt-1 text-sm text-on-surface-variant">
-              You haven&apos;t generated one yet — head to{" "}
-              <Link to="/dashboard/profile" className="text-primary hover:underline">Profile &amp; Settings</Link> to create one.
+              {t("apiDocs.noKeyYet")}{" "}
+              <Link to="/dashboard/profile" className="text-primary hover:underline">{t("apiDocs.profileLink")}</Link> {t("apiDocs.toCreateOne")}
             </p>
           )
         ) : (
           <p className="mt-1 text-sm text-on-surface-variant">
-            <Link to="/login" className="text-primary hover:underline">Sign in</Link> and generate a key from your
-            Profile page to replace <code className="font-mono text-xs">YOUR_API_KEY</code> below.
+            <Link to="/login" className="text-primary hover:underline">{t("common.signIn")}</Link> {t("apiDocs.signInPromptAfterLink")}{" "}
+            <code className="font-mono text-xs">YOUR_API_KEY</code> {t("apiDocs.signInPromptAfterCode")}
           </p>
         )}
       </div>
 
       <section className="mt-8 space-y-3">
-        <h2 className="text-lg font-bold text-on-surface">Authentication</h2>
+        <h2 className="text-lg font-bold text-on-surface">{t("apiDocs.authHeading")}</h2>
         <p className="text-sm text-on-surface-variant">
-          Send your key on every request as the <code className="font-mono text-xs">X-API-Key</code> header. There
-          is no session, no OAuth handshake — the key is the credential.
+          {t("apiDocs.authBody")} <code className="font-mono text-xs">X-API-Key</code> {t("apiDocs.authBodyEnd")}
         </p>
       </section>
 
       <section className="mt-8 space-y-3">
-        <h2 className="text-lg font-bold text-on-surface">List services &amp; live rates</h2>
+        <h2 className="text-lg font-bold text-on-surface">{t("apiDocs.listServicesHeading")}</h2>
         <p className="text-sm text-on-surface-variant"><code className="font-mono text-xs">GET /services</code></p>
         <CodeTabs snippets={servicesList} />
       </section>
 
       <section className="mt-8 space-y-3">
-        <h2 className="text-lg font-bold text-on-surface">Place an order</h2>
+        <h2 className="text-lg font-bold text-on-surface">{t("apiDocs.placeOrderHeading")}</h2>
         <p className="text-sm text-on-surface-variant">
-          <code className="font-mono text-xs">POST /orders</code> — the server always recalculates the charge from
-          the live service price server-side; anything you send is ignored except serviceId/link/quantity.
-          <code className="ml-2 font-mono text-xs">Idempotency-Key</code> is required and prevents accidental
-          double-orders if a request is retried.
+          <code className="font-mono text-xs">POST /orders</code> — {t("apiDocs.placeOrderBody")}
+          <code className="ml-2 font-mono text-xs">Idempotency-Key</code> {t("apiDocs.placeOrderIdempotency")}
         </p>
         <CodeTabs snippets={placeOrder} />
       </section>
 
       <section className="mt-8 space-y-3">
-        <h2 className="text-lg font-bold text-on-surface">Check order status</h2>
+        <h2 className="text-lg font-bold text-on-surface">{t("apiDocs.orderStatusHeading")}</h2>
         <p className="text-sm text-on-surface-variant"><code className="font-mono text-xs">GET /orders</code></p>
         <CodeTabs snippets={orderStatus} />
       </section>
 
       <section className="mt-8 space-y-3">
-        <h2 className="text-lg font-bold text-on-surface">Wallet balance</h2>
+        <h2 className="text-lg font-bold text-on-surface">{t("apiDocs.walletBalanceHeading")}</h2>
         <p className="text-sm text-on-surface-variant"><code className="font-mono text-xs">GET /wallet</code></p>
         <CodeTabs snippets={walletBalance} />
       </section>

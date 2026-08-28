@@ -3,36 +3,39 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../context/AuthContext.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 import { getWallet } from "../../api/resources.js";
 import NoticeBar from "./NoticeBar.js";
 import CurrencySwitcher from "./CurrencySwitcher.js";
+import LanguageSwitcher from "./LanguageSwitcher.js";
 import { Logo } from "../Logo.js";
-
-const navItems = [
-  { to: "/dashboard", label: "Overview", end: true },
-  { to: "/dashboard/new-order", label: "New Order" },
-  { to: "/dashboard/orders", label: "Orders History" },
-  { to: "/dashboard/services", label: "Services" },
-  { to: "/dashboard/wallet", label: "Add Funds" },
-  { to: "/dashboard/tickets", label: "Tickets Support" },
-  { to: "/dashboard/profile", label: "Profile & Settings" },
-];
-
-const bottomNavItems = [
-  { to: "/dashboard", label: "Home", end: true, icon: HomeIcon },
-  { to: "/dashboard/new-order", label: "Order", icon: PlusIcon },
-  { to: "/dashboard/services", label: "Services", icon: GridIcon },
-  { to: "/dashboard/wallet", label: "Wallet", icon: WalletIcon },
-  { to: "/dashboard/tickets", label: "Support", icon: SupportIcon },
-];
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { formatCurrency } = useCurrency();
+  const { t } = useLanguage();
   const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet, refetchInterval: 30_000 });
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const navItems = [
+    { to: "/dashboard", label: t("dashboardLayout.nav.overview"), end: true },
+    { to: "/dashboard/new-order", label: t("dashboardLayout.nav.newOrder") },
+    { to: "/dashboard/orders", label: t("dashboardLayout.nav.ordersHistory") },
+    { to: "/dashboard/services", label: t("dashboardLayout.nav.services") },
+    { to: "/dashboard/wallet", label: t("dashboardLayout.nav.addFunds") },
+    { to: "/dashboard/tickets", label: t("dashboardLayout.nav.tickets") },
+    { to: "/dashboard/profile", label: t("dashboardLayout.nav.profile") },
+  ];
+
+  const bottomNavItems = [
+    { to: "/dashboard", label: t("dashboardLayout.bottomNav.home"), end: true, icon: HomeIcon },
+    { to: "/dashboard/new-order", label: t("dashboardLayout.bottomNav.order"), icon: PlusIcon },
+    { to: "/dashboard/services", label: t("dashboardLayout.bottomNav.services"), icon: GridIcon },
+    { to: "/dashboard/wallet", label: t("dashboardLayout.bottomNav.wallet"), icon: WalletIcon },
+    { to: "/dashboard/tickets", label: t("dashboardLayout.bottomNav.support"), icon: SupportIcon },
+  ];
 
   useEffect(() => {
     setDrawerOpen(false);
@@ -97,7 +100,7 @@ export default function DashboardLayout() {
             <Logo />
             <button
               type="button"
-              aria-label="Close menu"
+              aria-label={t("nav.closeMenu")}
               onClick={() => setDrawerOpen(false)}
               className="flex h-11 w-11 items-center justify-center rounded-md text-on-surface-variant hover:bg-surface-container-high"
             >
@@ -133,13 +136,17 @@ export default function DashboardLayout() {
               </NavLink>
             ))}
           </nav>
+          <div className="flex items-center justify-between gap-2 border-t border-outline-variant px-4 py-3">
+            <LanguageSwitcher />
+            <CurrencySwitcher />
+          </div>
           <div className="border-t border-outline-variant p-3">
             <button
               type="button"
               onClick={handleLogout}
               className="btn-ghost min-h-[44px] w-full justify-center text-sm"
             >
-              Logout
+              {t("dashboardLayout.logout")}
             </button>
           </div>
         </aside>
@@ -154,7 +161,7 @@ export default function DashboardLayout() {
           <div className="flex items-center gap-2 min-w-0">
             <button
               type="button"
-              aria-label="Open menu"
+              aria-label={t("nav.openMenu")}
               onClick={() => setDrawerOpen(true)}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-on-surface hover:bg-surface-container-high md:hidden"
             >
@@ -168,7 +175,8 @@ export default function DashboardLayout() {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden sm:block">
+            <div className="hidden items-center gap-3 sm:flex">
+              <LanguageSwitcher />
               <CurrencySwitcher />
             </div>
             <div className="rounded-md border border-outline-variant bg-surface-container-high px-2.5 py-1.5 font-mono text-xs text-success sm:px-3 sm:text-sm">
@@ -178,7 +186,7 @@ export default function DashboardLayout() {
               className="btn-ghost hidden !px-3 !py-1.5 text-xs sm:inline-flex"
               onClick={handleLogout}
             >
-              Logout
+              {t("dashboardLayout.logout")}
             </button>
           </div>
         </header>

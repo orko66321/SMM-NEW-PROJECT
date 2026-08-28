@@ -5,8 +5,10 @@ import { createDeposit, getMyDeposits, getPaymentMethods, getPublicSettings, get
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 
 function CopyButton({ value, label }: { value: string; label: string }) {
+  const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
 
   async function onCopy() {
@@ -24,7 +26,7 @@ function CopyButton({ value, label }: { value: string; label: string }) {
       type="button"
       onClick={onCopy}
       aria-label={label}
-      title={copied ? "Copied!" : label}
+      title={copied ? t("common.copied") : label}
       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
     >
       {copied ? (
@@ -58,6 +60,7 @@ export default function Wallet() {
   const toast = useToast();
   const queryClient = useQueryClient();
   const { formatCurrency } = useCurrency();
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet });
   const { data: deposits } = useQuery({ queryKey: ["deposits"], queryFn: () => getMyDeposits({ page: 1, pageSize: 20 }) });
@@ -116,12 +119,12 @@ export default function Wallet() {
     const outcome = searchParams.get("deposit");
     if (!outcome) return;
     const messages: Record<string, [string, "success" | "error"]> = {
-      success: ["Payment confirmed — your balance has been updated.", "success"],
-      pending: ["Payment is still processing — we'll credit it as soon as it's confirmed.", "error"],
-      failed: ["Payment was not completed.", "error"],
-      error: ["Something went wrong confirming the payment. Contact support if you were charged.", "error"],
+      success: [t("wallet.paymentConfirmedToast"), "success"],
+      pending: [t("wallet.paymentPendingToast"), "error"],
+      failed: [t("wallet.paymentFailedToast"), "error"],
+      error: [t("wallet.paymentErrorToast"), "error"],
     };
-    const [message, variant] = messages[outcome] ?? ["Payment status unknown.", "error"];
+    const [message, variant] = messages[outcome] ?? [t("wallet.paymentUnknownToast"), "error"];
     toast.push(message, variant);
     queryClient.invalidateQueries({ queryKey: ["wallet"] });
     queryClient.invalidateQueries({ queryKey: ["deposits"] });
@@ -147,7 +150,7 @@ export default function Wallet() {
       const result = await validateCoupon(couponCode.trim(), Number(amount));
       setCouponBonus(result.bonusAmount);
     } catch (err) {
-      setCouponError(apiErrorMessage(err, "Invalid coupon code"));
+      setCouponError(apiErrorMessage(err, t("wallet.couponInvalidFallback")));
     } finally {
       setCheckingCoupon(false);
     }
@@ -172,7 +175,7 @@ export default function Wallet() {
       });
       window.location.href = redirectUrl;
     } catch (err) {
-      setError(apiErrorMessage(err, "Failed to start payment"));
+      setError(apiErrorMessage(err, t("wallet.payFailedFallback")));
       setSubmitting(false);
     }
   }
@@ -190,14 +193,14 @@ export default function Wallet() {
         senderNumber,
         couponCode: couponBonus ? couponCode.trim() : undefined,
       });
-      toast.push("Deposit request submitted — pending admin approval.", "success");
+      toast.push(t("wallet.depositSubmittedToast"), "success");
       setAmount("");
       setTrxId("");
       setSenderNumber("");
       resetCoupon();
       queryClient.invalidateQueries({ queryKey: ["deposits"] });
     } catch (err) {
-      setError(apiErrorMessage(err, "Failed to submit deposit"));
+      setError(apiErrorMessage(err, t("wallet.depositFailedFallback")));
     } finally {
       setSubmitting(false);
     }
@@ -207,17 +210,17 @@ export default function Wallet() {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="space-y-6 lg:col-span-2">
         <div className="card">
-          <p className="label">Current Balance</p>
+          <p className="label">{t("wallet.currentBalance")}</p>
           <p className="font-mono text-3xl font-bold text-success">{formatCurrency(wallet?.balance ?? 0)}</p>
         </div>
 
         <div>
-          <h2 className="mb-3 text-sm font-semibold">Fund history</h2>
+          <h2 className="mb-3 text-sm font-semibold">{t("wallet.fundHistory")}</h2>
 
           {/* Mobile: stacked cards */}
           <div className="space-y-3 md:hidden">
             {deposits?.items.length === 0 && (
-              <p className="card text-center text-sm text-on-surface-variant">No deposits yet.</p>
+              <p className="card text-center text-sm text-on-surface-variant">{t("wallet.noDeposits")}</p>
             )}
             {deposits?.items.map((d: { id: string; createdAt: string; method: string; amount: string; bonusAmount: string; status: string }) => (
               <div key={d.id} className="rounded-lg border border-outline-variant bg-surface-container p-4">
@@ -229,13 +232,13 @@ export default function Wallet() {
                   <span
                     className={`badge shrink-0 ${d.status === "APPROVED" ? "bg-success/15 text-success" : d.status === "REJECTED" ? "bg-error/15 text-error" : "bg-warning/15 text-warning"}`}
                   >
-                    {d.status}
+                    {t(`common.depositStatus.${d.status}`)}
                   </span>
                 </div>
                 <div className="mt-3 flex items-center justify-between gap-2 border-t border-outline-variant pt-3 text-sm">
                   <span className="font-mono">{formatCurrency(d.amount)}</span>
                   <span className="font-mono text-success">
-                    {Number(d.bonusAmount) > 0 ? `+${formatCurrency(d.bonusAmount)} bonus` : "No bonus"}
+                    {Number(d.bonusAmount) > 0 ? t("wallet.bonusAmount", { amount: formatCurrency(d.bonusAmount) }) : t("wallet.noBonus")}
                   </span>
                 </div>
               </div>
@@ -247,11 +250,11 @@ export default function Wallet() {
             <table className="w-full min-w-[520px] text-sm">
               <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
                 <tr>
-                  <th className="py-2">Date</th>
-                  <th className="py-2">Method</th>
-                  <th className="py-2">Amount</th>
-                  <th className="py-2">Bonus</th>
-                  <th className="py-2">Status</th>
+                  <th className="py-2">{t("wallet.tableDate")}</th>
+                  <th className="py-2">{t("wallet.tableMethod")}</th>
+                  <th className="py-2">{t("wallet.tableAmount")}</th>
+                  <th className="py-2">{t("wallet.tableBonus")}</th>
+                  <th className="py-2">{t("wallet.tableStatus")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant">
@@ -262,12 +265,12 @@ export default function Wallet() {
                     <td className="py-2 font-mono">{formatCurrency(d.amount)}</td>
                     <td className="py-2 font-mono text-success">{Number(d.bonusAmount) > 0 ? `+${formatCurrency(d.bonusAmount)}` : "—"}</td>
                     <td className="py-2">
-                      <span className={`badge ${d.status === "APPROVED" ? "bg-success/15 text-success" : d.status === "REJECTED" ? "bg-error/15 text-error" : "bg-warning/15 text-warning"}`}>{d.status}</span>
+                      <span className={`badge ${d.status === "APPROVED" ? "bg-success/15 text-success" : d.status === "REJECTED" ? "bg-error/15 text-error" : "bg-warning/15 text-warning"}`}>{t(`common.depositStatus.${d.status}`)}</span>
                     </td>
                   </tr>
                 ))}
                 {deposits?.items.length === 0 && (
-                  <tr><td colSpan={5} className="py-4 text-center text-on-surface-variant">No deposits yet.</td></tr>
+                  <tr><td colSpan={5} className="py-4 text-center text-on-surface-variant">{t("wallet.noDeposits")}</td></tr>
                 )}
               </tbody>
             </table>
@@ -276,17 +279,18 @@ export default function Wallet() {
       </div>
 
       <div className="card h-fit space-y-4">
-        <h2 className="text-lg font-bold">Add Funds</h2>
+        <h2 className="text-lg font-bold">{t("wallet.addFunds")}</h2>
         {orderIntentId && (
           <p className="rounded-md bg-primary/15 px-3 py-2 text-sm text-primary">
-            You need {requiredAmount ? formatCurrency(requiredAmount) : "more funds"} to place that order — pay
-            below and it'll be submitted automatically once confirmed.
+            {requiredAmount
+              ? t("wallet.orderIntentBanner", { amount: formatCurrency(requiredAmount) })
+              : t("wallet.orderIntentBannerNoAmount")}
           </p>
         )}
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
 
         <div>
-          <label className="label">Payment method</label>
+          <label className="label">{t("wallet.paymentMethodLabel")}</label>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
             {methods?.map((m: PaymentMethodItem) => (
               <button
@@ -300,11 +304,11 @@ export default function Wallet() {
                 <span>{m.title}</span>
                 <span className="flex items-center gap-1.5">
                   {Number(m.bonusPercent) > 0 && <span className="badge bg-success/15 text-success">+{m.bonusPercent}%</span>}
-                  {m.gatewayType === "AUTOMATED" && <span className="badge bg-primary/15 text-primary">Instant</span>}
+                  {m.gatewayType === "AUTOMATED" && <span className="badge bg-primary/15 text-primary">{t("wallet.instant")}</span>}
                 </span>
               </button>
             ))}
-            {methods?.length === 0 && <p className="text-sm text-on-surface-variant">No payment methods are configured yet — contact support.</p>}
+            {methods?.length === 0 && <p className="text-sm text-on-surface-variant">{t("wallet.noPaymentMethods")}</p>}
           </div>
         </div>
 
@@ -312,8 +316,8 @@ export default function Wallet() {
           <>
             <div>
               <label className="label flex flex-wrap items-baseline gap-x-1.5" htmlFor="amount">
-                <span>Amount (USD)</span>
-                <span className="normal-case text-on-surface-variant">(Min: ${selected.minAmount} / Max: ${selected.maxAmount})</span>
+                <span>{t("wallet.amountLabel")}</span>
+                <span className="normal-case text-on-surface-variant">{t("wallet.minMaxAmount", { min: selected.minAmount, max: selected.maxAmount })}</span>
               </label>
               <input
                 id="amount"
@@ -332,14 +336,14 @@ export default function Wallet() {
                   Shown so the actual local-currency charge isn't a surprise. */}
               {selected.gatewayType === "AUTOMATED" && bdtRate && amount && (
                 <p className="mt-1.5 text-xs text-on-surface-variant">
-                  You will pay: <span className="font-mono font-semibold text-on-surface">৳{(Number(amount) * bdtRate).toFixed(2)}</span>{" "}
-                  (Exchange rate: $1 = ৳{bdtRate})
+                  {t("wallet.willPay")} <span className="font-mono font-semibold text-on-surface">৳{(Number(amount) * bdtRate).toFixed(2)}</span>{" "}
+                  {t("wallet.exchangeRate", { rate: bdtRate })}
                 </p>
               )}
             </div>
 
             <div>
-              <label className="label" htmlFor="couponCode">Coupon / promo code (optional)</label>
+              <label className="label" htmlFor="couponCode">{t("wallet.couponLabel")}</label>
               <div className="flex flex-wrap gap-2">
                 <input
                   id="couponCode"
@@ -350,7 +354,7 @@ export default function Wallet() {
                     setCouponBonus(null);
                     setCouponError(null);
                   }}
-                  placeholder="e.g. WELCOME10"
+                  placeholder={t("wallet.couponPlaceholder")}
                 />
                 <button
                   type="button"
@@ -358,20 +362,20 @@ export default function Wallet() {
                   disabled={!couponCode.trim() || !amount || checkingCoupon}
                   onClick={onApplyCoupon}
                 >
-                  {checkingCoupon ? "Checking…" : "Apply"}
+                  {checkingCoupon ? t("wallet.checking") : t("wallet.apply")}
                 </button>
               </div>
               {couponError && <p className="mt-1 text-xs text-error">{couponError}</p>}
               {couponBonus && (
                 <p className="mt-1 text-xs text-success">
-                  Coupon applied — you&apos;ll get an extra {formatCurrency(couponBonus)} once this deposit is credited.
+                  {t("wallet.couponApplied", { amount: formatCurrency(couponBonus) })}
                 </p>
               )}
             </div>
 
             {selected.gatewayType === "AUTOMATED" ? (
               <button type="button" className="btn-primary w-full" disabled={submitting || !amount} onClick={onPayAutomated}>
-                {submitting ? "Redirecting…" : `Pay instantly via ${selected.gatewayProvider}`}
+                {submitting ? t("wallet.redirecting") : t("wallet.payInstantly", { provider: selected.gatewayProvider ?? "" })}
               </button>
             ) : (
               <form onSubmit={onSubmitManual} className="space-y-3">
@@ -381,27 +385,25 @@ export default function Wallet() {
                 {selected.accountNumber && (
                   <div className="flex items-center justify-between gap-2 rounded-md bg-surface-container-high px-3 py-2">
                     <div className="min-w-0">
-                      <span className="block text-xs text-on-surface-variant">Send to ({selected.accountType})</span>
+                      <span className="block text-xs text-on-surface-variant">{t("wallet.sendTo", { accountType: selected.accountType })}</span>
                       <span className="block truncate font-mono font-semibold">{selected.accountNumber}</span>
                     </div>
-                    <CopyButton value={selected.accountNumber} label="Copy account number" />
+                    <CopyButton value={selected.accountNumber} label={t("wallet.copyAccountNumber")} />
                   </div>
                 )}
                 <div>
-                  <label className="label" htmlFor="senderNumber">Your number</label>
+                  <label className="label" htmlFor="senderNumber">{t("wallet.yourNumberLabel")}</label>
                   <input id="senderNumber" className="input-field" value={senderNumber} onChange={(e) => setSenderNumber(e.target.value)} required />
                 </div>
                 <div>
-                  <label className="label" htmlFor="trxId">Transaction ID</label>
+                  <label className="label" htmlFor="trxId">{t("wallet.transactionIdLabel")}</label>
                   <input id="trxId" className="input-field" value={trxId} onChange={(e) => setTrxId(e.target.value)} required />
                 </div>
                 <button type="submit" className="btn-primary w-full" disabled={submitting}>
-                  {submitting ? "Submitting…" : "Submit deposit request"}
+                  {submitting ? t("wallet.submittingDeposit") : t("wallet.submitDeposit")}
                 </button>
                 <p className="text-xs text-on-surface-variant">
-                  Deposits are reviewed by an admin and credited once verified.
-                  <br />
-                  ডিপোজিট যাচাই হওয়ার পর ব্যালেন্স যোগ হবে।
+                  {t("wallet.manualNote")}
                 </p>
               </form>
             )}

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getPublicCategories, getPublicServices } from "../../api/resources.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
 
 interface Category {
@@ -27,6 +28,7 @@ const PLATFORM_ORDER = ["Facebook", "Instagram", "TikTok", "YouTube", "Telegram"
 
 export default function PublicServices() {
   const { formatCurrency } = useCurrency();
+  const { t } = useLanguage();
   const [platform, setPlatform] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [detailsService, setDetailsService] = useState<PublicService | null>(null);
@@ -57,9 +59,9 @@ export default function PublicServices() {
 
   return (
     <div className="mx-auto max-w-container px-4 py-10 sm:px-6">
-      <h1 className="font-display text-3xl font-bold text-on-surface">Services Catalog</h1>
+      <h1 className="font-display text-3xl font-bold text-on-surface">{t("publicServices.title")}</h1>
       <p className="mt-2 text-sm text-on-surface-variant">
-        Live rates, pulled straight from the same catalog customers order from — nothing here is a stale price sheet.
+        {t("publicServices.subtitle")}
       </p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -71,7 +73,7 @@ export default function PublicServices() {
               platform === null ? "border-primary bg-primary/10 text-primary" : "border-outline-variant text-on-surface-variant"
             }`}
           >
-            All
+            {t("publicServices.all")}
           </button>
           {platforms.map((p) => (
             <button
@@ -88,7 +90,7 @@ export default function PublicServices() {
         </div>
         <input
           className="input-field sm:w-64"
-          placeholder="Search services…"
+          placeholder={t("publicServices.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -105,12 +107,12 @@ export default function PublicServices() {
             {s.description && <p className="mt-1 line-clamp-2 whitespace-pre-line text-xs text-on-surface-variant">{s.description}</p>}
             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-on-surface-variant">
               <span>{s.category.platform}</span>
-              <span className="font-mono">Min/Max: {s.minQuantity} – {s.maxQuantity}</span>
+              <span className="font-mono">{t("publicServices.tableMinMax")}: {s.minQuantity} – {s.maxQuantity}</span>
             </div>
             {(s.refillEnabled || s.cancelEnabled) && (
               <div className="mt-3 flex gap-1.5">
-                {s.refillEnabled && <span className="badge bg-info/15 text-info">Refill</span>}
-                {s.cancelEnabled && <span className="badge bg-warning/15 text-warning">Cancel</span>}
+                {s.refillEnabled && <span className="badge bg-info/15 text-info">{t("common.refill")}</span>}
+                {s.cancelEnabled && <span className="badge bg-warning/15 text-warning">{t("common.cancelBadge")}</span>}
               </div>
             )}
             <button
@@ -118,12 +120,12 @@ export default function PublicServices() {
               onClick={() => setDetailsService(s)}
               className="btn-ghost mt-3 w-full justify-center !min-h-[38px] !px-3 !py-2 text-xs"
             >
-              Details
+              {t("common.details")}
             </button>
           </div>
         ))}
         {!isLoading && filtered.length === 0 && (
-          <p className="rounded-lg border border-outline-variant px-4 py-8 text-center text-on-surface-variant">No services match your filters.</p>
+          <p className="rounded-lg border border-outline-variant px-4 py-8 text-center text-on-surface-variant">{t("publicServices.noMatch")}</p>
         )}
       </div>
 
@@ -132,11 +134,11 @@ export default function PublicServices() {
         <table className="w-full min-w-[720px] text-sm">
           <thead className="bg-surface-container-high text-left text-xs uppercase text-on-surface-variant">
             <tr>
-              <th className="px-4 py-3">Service</th>
-              <th className="px-4 py-3">Platform</th>
-              <th className="px-4 py-3">Rate / 1K</th>
-              <th className="px-4 py-3">Min / Max</th>
-              <th className="px-4 py-3">Badges</th>
+              <th className="px-4 py-3">{t("publicServices.tableService")}</th>
+              <th className="px-4 py-3">{t("publicServices.tablePlatform")}</th>
+              <th className="px-4 py-3">{t("publicServices.tableRate")}</th>
+              <th className="px-4 py-3">{t("publicServices.tableMinMax")}</th>
+              <th className="px-4 py-3">{t("publicServices.tableBadges")}</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
@@ -152,20 +154,20 @@ export default function PublicServices() {
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">{s.minQuantity} – {s.maxQuantity}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1.5">
-                    {s.refillEnabled && <span className="badge bg-info/15 text-info">Refill</span>}
-                    {s.cancelEnabled && <span className="badge bg-warning/15 text-warning">Cancel</span>}
+                    {s.refillEnabled && <span className="badge bg-info/15 text-info">{t("common.refill")}</span>}
+                    {s.cancelEnabled && <span className="badge bg-warning/15 text-warning">{t("common.cancelBadge")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <button type="button" onClick={() => setDetailsService(s)} className="btn-ghost !min-h-0 !px-3 !py-1.5 text-xs">
-                    Details
+                    {t("common.details")}
                   </button>
                 </td>
               </tr>
             ))}
             {!isLoading && filtered.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-on-surface-variant">No services match your filters.</td>
+                <td colSpan={6} className="px-4 py-8 text-center text-on-surface-variant">{t("publicServices.noMatch")}</td>
               </tr>
             )}
           </tbody>
@@ -173,9 +175,9 @@ export default function PublicServices() {
       </div>
 
       <div className="mt-8 rounded-lg border border-primary/30 bg-primary/5 p-6 text-center">
-        <p className="font-semibold text-on-surface">Ready to order?</p>
-        <p className="mt-1 text-sm text-on-surface-variant">Create a free account and fund your wallet in seconds.</p>
-        <Link to="/register" className="btn-primary mt-4 inline-block">Sign up</Link>
+        <p className="font-semibold text-on-surface">{t("publicServices.ctaHeading")}</p>
+        <p className="mt-1 text-sm text-on-surface-variant">{t("publicServices.ctaSubtitle")}</p>
+        <Link to="/register" className="btn-primary mt-4 inline-block">{t("common.signUp")}</Link>
       </div>
 
       {detailsService && (
@@ -194,7 +196,7 @@ export default function PublicServices() {
           onClose={() => setDetailsService(null)}
           footer={
             <Link to="/register" className="btn-primary w-full justify-center" onClick={() => setDetailsService(null)}>
-              Sign up to order
+              {t("common.signUp")}
             </Link>
           }
         />

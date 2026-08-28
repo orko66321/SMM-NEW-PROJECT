@@ -3,6 +3,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../context/AuthContext.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 import { useToast } from "../ui/Toast.js";
 import { getPublicSettings } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
@@ -24,6 +25,7 @@ export default function GoogleSignInButton() {
   const { loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
+  const { t, lang } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const { data: settings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
 
@@ -49,16 +51,16 @@ export default function GoogleSignInButton() {
 
   async function onSuccess(credential: { credential?: string }) {
     if (!credential.credential) {
-      toast.push("Google sign-in failed", "error");
+      toast.push(t("auth.google.failedToast"), "error");
       return;
     }
     setSubmitting(true);
     try {
       await loginWithGoogle(credential.credential);
-      toast.push("Welcome!", "success");
+      toast.push(t("auth.google.welcomeToast"), "success");
       navigate("/dashboard", { replace: true });
     } catch (err) {
-      toast.push(apiErrorMessage(err, "Google sign-in failed"), "error");
+      toast.push(apiErrorMessage(err, t("auth.google.failedToast")), "error");
     } finally {
       setSubmitting(false);
     }
@@ -76,9 +78,10 @@ export default function GoogleSignInButton() {
           shape="pill"
           size="large"
           text="continue_with"
+          locale={lang === "bn" ? "bn" : "en"}
           width={String(buttonWidth)}
           onSuccess={onSuccess}
-          onError={() => toast.push("Google sign-in failed", "error")}
+          onError={() => toast.push(t("auth.google.failedToast"), "error")}
         />
       </div>
     </div>

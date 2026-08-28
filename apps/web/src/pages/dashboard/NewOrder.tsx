@@ -5,6 +5,7 @@ import axios from "axios";
 import { getCategories, getServices, placeOrder } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
 // throws when the wallet can't cover the charge (see AppError's `details`).
@@ -32,6 +33,7 @@ export default function NewOrder() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useLanguage();
 
   const { data: categories } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
   const [categoryId, setCategoryId] = useState<string>("");
@@ -58,14 +60,14 @@ export default function NewOrder() {
     setError(null);
     if (!selectedService || !quantity) return;
     if (quantity < selectedService.minQuantity || quantity > selectedService.maxQuantity) {
-      setError(`Quantity must be between ${selectedService.minQuantity} and ${selectedService.maxQuantity}`);
+      setError(t("newOrder.quantityRangeError", { min: selectedService.minQuantity, max: selectedService.maxQuantity }));
       return;
     }
     setSubmitting(true);
     try {
       const idempotencyKey = crypto.randomUUID();
       await placeOrder({ serviceId: selectedService.id, link, quantity: Number(quantity) }, idempotencyKey);
-      toast.push("Order placed successfully!", "success");
+      toast.push(t("newOrder.successToast"), "success");
       setLink("");
       setQuantity("");
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
@@ -79,12 +81,12 @@ export default function NewOrder() {
       if (axios.isAxiosError(err) && err.response?.status === 402) {
         const details = err.response.data?.details as InsufficientFundsDetails | undefined;
         if (details) {
-          toast.push("Insufficient balance — redirecting to Add Funds", "info");
+          toast.push(t("newOrder.insufficientToast"), "info");
           navigate(`/dashboard/wallet?orderIntentId=${details.orderIntentId}&required=${details.shortfall}`);
           return;
         }
       }
-      setError(apiErrorMessage(err, "Failed to place order"));
+      setError(apiErrorMessage(err, t("newOrder.failedFallback")));
     } finally {
       setSubmitting(false);
     }
@@ -93,11 +95,11 @@ export default function NewOrder() {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <form onSubmit={onSubmit} className="card space-y-4 lg:col-span-2">
-        <h1 className="text-lg font-bold sm:text-xl">New Order</h1>
+        <h1 className="text-lg font-bold sm:text-xl">{t("newOrder.title")}</h1>
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error break-words">{error}</p>}
 
         <div>
-          <label className="label" htmlFor="category">Category</label>
+          <label className="label" htmlFor="category">{t("newOrder.categoryLabel")}</label>
           <select
             id="category"
             className="input-field"
@@ -107,7 +109,7 @@ export default function NewOrder() {
               setServiceId("");
             }}
           >
-            <option value="">All categories</option>
+            <option value="">{t("newOrder.allCategories")}</option>
             {categories?.map((c: { id: string; name: string; platform: string }) => (
               <option key={c.id} value={c.id}>{c.platform} — {c.name}</option>
             ))}
@@ -115,17 +117,17 @@ export default function NewOrder() {
         </div>
 
         <div>
-          <label className="label" htmlFor="service">Service</label>
+          <label className="label" htmlFor="service">{t("newOrder.serviceLabel")}</label>
           <select id="service" className="input-field" value={serviceId} onChange={(e) => setServiceId(e.target.value)} required>
-            <option value="" disabled>Select a service…</option>
+            <option value="" disabled>{t("newOrder.selectService")}</option>
             {services.map((s) => (
               <option key={s.id} value={s.id}>{s.name} — ${s.sellPricePer1000}/1000</option>
             ))}
           </select>
           {selectedService && (
             <div className="mt-2 flex flex-wrap gap-2">
-              {selectedService.refillEnabled && <span className="badge bg-success/15 text-success">Refill</span>}
-              {!selectedService.cancelEnabled && <span className="badge bg-outline-variant/40 text-on-surface-variant">No Cancel</span>}
+              {selectedService.refillEnabled && <span className="badge bg-success/15 text-success">{t("common.refill")}</span>}
+              {!selectedService.cancelEnabled && <span className="badge bg-outline-variant/40 text-on-surface-variant">{t("serviceDetails.noCancel")}</span>}
             </div>
           )}
           {selectedService?.description && (
@@ -136,11 +138,11 @@ export default function NewOrder() {
         </div>
 
         <div>
-          <label className="label" htmlFor="link">Link</label>
+          <label className="label" htmlFor="link">{t("newOrder.linkLabel")}</label>
           <input
             id="link"
             className="input-field"
-            placeholder="https://instagram.com/yourprofile"
+            placeholder={t("newOrder.linkPlaceholder")}
             value={link}
             onChange={(e) => setLink(e.target.value)}
             required
@@ -149,8 +151,12 @@ export default function NewOrder() {
 
         <div>
           <label className="label flex flex-wrap items-baseline gap-x-1.5" htmlFor="quantity">
-            <span>Quantity</span>
-            {selectedService && <span className="normal-case text-on-surface-variant">(Min: {selectedService.minQuantity} / Max: {selectedService.maxQuantity})</span>}
+            <span>{t("newOrder.quantityLabel")}</span>
+            {selectedService && (
+              <span className="normal-case text-on-surface-variant">
+                {t("newOrder.minMax", { min: selectedService.minQuantity, max: selectedService.maxQuantity })}
+              </span>
+            )}
           </label>
           <input
             id="quantity"
@@ -165,21 +171,21 @@ export default function NewOrder() {
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-surface-container-high px-4 py-3">
-          <span className="text-sm text-on-surface-variant">Estimated charge</span>
+          <span className="text-sm text-on-surface-variant">{t("newOrder.estimatedCharge")}</span>
           <span className="font-mono text-lg font-semibold text-success">${estimatedCharge}</span>
         </div>
 
         <button type="submit" className="btn-primary w-full" disabled={submitting || !selectedService}>
-          {submitting ? "Placing order…" : "Place Order"}
+          {submitting ? t("newOrder.submitting") : t("newOrder.submit")}
         </button>
       </form>
 
       <aside className="card space-y-3 break-words text-sm text-on-surface-variant">
-        <h2 className="font-semibold text-on-surface">Important</h2>
-        <p>Prices are always calculated by the server at order time — the estimate above is indicative only.</p>
-        <p><strong className="text-on-surface">Refill</strong>: eligible for a free refill if the count drops within the refill window.</p>
-        <p><strong className="text-on-surface">No Cancel</strong>: once started, this order cannot be canceled for a refund.</p>
-        <p>অর্ডার করার আগে লিংক ও কোয়ান্টিটি ভালোভাবে চেক করে নিন। ভুল লিংকে অর্ডার করলে রিফান্ড দেওয়া সম্ভব নয়।</p>
+        <h2 className="font-semibold text-on-surface">{t("newOrder.important")}</h2>
+        <p>{t("newOrder.note1")}</p>
+        <p><strong className="text-on-surface">{t("newOrder.note2Label")}</strong>: {t("newOrder.note2")}</p>
+        <p><strong className="text-on-surface">{t("newOrder.note3Label")}</strong>: {t("newOrder.note3")}</p>
+        <p>{t("newOrder.note4")}</p>
       </aside>
     </div>
   );

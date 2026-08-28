@@ -3,12 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiErrorMessage } from "../../api/client.js";
 import * as authApi from "../../api/auth.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 import AuthShell from "../../components/auth/AuthShell.js";
 import GoogleSignInButton from "../../components/auth/GoogleSignInButton.js";
 
 export default function Register() {
   const navigate = useNavigate();
   const toast = useToast();
+  const { t } = useLanguage();
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,21 +21,21 @@ export default function Register() {
     setError(null);
     try {
       await authApi.register(form);
-      toast.push("Account created — please sign in.", "success");
+      toast.push(t("auth.register.createdToast"), "success");
       navigate("/login", { replace: true });
     } catch (err) {
-      setError(apiErrorMessage(err, "Registration failed"));
+      setError(apiErrorMessage(err, t("auth.register.failedFallback")));
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <AuthShell title="Create an account" subtitle="Start ordering in minutes — no setup fees.">
+    <AuthShell title={t("auth.register.title")} subtitle={t("auth.register.subtitle")}>
       <form onSubmit={onSubmit} className="space-y-4">
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
         <div>
-          <label className="label" htmlFor="username">Username</label>
+          <label className="label" htmlFor="username">{t("auth.register.usernameLabel")}</label>
           <input
             id="username"
             className="input-field"
@@ -43,7 +45,7 @@ export default function Register() {
           />
         </div>
         <div>
-          <label className="label" htmlFor="email">Email</label>
+          <label className="label" htmlFor="email">{t("auth.register.emailLabel")}</label>
           <input
             id="email"
             type="email"
@@ -54,7 +56,7 @@ export default function Register() {
           />
         </div>
         <div>
-          <label className="label" htmlFor="password">Password</label>
+          <label className="label" htmlFor="password">{t("auth.register.passwordLabel")}</label>
           <input
             id="password"
             type="password"
@@ -64,14 +66,14 @@ export default function Register() {
             required
           />
           <p className="mt-1 text-xs text-on-surface-variant">
-            At least 10 characters, with uppercase, lowercase, and a number.
+            {t("auth.register.passwordHint")}
           </p>
         </div>
         <button type="submit" className="btn-primary w-full" disabled={submitting}>
-          {submitting ? "Creating account…" : "Sign up"}
+          {submitting ? t("auth.register.submitting") : t("auth.register.submit")}
         </button>
         <p className="text-center text-sm text-on-surface-variant">
-          Already have an account? <Link to="/login" className="text-primary hover:underline">Sign in</Link>
+          {t("auth.register.haveAccount")} <Link to="/login" className="text-primary hover:underline">{t("common.signIn")}</Link>
         </p>
       </form>
       <GoogleSignInButton />

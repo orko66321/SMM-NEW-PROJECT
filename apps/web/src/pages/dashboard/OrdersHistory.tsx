@@ -4,6 +4,7 @@ import { OrderStatusValues } from "@smm/shared";
 import { apiErrorMessage } from "../../api/client.js";
 import { getMyOrders, requestOrderRefill } from "../../api/resources.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 
 const statusTabs = ["ALL", ...OrderStatusValues] as const;
 
@@ -25,22 +26,23 @@ function isRefillEligible(o: OrderRow) {
 function RefillButton({ orderId }: { orderId: string }) {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
   const [done, setDone] = useState(false);
 
   const mutation = useMutation({
     mutationFn: () => requestOrderRefill(orderId),
     onSuccess: () => {
       setDone(true);
-      toast.push("Refill requested.", "success");
+      toast.push(t("ordersHistory.refillRequestedToast"), "success");
       queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
     onError: (err) => {
-      toast.push(apiErrorMessage(err, "Failed to request refill"), "error");
+      toast.push(apiErrorMessage(err, t("ordersHistory.refillFailedFallback")), "error");
     },
   });
 
   if (done) {
-    return <span className="badge shrink-0 bg-info/15 text-info">Refill requested</span>;
+    return <span className="badge shrink-0 bg-info/15 text-info">{t("ordersHistory.refillRequested")}</span>;
   }
 
   return (
@@ -50,12 +52,13 @@ function RefillButton({ orderId }: { orderId: string }) {
       disabled={mutation.isPending}
       className="btn-ghost !min-h-[36px] shrink-0 !px-3 !py-1.5 text-xs"
     >
-      {mutation.isPending ? "Requesting…" : "Refill"}
+      {mutation.isPending ? t("ordersHistory.requesting") : t("ordersHistory.refillButton")}
     </button>
   );
 }
 
 function CopyIdButton({ id }: { id: string }) {
+  const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
 
   async function onCopy() {
@@ -72,8 +75,8 @@ function CopyIdButton({ id }: { id: string }) {
     <button
       type="button"
       onClick={onCopy}
-      aria-label="Copy order ID"
-      title={copied ? "Copied!" : "Copy order ID"}
+      aria-label={t("ordersHistory.copyOrderId")}
+      title={copied ? t("ordersHistory.copied") : t("ordersHistory.copyOrderId")}
       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-on-surface-variant transition hover:bg-surface-container-high hover:text-on-surface"
     >
       {copied ? (
@@ -91,6 +94,7 @@ function CopyIdButton({ id }: { id: string }) {
 }
 
 function OrderCard({ o }: { o: OrderRow }) {
+  const { t } = useLanguage();
   return (
     <div className="rounded-lg border border-outline-variant bg-surface-container p-4">
       <div className="flex items-start justify-between gap-2">
@@ -98,7 +102,7 @@ function OrderCard({ o }: { o: OrderRow }) {
           <p className="truncate text-sm font-semibold text-on-surface">{o.service.name}</p>
           <p className="mt-0.5 text-xs text-on-surface-variant">{new Date(o.createdAt).toLocaleDateString()}</p>
         </div>
-        <span className="badge shrink-0 bg-primary/15 text-primary">{o.status}</span>
+        <span className="badge shrink-0 bg-primary/15 text-primary">{t(`common.orderStatus.${o.status}`)}</span>
       </div>
 
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-outline-variant pt-3">
@@ -111,19 +115,19 @@ function OrderCard({ o }: { o: OrderRow }) {
 
       <dl className="mt-1 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
         <div>
-          <dt className="text-xs text-on-surface-variant">Link</dt>
+          <dt className="text-xs text-on-surface-variant">{t("ordersHistory.tableLink")}</dt>
           <dd className="truncate text-xs text-on-surface-variant">{o.link}</dd>
         </div>
         <div>
-          <dt className="text-xs text-on-surface-variant">Charge</dt>
+          <dt className="text-xs text-on-surface-variant">{t("ordersHistory.tableCharge")}</dt>
           <dd className="font-mono">${o.charge}</dd>
         </div>
         <div>
-          <dt className="text-xs text-on-surface-variant">Qty</dt>
+          <dt className="text-xs text-on-surface-variant">{t("ordersHistory.tableQty")}</dt>
           <dd className="font-mono">{o.quantity}</dd>
         </div>
         <div>
-          <dt className="text-xs text-on-surface-variant">Remains</dt>
+          <dt className="text-xs text-on-surface-variant">{t("ordersHistory.tableRemains")}</dt>
           <dd className="font-mono">{o.remains ?? "—"}</dd>
         </div>
       </dl>
@@ -132,6 +136,7 @@ function OrderCard({ o }: { o: OrderRow }) {
 }
 
 export default function OrdersHistory() {
+  const { t } = useLanguage();
   const [status, setStatus] = useState<(typeof statusTabs)[number]>("ALL");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useQuery({
@@ -139,9 +144,13 @@ export default function OrdersHistory() {
     queryFn: () => getMyOrders({ page, pageSize: 20, status: status === "ALL" ? undefined : status }),
   });
 
+  function tabLabel(tab: (typeof statusTabs)[number]) {
+    return tab === "ALL" ? t("ordersHistory.allTab") : t(`common.orderStatus.${tab}`);
+  }
+
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">Orders History</h1>
+      <h1 className="text-xl font-bold">{t("ordersHistory.title")}</h1>
 
       <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1 snap-x sm:flex-wrap sm:overflow-visible">
         {statusTabs.map((tab) => (
@@ -155,16 +164,16 @@ export default function OrdersHistory() {
               status === tab ? "bg-primary text-on-primary" : "bg-surface-container-high text-on-surface-variant"
             }`}
           >
-            {tab}
+            {tabLabel(tab)}
           </button>
         ))}
       </div>
 
       {/* Mobile: stacked cards */}
       <div className="space-y-3 md:hidden">
-        {isLoading && <p className="card text-center text-sm text-on-surface-variant">Loading…</p>}
+        {isLoading && <p className="card text-center text-sm text-on-surface-variant">{t("common.loading")}</p>}
         {!isLoading && data?.items.length === 0 && (
-          <p className="card text-center text-sm text-on-surface-variant">No orders found.</p>
+          <p className="card text-center text-sm text-on-surface-variant">{t("ordersHistory.noOrdersFound")}</p>
         )}
         {data?.items.map((o: OrderRow) => (
           <OrderCard key={o.id} o={o} />
@@ -176,23 +185,23 @@ export default function OrdersHistory() {
         <table className="w-full min-w-[720px] text-sm">
           <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
             <tr>
-              <th className="px-4 py-3">ID</th>
-              <th className="px-4 py-3">Date</th>
-              <th className="px-4 py-3">Service</th>
-              <th className="px-4 py-3">Link</th>
-              <th className="px-4 py-3">Charge</th>
-              <th className="px-4 py-3">Qty</th>
-              <th className="px-4 py-3">Remains</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Action</th>
+              <th className="px-4 py-3">{t("ordersHistory.tableId")}</th>
+              <th className="px-4 py-3">{t("ordersHistory.tableDate")}</th>
+              <th className="px-4 py-3">{t("ordersHistory.tableService")}</th>
+              <th className="px-4 py-3">{t("ordersHistory.tableLink")}</th>
+              <th className="px-4 py-3">{t("ordersHistory.tableCharge")}</th>
+              <th className="px-4 py-3">{t("ordersHistory.tableQty")}</th>
+              <th className="px-4 py-3">{t("ordersHistory.tableRemains")}</th>
+              <th className="px-4 py-3">{t("ordersHistory.tableStatus")}</th>
+              <th className="px-4 py-3">{t("ordersHistory.tableAction")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
             {isLoading && (
-              <tr><td colSpan={9} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>
+              <tr><td colSpan={9} className="px-4 py-6 text-center text-on-surface-variant">{t("common.loading")}</td></tr>
             )}
             {!isLoading && data?.items.length === 0 && (
-              <tr><td colSpan={9} className="px-4 py-6 text-center text-on-surface-variant">No orders found.</td></tr>
+              <tr><td colSpan={9} className="px-4 py-6 text-center text-on-surface-variant">{t("ordersHistory.noOrdersFound")}</td></tr>
             )}
             {data?.items.map((o: OrderRow) => (
               <tr key={o.id}>
@@ -208,7 +217,7 @@ export default function OrdersHistory() {
                 <td className="px-4 py-3 font-mono">${o.charge}</td>
                 <td className="px-4 py-3 font-mono">{o.quantity}</td>
                 <td className="px-4 py-3 font-mono">{o.remains ?? "—"}</td>
-                <td className="px-4 py-3"><span className="badge bg-primary/15 text-primary">{o.status}</span></td>
+                <td className="px-4 py-3"><span className="badge bg-primary/15 text-primary">{t(`common.orderStatus.${o.status}`)}</span></td>
                 <td className="px-4 py-3">{isRefillEligible(o) && <RefillButton orderId={o.id} />}</td>
               </tr>
             ))}
@@ -218,14 +227,14 @@ export default function OrdersHistory() {
 
       {data && data.total > data.pageSize && (
         <div className="flex justify-center gap-2">
-          <button className="btn-ghost !px-3 !py-1.5 text-xs" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Prev</button>
-          <span className="self-center text-xs text-on-surface-variant">Page {page}</span>
+          <button className="btn-ghost !px-3 !py-1.5 text-xs" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>{t("ordersHistory.prev")}</button>
+          <span className="self-center text-xs text-on-surface-variant">{t("ordersHistory.page", { page })}</span>
           <button
             className="btn-ghost !px-3 !py-1.5 text-xs"
             disabled={page * data.pageSize >= data.total}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            {t("ordersHistory.next")}
           </button>
         </div>
       )}

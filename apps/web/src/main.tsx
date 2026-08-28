@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./context/AuthContext.js";
 import { CurrencyProvider } from "./context/CurrencyContext.js";
+import { LanguageProvider } from "./context/LanguageContext.js";
 import App from "./App.js";
 import "./styles/index.css";
 
@@ -15,11 +16,13 @@ const queryClient = new QueryClient({
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const appTree = (
-  <AuthProvider>
-    <CurrencyProvider>
-      <App />
-    </CurrencyProvider>
-  </AuthProvider>
+  <LanguageProvider>
+    <AuthProvider>
+      <CurrencyProvider>
+        <App />
+      </CurrencyProvider>
+    </AuthProvider>
+  </LanguageProvider>
 );
 
 // Only mount the provider when a client ID is actually configured — with no

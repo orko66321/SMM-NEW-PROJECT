@@ -2,9 +2,11 @@ import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { apiErrorMessage } from "../../api/client.js";
 import * as authApi from "../../api/auth.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 import AuthShell from "../../components/auth/AuthShell.js";
 
 export default function ForgotPassword() {
+  const { t } = useLanguage();
   const [identifier, setIdentifier] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,26 +23,26 @@ export default function ForgotPassword() {
       // one happened, so this message is always shown on success.
       setSent(true);
     } catch (err) {
-      setError(apiErrorMessage(err, "Something went wrong — please try again"));
+      setError(apiErrorMessage(err, t("auth.forgotPassword.failedFallback")));
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <AuthShell title="Reset your password" subtitle="We'll email you a link to set a new password.">
+    <AuthShell title={t("auth.forgotPassword.title")} subtitle={t("auth.forgotPassword.subtitle")}>
       {sent ? (
         <div className="space-y-4">
           <p className="rounded-md bg-success/15 px-3 py-2 text-sm text-success">
-            If an account matches what you entered, a reset link is on its way. Check your inbox.
+            {t("auth.forgotPassword.sentMessage")}
           </p>
-          <Link to="/login" className="btn-primary block w-full text-center">Back to sign in</Link>
+          <Link to="/login" className="btn-primary block w-full text-center">{t("auth.forgotPassword.backToSignIn")}</Link>
         </div>
       ) : (
         <form onSubmit={onSubmit} className="space-y-4">
           {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
           <div>
-            <label className="label" htmlFor="identifier">Username or Email</label>
+            <label className="label" htmlFor="identifier">{t("auth.forgotPassword.identifierLabel")}</label>
             <input
               id="identifier"
               className="input-field"
@@ -51,10 +53,10 @@ export default function ForgotPassword() {
             />
           </div>
           <button type="submit" className="btn-primary w-full" disabled={submitting}>
-            {submitting ? "Sending…" : "Send reset link"}
+            {submitting ? t("auth.forgotPassword.submitting") : t("auth.forgotPassword.submit")}
           </button>
           <p className="text-center text-sm text-on-surface-variant">
-            Remembered it? <Link to="/login" className="text-primary hover:underline">Sign in</Link>
+            {t("auth.forgotPassword.rememberedIt")} <Link to="/login" className="text-primary hover:underline">{t("common.signIn")}</Link>
           </p>
         </form>
       )}

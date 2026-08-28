@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 import { createTicket, getMyTickets } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 
 export default function Tickets() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
   const { data } = useQuery({ queryKey: ["tickets"], queryFn: () => getMyTickets({ page: 1, pageSize: 20 }) });
 
   const [subject, setSubject] = useState("");
@@ -21,12 +23,12 @@ export default function Tickets() {
     setError(null);
     try {
       await createTicket({ subject, message });
-      toast.push("Ticket submitted.", "success");
+      toast.push(t("tickets.submittedToast"), "success");
       setSubject("");
       setMessage("");
       queryClient.invalidateQueries({ queryKey: ["tickets"] });
     } catch (err) {
-      setError(apiErrorMessage(err, "Failed to submit ticket"));
+      setError(apiErrorMessage(err, t("tickets.failedFallback")));
     } finally {
       setSubmitting(false);
     }
@@ -35,39 +37,39 @@ export default function Tickets() {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="card lg:col-span-2">
-        <h2 className="mb-3 text-sm font-semibold">Ticket history</h2>
+        <h2 className="mb-3 text-sm font-semibold">{t("tickets.ticketHistory")}</h2>
         <ul className="divide-y divide-outline-variant">
-          {data?.items.map((t: { id: string; subject: string; status: string; updatedAt: string }) => (
-            <li key={t.id}>
+          {data?.items.map((t2: { id: string; subject: string; status: string; updatedAt: string }) => (
+            <li key={t2.id}>
               <Link
-                to={`/dashboard/tickets/${t.id}`}
+                to={`/dashboard/tickets/${t2.id}`}
                 className="flex min-h-[44px] flex-wrap items-center justify-between gap-x-3 gap-y-1 py-3 text-sm hover:text-primary"
               >
-                <span className="min-w-0 flex-1 basis-full truncate sm:basis-auto">{t.subject}</span>
+                <span className="min-w-0 flex-1 basis-full truncate sm:basis-auto">{t2.subject}</span>
                 <span className="flex shrink-0 items-center gap-3">
-                  <span className="text-xs text-on-surface-variant">{new Date(t.updatedAt).toLocaleDateString()}</span>
-                  <span className="badge bg-primary/15 text-primary">{t.status}</span>
+                  <span className="text-xs text-on-surface-variant">{new Date(t2.updatedAt).toLocaleDateString()}</span>
+                  <span className="badge bg-primary/15 text-primary">{t(`common.ticketStatus.${t2.status}`)}</span>
                 </span>
               </Link>
             </li>
           ))}
-          {data?.items.length === 0 && <p className="py-4 text-sm text-on-surface-variant">No tickets yet.</p>}
+          {data?.items.length === 0 && <p className="py-4 text-sm text-on-surface-variant">{t("tickets.noTicketsYet")}</p>}
         </ul>
       </div>
 
       <form onSubmit={onSubmit} className="card h-fit space-y-4">
-        <h2 className="text-lg font-bold">New Ticket</h2>
+        <h2 className="text-lg font-bold">{t("tickets.newTicket")}</h2>
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
         <div>
-          <label className="label" htmlFor="subject">Subject</label>
+          <label className="label" htmlFor="subject">{t("tickets.subjectLabel")}</label>
           <input id="subject" className="input-field" value={subject} onChange={(e) => setSubject(e.target.value)} required />
         </div>
         <div>
-          <label className="label" htmlFor="message">Message</label>
+          <label className="label" htmlFor="message">{t("tickets.messageLabel")}</label>
           <textarea id="message" rows={5} className="input-field" value={message} onChange={(e) => setMessage(e.target.value)} required />
         </div>
         <button type="submit" className="btn-primary w-full" disabled={submitting}>
-          {submitting ? "Submitting…" : "Submit ticket"}
+          {submitting ? t("tickets.submitting") : t("tickets.submit")}
         </button>
       </form>
     </div>

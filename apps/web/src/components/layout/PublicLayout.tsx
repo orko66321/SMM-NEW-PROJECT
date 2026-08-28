@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { Outlet, NavLink, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 import CurrencySwitcher from "./CurrencySwitcher.js";
+import LanguageSwitcher from "./LanguageSwitcher.js";
 import NoticeBar from "./NoticeBar.js";
 import { Logo } from "../Logo.js";
 
-const navItems = [
-  { to: "/", label: "Home", end: true },
-  { to: "/services", label: "Services" },
-  { to: "/api-docs", label: "API" },
-];
-
 export default function PublicLayout() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navItems = [
+    { to: "/", label: t("nav.home"), end: true },
+    { to: "/services", label: t("nav.services") },
+    { to: "/api-docs", label: t("nav.api") },
+  ];
 
   useEffect(() => {
     setMenuOpen(false);
@@ -44,7 +47,8 @@ export default function PublicLayout() {
             ))}
           </nav>
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden sm:block">
+            <div className="hidden items-center gap-3 sm:flex">
+              <LanguageSwitcher />
               <CurrencySwitcher />
             </div>
             {user ? (
@@ -52,17 +56,17 @@ export default function PublicLayout() {
                 to={user.role === "ADMIN" ? "/admin" : "/dashboard"}
                 className="btn-primary hidden !px-4 !py-1.5 text-sm sm:inline-flex"
               >
-                Dashboard
+                {t("nav.dashboard")}
               </Link>
             ) : (
               <>
-                <Link to="/login" className="btn-ghost hidden !px-3 !py-1.5 text-sm sm:inline-flex">Sign In</Link>
-                <Link to="/register" className="btn-primary hidden !px-4 !py-1.5 text-sm sm:inline-flex">Sign Up</Link>
+                <Link to="/login" className="btn-ghost hidden !px-3 !py-1.5 text-sm sm:inline-flex">{t("nav.signIn")}</Link>
+                <Link to="/register" className="btn-primary hidden !px-4 !py-1.5 text-sm sm:inline-flex">{t("nav.signUp")}</Link>
               </>
             )}
             <button
               type="button"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-label={menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
               onClick={() => setMenuOpen((v) => !v)}
               className="flex h-11 w-11 items-center justify-center rounded-md text-on-surface hover:bg-surface-container-high md:hidden"
             >
@@ -96,17 +100,21 @@ export default function PublicLayout() {
               ))}
               <div className="my-2 border-t border-outline-variant/60" />
               <div className="flex items-center justify-between px-1 py-2">
-                <span className="text-xs text-on-surface-variant">Currency</span>
+                <span className="text-xs text-on-surface-variant">{t("nav.language")}</span>
+                <LanguageSwitcher />
+              </div>
+              <div className="flex items-center justify-between px-1 py-2">
+                <span className="text-xs text-on-surface-variant">{t("nav.currency")}</span>
                 <CurrencySwitcher />
               </div>
               {user ? (
                 <Link to={user.role === "ADMIN" ? "/admin" : "/dashboard"} className="btn-primary min-h-[44px] w-full justify-center text-sm">
-                  Dashboard
+                  {t("nav.dashboard")}
                 </Link>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Link to="/login" className="btn-ghost min-h-[44px] w-full justify-center text-sm">Sign In</Link>
-                  <Link to="/register" className="btn-primary min-h-[44px] w-full justify-center text-sm">Sign Up</Link>
+                  <Link to="/login" className="btn-ghost min-h-[44px] w-full justify-center text-sm">{t("nav.signIn")}</Link>
+                  <Link to="/register" className="btn-primary min-h-[44px] w-full justify-center text-sm">{t("nav.signUp")}</Link>
                 </div>
               )}
             </nav>
@@ -124,13 +132,13 @@ export default function PublicLayout() {
             <div>
               <Logo />
               <p className="mt-2 text-xs text-on-surface-variant">
-                © {new Date().getFullYear()} All In One Service. All rights reserved.
+                {t("footer.rights", { year: new Date().getFullYear() })}
               </p>
             </div>
             <div className="flex gap-5 text-sm text-on-surface-variant">
-              <Link to="/services" className="hover:text-on-surface">Services</Link>
-              <Link to="/api-docs" className="hover:text-on-surface">API Docs</Link>
-              <Link to="/login" className="hover:text-on-surface">Sign In</Link>
+              <Link to="/services" className="hover:text-on-surface">{t("nav.services")}</Link>
+              <Link to="/api-docs" className="hover:text-on-surface">{t("nav.apiDocs")}</Link>
+              <Link to="/login" className="hover:text-on-surface">{t("nav.signIn")}</Link>
             </div>
           </div>
         </div>

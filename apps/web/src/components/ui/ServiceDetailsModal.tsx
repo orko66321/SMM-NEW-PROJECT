@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from "react";
+import { useLanguage } from "../../context/LanguageContext.js";
 
 export interface ServiceDetailsData {
   name: string;
@@ -25,6 +26,8 @@ export default function ServiceDetailsModal({
   onClose: () => void;
   footer?: ReactNode;
 }) {
+  const { t } = useLanguage();
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -56,7 +59,7 @@ export default function ServiceDetailsModal({
           </div>
           <button
             type="button"
-            aria-label="Close"
+            aria-label={t("common.close")}
             onClick={onClose}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-on-surface-variant transition hover:bg-surface-container-high hover:text-on-surface"
           >
@@ -76,31 +79,31 @@ export default function ServiceDetailsModal({
 
           <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div className="rounded-md bg-surface-container-high px-3 py-2">
-              <dt className="text-[11px] uppercase tracking-wide text-on-surface-variant">Price / 1000</dt>
+              <dt className="text-[11px] uppercase tracking-wide text-on-surface-variant">{t("serviceDetails.pricePer1000")}</dt>
               <dd className="mt-0.5 font-mono text-sm font-semibold text-success">${service.sellPricePer1000}</dd>
             </div>
             <div className="rounded-md bg-surface-container-high px-3 py-2">
-              <dt className="text-[11px] uppercase tracking-wide text-on-surface-variant">Min order</dt>
+              <dt className="text-[11px] uppercase tracking-wide text-on-surface-variant">{t("serviceDetails.minOrder")}</dt>
               <dd className="mt-0.5 font-mono text-sm font-semibold">{service.minQuantity.toLocaleString()}</dd>
             </div>
             <div className="rounded-md bg-surface-container-high px-3 py-2">
-              <dt className="text-[11px] uppercase tracking-wide text-on-surface-variant">Max order</dt>
+              <dt className="text-[11px] uppercase tracking-wide text-on-surface-variant">{t("serviceDetails.maxOrder")}</dt>
               <dd className="mt-0.5 font-mono text-sm font-semibold">{service.maxQuantity.toLocaleString()}</dd>
             </div>
             <div className="rounded-md bg-surface-container-high px-3 py-2">
-              <dt className="text-[11px] uppercase tracking-wide text-on-surface-variant">Refill</dt>
-              <dd className="mt-0.5 text-sm font-semibold">{service.refillEnabled ? "Yes" : "No refill"}</dd>
+              <dt className="text-[11px] uppercase tracking-wide text-on-surface-variant">{t("serviceDetails.refill")}</dt>
+              <dd className="mt-0.5 text-sm font-semibold">{service.refillEnabled ? t("common.yes") : t("serviceDetails.noRefill")}</dd>
             </div>
           </dl>
 
           {!service.cancelEnabled && (
-            <span className="badge mt-3 bg-outline-variant/40 text-on-surface-variant">No Cancel</span>
+            <span className="badge mt-3 bg-outline-variant/40 text-on-surface-variant">{t("serviceDetails.noCancel")}</span>
           )}
 
           {service.description ? (
             <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-on-surface-variant">{service.description}</p>
           ) : (
-            <p className="mt-4 text-sm text-on-surface-variant">No additional details provided for this service.</p>
+            <p className="mt-4 text-sm text-on-surface-variant">{t("serviceDetails.noDescription")}</p>
           )}
         </div>
 

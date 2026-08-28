@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { apiErrorMessage } from "../../api/client.js";
 import * as authApi from "../../api/auth.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 import AuthShell from "../../components/auth/AuthShell.js";
 
 export default function ResetPassword() {
@@ -10,6 +11,7 @@ export default function ResetPassword() {
   const token = searchParams.get("token") ?? "";
   const navigate = useNavigate();
   const toast = useToast();
+  const { t } = useLanguage();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -18,17 +20,17 @@ export default function ResetPassword() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (password !== confirm) {
-      setError("Passwords do not match");
+      setError(t("auth.resetPassword.passwordsDontMatch"));
       return;
     }
     setSubmitting(true);
     setError(null);
     try {
       await authApi.resetPassword({ token, password });
-      toast.push("Password updated — please sign in.", "success");
+      toast.push(t("auth.resetPassword.updatedToast"), "success");
       navigate("/login", { replace: true });
     } catch (err) {
-      setError(apiErrorMessage(err, "This reset link is invalid or has expired"));
+      setError(apiErrorMessage(err, t("auth.resetPassword.failedFallback")));
     } finally {
       setSubmitting(false);
     }
@@ -36,21 +38,21 @@ export default function ResetPassword() {
 
   if (!token) {
     return (
-      <AuthShell title="Reset your password" subtitle="This link is missing its reset token.">
+      <AuthShell title={t("auth.resetPassword.missingTokenTitle")} subtitle={t("auth.resetPassword.missingTokenSubtitle")}>
         <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">
-          Open the link from your email again, or request a new one.
+          {t("auth.resetPassword.missingTokenMessage")}
         </p>
-        <Link to="/forgot-password" className="btn-primary mt-4 block w-full text-center">Request a new link</Link>
+        <Link to="/forgot-password" className="btn-primary mt-4 block w-full text-center">{t("auth.resetPassword.requestNewLink")}</Link>
       </AuthShell>
     );
   }
 
   return (
-    <AuthShell title="Set a new password" subtitle="Choose a strong password you haven't used before.">
+    <AuthShell title={t("auth.resetPassword.title")} subtitle={t("auth.resetPassword.subtitle")}>
       <form onSubmit={onSubmit} className="space-y-4">
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
         <div>
-          <label className="label" htmlFor="password">New password</label>
+          <label className="label" htmlFor="password">{t("auth.resetPassword.newPasswordLabel")}</label>
           <input
             id="password"
             type="password"
@@ -61,11 +63,11 @@ export default function ResetPassword() {
             required
           />
           <p className="mt-1 text-xs text-on-surface-variant">
-            At least 10 characters, with uppercase, lowercase, and a number.
+            {t("auth.resetPassword.passwordHint")}
           </p>
         </div>
         <div>
-          <label className="label" htmlFor="confirm">Confirm password</label>
+          <label className="label" htmlFor="confirm">{t("auth.resetPassword.confirmLabel")}</label>
           <input
             id="confirm"
             type="password"
@@ -77,7 +79,7 @@ export default function ResetPassword() {
           />
         </div>
         <button type="submit" className="btn-primary w-full" disabled={submitting}>
-          {submitting ? "Updating…" : "Update password"}
+          {submitting ? t("auth.resetPassword.submitting") : t("auth.resetPassword.submit")}
         </button>
       </form>
     </AuthShell>

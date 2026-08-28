@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.js";
+import { useLanguage } from "../../context/LanguageContext.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import AuthShell from "../../components/auth/AuthShell.js";
@@ -11,6 +12,7 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
+  const { t } = useLanguage();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -22,22 +24,22 @@ export default function Login() {
     setError(null);
     try {
       await login({ identifier, password });
-      toast.push("Welcome back!", "success");
+      toast.push(t("auth.login.welcomeToast"), "success");
       const from = (location.state as { from?: Location })?.from?.pathname;
       navigate(from ?? "/dashboard", { replace: true });
     } catch (err) {
-      setError(apiErrorMessage(err, "Login failed"));
+      setError(apiErrorMessage(err, t("auth.login.failedFallback")));
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <AuthShell title="Welcome back" subtitle="Sign in to manage your orders and wallet.">
+    <AuthShell title={t("auth.login.title")} subtitle={t("auth.login.subtitle")}>
       <form onSubmit={onSubmit} className="space-y-4">
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
         <div>
-          <label className="label" htmlFor="identifier">Username or Email</label>
+          <label className="label" htmlFor="identifier">{t("auth.login.identifierLabel")}</label>
           <input
             id="identifier"
             className="input-field"
@@ -49,8 +51,8 @@ export default function Login() {
         </div>
         <div>
           <div className="flex items-center justify-between">
-            <label className="label" htmlFor="password">Password</label>
-            <Link to="/forgot-password" className="text-xs text-primary hover:underline">Forgot password?</Link>
+            <label className="label" htmlFor="password">{t("auth.login.passwordLabel")}</label>
+            <Link to="/forgot-password" className="text-xs text-primary hover:underline">{t("auth.login.forgotPassword")}</Link>
           </div>
           <input
             id="password"
@@ -63,10 +65,10 @@ export default function Login() {
           />
         </div>
         <button type="submit" className="btn-primary w-full" disabled={submitting}>
-          {submitting ? "Signing in…" : "Sign in"}
+          {submitting ? t("auth.login.submitting") : t("auth.login.submit")}
         </button>
         <p className="text-center text-sm text-on-surface-variant">
-          No account? <Link to="/register" className="text-primary hover:underline">Sign up</Link>
+          {t("auth.login.noAccount")} <Link to="/register" className="text-primary hover:underline">{t("common.signUp")}</Link>
         </p>
       </form>
       <GoogleSignInButton />
