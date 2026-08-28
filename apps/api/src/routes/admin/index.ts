@@ -13,6 +13,7 @@ import { adminPaymentMethodsRouter } from "./paymentMethods.routes.js";
 import { adminSettingsRouter } from "./settings.routes.js";
 import { adminNoticesRouter } from "./notices.routes.js";
 import { adminSiteNoticeRouter } from "./siteNotice.routes.js";
+import { adminBannersRouter } from "./banners.routes.js";
 import { adminCouponsRouter } from "./coupons.routes.js";
 
 export const adminRouter = Router();
@@ -42,4 +43,5 @@ adminRouter.use("/payment-methods", adminPaymentMethodsRouter);
 adminRouter.use("/settings", adminSettingsRouter);
 adminRouter.use("/notices", adminNoticesRouter);
 adminRouter.use("/site-notice", adminSiteNoticeRouter);
+adminRouter.use("/banners", adminBannersRouter);
 adminRouter.use("/coupons", adminCouponsRouter);

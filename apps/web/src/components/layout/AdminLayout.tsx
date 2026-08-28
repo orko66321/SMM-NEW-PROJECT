@@ -16,6 +16,7 @@ const navItems = [
   { to: "/admin/payment-methods", label: "Payment Methods" },
   { to: "/admin/coupons", label: "Coupons" },
   { to: "/admin/notice-settings", label: "Notice Settings" },
+  { to: "/admin/banner", label: "Banner Slider" },
   { to: "/admin/settings", label: "Settings" },
 ];
 

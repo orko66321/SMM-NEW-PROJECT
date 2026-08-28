@@ -468,6 +468,20 @@ export const publicSiteNoticeSchema = z.object({
 });
 export type PublicSiteNotice = z.infer<typeof publicSiteNoticeSchema>;
 
+// Homepage + dashboard Overview banner slider. `image` is a base64 data URI
+// (see the Banner model comment in schema.prisma for why — no filesystem
+// storage survives a cPanel deploy here). Capped well above any real
+// banner image but still a real ceiling against a malformed/malicious
+// request — ~2.2MB of raw image data after base64's ~33% overhead.
+export const bannerInputSchema = z.object({
+  link: z.string().trim().min(1).max(2048),
+  image: z.string().trim().min(1).max(3_000_000),
+  // Deliberately signed — an admin pins a banner first by giving it a very
+  // negative order rather than renumbering every other row.
+  order: z.coerce.number().int(),
+});
+export type BannerInput = z.infer<typeof bannerInputSchema>;
+
 // Kept as a plain ZodObject (not the refined version below) so the admin
 // PUT route can call `.partial()` on it — same reasoning as
 // serviceObjectSchema/serviceInputSchema above (`.refine()` returns a

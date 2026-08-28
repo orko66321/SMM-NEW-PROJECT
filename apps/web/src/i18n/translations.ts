@@ -41,6 +41,12 @@ const en = {
     },
   },
 
+  bannerSlider: {
+    prev: "Previous slide",
+    next: "Next slide",
+    goTo: "Go to slide {{n}}",
+  },
+
   nav: {
     home: "Home",
     services: "Services",
@@ -443,6 +449,12 @@ const bn: Translations = {
       PENDING_USER: "আপনার রিপ্লাইয়ের অপেক্ষায়",
       CLOSED: "বন্ধ",
     },
+  },
+
+  bannerSlider: {
+    prev: "আগের স্লাইড",
+    next: "পরের স্লাইড",
+    goTo: "স্লাইড {{n}}-এ যান",
   },
 
   nav: {

@@ -776,3 +776,25 @@ model SiteNotice {
 
   @@map("site_notices")
 }
+
+// Homepage + dashboard Overview banner slider. `image` is a base64 data URI
+// (e.g. "data:image/jpeg;base64,...") stored directly in the row, not a
+// filesystem path — the cPanel deploy wipes both APP_ROOT and PUBLIC_HTML
+// on every single deploy (see bin/deploy-cpanel.sh), so any file saved to
+// disk on the server would vanish on the next push. The database is the
+// only thing that survives a deploy, same reasoning as everything else in
+// this app being DB-backed rather than file-backed.
+// `order` is signed on purpose (spec allows negative values) — ascending
+// order is the display order, so a banner an admin wants "pinned first"
+// gets a very negative number instead of renumbering every other row.
+model Banner {
+  id    String @id @default(cuid())
+  link  String
+  image String
+  order Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}

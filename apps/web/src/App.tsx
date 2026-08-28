@@ -38,6 +38,7 @@ import AdminPaymentGateways from "./pages/admin/PaymentGateways.js";
 import AdminPaymentMethods from "./pages/admin/PaymentMethods.js";
 import AdminSettings from "./pages/admin/Settings.js";
 import AdminNoticeSettings from "./pages/admin/NoticeSettings.js";
+import AdminBanner from "./pages/admin/Banner.js";
 import AdminCoupons from "./pages/admin/Coupons.js";
 
 export default function App() {
@@ -97,6 +98,7 @@ export default function App() {
           <Route path="payment-methods" element={<AdminPaymentMethods />} />
           <Route path="settings" element={<AdminSettings />} />
           <Route path="notice-settings" element={<AdminNoticeSettings />} />
+          <Route path="banner" element={<AdminBanner />} />
           <Route path="coupons" element={<AdminCoupons />} />
         </Route>
 

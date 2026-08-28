@@ -6,6 +6,7 @@ import { listCategories, listServices } from "../services/catalog.service.js";
 import { getPublicSettings } from "../services/settings.service.js";
 import { listActiveNotices } from "../services/notice.service.js";
 import { getPublicSiteNotice } from "../services/siteNotice.service.js";
+import { listBannersPublic } from "../services/banner.service.js";
 import { getPublicStats } from "../services/stats.service.js";
 
 // Unauthenticated — powers the landing page, public services catalog, and
@@ -33,6 +34,13 @@ publicRouter.get(
   "/notice",
   asyncHandler(async (_req, res) => {
     res.json(await getPublicSiteNotice());
+  }),
+);
+
+publicRouter.get(
+  "/banners",
+  asyncHandler(async (_req, res) => {
+    res.json({ items: await listBannersPublic() });
   }),
 );
 

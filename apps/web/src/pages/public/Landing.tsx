@@ -8,6 +8,7 @@ import { useLanguage } from "../../context/LanguageContext.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import GoogleSignInButton from "../../components/auth/GoogleSignInButton.js";
+import BannerSlider from "../../components/ui/BannerSlider.js";
 
 interface PublicService {
   id: string;
@@ -126,6 +127,10 @@ export default function Landing() {
 
   return (
     <div>
+      <div className="mx-auto max-w-container px-4 pt-4 sm:px-6 sm:pt-6">
+        <BannerSlider />
+      </div>
+
       <section className="relative overflow-hidden">
         <div
           className="pointer-events-none absolute -top-1/3 left-1/4 h-[50rem] w-[50rem] rounded-full opacity-20 blur-3xl"

@@ -871,6 +871,20 @@ export declare const publicSiteNoticeSchema: z.ZodObject<{
     bodyEn: string | null;
 }>;
 export type PublicSiteNotice = z.infer<typeof publicSiteNoticeSchema>;
+export declare const bannerInputSchema: z.ZodObject<{
+    link: z.ZodString;
+    image: z.ZodString;
+    order: z.ZodNumber;
+}, "strip", z.ZodTypeAny, {
+    link: string;
+    image: string;
+    order: number;
+}, {
+    link: string;
+    image: string;
+    order: number;
+}>;
+export type BannerInput = z.infer<typeof bannerInputSchema>;
 export declare const noticeObjectSchema: z.ZodObject<{
     messageBn: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     messageEn: z.ZodOptional<z.ZodNullable<z.ZodString>>;

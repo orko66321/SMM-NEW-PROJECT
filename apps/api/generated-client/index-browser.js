@@ -461,6 +461,15 @@ exports.Prisma.SiteNoticeScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.BannerScalarFieldEnum = {
+  id: 'id',
+  link: 'link',
+  image: 'image',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -630,7 +639,8 @@ exports.Prisma.ModelName = {
   CouponRedemption: 'CouponRedemption',
   SiteSettings: 'SiteSettings',
   Notice: 'Notice',
-  SiteNotice: 'SiteNotice'
+  SiteNotice: 'SiteNotice',
+  Banner: 'Banner'
 };
 
 /**

@@ -12,6 +12,7 @@ import type {
   PaymentGatewayKey,
   PaymentMethodInput,
   ResolveManualRefillInput,
+  BannerInput,
   ServiceInput,
   UpdateSiteNoticeInput,
   UpdateGatewayConfigInput,
@@ -139,6 +140,7 @@ export const getPublicCategories = () => apiClient.get("/public/categories").the
 export const getPublicServices = (params: { page?: number; pageSize?: number; categoryId?: string; search?: string }) =>
   apiClient.get("/public/services", { params }).then((r) => r.data);
 export const getPublicSiteNotice = () => apiClient.get("/public/notice").then((r) => r.data);
+export const getPublicBanners = () => apiClient.get("/public/banners").then((r) => r.data.items);
 
 // ── Coupons (Phase 4) ────────────────────────────────────────────────────
 export const validateCoupon = (code: string, amount: number) =>
@@ -161,6 +163,14 @@ export const getAdminSettings = () => apiClient.get("/admin/settings").then((r) 
 export const updateAdminSettings = (input: UpdateSettingsInput) => apiClient.put("/admin/settings", input);
 export const getAdminSiteNotice = () => apiClient.get("/admin/site-notice").then((r) => r.data);
 export const updateAdminSiteNotice = (input: UpdateSiteNoticeInput) => apiClient.put("/admin/site-notice", input);
+
+// ── Banner slider (admin) ────────────────────────────────────────────────
+export const getAdminBanners = (params: { page?: number; pageSize?: number }) =>
+  apiClient.get("/admin/banners", { params }).then((r) => r.data);
+export const createAdminBanner = (input: BannerInput) => apiClient.post("/admin/banners", input).then((r) => r.data.banner);
+export const updateAdminBanner = (id: string, input: Partial<BannerInput>) =>
+  apiClient.put(`/admin/banners/${id}`, input).then((r) => r.data.banner);
+export const deleteAdminBanner = (id: string) => apiClient.delete(`/admin/banners/${id}`);
 
 // ── Analytics (Phase 4, admin) ───────────────────────────────────────────
 export const getAdminDailyStats = (days = 30) =>

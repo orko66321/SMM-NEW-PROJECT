@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getMyOrders, getWallet } from "../../api/resources.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import BannerSlider from "../../components/ui/BannerSlider.js";
 
 export default function Overview() {
   const { user } = useAuth();
@@ -12,6 +13,8 @@ export default function Overview() {
 
   return (
     <div className="space-y-6">
+      <BannerSlider />
+
       <h1 className="text-xl font-bold sm:text-2xl">{t("overview.welcomeBack", { username: user?.username ?? "" })}</h1>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
