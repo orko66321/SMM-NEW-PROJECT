@@ -13,6 +13,15 @@ export async function submitPendingOrders() {
     const orders = await findPendingAutoSubmitOrders();
     for (const order of orders) {
         const { service } = order;
+        // findPendingAutoSubmitOrders' where clause (`service: { autoSubmit: true }`)
+        // guarantees a non-null relation for every row it returns — Order.serviceId
+        // is only nullable to support Store package purchases that never enter
+        // this query in the first place. Guard anyway rather than trust that at
+        // the type level.
+        if (!service) {
+            logger.error({ orderId: order.id }, "autoSubmit query returned an order with no linked service — skipping");
+            continue;
+        }
         const candidates = [service.provider, service.backupProvider].filter((p) => !!p);
         if (candidates.length === 0) {
             logger.warn({ orderId: order.id, serviceId: service.id }, "autoSubmit service has no provider configured");

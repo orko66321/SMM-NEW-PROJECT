@@ -13,7 +13,7 @@ export async function pollRefillStatus() {
 
   let updated = 0;
   for (const refill of refills) {
-    const provider = refill.order.service.provider;
+    const provider = refill.order.service?.provider;
     if (!provider || !refill.providerRefillId) continue;
 
     let remote: { status: string };

@@ -1,5 +1,6 @@
 import type {
   AdjustWalletInput,
+  BrandInput,
   BulkImportProviderServicesInput,
   ChangePasswordInput,
   CouponInput,
@@ -9,12 +10,16 @@ import type {
   CreateProviderInput,
   CreateTicketInput,
   NoticeInput,
+  PackageInput,
   PaymentGatewayKey,
   PaymentMethodInput,
+  ProductInput,
+  PurchasePackageInput,
   ResolveManualRefillInput,
   BannerInput,
   PostInput,
   ServiceInput,
+  StockPoolInput,
   UpdateSiteNoticeInput,
   UpdateGatewayConfigInput,
   UpdateOrderStatusInput,
@@ -189,6 +194,53 @@ export const deleteAdminPost = (id: string) => apiClient.delete(`/admin/posts/${
 // ── Analytics (Phase 4, admin) ───────────────────────────────────────────
 export const getAdminDailyStats = (days = 30) =>
   apiClient.get("/admin/stats/daily", { params: { days } }).then((r) => r.data.items);
+
+// ── Store: Brand → Product → Package (public browsing + purchase) ───────
+export const getStoreBrands = (limit?: number) => apiClient.get("/store/brands", { params: { limit } }).then((r) => r.data.items);
+export const getStoreBrandProducts = (brandId: string) => apiClient.get(`/store/brands/${brandId}/products`).then((r) => r.data.items);
+export const getStoreProductBySlug = (slug: string) => apiClient.get(`/store/products/${slug}`).then((r) => r.data.product);
+export const getStoreProductPackages = (productId: string) => apiClient.get(`/store/products/${productId}/packages`).then((r) => r.data.items);
+export const purchaseStorePackage = (input: PurchasePackageInput, idempotencyKey: string) =>
+  apiClient
+    .post("/store/purchase", input, { headers: { "Idempotency-Key": idempotencyKey } })
+    .then((r) => r.data as { order: unknown; deliveredCode: string | null });
+export const getOrderDeliveredCode = (orderId: string) =>
+  apiClient.get(`/store/orders/${orderId}/code`).then((r) => r.data as { code: string });
+
+// ── Admin: Brand → Product → Package → Stock Pool ────────────────────────
+export const getAdminBrands = (params: { page?: number; pageSize?: number }) =>
+  apiClient.get("/admin/brands", { params }).then((r) => r.data);
+export const getAdminBrand = (id: string) => apiClient.get(`/admin/brands/${id}`).then((r) => r.data.brand);
+export const createAdminBrand = (input: BrandInput) => apiClient.post("/admin/brands", input).then((r) => r.data.brand);
+export const updateAdminBrand = (id: string, input: Partial<BrandInput>) =>
+  apiClient.put(`/admin/brands/${id}`, input).then((r) => r.data.brand);
+export const deleteAdminBrand = (id: string) => apiClient.delete(`/admin/brands/${id}`);
+
+export const getAdminProducts = (params: { page?: number; pageSize?: number; brandId?: string }) =>
+  apiClient.get("/admin/products", { params }).then((r) => r.data);
+export const getAdminProduct = (id: string) => apiClient.get(`/admin/products/${id}`).then((r) => r.data.product);
+export const createAdminProduct = (input: ProductInput) => apiClient.post("/admin/products", input).then((r) => r.data.product);
+export const updateAdminProduct = (id: string, input: Partial<ProductInput>) =>
+  apiClient.put(`/admin/products/${id}`, input).then((r) => r.data.product);
+export const deleteAdminProduct = (id: string) => apiClient.delete(`/admin/products/${id}`);
+
+export const getAdminPackages = (params: { page?: number; pageSize?: number; productId?: string }) =>
+  apiClient.get("/admin/packages", { params }).then((r) => r.data);
+export const createAdminPackage = (input: PackageInput) => apiClient.post("/admin/packages", input).then((r) => r.data.package);
+export const updateAdminPackage = (id: string, input: Partial<PackageInput>) =>
+  apiClient.put(`/admin/packages/${id}`, input).then((r) => r.data.package);
+export const deleteAdminPackage = (id: string) => apiClient.delete(`/admin/packages/${id}`);
+
+export const getAdminStockPools = (params: { page?: number; pageSize?: number }) =>
+  apiClient.get("/admin/stock-pools", { params }).then((r) => r.data);
+export const createAdminStockPool = (input: StockPoolInput) =>
+  apiClient.post("/admin/stock-pools", input).then((r) => r.data.pool);
+export const deleteAdminStockPool = (id: string) => apiClient.delete(`/admin/stock-pools/${id}`);
+export const getAdminStockCodes = (poolId: string, params: { page?: number; pageSize?: number }) =>
+  apiClient.get(`/admin/stock-pools/${poolId}/codes`, { params }).then((r) => r.data);
+export const bulkAddAdminStockCodes = (poolId: string, codes: string) =>
+  apiClient.post(`/admin/stock-pools/${poolId}/codes`, { codes }).then((r) => r.data as { added: number });
+export const revokeAdminStockCode = (codeId: string) => apiClient.post(`/admin/stock-pools/codes/${codeId}/revoke`);
 
 // ── Profile (Phase 4) ────────────────────────────────────────────────────
 export const getMyProfile = () => apiClient.get("/users/me").then((r) => r.data.profile);

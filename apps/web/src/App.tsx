@@ -43,6 +43,12 @@ import AdminNoticeSettings from "./pages/admin/NoticeSettings.js";
 import AdminBanner from "./pages/admin/Banner.js";
 import AdminPosts from "./pages/admin/Posts.js";
 import AdminCoupons from "./pages/admin/Coupons.js";
+import AdminBrands from "./pages/admin/Brands.js";
+import AdminProducts from "./pages/admin/Products.js";
+import AdminPackages from "./pages/admin/Packages.js";
+import AdminStockPools from "./pages/admin/StockPools.js";
+
+import Store from "./pages/dashboard/Store.js";
 
 export default function App() {
   return (
@@ -72,6 +78,7 @@ export default function App() {
             `authenticate` in the API regardless of what this route renders. */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Overview />} />
+          <Route path="store" element={<Store />} />
           <Route path="new-order" element={<NewOrder />} />
           <Route path="orders" element={<OrdersHistory />} />
           <Route path="services" element={<Services />} />
@@ -106,6 +113,10 @@ export default function App() {
           <Route path="banner" element={<AdminBanner />} />
           <Route path="posts" element={<AdminPosts />} />
           <Route path="coupons" element={<AdminCoupons />} />
+          <Route path="brands" element={<AdminBrands />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="packages" element={<AdminPackages />} />
+          <Route path="stock-pools" element={<AdminStockPools />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

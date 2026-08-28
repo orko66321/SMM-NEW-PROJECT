@@ -14,7 +14,13 @@ export async function resetDb() {
   await prisma.ticketMessage.deleteMany();
   await prisma.ticket.deleteMany();
   await prisma.refillRequest.deleteMany();
+  await prisma.stockCode.deleteMany();
   await prisma.order.deleteMany();
+  await prisma.packageStockPool.deleteMany();
+  await prisma.stockPool.deleteMany();
+  await prisma.package.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.brand.deleteMany();
   await prisma.couponRedemption.deleteMany();
   await prisma.deposit.deleteMany();
   await prisma.orderIntent.deleteMany();
@@ -127,6 +133,74 @@ export async function enableGateway(
 ) {
   const { upsertGatewayConfig } = await import("../src/services/payments/config.service.js");
   await upsertGatewayConfig(provider, { mode: "SANDBOX", enabled: true, autoVerify: opts.autoVerify ?? true, credentials });
+}
+
+export async function createBrand(overrides: Partial<{ name: string; level: number; isActive: boolean }> = {}) {
+  return prisma.brand.create({
+    data: { name: overrides.name ?? "Test Brand", level: overrides.level ?? 0, isActive: overrides.isActive ?? true },
+  });
+}
+
+export async function createProduct(
+  brandId: string,
+  overrides: Partial<{
+    name: string;
+    slug: string;
+    productType: "TOPUP" | "VOUCHER" | "SMM" | "SUBSCRIPTION";
+    accessType: "ALL" | "VIP" | "RESELLER";
+    serviceId: string | null;
+    isActive: boolean;
+    userInputFieldName: string;
+    hasOrderTimeLimit: boolean;
+    maxOrdersPerWindow: number | null;
+    orderWindowHours: number | null;
+    removeCharacters: string | null;
+  }> = {},
+) {
+  return prisma.product.create({
+    data: {
+      brandId,
+      name: overrides.name ?? "Test Product",
+      slug: overrides.slug ?? `test-product-${Math.random().toString(36).slice(2, 8)}`,
+      salePrice: 0,
+      productType: overrides.productType ?? "TOPUP",
+      accessType: overrides.accessType ?? "ALL",
+      serviceId: overrides.serviceId,
+      isActive: overrides.isActive ?? true,
+      userInputFieldName: overrides.userInputFieldName ?? "Player ID",
+      hasOrderTimeLimit: overrides.hasOrderTimeLimit ?? false,
+      maxOrdersPerWindow: overrides.maxOrdersPerWindow,
+      orderWindowHours: overrides.orderWindowHours,
+      removeCharacters: overrides.removeCharacters,
+    },
+  });
+}
+
+export async function createPackage(
+  productId: string,
+  overrides: Partial<{ name: string; amount: number; salePrice: number; buyPrice: number; commonPriceUsd: number; extraFee: number; isAuto: boolean; isManual: boolean }> = {},
+) {
+  return prisma.package.create({
+    data: {
+      productId,
+      name: overrides.name ?? "Test Package",
+      amount: overrides.amount ?? 1,
+      salePrice: overrides.salePrice ?? 10,
+      buyPrice: overrides.buyPrice ?? 5,
+      commonPriceUsd: overrides.commonPriceUsd ?? 10,
+      extraFee: overrides.extraFee ?? 0,
+      isAuto: overrides.isAuto ?? false,
+      isManual: overrides.isManual ?? false,
+    },
+  });
+}
+
+export async function createStockPoolWithCodes(codes: string[], name?: string) {
+  const pool = await prisma.stockPool.create({ data: { name: name ?? `Pool ${Math.random().toString(36).slice(2, 8)}` } });
+  if (codes.length > 0) {
+    await prisma.stockCode.createMany({ data: codes.map((code) => ({ poolId: pool.id, codeCiphertext: encrypt(code) })) });
+  }
+  return pool;
 }
 
 export async function createCoupon(

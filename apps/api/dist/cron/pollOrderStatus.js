@@ -11,7 +11,7 @@ export async function pollOrderStatus() {
     const orders = await findActiveProviderOrders();
     const byProvider = new Map();
     for (const order of orders) {
-        const providerId = order.service.provider?.id;
+        const providerId = order.service?.provider?.id;
         if (!providerId || !order.providerOrderId)
             continue;
         const group = byProvider.get(providerId) ?? [];

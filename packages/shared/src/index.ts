@@ -150,6 +150,9 @@ export const authUserSchema = z.object({
   status: z.enum(UserStatusValues),
   avatarUrl: z.string().nullable(),
   createdAt: z.string(),
+  // Store Access Type gating — see Product.accessType / User.isVip.
+  isVip: z.boolean(),
+  isReseller: z.boolean(),
 });
 export type AuthUser = z.infer<typeof authUserSchema>;
 
@@ -270,6 +273,8 @@ export type UpdateTicketStatusInput = z.infer<typeof updateTicketStatusSchema>;
 export const updateUserSchema = z.object({
   status: z.enum(UserStatusValues).optional(),
   role: z.enum(RoleValues).optional(),
+  // Store Access Type gating (Product.accessType = "VIP") — see User.isVip.
+  isVip: z.boolean().optional(),
 });
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 
@@ -664,3 +669,140 @@ export type PostListQuery = z.infer<typeof postListQuerySchema>;
 export const publicPostListQuerySchema = z.object({
   category: z.enum(PostCategoryValues).optional(),
 });
+
+// ── Store: Brand → Product → Package ────────────────────────────────────
+
+export const ProductDesignTemplateValues = ["SMALL_STRIP", "STANDARD_GRID", "FEATURED_LARGE"] as const;
+export type ProductDesignTemplate = (typeof ProductDesignTemplateValues)[number];
+
+export const PackageDesignTemplateValues = ["RADIO_LIST", "BOXED_GRID"] as const;
+export type PackageDesignTemplate = (typeof PackageDesignTemplateValues)[number];
+
+export const ProductTypeValues = ["TOPUP", "VOUCHER", "SMM", "SUBSCRIPTION"] as const;
+export type ProductType = (typeof ProductTypeValues)[number];
+
+export const AccessTypeValues = ["ALL", "VIP", "RESELLER"] as const;
+export type AccessType = (typeof AccessTypeValues)[number];
+
+export const StockCodeStatusValues = ["AVAILABLE", "CONSUMED", "REVOKED"] as const;
+export type StockCodeStatus = (typeof StockCodeStatusValues)[number];
+
+// Plain ZodObject (no .refine()) so admin PUT routes can call `.partial()` —
+// same convention as serviceObjectSchema elsewhere in this file.
+export const brandObjectSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  level: z.coerce.number().int().default(0),
+  productDesign: z.enum(ProductDesignTemplateValues).default("STANDARD_GRID"),
+  logo: z.string().trim().max(3_000_000).nullable().optional(), // base64 data URI, same cap as Banner.image
+  isActive: z.boolean().default(true),
+});
+export type BrandInput = z.infer<typeof brandObjectSchema>;
+
+export const productObjectSchema = z.object({
+  brandId: z.string(),
+  name: z.string().trim().min(1).max(200),
+  userInputFieldName: z.string().trim().min(1).max(100).default("Link"),
+  orderInstructionsLink: z.string().trim().max(2048).nullable().optional(),
+  salePrice: z.coerce.number().nonnegative().max(1_000_000),
+  buyPrice: z.coerce.number().nonnegative().max(1_000_000).default(0),
+  quantity: z.coerce.number().int().positive().default(1),
+  productType: z.enum(ProductTypeValues),
+  accessType: z.enum(AccessTypeValues).default("ALL"),
+  logo: z.string().trim().max(3_000_000).nullable().optional(),
+  secondaryType: z.string().trim().max(100).nullable().optional(),
+  level: z.coerce.number().int().default(0),
+  isAuto: z.boolean().default(false),
+  isActive: z.boolean().default(true),
+  productNote: z.string().trim().max(1000).nullable().optional(),
+  slug: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(1)
+    .max(150)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug may only contain lowercase letters, numbers, and hyphens"),
+  gameCheaterType: z.string().trim().max(100).nullable().optional(),
+  hasOrderTimeLimit: z.boolean().default(false),
+  maxOrdersPerWindow: z.coerce.number().int().positive().nullable().optional(),
+  orderWindowHours: z.coerce.number().int().positive().nullable().optional(),
+  checkUniquePlayerId: z.boolean().default(false),
+  isQuantityMinusOnOrder: z.boolean().default(false),
+  isQuantityShowUser: z.boolean().default(false),
+  isPremiumProduct: z.boolean().default(false),
+  minAmountForPremium: z.coerce.number().nonnegative().max(1_000_000).nullable().optional(),
+  removeCharacters: z.string().trim().max(50).nullable().optional(),
+  redeemLink: z.string().trim().max(2048).nullable().optional(),
+  isResellerProduct: z.boolean().default(false),
+  isMysteryBox: z.boolean().default(false),
+  description: z.string().trim().max(10_000).nullable().optional(),
+  packageDesign: z.enum(PackageDesignTemplateValues).default("RADIO_LIST"),
+  // Only meaningful for productType SMM — the existing provider-synced
+  // Service this product sells (see Product.serviceId in schema.prisma).
+  serviceId: z.string().nullable().optional(),
+});
+
+export const productInputSchema = productObjectSchema
+  .refine((p) => p.productType !== "SMM" || !!p.serviceId, {
+    message: "An SMM product must be linked to an existing Service",
+    path: ["serviceId"],
+  })
+  .refine((p) => !p.hasOrderTimeLimit || (!!p.maxOrdersPerWindow && !!p.orderWindowHours), {
+    message: "Set a max order count and time window when an order time limit is enabled",
+    path: ["maxOrdersPerWindow"],
+  })
+  .refine((p) => !p.isPremiumProduct || p.minAmountForPremium != null, {
+    message: "Set a minimum amount when Is Premium Product is enabled",
+    path: ["minAmountForPremium"],
+  });
+export type ProductInput = z.infer<typeof productInputSchema>;
+
+// Plain ZodObject (no .refine()) so the admin PUT route can call `.partial()`.
+export const packageObjectSchema = z.object({
+  productId: z.string(),
+  name: z.string().trim().min(1).max(150),
+  amount: z.coerce.number().int().positive(),
+  salePrice: z.coerce.number().nonnegative().max(1_000_000),
+  buyPrice: z.coerce.number().nonnegative().max(1_000_000).default(0),
+  commonPriceUsd: z.coerce.number().nonnegative().max(1_000_000),
+  extraFee: z.coerce.number().nonnegative().max(1_000_000).default(0),
+  level: z.coerce.number().int().default(0),
+  isAuto: z.boolean().default(false),
+  isManual: z.boolean().default(false),
+  server: z.string().trim().max(50).nullable().optional(),
+  // "Selected relative ids" — the StockPool ids this package can claim from.
+  stockPoolIds: z.array(z.string()).max(50).default([]),
+});
+export type PackageInput = z.infer<typeof packageObjectSchema>;
+
+export const stockPoolInputSchema = z.object({
+  name: z.string().trim().min(1).max(150),
+});
+export type StockPoolInput = z.infer<typeof stockPoolInputSchema>;
+
+// Bulk-add — one code/credential per line, same "textarea, one per line"
+// convention the spec calls for. Blank lines are dropped server-side.
+export const stockPoolBulkAddSchema = z.object({
+  codes: z.string().trim().min(1).max(500_000),
+});
+export type StockPoolBulkAddInput = z.infer<typeof stockPoolBulkAddSchema>;
+
+export const brandListQuerySchema = paginationQuerySchema;
+export type BrandListQuery = z.infer<typeof brandListQuerySchema>;
+
+export const productListQuerySchema = paginationQuerySchema.extend({
+  brandId: z.string().optional(),
+});
+export type ProductListQuery = z.infer<typeof productListQuerySchema>;
+
+export const packageListQuerySchema = paginationQuerySchema.extend({
+  productId: z.string().optional(),
+});
+export type PackageListQuery = z.infer<typeof packageListQuerySchema>;
+
+// A Store purchase's checkout submission — `buyerInput` is whatever the
+// buyer typed into the Product's custom field (link / player ID / email).
+export const purchasePackageSchema = z.object({
+  packageId: z.string(),
+  buyerInput: z.string().trim().min(1).max(2048),
+});
+export type PurchasePackageInput = z.infer<typeof purchasePackageSchema>;

@@ -11,7 +11,7 @@ export async function pollRefillStatus() {
     const refills = await findPollableRefills();
     let updated = 0;
     for (const refill of refills) {
-        const provider = refill.order.service.provider;
+        const provider = refill.order.service?.provider;
         if (!provider || !refill.providerRefillId)
             continue;
         let remote;

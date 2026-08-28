@@ -13,7 +13,7 @@ export async function pollOrderStatus() {
 
   const byProvider = new Map<string, typeof orders>();
   for (const order of orders) {
-    const providerId = order.service.provider?.id;
+    const providerId = order.service?.provider?.id;
     if (!providerId || !order.providerOrderId) continue;
     const group = byProvider.get(providerId) ?? [];
     group.push(order);
@@ -22,7 +22,7 @@ export async function pollOrderStatus() {
 
   let updated = 0;
   for (const [, group] of byProvider) {
-    const provider = group[0]!.service.provider!;
+    const provider = group[0]!.service!.provider!;
     const ids = group.map((o) => o.providerOrderId!);
 
     let statuses: Record<string, { status: string; start_count?: string; remains?: string }>;

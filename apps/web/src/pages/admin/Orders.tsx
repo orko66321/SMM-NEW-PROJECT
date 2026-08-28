@@ -200,7 +200,16 @@ export default function AdminOrders() {
           </thead>
           <tbody className="divide-y divide-outline-variant">
             {isLoading && <tr><td colSpan={8} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
-            {data?.items.map((o: { id: string; user: { username: string }; service: { name: string }; charge: string; providerCost: string; quantity: number; status: string }) => (
+            {data?.items.map((o: {
+              id: string;
+              user: { username: string };
+              service: { name: string } | null;
+              package: { name: string; product: { name: string; brand: { name: string } } } | null;
+              charge: string;
+              providerCost: string;
+              quantity: number;
+              status: string;
+            }) => (
               <tr key={o.id}>
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">
                   <button
@@ -215,7 +224,9 @@ export default function AdminOrders() {
                   </button>
                 </td>
                 <td className="px-4 py-3">{o.user.username}</td>
-                <td className="px-4 py-3">{o.service.name}</td>
+                <td className="px-4 py-3">
+                  {o.service ? o.service.name : o.package ? `${o.package.product.brand.name} — ${o.package.product.name} — ${o.package.name}` : "—"}
+                </td>
                 <td className="px-4 py-3 font-mono text-success">${o.charge}</td>
                 <td className="px-4 py-3 font-mono text-info">${(Number(o.charge) - Number(o.providerCost)).toFixed(4)}</td>
                 <td className="px-4 py-3 font-mono">{o.quantity}</td>

@@ -16,6 +16,10 @@ import { adminSiteNoticeRouter } from "./siteNotice.routes.js";
 import { adminBannersRouter } from "./banners.routes.js";
 import { adminPostsRouter } from "./posts.routes.js";
 import { adminCouponsRouter } from "./coupons.routes.js";
+import { adminBrandsRouter } from "./brands.routes.js";
+import { adminProductsRouter } from "./products.routes.js";
+import { adminPackagesRouter } from "./packages.routes.js";
+import { adminStockPoolsRouter } from "./stockPools.routes.js";
 export const adminRouter = Router();
 // Every single route under /api/admin/* passes through both of these,
 // with no exceptions — this is the one gate that must never be bypassed.
@@ -44,3 +48,7 @@ adminRouter.use("/site-notice", adminSiteNoticeRouter);
 adminRouter.use("/banners", adminBannersRouter);
 adminRouter.use("/posts", adminPostsRouter);
 adminRouter.use("/coupons", adminCouponsRouter);
+adminRouter.use("/brands", adminBrandsRouter);
+adminRouter.use("/products", adminProductsRouter);
+adminRouter.use("/packages", adminPackagesRouter);
+adminRouter.use("/stock-pools", adminStockPoolsRouter);

@@ -122,6 +122,95 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.BrandScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  level: 'level',
+  productDesign: 'productDesign',
+  logo: 'logo',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProductScalarFieldEnum = {
+  id: 'id',
+  brandId: 'brandId',
+  name: 'name',
+  userInputFieldName: 'userInputFieldName',
+  orderInstructionsLink: 'orderInstructionsLink',
+  salePrice: 'salePrice',
+  buyPrice: 'buyPrice',
+  quantity: 'quantity',
+  productType: 'productType',
+  accessType: 'accessType',
+  logo: 'logo',
+  secondaryType: 'secondaryType',
+  level: 'level',
+  isAuto: 'isAuto',
+  isActive: 'isActive',
+  productNote: 'productNote',
+  slug: 'slug',
+  gameCheaterType: 'gameCheaterType',
+  hasOrderTimeLimit: 'hasOrderTimeLimit',
+  maxOrdersPerWindow: 'maxOrdersPerWindow',
+  orderWindowHours: 'orderWindowHours',
+  checkUniquePlayerId: 'checkUniquePlayerId',
+  isQuantityMinusOnOrder: 'isQuantityMinusOnOrder',
+  isQuantityShowUser: 'isQuantityShowUser',
+  isPremiumProduct: 'isPremiumProduct',
+  minAmountForPremium: 'minAmountForPremium',
+  removeCharacters: 'removeCharacters',
+  redeemLink: 'redeemLink',
+  isResellerProduct: 'isResellerProduct',
+  isMysteryBox: 'isMysteryBox',
+  description: 'description',
+  packageDesign: 'packageDesign',
+  serviceId: 'serviceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PackageScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  name: 'name',
+  amount: 'amount',
+  salePrice: 'salePrice',
+  buyPrice: 'buyPrice',
+  commonPriceUsd: 'commonPriceUsd',
+  extraFee: 'extraFee',
+  level: 'level',
+  isAuto: 'isAuto',
+  isManual: 'isManual',
+  server: 'server',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StockPoolScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PackageStockPoolScalarFieldEnum = {
+  packageId: 'packageId',
+  poolId: 'poolId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.StockCodeScalarFieldEnum = {
+  id: 'id',
+  poolId: 'poolId',
+  codeCiphertext: 'codeCiphertext',
+  status: 'status',
+  orderId: 'orderId',
+  consumedAt: 'consumedAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   username: 'username',
@@ -136,6 +225,7 @@ exports.Prisma.UserScalarFieldEnum = {
   apiKeyHash: 'apiKeyHash',
   apiKeyPrefix: 'apiKeyPrefix',
   apiKeyCreatedAt: 'apiKeyCreatedAt',
+  isVip: 'isVip',
   phone: 'phone',
   notifyEmail: 'notifyEmail',
   notifyOrderUpdates: 'notifyOrderUpdates',
@@ -277,6 +367,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   serviceId: 'serviceId',
+  packageId: 'packageId',
   link: 'link',
   quantity: 'quantity',
   charge: 'charge',
@@ -504,6 +595,36 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.ProductDesignTemplate = exports.$Enums.ProductDesignTemplate = {
+  SMALL_STRIP: 'SMALL_STRIP',
+  STANDARD_GRID: 'STANDARD_GRID',
+  FEATURED_LARGE: 'FEATURED_LARGE'
+};
+
+exports.ProductType = exports.$Enums.ProductType = {
+  TOPUP: 'TOPUP',
+  VOUCHER: 'VOUCHER',
+  SMM: 'SMM',
+  SUBSCRIPTION: 'SUBSCRIPTION'
+};
+
+exports.AccessType = exports.$Enums.AccessType = {
+  ALL: 'ALL',
+  VIP: 'VIP',
+  RESELLER: 'RESELLER'
+};
+
+exports.PackageDesignTemplate = exports.$Enums.PackageDesignTemplate = {
+  RADIO_LIST: 'RADIO_LIST',
+  BOXED_GRID: 'BOXED_GRID'
+};
+
+exports.StockCodeStatus = exports.$Enums.StockCodeStatus = {
+  AVAILABLE: 'AVAILABLE',
+  CONSUMED: 'CONSUMED',
+  REVOKED: 'REVOKED'
+};
+
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
   STAFF: 'STAFF',
@@ -644,6 +765,12 @@ exports.PostStatus = exports.$Enums.PostStatus = {
 };
 
 exports.Prisma.ModelName = {
+  Brand: 'Brand',
+  Product: 'Product',
+  Package: 'Package',
+  StockPool: 'StockPool',
+  PackageStockPool: 'PackageStockPool',
+  StockCode: 'StockCode',
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
   RefreshToken: 'RefreshToken',

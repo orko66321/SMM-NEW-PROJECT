@@ -207,7 +207,7 @@ export async function fulfillOrderIntent(
 function serializeOrder(order: {
   id: string;
   userId: string;
-  serviceId: string;
+  serviceId: string | null;
   link: string;
   quantity: number;
   charge: Prisma.Decimal;
@@ -240,7 +240,13 @@ export async function listOrdersForUser(userId: string, page: number, pageSize: 
   const [items, total] = await Promise.all([
     prisma.order.findMany({
       where,
-      include: { service: { select: { name: true, nameBn: true, refillEnabled: true } } },
+      include: {
+        service: { select: { name: true, nameBn: true, refillEnabled: true } },
+        // Brand/Product/Package name for Store-purchase order history — see
+        // store.service.ts's purchasePackage. null for a plain Service order.
+        package: { select: { name: true, product: { select: { name: true, brand: { select: { name: true } } } } } },
+        stockCode: { select: { id: true } },
+      },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -281,7 +287,11 @@ export async function listOrdersForAdmin(
   const [items, total] = await Promise.all([
     prisma.order.findMany({
       where,
-      include: { service: { select: { name: true } }, user: { select: { username: true } } },
+      include: {
+        service: { select: { name: true } },
+        package: { select: { name: true, product: { select: { name: true, brand: { select: { name: true } } } } } },
+        user: { select: { username: true } },
+      },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -380,8 +390,8 @@ export async function requestRefill(userId: string, orderId: string) {
   if (!order || order.userId !== userId) {
     throw AppError.notFound("Order not found");
   }
-  if (!order.service.refillEnabled) {
-    throw AppError.badRequest("This service is not eligible for refill");
+  if (!order.service || !order.service.refillEnabled) {
+    throw AppError.badRequest("This order is not eligible for refill");
   }
   if (order.status !== "COMPLETED" && order.status !== "PARTIAL") {
     throw AppError.badRequest("Only completed or partially-delivered orders can be refilled");

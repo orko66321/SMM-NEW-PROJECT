@@ -35,6 +35,8 @@ function publicUser(user: {
   status: string;
   avatarUrl?: string | null;
   createdAt: Date;
+  isVip?: boolean;
+  apiKeyHash?: string | null;
 }) {
   return {
     id: user.id,
@@ -44,6 +46,11 @@ function publicUser(user: {
     status: user.status,
     avatarUrl: user.avatarUrl ?? null,
     createdAt: user.createdAt.toISOString(),
+    // Store Access Type gating (Product.accessType) — lets the frontend show
+    // a lock on a VIP/Reseller-only product without a round trip; purchase
+    // is still re-checked server-side regardless (see store.service.ts).
+    isVip: user.isVip ?? false,
+    isReseller: !!user.apiKeyHash,
   };
 }
 
