@@ -116,7 +116,43 @@ export default function AdminCoupons() {
         </button>
       </form>
 
-      <div className="overflow-x-auto rounded-lg border border-outline-variant">
+      {/* Mobile: stacked cards */}
+      <div className="space-y-3 md:hidden">
+        {(coupons ?? []).map((c: Coupon) => (
+          <div key={c.id} className="rounded-lg border border-outline-variant bg-surface-container p-4">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="font-mono text-sm font-semibold text-on-surface">{c.code}</p>
+                <p className="mt-0.5 text-xs text-on-surface-variant">
+                  {c.type === "PERCENT" ? `${c.value}% off` : `$${c.value} off`} · {c.usedCount}{c.maxUses ? ` / ${c.maxUses}` : ""} used
+                </p>
+              </div>
+              <span className={`badge shrink-0 ${c.active ? "bg-success/15 text-success" : "bg-outline-variant/40 text-on-surface-variant"}`}>
+                {c.active ? "Active" : "Disabled"}
+              </span>
+            </div>
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-outline-variant pt-3">
+              <span className="text-xs text-on-surface-variant">
+                {c.expiresAt ? `Expires ${new Date(c.expiresAt).toLocaleDateString()}` : "No expiry"}
+              </span>
+              <div className="flex shrink-0 gap-2">
+                <button type="button" className="btn-ghost !min-h-0 !px-3 !py-1.5 text-xs" onClick={() => onToggle(c)}>
+                  {c.active ? "Disable" : "Enable"}
+                </button>
+                <button type="button" className="btn-ghost !min-h-0 !px-3 !py-1.5 text-xs text-error" onClick={() => onDelete(c.id)}>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+        {coupons?.length === 0 && (
+          <p className="rounded-lg border border-outline-variant px-4 py-6 text-center text-sm text-on-surface-variant">No coupons yet.</p>
+        )}
+      </div>
+
+      {/* Desktop / tablet: table */}
+      <div className="hidden overflow-x-auto rounded-lg border border-outline-variant md:block">
         <table className="w-full min-w-[560px] text-sm">
           <thead className="bg-surface-container-high text-left text-xs uppercase text-on-surface-variant">
             <tr>

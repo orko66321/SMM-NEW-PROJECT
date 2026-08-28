@@ -145,7 +145,11 @@ export default function DashboardLayout() {
         </aside>
       </div>
 
-      <div className="flex min-h-screen flex-1 flex-col">
+      {/* min-w-0 overrides the flex item's default min-width:auto — without
+          it, any wide descendant (e.g. a non-wrapping row of filter pills)
+          forces this whole column wider than the viewport instead of
+          scrolling internally, blowing out the page horizontally on mobile. */}
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-outline-variant bg-surface-container px-3 sm:px-6">
           <div className="flex items-center gap-2 min-w-0">
             <button

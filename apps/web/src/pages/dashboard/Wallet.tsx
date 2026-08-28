@@ -211,35 +211,67 @@ export default function Wallet() {
           <p className="font-mono text-3xl font-bold text-success">{formatCurrency(wallet?.balance ?? 0)}</p>
         </div>
 
-        <div className="card overflow-x-auto">
+        <div>
           <h2 className="mb-3 text-sm font-semibold">Fund history</h2>
-          <table className="w-full min-w-[520px] text-sm">
-            <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
-              <tr>
-                <th className="py-2">Date</th>
-                <th className="py-2">Method</th>
-                <th className="py-2">Amount</th>
-                <th className="py-2">Bonus</th>
-                <th className="py-2">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-outline-variant">
-              {deposits?.items.map((d: { id: string; createdAt: string; method: string; amount: string; bonusAmount: string; status: string }) => (
-                <tr key={d.id}>
-                  <td className="py-2 text-xs">{new Date(d.createdAt).toLocaleDateString()}</td>
-                  <td className="py-2">{d.method}</td>
-                  <td className="py-2 font-mono">{formatCurrency(d.amount)}</td>
-                  <td className="py-2 font-mono text-success">{Number(d.bonusAmount) > 0 ? `+${formatCurrency(d.bonusAmount)}` : "—"}</td>
-                  <td className="py-2">
-                    <span className={`badge ${d.status === "APPROVED" ? "bg-success/15 text-success" : d.status === "REJECTED" ? "bg-error/15 text-error" : "bg-warning/15 text-warning"}`}>{d.status}</span>
-                  </td>
+
+          {/* Mobile: stacked cards */}
+          <div className="space-y-3 md:hidden">
+            {deposits?.items.length === 0 && (
+              <p className="card text-center text-sm text-on-surface-variant">No deposits yet.</p>
+            )}
+            {deposits?.items.map((d: { id: string; createdAt: string; method: string; amount: string; bonusAmount: string; status: string }) => (
+              <div key={d.id} className="rounded-lg border border-outline-variant bg-surface-container p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-on-surface">{d.method}</p>
+                    <p className="mt-0.5 text-xs text-on-surface-variant">{new Date(d.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  <span
+                    className={`badge shrink-0 ${d.status === "APPROVED" ? "bg-success/15 text-success" : d.status === "REJECTED" ? "bg-error/15 text-error" : "bg-warning/15 text-warning"}`}
+                  >
+                    {d.status}
+                  </span>
+                </div>
+                <div className="mt-3 flex items-center justify-between gap-2 border-t border-outline-variant pt-3 text-sm">
+                  <span className="font-mono">{formatCurrency(d.amount)}</span>
+                  <span className="font-mono text-success">
+                    {Number(d.bonusAmount) > 0 ? `+${formatCurrency(d.bonusAmount)} bonus` : "No bonus"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop / tablet: table */}
+          <div className="card hidden overflow-x-auto md:block">
+            <table className="w-full min-w-[520px] text-sm">
+              <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
+                <tr>
+                  <th className="py-2">Date</th>
+                  <th className="py-2">Method</th>
+                  <th className="py-2">Amount</th>
+                  <th className="py-2">Bonus</th>
+                  <th className="py-2">Status</th>
                 </tr>
-              ))}
-              {deposits?.items.length === 0 && (
-                <tr><td colSpan={5} className="py-4 text-center text-on-surface-variant">No deposits yet.</td></tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-outline-variant">
+                {deposits?.items.map((d: { id: string; createdAt: string; method: string; amount: string; bonusAmount: string; status: string }) => (
+                  <tr key={d.id}>
+                    <td className="py-2 text-xs">{new Date(d.createdAt).toLocaleDateString()}</td>
+                    <td className="py-2">{d.method}</td>
+                    <td className="py-2 font-mono">{formatCurrency(d.amount)}</td>
+                    <td className="py-2 font-mono text-success">{Number(d.bonusAmount) > 0 ? `+${formatCurrency(d.bonusAmount)}` : "—"}</td>
+                    <td className="py-2">
+                      <span className={`badge ${d.status === "APPROVED" ? "bg-success/15 text-success" : d.status === "REJECTED" ? "bg-error/15 text-error" : "bg-warning/15 text-warning"}`}>{d.status}</span>
+                    </td>
+                  </tr>
+                ))}
+                {deposits?.items.length === 0 && (
+                  <tr><td colSpan={5} className="py-4 text-center text-on-surface-variant">No deposits yet.</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
