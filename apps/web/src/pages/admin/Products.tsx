@@ -19,6 +19,7 @@ import {
 } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 
 const MAX_IMAGE_CHARS = 3_000_000;
 
@@ -247,6 +248,7 @@ export default function AdminProducts() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Store" }, { label: "Products" }]} />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold">Store — Products</h1>

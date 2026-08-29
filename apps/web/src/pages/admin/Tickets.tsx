@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { getAdminTickets } from "../../api/resources.js";
+import { Breadcrumbs, EmptyState, StatusBadge } from "../../components/ds/index.js";
 
 export default function AdminTickets() {
   const [status, setStatus] = useState("");
@@ -9,6 +10,7 @@ export default function AdminTickets() {
 
   return (
     <div className="space-y-4">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Support Tickets" }]} />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold">Support Tickets</h1>
         <select className="input-field w-full sm:max-w-xs" value={status} onChange={(e) => setStatus(e.target.value)}>
@@ -32,12 +34,12 @@ export default function AdminTickets() {
                 <span className="flex flex-wrap items-center gap-3">
                   <span className="text-on-surface-variant">@{t.user.username}</span>
                   <span className="text-xs text-on-surface-variant">{new Date(t.updatedAt).toLocaleDateString()}</span>
-                  <span className="badge bg-primary/15 text-primary">{t.status}</span>
+                  <StatusBadge status={t.status} kind="ticket" />
                 </span>
               </Link>
             </li>
           ))}
-          {data?.items.length === 0 && <p className="px-4 py-6 text-center text-sm text-on-surface-variant">No tickets.</p>}
+          {data?.items.length === 0 && <EmptyState icon="support" title="No tickets" />}
         </ul>
       </div>
     </div>

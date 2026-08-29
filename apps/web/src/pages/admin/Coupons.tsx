@@ -4,6 +4,7 @@ import type { CouponType } from "@smm/shared";
 import { createAdminCoupon, deleteAdminCoupon, getAdminCoupons, updateAdminCoupon } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 
 interface Coupon {
   id: string;
@@ -71,6 +72,7 @@ export default function AdminCoupons() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Coupons" }]} />
       <h1 className="text-xl font-bold">Coupon Codes</h1>
       <p className="text-sm text-on-surface-variant">
         Redeemable once per user on the deposit page — credited as an extra bonus alongside the deposit, atomically

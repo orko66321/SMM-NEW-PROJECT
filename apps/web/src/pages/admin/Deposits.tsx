@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAdminDeposits, reviewAdminDeposit } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { Breadcrumbs, EmptyState, StatusBadge } from "../../components/ds/index.js";
 
 export default function AdminDeposits() {
   const toast = useToast();
@@ -42,6 +43,7 @@ export default function AdminDeposits() {
 
   return (
     <div className="space-y-4">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Payment Notifications" }]} />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold">Payment Notifications</h1>
         <select className="input-field w-full sm:max-w-xs" value={status} onChange={(e) => setStatus(e.target.value)}>
@@ -68,7 +70,7 @@ export default function AdminDeposits() {
           <tbody className="divide-y divide-outline-variant">
             {isLoading && <tr><td colSpan={7} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
             {data?.items.map((d: { id: string; user: { username: string }; method: string; amount: string; bonusAmount: string; trxId: string | null; senderNumber: string | null; status: string }) => (
-              <tr key={d.id}>
+              <tr key={d.id} className="row-hover">
                 <td className="px-4 py-3">{d.user.username}</td>
                 <td className="px-4 py-3">{d.method}</td>
                 <td className="px-4 py-3 font-mono text-success">${d.amount}</td>
@@ -90,7 +92,7 @@ export default function AdminDeposits() {
                   )}
                   {d.senderNumber ? ` · ${d.senderNumber}` : ""}
                 </td>
-                <td className="px-4 py-3"><span className="badge bg-warning/15 text-warning">{d.status}</span></td>
+                <td className="px-4 py-3"><StatusBadge status={d.status} kind="deposit" /></td>
                 <td className="px-4 py-3 text-right">
                   {d.status === "PENDING" && (
                     <div className="flex justify-end gap-2">
@@ -101,7 +103,7 @@ export default function AdminDeposits() {
                 </td>
               </tr>
             ))}
-            {data?.items.length === 0 && <tr><td colSpan={7} className="px-4 py-6 text-center text-on-surface-variant">No deposits found.</td></tr>}
+            {!isLoading && data?.items.length === 0 && <tr><td colSpan={7} className="px-4 py-6"><EmptyState icon="wallet" title="No deposits found" /></td></tr>}
           </tbody>
         </table>
       </div>

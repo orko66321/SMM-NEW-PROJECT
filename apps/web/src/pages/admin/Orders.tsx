@@ -5,6 +5,7 @@ import { OrderStatusValues } from "@smm/shared";
 import { getAdminOrders, getAdminRefills, resolveAdminRefill, updateAdminOrderStatus } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { Badge, type BadgeTone, Breadcrumbs, EmptyState, Pagination, StatusBadge } from "../../components/ds/index.js";
 
 type RefillRow = {
   id: string;
@@ -15,11 +16,11 @@ type RefillRow = {
   order: { id: string; service: { name: string }; user: { username: string } };
 };
 
-const REFILL_STATUS_STYLES: Record<string, string> = {
-  REQUESTED: "bg-warning/15 text-warning",
-  IN_PROGRESS: "bg-info/15 text-info",
-  COMPLETED: "bg-success/15 text-success",
-  REJECTED: "bg-error/15 text-error",
+const REFILL_STATUS_TONE: Record<string, BadgeTone> = {
+  REQUESTED: "warning",
+  IN_PROGRESS: "info",
+  COMPLETED: "success",
+  REJECTED: "error",
 };
 
 function RefillRequestsPanel() {
@@ -70,14 +71,14 @@ function RefillRequestsPanel() {
           <tbody className="divide-y divide-outline-variant">
             {isLoading && <tr><td colSpan={6} className="px-3 py-4 text-center text-on-surface-variant">Loading…</td></tr>}
             {!isLoading && data?.items.length === 0 && (
-              <tr><td colSpan={6} className="px-3 py-4 text-center text-on-surface-variant">No refill requests.</td></tr>
+              <tr><td colSpan={6} className="px-3 py-6"><EmptyState icon="refresh" title="No refill requests" /></td></tr>
             )}
             {data?.items.map((r: RefillRow) => (
-              <tr key={r.id}>
+              <tr key={r.id} className="row-hover">
                 <td className="px-3 py-2">{r.order.user.username}</td>
                 <td className="px-3 py-2">{r.order.service.name}</td>
                 <td className="px-3 py-2 font-mono text-xs text-on-surface-variant">{r.order.id.slice(0, 8)}</td>
-                <td className="px-3 py-2"><span className={`badge ${REFILL_STATUS_STYLES[r.status] ?? ""}`}>{r.status}</span></td>
+                <td className="px-3 py-2"><Badge tone={REFILL_STATUS_TONE[r.status] ?? "neutral"}>{r.status}</Badge></td>
                 <td className="px-3 py-2 text-xs">{new Date(r.createdAt).toLocaleString()}</td>
                 <td className="px-3 py-2">
                   {r.status === "REQUESTED" ? (
@@ -162,6 +163,7 @@ export default function AdminOrders() {
 
   return (
     <div className="space-y-4">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Orders" }]} />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold">Orders</h1>
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -175,9 +177,9 @@ export default function AdminOrders() {
 
       {hasDateFilter && (
         <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="badge bg-primary/15 text-primary">
+          <Badge tone="primary">
             Date-filtered{likeOnly ? " · Like orders only" : ""}
-          </span>
+          </Badge>
           <button type="button" className="btn-ghost !min-h-0 !px-2 !py-1 text-xs" onClick={clearDateFilter}>
             Clear filter
           </button>
@@ -210,7 +212,7 @@ export default function AdminOrders() {
               quantity: number;
               status: string;
             }) => (
-              <tr key={o.id}>
+              <tr key={o.id} className="row-hover">
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">
                   <button
                     type="button"
@@ -230,7 +232,7 @@ export default function AdminOrders() {
                 <td className="px-4 py-3 font-mono text-success">${o.charge}</td>
                 <td className="px-4 py-3 font-mono text-info">${(Number(o.charge) - Number(o.providerCost)).toFixed(4)}</td>
                 <td className="px-4 py-3 font-mono">{o.quantity}</td>
-                <td className="px-4 py-3"><span className="badge bg-primary/15 text-primary">{o.status}</span></td>
+                <td className="px-4 py-3"><StatusBadge status={o.status} /></td>
                 <td className="px-4 py-3">
                   <select className="input-field !py-1.5 text-xs" value={o.status} onChange={(e) => onStatusChange(o.id, e.target.value)}>
                     {OrderStatusValues.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -243,11 +245,7 @@ export default function AdminOrders() {
       </div>
 
       {data && data.total > data.pageSize && (
-        <div className="flex justify-center gap-2">
-          <button className="btn-ghost !px-3 !py-1.5 text-xs" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Prev</button>
-          <span className="self-center text-xs text-on-surface-variant">Page {page}</span>
-          <button className="btn-ghost !px-3 !py-1.5 text-xs" disabled={page * data.pageSize >= data.total} onClick={() => setPage((p) => p + 1)}>Next</button>
-        </div>
+        <Pagination page={page} totalPages={Math.ceil(data.total / data.pageSize)} onChange={setPage} />
       )}
 
       <RefillRequestsPanel />

@@ -10,6 +10,7 @@ import {
   updateAdminProvider,
 } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 import { useToast } from "../../components/ui/Toast.js";
 
 interface ProviderItem {
@@ -87,6 +88,7 @@ export default function AdminProviders() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Providers" }]} />
       <h1 className="text-xl font-bold">Providers</h1>
       <p className="text-sm text-on-surface-variant">
         Upstream SMM reseller accounts (JAP-standard API). Services opt into auto-fulfillment individually
