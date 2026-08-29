@@ -11,7 +11,19 @@
 # because apps/web simply wasn't in the runtime image.
 #
 # Build context is the REPO ROOT (Railway "Root Directory" stays "/"),
-# same as the root Dockerfile.
+# same as the root Dockerfile. Point the @smm/web Railway service's
+# "Config-as-code" / config path at railway.web.json (repo root) — that
+# file sets build.dockerfilePath to this Dockerfile while Root Directory
+# stays "/", which is what lets the COPY steps below reach the workspace
+# root at all. See railway.web.json for the full explanation.
+#
+# ENTRYPOINT (not CMD) below is deliberate: a Railway service can carry a
+# leftover Custom Start Command from before this Dockerfile existed (e.g.
+# a Nixpacks-era `npm run start --workspace=@smm/web`). Docker only lets a
+# custom runtime command override CMD — it gets appended as arguments to
+# ENTRYPOINT instead of replacing it. Our entrypoint ignores any such args
+# and always serves the built SPA, so a stale dashboard override can't
+# reintroduce the exact crash this file was written to fix.
 
 FROM node:20-slim AS build
 WORKDIR /app
@@ -47,4 +59,7 @@ COPY --from=build /app/apps/web/dist ./dist
 # Railway injects $PORT at runtime; 4173 is only a local-run default.
 ENV PORT=4173
 EXPOSE 4173
-CMD ["sh", "-c", "serve -s dist -l ${PORT:-4173}"]
+
+# Any args Railway appends (e.g. a stale Custom Start Command) land in "$@"
+# and are intentionally unused — this always serves the built SPA.
+ENTRYPOINT ["sh", "-c", "serve -s dist -l ${PORT:-4173}", "--"]
