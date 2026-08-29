@@ -115,18 +115,21 @@ export default function Overview() {
 
       <h1 className="text-xl font-bold sm:text-2xl">{t("overview.welcomeBack", { username: user.username })}</h1>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="card">
-          <p className="label">{t("overview.walletBalance")}</p>
-          <p className="font-mono text-2xl font-semibold text-success">${wallet?.balance ?? "0.00"}</p>
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+        <div className="card p-3 sm:p-5">
+          <p className="label text-[10px] sm:text-xs">{t("overview.walletBalance")}</p>
+          <p className="truncate font-mono text-lg font-semibold text-success sm:text-2xl">${wallet?.balance ?? "0.00"}</p>
         </div>
-        <div className="card">
-          <p className="label">{t("overview.totalOrders")}</p>
-          <p className="font-mono text-2xl font-semibold">{orders?.total ?? 0}</p>
+        <div className="card p-3 sm:p-5">
+          <p className="label text-[10px] sm:text-xs">{t("overview.totalOrders")}</p>
+          <p className="truncate font-mono text-lg font-semibold sm:text-2xl">{orders?.total ?? 0}</p>
         </div>
-        <div className="card flex flex-col justify-between">
-          <p className="label">{t("overview.quickAction")}</p>
-          <Link to="/dashboard/new-order" className="btn-primary mt-2 justify-center">
+        <div className="card flex flex-col justify-between p-3 sm:p-5">
+          <p className="label text-[10px] sm:text-xs">{t("overview.quickAction")}</p>
+          <Link
+            to="/dashboard/new-order"
+            className="btn-primary mt-2 justify-center break-words px-2 py-1.5 text-center text-xs leading-tight sm:px-4 sm:py-2.5 sm:text-sm sm:leading-normal"
+          >
             {t("overview.newOrderCta")}
           </Link>
         </div>
