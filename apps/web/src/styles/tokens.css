@@ -1,0 +1,113 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Design tokens — ported from "All in One Service Design System/tokens/*".
+   Nothing here is invented: the palette is the v2 Refined Identity violet +
+   the Sovereign Fintech (customer / navy) and Sovereign Admin (obsidian)
+   surface scales, and matches tailwind.config.js.
+
+   Surfaces / foreground / lines are exposed as space-separated RGB channels
+   so Tailwind's `/opacity` modifier keeps working. `.theme-admin` swaps the
+   channels to obsidian; `.theme-light` is the marketing / print ground.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Brand violet — identical in every theme (violet is violet) */
+  --violet-900: #4c1d95;
+  --violet-700: #6d28d9; /* Primary — logo, buttons */
+  --violet-500: #8b5cf6; /* hover / focus / gradient top */
+  --violet-300: #a78bfa; /* accent on dark grounds */
+  --violet-100: #e1e0ff;
+  --brand-gradient: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+
+  /* Payment-gateway brand colours — payment tiles only */
+  --bkash: #e2136e;
+  --nagad: #f7941d;
+  --rocket: #8c3494;
+  --upay: #00a651;
+
+  /* ── Themed channels — customer panel (deep nautical navy) ───────────── */
+  --sf-page: 3 20 39; /* #031427 */
+  --sf-deep: 2 6 23; /* #020617 */
+  --sf-lowest: 0 15 33; /* #000F21 */
+  --sf-low: 11 28 48; /* #0B1C30 */
+  --sf-card: 16 32 52; /* #102034 */
+  --sf-raised: 27 43 63; /* #1B2B3F */
+  --sf-highest: 38 54 74; /* #26364A */
+
+  --fg-1: 211 228 254; /* on-surface     #D3E4FE */
+  --fg-2: 199 196 215; /* on-surface-var #C7C4D7 */
+  --line-1: 70 69 84; /* outline-variant #464554 */
+  --line-strong-1: 144 143 160; /* outline #908FA0 */
+
+  --accent-on-dark: 167 139 250; /* violet-300 */
+
+  /* Elevation — tonal first, ambient shadows tinted violet, never heavy black */
+  --shadow-sm: 0 1px 2px 0 rgba(2, 6, 23, 0.35);
+  --shadow-ambient: 0 10px 15px -3px rgba(109, 40, 217, 0.18);
+  --shadow-raised: 0 4px 12px -2px rgba(2, 6, 23, 0.45);
+  --shadow-overlay: 0 24px 48px -12px rgba(2, 6, 23, 0.7);
+  --focus-ring-soft: 0 0 0 3px rgba(139, 92, 246, 0.4);
+  --row-hover: rgba(109, 40, 217, 0.06);
+  --glass-blur: 12px;
+
+  /* Shape — customer base is softer (8px control / 16px card) */
+  --radius-control: 8px;
+  --radius-card: 16px;
+
+  /* Motion — short, eased, no bounce / spring */
+  --duration-instant: 80ms;
+  --duration-fast: 150ms;
+  --duration: 200ms;
+  --duration-slow: 300ms;
+  --duration-reveal: 700ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Bengali runs at 1.2x the English line-height to clear kars / conjuncts */
+  --bengali-lh-multiplier: 1.2;
+}
+
+/* ── Admin back-office — obsidian, sharper, denser ───────────────────────── */
+.theme-admin {
+  --sf-page: 19 19 23; /* #131317 */
+  --sf-deep: 14 14 17; /* #0E0E11 */
+  --sf-lowest: 14 14 17;
+  --sf-low: 27 27 31; /* #1B1B1F */
+  --sf-card: 27 27 31;
+  --sf-raised: 42 41 45; /* #2A292D */
+  --sf-highest: 53 52 56; /* #353438 */
+
+  --fg-1: 229 225 231; /* #E5E1E7 */
+  --fg-2: 199 197 208; /* #C7C5D0 */
+  --accent-on-dark: 192 193 255; /* #C0C1FF — legible on obsidian */
+
+  --shadow-ambient: 0 10px 15px -3px rgba(2, 6, 23, 0.5);
+
+  --radius-control: 4px;
+  --radius-card: 8px;
+}
+
+/* ── Marketing / print ground (from the Refined Identity doc) ────────────── */
+.theme-light {
+  --sf-page: 241 239 246; /* #F1EFF6 */
+  --sf-deep: 20 16 31; /* #14101F */
+  --sf-lowest: 241 239 246;
+  --sf-low: 250 249 252; /* #FAF9FC */
+  --sf-card: 255 255 255;
+  --sf-raised: 250 249 252;
+  --sf-highest: 241 239 246;
+
+  --fg-1: 36 28 54; /* #241C36 */
+  --fg-2: 71 62 92;
+  --line-1: 20 16 31; /* used at low alpha */
+  --line-strong-1: 20 16 31;
+  --accent-on-dark: 109 40 217; /* violet-700 */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration: 0ms;
+    --duration-slow: 0ms;
+    --duration-reveal: 0ms;
+  }
+}

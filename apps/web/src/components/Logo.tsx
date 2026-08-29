@@ -72,12 +72,15 @@ export function Logo({
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <AioMark gradient className={`${s.mark} shrink-0 text-primary`} />
       <span className="flex flex-col leading-none">
-        <span className={`font-display font-medium tracking-[0.08em] text-on-surface ${s.name}`}>
+        {/* Jost lockup — geometric O matches the mark's network ring (identity v2) */}
+        <span className={`font-brand font-medium tracking-[0.10em] text-on-surface ${s.name}`}>
           ALL IN <span className="text-primary-container">ONE</span>
         </span>
         {s.tagline && (
-          <span className="mt-1 font-mono text-[10px] font-light tracking-[0.4em] text-on-surface-variant">
+          <span className="mt-1.5 flex items-center gap-1.5 text-[10px] font-light tracking-[0.4em] text-on-surface-variant">
+            <span className="h-px w-3 bg-outline-variant" />
             SERVICE
+            <span className="h-px flex-1 bg-outline-variant" />
           </span>
         )}
       </span>
