@@ -1,10 +1,11 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { DisplayCurrency, LiveChatProvider } from "@smm/shared";
-import { getAdminSettings, updateAdminSettings } from "../../api/resources.js";
+import { getAdminSettings, sendAdminTestEmail, updateAdminSettings } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
-import { Breadcrumbs } from "../../components/ds/index.js";
+import { Breadcrumbs, Button } from "../../components/ds/index.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useAuth } from "../../context/AuthContext.js";
 
 interface AdminSettings {
   siteName: string;
@@ -26,6 +27,7 @@ interface AdminSettings {
 export default function AdminSettingsPage() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const { data: settings } = useQuery({ queryKey: ["admin-settings"], queryFn: getAdminSettings });
 
   const [form, setForm] = useState({
@@ -45,6 +47,12 @@ export default function AdminSettingsPage() {
     smtpFromAddress: "",
   });
   const [submitting, setSubmitting] = useState(false);
+  const [testEmailTo, setTestEmailTo] = useState("");
+  const [sendingTestEmail, setSendingTestEmail] = useState(false);
+
+  useEffect(() => {
+    if (user?.email) setTestEmailTo((current) => current || user.email);
+  }, [user]);
 
   useEffect(() => {
     if (!settings) return;
@@ -95,6 +103,19 @@ export default function AdminSettingsPage() {
       toast.push(apiErrorMessage(err, "Failed to save settings"), "error");
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function onSendTestEmail() {
+    if (!testEmailTo.trim()) return;
+    setSendingTestEmail(true);
+    try {
+      await sendAdminTestEmail(testEmailTo.trim());
+      toast.push("Test email sent — check the inbox.", "success");
+    } catch (err) {
+      toast.push(apiErrorMessage(err, "Test email failed"), "error");
+    } finally {
+      setSendingTestEmail(false);
     }
   }
 
@@ -187,6 +208,30 @@ export default function AdminSettingsPage() {
         <input className="input-field" placeholder="SMTP username" value={form.smtpUser} onChange={(e) => setForm((f) => ({ ...f, smtpUser: e.target.value }))} />
         <input className="input-field" type="password" placeholder="SMTP password (leave blank to keep existing)" value={form.smtpPassword} onChange={(e) => setForm((f) => ({ ...f, smtpPassword: e.target.value }))} />
         <input className="input-field" placeholder="From address, e.g. noreply@yourpanel.com" value={form.smtpFromAddress} onChange={(e) => setForm((f) => ({ ...f, smtpFromAddress: e.target.value }))} />
+
+        <div className="flex flex-col gap-2 border-t border-outline-variant pt-3 sm:flex-row sm:items-center">
+          <input
+            type="email"
+            className="input-field sm:flex-1"
+            placeholder="Send test email to…"
+            value={testEmailTo}
+            onChange={(e) => setTestEmailTo(e.target.value)}
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={sendingTestEmail || !testEmailTo.trim()}
+            onClick={onSendTestEmail}
+          >
+            {sendingTestEmail && (
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            )}
+            {sendingTestEmail ? "Sending…" : "Send test email"}
+          </Button>
+        </div>
+        <p className="text-xs text-on-surface-variant">
+          Save your SMTP settings first — the test uses the saved password, not what&apos;s typed above.
+        </p>
       </div>
 
       <button type="submit" className="btn-primary" disabled={submitting}>

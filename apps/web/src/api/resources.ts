@@ -18,6 +18,7 @@ import type {
   ResolveManualRefillInput,
   BannerInput,
   PostInput,
+  SendTestEmailInput,
   ServiceInput,
   StockPoolInput,
   UpdateSiteNoticeInput,
@@ -171,6 +172,8 @@ export const deleteAdminNotice = (id: string) => apiClient.delete(`/admin/notice
 // ── Site settings (Phase 4, admin) ──────────────────────────────────────
 export const getAdminSettings = () => apiClient.get("/admin/settings").then((r) => r.data);
 export const updateAdminSettings = (input: UpdateSettingsInput) => apiClient.put("/admin/settings", input);
+export const sendAdminTestEmail = (to: string) =>
+  apiClient.post("/admin/settings/test-email", { to } satisfies SendTestEmailInput);
 export const getAdminSiteNotice = () => apiClient.get("/admin/site-notice").then((r) => r.data);
 export const updateAdminSiteNotice = (input: UpdateSiteNoticeInput) => apiClient.put("/admin/site-notice", input);
 

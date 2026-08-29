@@ -338,6 +338,13 @@ export const updateSettingsSchema = z.object({
     smtpPassword: z.string().trim().max(500).optional(), // write-only; omit to keep existing
     smtpFromAddress: z.string().trim().max(255).nullable().optional(),
 });
+// Admin-only "Send test email" action (Settings -> SMTP card) — lets the
+// operator confirm their saved SMTP config actually works without triggering
+// a real password-reset flow. Always uses the saved SMTP password
+// server-side; this just carries the destination address.
+export const sendTestEmailSchema = z.object({
+    to: z.string().trim().email(),
+});
 export const publicSettingsSchema = z.object({
     siteName: z.string(),
     whatsappEnabled: z.boolean(),

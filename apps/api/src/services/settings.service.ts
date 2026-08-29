@@ -1,6 +1,8 @@
 import { prisma } from "../lib/prisma.js";
 import { encrypt, decrypt } from "../lib/crypto.js";
 import { env } from "../env.js";
+import { AppError } from "../utils/AppError.js";
+import { sendMail } from "../lib/mailer.js";
 import type { UpdateSettingsInput, PublicSettings } from "@smm/shared";
 
 // Deliberately a singleton row (fixed id) rather than a key/value table —
@@ -105,4 +107,32 @@ export async function getSmtpConfig() {
     pass: decrypt(s.smtpPassCiphertext),
     from: s.smtpFromAddress,
   };
+}
+
+/**
+ * Admin-only "Send test email" action — lets the operator confirm the saved
+ * SMTP config actually works right after saving it, without triggering a real
+ * password-reset flow. Always uses the saved SMTP password (via
+ * getSmtpConfig/sendMail); the caller only supplies the destination.
+ */
+export async function sendTestEmail(to: string): Promise<void> {
+  const config = await getSmtpConfig();
+  if (!config) {
+    throw AppError.badRequest(
+      "SMTP is not enabled/fully configured — save host, port, password and from-address first",
+    );
+  }
+
+  const s = await ensureSettings();
+  try {
+    await sendMail(
+      to,
+      `SMTP test — ${s.siteName}`,
+      "This is a test email from your admin panel. If you received it, SMTP is working.",
+    );
+  } catch (err) {
+    // Surface the mail-server error (auth failed, self-signed cert, …) so the
+    // operator can fix their config — but never a stack trace.
+    throw AppError.badRequest(err instanceof Error ? err.message : "Failed to send test email");
+  }
 }
