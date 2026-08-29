@@ -2,7 +2,7 @@ import { prisma } from "../lib/prisma.js";
 import { encrypt, decrypt } from "../lib/crypto.js";
 import { env } from "../env.js";
 import { AppError } from "../utils/AppError.js";
-import { sendMail } from "../lib/mailer.js";
+import { sendMail, isMailConfigured } from "../lib/mailer.js";
 import type { UpdateSettingsInput, PublicSettings } from "@smm/shared";
 
 // Deliberately a singleton row (fixed id) rather than a key/value table —
@@ -116,10 +116,9 @@ export async function getSmtpConfig() {
  * getSmtpConfig/sendMail); the caller only supplies the destination.
  */
 export async function sendTestEmail(to: string): Promise<void> {
-  const config = await getSmtpConfig();
-  if (!config) {
+  if (!(await isMailConfigured())) {
     throw AppError.badRequest(
-      "SMTP is not enabled/fully configured — save host, port, password and from-address first",
+      "Email isn't configured — either set BREVO_API_KEY + MAIL_FROM on the API server (recommended on Railway), or fill in and save the SMTP settings below (host, port, password, from-address)",
     );
   }
 

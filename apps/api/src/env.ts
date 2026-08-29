@@ -54,6 +54,17 @@ const envSchema = z.object({
   // flow used here but is captured for a future authorization-code flow.
   GOOGLE_CLIENT_ID: z.string().trim().min(1).optional(),
   GOOGLE_CLIENT_SECRET: z.string().trim().min(1).optional(),
+
+  // Transactional email over HTTPS (Brevo) instead of SMTP. Shared-hosting
+  // (cPanel) mail servers are frequently unreachable from a cloud host like
+  // Railway — the SMTP ports time out at the firewall — whereas an HTTPS
+  // API call on 443 always gets through. When BREVO_API_KEY is set, lib/
+  // mailer.ts uses the Brevo API and MAIL_FROM must also be set to a
+  // Brevo-verified sender address; otherwise it falls back to the
+  // admin-configured SMTP settings. Both optional so the app boots without
+  // either.
+  BREVO_API_KEY: z.string().trim().min(1).optional(),
+  MAIL_FROM: z.string().trim().email().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -69,4 +80,5 @@ export const env = {
   isProduction: parsed.data.NODE_ENV === "production",
   corsOrigins: parsed.data.CORS_ORIGIN.split(",").map((s) => s.trim()).filter(Boolean),
   googleAuthEnabled: !!(parsed.data.GOOGLE_CLIENT_ID && parsed.data.GOOGLE_CLIENT_SECRET),
+  brevoEmailEnabled: !!parsed.data.BREVO_API_KEY,
 };
