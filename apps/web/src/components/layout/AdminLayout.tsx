@@ -3,33 +3,41 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.js";
 import NoticeBar from "./NoticeBar.js";
 import { Logo } from "../Logo.js";
+import { Icon, type IconName } from "../ds/Icon.js";
+import { cn } from "../ds/cn.js";
 
-const navItems = [
-  { to: "/admin", label: "Dashboard", end: true },
-  { to: "/admin/users", label: "Users" },
-  { to: "/admin/services", label: "Services" },
-  { to: "/admin/brands", label: "Store: Brands" },
-  { to: "/admin/products", label: "Store: Products" },
-  { to: "/admin/packages", label: "Store: Packages" },
-  { to: "/admin/stock-pools", label: "Store: Stock Pools" },
-  { to: "/admin/orders", label: "Orders" },
-  { to: "/admin/deposits", label: "Deposits" },
-  { to: "/admin/tickets", label: "Tickets" },
-  { to: "/admin/providers", label: "Providers" },
-  { to: "/admin/payment-gateways", label: "Payment Gateways" },
-  { to: "/admin/payment-methods", label: "Payment Methods" },
-  { to: "/admin/coupons", label: "Coupons" },
-  { to: "/admin/notice-settings", label: "Notice Settings" },
-  { to: "/admin/banner", label: "Banner Slider" },
-  { to: "/admin/posts", label: "Documentation" },
-  { to: "/admin/settings", label: "Settings" },
+type NavRow = { section: string } | { to: string; label: string; end?: boolean; icon: IconName };
+
+const navRows: NavRow[] = [
+  { to: "/admin", label: "Dashboard", end: true, icon: "dashboard" },
+  { to: "/admin/users", label: "Users", icon: "users" },
+  { to: "/admin/orders", label: "Orders", icon: "orders" },
+  { to: "/admin/deposits", label: "Deposits", icon: "wallet" },
+  { to: "/admin/tickets", label: "Tickets", icon: "support" },
+  { section: "Catalogue" },
+  { to: "/admin/services", label: "Services", icon: "grid" },
+  { to: "/admin/brands", label: "Store: Brands", icon: "tag" },
+  { to: "/admin/products", label: "Store: Products", icon: "package" },
+  { to: "/admin/packages", label: "Store: Packages", icon: "package" },
+  { to: "/admin/stock-pools", label: "Store: Stock Pools", icon: "package" },
+  { section: "Integrations" },
+  { to: "/admin/providers", label: "Providers", icon: "provider" },
+  { to: "/admin/payment-gateways", label: "Payment Gateways", icon: "card" },
+  { to: "/admin/payment-methods", label: "Payment Methods", icon: "card" },
+  { section: "Content" },
+  { to: "/admin/coupons", label: "Coupons", icon: "coupon" },
+  { to: "/admin/notice-settings", label: "Notice Settings", icon: "campaign" },
+  { to: "/admin/banner", label: "Banner Slider", icon: "image" },
+  { to: "/admin/posts", label: "Documentation", icon: "docs" },
+  { section: "System" },
+  { to: "/admin/settings", label: "Settings", icon: "settings" },
 ];
 
-const bottomNavItems = [
-  { to: "/admin", label: "Home", end: true, icon: HomeIcon },
-  { to: "/admin/users", label: "Users", icon: UsersIcon },
-  { to: "/admin/orders", label: "Orders", icon: OrdersIcon },
-  { to: "/admin/deposits", label: "Deposits", icon: DepositsIcon },
+const bottomNavItems: { to: string; label: string; end?: boolean; icon: IconName }[] = [
+  { to: "/admin", label: "Home", end: true, icon: "dashboard" },
+  { to: "/admin/users", label: "Users", icon: "users" },
+  { to: "/admin/orders", label: "Orders", icon: "orders" },
+  { to: "/admin/deposits", label: "Deposits", icon: "wallet" },
 ];
 
 export default function AdminLayout() {
@@ -54,31 +62,50 @@ export default function AdminLayout() {
     navigate("/login");
   }
 
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    cn(
+      "flex min-h-[44px] items-center gap-3 rounded-control border-r-[3px] px-3 py-2 text-sm transition duration-200 ease-ds",
+      isActive
+        ? "border-accent-on-dark bg-primary/15 font-semibold text-accent-on-dark"
+        : "border-transparent font-medium text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface",
+    );
+
+  function NavList() {
+    return (
+      <>
+        {navRows.map((row, i) =>
+          "section" in row ? (
+            <div
+              key={`s-${i}`}
+              className="px-3 pb-1.5 pt-4 text-[11px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant/60"
+            >
+              {row.section}
+            </div>
+          ) : (
+            <NavLink key={row.to} to={row.to} end={row.end} className={navLinkClass}>
+              {({ isActive }) => (
+                <>
+                  <Icon name={row.icon} size={19} filled={isActive} className="shrink-0" />
+                  <span>{row.label}</span>
+                </>
+              )}
+            </NavLink>
+          ),
+        )}
+      </>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="theme-admin flex min-h-screen bg-background">
       {/* Desktop sidebar */}
-      <aside className="hidden w-64 shrink-0 border-r border-outline-variant bg-surface-container-high md:block">
+      <aside className="hidden w-[260px] shrink-0 border-r border-outline-variant bg-surface-card md:block">
         <div className="flex h-16 items-center gap-2 px-6">
           <Logo />
-          <span className="badge bg-primary/20 text-primary">Admin</span>
+          <span className="badge badge-primary">Admin</span>
         </div>
-        <nav className="flex flex-col gap-1 px-3">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) =>
-                `rounded-md px-3 py-2.5 text-sm font-medium transition ${
-                  isActive
-                    ? "bg-primary/15 text-primary"
-                    : "text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface"
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
+        <nav className="aio-scroll flex max-h-[calc(100vh-4rem)] flex-col gap-0.5 overflow-y-auto px-3 pb-6">
+          <NavList />
         </nav>
       </aside>
 
@@ -88,28 +115,28 @@ export default function AdminLayout() {
         aria-hidden={!drawerOpen}
       >
         <div
-          className={`absolute inset-0 bg-surface-deep/70 backdrop-blur-sm transition-opacity duration-300 ${
+          className={`absolute inset-0 bg-surface-deep/70 backdrop-blur-[12px] transition-opacity duration-300 ${
             drawerOpen ? "opacity-100" : "opacity-0"
           }`}
           onClick={() => setDrawerOpen(false)}
         />
         <aside
-          className={`absolute inset-y-0 left-0 flex w-[82%] max-w-xs flex-col bg-surface-container-high shadow-2xl transition-transform duration-300 ease-out ${
+          className={`glass absolute inset-y-0 left-0 flex w-[82%] max-w-xs flex-col shadow-overlay transition-transform duration-300 ease-out ${
             drawerOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-outline-variant px-4">
             <span className="flex items-center gap-2">
               <Logo />
-              <span className="badge bg-primary/20 text-primary">Admin</span>
+              <span className="badge badge-primary">Admin</span>
             </span>
             <button
               type="button"
               aria-label="Close menu"
               onClick={() => setDrawerOpen(false)}
-              className="flex h-11 w-11 items-center justify-center rounded-md text-on-surface-variant hover:bg-surface-container-highest"
+              className="flex h-11 w-11 items-center justify-center rounded-control text-on-surface-variant hover:bg-surface-container-highest"
             >
-              <CloseIcon />
+              <Icon name="close" size={20} />
             </button>
           </div>
           <div className="flex items-center gap-2 border-b border-outline-variant px-4 py-3 font-mono text-xs text-on-surface-variant">
@@ -118,54 +145,32 @@ export default function AdminLayout() {
             )}
             admin: @{user?.username}
           </div>
-          <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-3">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  `flex min-h-[44px] items-center rounded-md px-3 py-2.5 text-sm font-medium transition ${
-                    isActive
-                      ? "bg-primary/15 text-primary"
-                      : "text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface"
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
+          <nav className="aio-scroll flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 py-3">
+            <NavList />
           </nav>
           <div className="flex flex-col gap-2 border-t border-outline-variant p-3">
             <NavLink to="/dashboard" className="btn-ghost min-h-[44px] w-full justify-center text-sm">
               User panel
             </NavLink>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="btn-ghost min-h-[44px] w-full justify-center text-sm"
-            >
+            <button type="button" onClick={handleLogout} className="btn-ghost min-h-[44px] w-full justify-center text-sm">
               Logout
             </button>
           </div>
         </aside>
       </div>
 
-      {/* min-w-0 overrides the flex item's default min-width:auto — without
-          it, any wide descendant (e.g. a data table or a non-wrapping row
-          of filter pills) forces this whole column wider than the viewport
-          instead of scrolling internally, blowing out the page horizontally
-          on mobile. */}
+      {/* min-w-0 keeps wide tables scrolling internally instead of blowing out
+          the page width on mobile. */}
       <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-        <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b border-outline-variant bg-surface-container-high px-3 sm:px-6">
-          <div className="flex items-center gap-2 min-w-0">
+        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b border-outline-variant bg-surface-card/80 px-3 backdrop-blur-xl sm:px-6">
+          <div className="flex min-w-0 items-center gap-2">
             <button
               type="button"
               aria-label="Open menu"
               onClick={() => setDrawerOpen(true)}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-on-surface hover:bg-surface-container-highest md:hidden"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-on-surface hover:bg-surface-container-highest md:hidden"
             >
-              <MenuIcon />
+              <Icon name="menu" size={22} />
             </button>
             <div className="hidden items-center gap-2 truncate font-mono text-sm text-on-surface-variant sm:flex">
               {user?.avatarUrl && (
@@ -178,10 +183,7 @@ export default function AdminLayout() {
             <NavLink to="/dashboard" className="btn-ghost hidden !px-3 !py-1.5 text-xs sm:inline-flex">
               User panel
             </NavLink>
-            <button
-              className="btn-ghost hidden !px-3 !py-1.5 text-xs sm:inline-flex"
-              onClick={handleLogout}
-            >
+            <button className="btn-ghost hidden !px-3 !py-1.5 text-xs sm:inline-flex" onClick={handleLogout}>
               Logout
             </button>
           </div>
@@ -193,21 +195,22 @@ export default function AdminLayout() {
       </div>
 
       {/* Mobile bottom navigation */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-stretch border-t border-outline-variant bg-surface-container-highest/95 backdrop-blur-lg md:hidden">
+      <nav className="glass fixed inset-x-0 bottom-0 z-40 flex h-16 items-stretch border-t border-outline-variant md:hidden">
         {bottomNavItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
             className={({ isActive }) =>
-              `flex flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-medium transition ${
-                isActive ? "text-primary" : "text-on-surface-variant"
-              }`
+              cn(
+                "flex flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-medium transition",
+                isActive ? "text-accent-on-dark" : "text-on-surface-variant",
+              )
             }
           >
             {({ isActive }) => (
               <>
-                <item.icon active={isActive} />
+                <Icon name={item.icon} size={22} filled={isActive} />
                 <span>{item.label}</span>
               </>
             )}
@@ -218,82 +221,10 @@ export default function AdminLayout() {
           onClick={() => setDrawerOpen(true)}
           className="flex flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-on-surface-variant"
         >
-          <MoreIcon />
+          <Icon name="more" size={22} />
           <span>More</span>
         </button>
       </nav>
     </div>
-  );
-}
-
-function MenuIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-      <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}
-
-function iconProps(active?: boolean) {
-  return { width: 20, height: 20, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: active ? 2.4 : 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-}
-
-function HomeIcon({ active }: { active?: boolean }) {
-  return (
-    <svg {...iconProps(active)}>
-      <path d="M3 11.5 12 4l9 7.5" />
-      <path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9" />
-    </svg>
-  );
-}
-
-function UsersIcon({ active }: { active?: boolean }) {
-  return (
-    <svg {...iconProps(active)}>
-      <circle cx="9" cy="8" r="3.2" />
-      <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
-      <path d="M16 8.5a3 3 0 1 1 0 6" />
-      <path d="M21 20c0-2.8-1.9-5.1-4.5-5.8" />
-    </svg>
-  );
-}
-
-function OrdersIcon({ active }: { active?: boolean }) {
-  return (
-    <svg {...iconProps(active)}>
-      <path d="M4 7h16l-1.5 12.2a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8L4 7Z" />
-      <path d="M8 7V5a4 4 0 0 1 8 0v2" />
-    </svg>
-  );
-}
-
-function DepositsIcon({ active }: { active?: boolean }) {
-  return (
-    <svg {...iconProps(active)}>
-      <rect x="3" y="6" width="18" height="13" rx="2" />
-      <path d="M3 10h18" />
-      <circle cx="16" cy="14" r="1" />
-    </svg>
-  );
-}
-
-function MoreIcon({ active }: { active?: boolean }) {
-  return (
-    <svg {...iconProps(active)}>
-      <circle cx="5" cy="12" r="1.5" />
-      <circle cx="12" cy="12" r="1.5" />
-      <circle cx="19" cy="12" r="1.5" />
-    </svg>
   );
 }

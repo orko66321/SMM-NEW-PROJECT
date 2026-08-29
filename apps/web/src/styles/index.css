@@ -1,3 +1,5 @@
+@import "./tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,28 +8,139 @@
   body {
     @apply bg-background text-on-surface font-body antialiased;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     @apply font-display;
+  }
+
+  /* Bengali runs get their own face + 1.2x line-height (clears kars/conjuncts) */
+  :lang(bn),
+  .bn {
+    font-family: "Noto Sans Bengali", "Inter", system-ui, sans-serif;
+    line-height: calc(1.5 * var(--bengali-lh-multiplier));
+  }
+
+  ::selection {
+    background: rgba(139, 92, 246, 0.24);
+    color: rgb(var(--fg-1));
   }
 }
 
 @layer components {
+  /* ── Buttons ─────────────────────────────────────────────────────────── */
   .btn-primary {
-    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary transition hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-control bg-primary px-4 py-2.5
+      text-sm font-semibold text-on-primary transition duration-200 ease-ds
+      hover:-translate-y-px hover:brightness-[1.12] hover:shadow-ambient
+      active:translate-y-0 active:opacity-70
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-hover/40 focus-visible:ring-offset-0
+      disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:hover:brightness-100;
   }
   .btn-ghost {
-    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md border border-outline-variant px-4 py-2.5 text-sm font-semibold text-on-surface transition hover:bg-surface-container-high disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-control border border-outline-variant
+      px-4 py-2.5 text-sm font-semibold text-on-surface transition duration-200 ease-ds
+      hover:bg-surface-container-high active:opacity-70
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-hover/40
+      disabled:cursor-not-allowed disabled:opacity-50;
   }
+  .btn-subtle {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-control bg-primary/15
+      px-4 py-2.5 text-sm font-semibold text-accent-on-dark transition duration-200 ease-ds
+      hover:bg-primary/25 active:opacity-70
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-hover/40
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  /* Destructive — outline only; still requires a confirm dialog */
+  .btn-danger {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-control border border-error/40
+      px-4 py-2.5 text-sm font-semibold text-error transition duration-200 ease-ds
+      hover:bg-error/10 active:opacity-70
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error/40
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* ── Inputs ──────────────────────────────────────────────────────────── */
   .input-field {
-    @apply w-full min-h-[44px] rounded-md border border-outline-variant bg-surface-container px-3.5 py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/60 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40;
+    @apply w-full min-h-[44px] rounded-control border border-outline-variant bg-surface-container px-3.5 py-2.5
+      text-sm text-on-surface placeholder:text-on-surface-variant/60 outline-none transition duration-150 ease-ds
+      focus:border-primary-hover focus:ring-[3px] focus:ring-primary-hover/40;
   }
+
+  /* ── Surface primitive ───────────────────────────────────────────────── */
   .card {
-    @apply rounded-lg border border-outline-variant bg-surface-container p-5;
+    @apply rounded-card border border-outline-variant bg-surface-card p-5;
   }
+  .card-interactive {
+    @apply transition duration-200 ease-ds hover:-translate-y-px hover:border-primary/40 hover:shadow-ambient;
+  }
+  .card-header {
+    @apply mb-4 flex items-center gap-2 border-b border-outline-variant pb-3 font-display text-base font-semibold text-on-surface;
+  }
+
+  /* ── Labels & badges ─────────────────────────────────────────────────── */
   .label {
-    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-on-surface-variant;
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant;
   }
   .badge {
-    @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+  /* Semantic badges: 15% fill · 30% border · full-strength text */
+  .badge-neutral {
+    @apply border border-outline-variant bg-surface-container-highest text-on-surface-variant;
+  }
+  .badge-primary {
+    @apply border border-primary/30 bg-primary/15 text-accent-on-dark;
+  }
+  .badge-success {
+    @apply border border-success/30 bg-success/15 text-success;
+  }
+  .badge-warning {
+    @apply border border-warning/30 bg-warning/15 text-warning;
+  }
+  .badge-error {
+    @apply border border-error/30 bg-error/15 text-error;
+  }
+  .badge-info {
+    @apply border border-info/30 bg-info/15 text-info;
+  }
+
+  /* ── Overlay glass — modals, drawers, toasts. Never on a resting card. ── */
+  .glass {
+    background: rgb(var(--sf-card) / 0.72);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+
+  /* ── Wallet — the one sanctioned full-gradient surface ────────────────── */
+  .gradient-wallet {
+    background: var(--brand-gradient);
+    color: #fff;
+  }
+
+  /* ── Table row hover — 6% violet tint, no lift ───────────────────────── */
+  .row-hover {
+    @apply transition-colors duration-150 ease-ds;
+  }
+  .row-hover:hover {
+    background: var(--row-hover);
+  }
+
+  /* ── Thin scrollbar for nav / table scroll areas ─────────────────────── */
+  .aio-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--sf-highest)) transparent;
+  }
+  .aio-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .aio-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .aio-scroll::-webkit-scrollbar-thumb {
+    background: rgb(var(--sf-highest));
+    border-radius: 20px;
   }
 }

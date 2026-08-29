@@ -6,6 +6,7 @@ import CurrencySwitcher from "./CurrencySwitcher.js";
 import LanguageSwitcher from "./LanguageSwitcher.js";
 import NoticeBar from "./NoticeBar.js";
 import { Logo } from "../Logo.js";
+import { Icon } from "../ds/Icon.js";
 
 export default function PublicLayout() {
   const { user } = useAuth();
@@ -69,9 +70,9 @@ export default function PublicLayout() {
               type="button"
               aria-label={menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
               onClick={() => setMenuOpen((v) => !v)}
-              className="flex h-11 w-11 items-center justify-center rounded-md text-on-surface hover:bg-surface-container-high md:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-control text-on-surface hover:bg-surface-container-high md:hidden"
             >
-              {menuOpen ? <CloseIcon /> : <MenuIcon />}
+              <Icon name={menuOpen ? "close" : "menu"} size={menuOpen ? 20 : 22} />
             </button>
           </div>
         </div>
@@ -146,24 +147,5 @@ export default function PublicLayout() {
         </div>
       </footer>
     </div>
-  );
-}
-
-function MenuIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-      <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
   );
 }
