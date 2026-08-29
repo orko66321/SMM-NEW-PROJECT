@@ -10,6 +10,7 @@ import {
 } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 
 const emptyForm = {
   categoryId: "",
@@ -146,6 +147,7 @@ export default function AdminServices() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Services" }]} />
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold">Services</h1>
         {services && <p className="text-sm text-on-surface-variant">{services.total.toLocaleString()} total</p>}

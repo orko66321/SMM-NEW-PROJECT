@@ -6,6 +6,8 @@ import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
 import { LeaderboardSection } from "../../components/leaderboard/LeaderboardSection.js";
+import { EmptyState, StatCard, StatusBadge } from "../../components/ds/index.js";
+import { useCurrency } from "../../context/CurrencyContext.js";
 
 const PINNED_BRAND_LIMIT = 6;
 
@@ -66,10 +68,7 @@ function GuestOverview() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {statCards.map((c) => (
-          <div key={c.label} className="card text-center">
-            <p className="font-mono text-2xl font-semibold text-primary">{c.value}</p>
-            <p className="label mt-1">{c.label}</p>
-          </div>
+          <StatCard key={c.label} label={c.label} value={c.value} />
         ))}
       </div>
 
@@ -101,6 +100,7 @@ function GuestOverview() {
 export default function Overview() {
   const { user } = useAuth();
   const { t, lang } = useLanguage();
+  const { formatCurrency } = useCurrency();
   const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet, enabled: !!user });
   const { data: orders } = useQuery({
     queryKey: ["orders", "recent"],
@@ -117,14 +117,13 @@ export default function Overview() {
       <h1 className="text-xl font-bold sm:text-2xl">{t("overview.welcomeBack", { username: user.username })}</h1>
 
       <div className="grid grid-cols-3 gap-2 sm:gap-4">
-        <div className="card p-3 sm:p-5">
-          <p className="label text-[10px] sm:text-xs">{t("overview.walletBalance")}</p>
-          <p className="truncate font-mono text-lg font-semibold text-success sm:text-2xl">${wallet?.balance ?? "0.00"}</p>
-        </div>
-        <div className="card p-3 sm:p-5">
-          <p className="label text-[10px] sm:text-xs">{t("overview.totalOrders")}</p>
-          <p className="truncate font-mono text-lg font-semibold sm:text-2xl">{orders?.total ?? 0}</p>
-        </div>
+        <StatCard
+          accent
+          label={t("overview.walletBalance")}
+          value={formatCurrency(wallet?.balance ?? 0)}
+          icon="wallet"
+        />
+        <StatCard label={t("overview.totalOrders")} value={orders?.total ?? 0} icon="orders" />
         <div className="card flex flex-col justify-between p-3 sm:p-5">
           <p className="label text-[10px] sm:text-xs">{t("overview.quickAction")}</p>
           <Link
@@ -147,12 +146,12 @@ export default function Overview() {
                 <span className="min-w-0 flex-1 basis-full truncate sm:basis-auto">{pickLang(lang, o.service.nameBn, o.service.name)}</span>
                 <span className="font-mono text-on-surface-variant">{o.quantity}</span>
                 <span className="font-mono">${o.charge}</span>
-                <span className="badge bg-primary/15 text-primary">{t(`common.orderStatus.${o.status}`)}</span>
+                <StatusBadge status={o.status} />
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-on-surface-variant">{t("overview.noOrdersYet")}</p>
+          <EmptyState icon="orders" title={t("overview.noOrdersYet")} />
         )}
       </div>
 

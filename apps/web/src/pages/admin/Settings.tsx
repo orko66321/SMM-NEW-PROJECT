@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { DisplayCurrency, LiveChatProvider } from "@smm/shared";
 import { getAdminSettings, updateAdminSettings } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 import { useToast } from "../../components/ui/Toast.js";
 
 interface AdminSettings {
@@ -99,6 +100,7 @@ export default function AdminSettingsPage() {
 
   return (
     <form onSubmit={onSave} className="mx-auto max-w-2xl space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Site Settings" }]} />
       <h1 className="text-xl font-bold">Site Settings</h1>
 
       <div className="card space-y-3">

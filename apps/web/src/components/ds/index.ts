@@ -5,6 +5,7 @@ export { Icon, type IconName } from "./Icon.js";
 export { Button } from "./Button.js";
 export { Card } from "./Card.js";
 export { Badge, type BadgeTone } from "./Badge.js";
+export { Breadcrumbs, type Crumb } from "./Breadcrumbs.js";
 export { StatusBadge, statusTone } from "./StatusBadge.js";
 export { StatCard } from "./StatCard.js";
 export { ServiceTag } from "./ServiceTag.js";

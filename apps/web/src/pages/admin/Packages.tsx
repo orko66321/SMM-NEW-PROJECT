@@ -11,6 +11,7 @@ import {
 } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 
 interface PackageRow {
   id: string;
@@ -154,6 +155,7 @@ export default function AdminPackages() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Store" }, { label: "Packages" }]} />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold">Store — Packages</h1>

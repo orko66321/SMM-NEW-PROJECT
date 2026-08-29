@@ -10,6 +10,7 @@ import {
   updateAdminSiteNotice,
 } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 import { useToast } from "../../components/ui/Toast.js";
 
 interface SiteNotice {
@@ -292,6 +293,7 @@ function ImportantNoticeSection() {
 export default function AdminNoticeSettings() {
   return (
     <div className="mx-auto max-w-3xl space-y-10">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Notice Settings" }]} />
       <div>
         <h1 className="text-xl font-bold">Notice Settings / নোটিশ সেটিংস</h1>
         <p className="mt-1 text-sm text-on-surface-variant">Every kind of notice on the site, in one place.</p>

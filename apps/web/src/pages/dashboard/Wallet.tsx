@@ -8,6 +8,7 @@ import { useAuth } from "../../context/AuthContext.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
+import { BilingualNote, EmptyState, Icon, StatusBadge, WalletBalance } from "../../components/ds/index.js";
 
 function CopyButton({ value, label }: { value: string; label: string }) {
   const { t } = useLanguage();
@@ -29,18 +30,9 @@ function CopyButton({ value, label }: { value: string; label: string }) {
       onClick={onCopy}
       aria-label={label}
       title={copied ? t("common.copied") : label}
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
     >
-      {copied ? (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 text-success">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
-          <rect x="9" y="9" width="11" height="11" rx="2" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15H4a1 1 0 01-1-1V4a1 1 0 011-1h10a1 1 0 011 1v1" />
-        </svg>
-      )}
+      <Icon name={copied ? "check" : "copy"} size={18} className={copied ? "text-success" : undefined} />
     </button>
   );
 }
@@ -216,10 +208,15 @@ export default function Wallet() {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="space-y-6 lg:col-span-2">
-        <div className="card">
-          <p className="label">{t("wallet.currentBalance")}</p>
-          <p className="font-mono text-3xl font-bold text-success">{formatCurrency(wallet?.balance ?? 0)}</p>
-        </div>
+        <WalletBalance
+          balance={formatCurrency(wallet?.balance ?? 0)}
+          currency=""
+          secondary={
+            bdtRate && wallet?.balance != null
+              ? `≈ ৳${(Number(wallet.balance) * bdtRate).toFixed(0)} · 1 USD = ${bdtRate}৳`
+              : undefined
+          }
+        />
 
         <div>
           <h2 className="mb-3 text-sm font-semibold">{t("wallet.fundHistory")}</h2>
@@ -227,20 +224,18 @@ export default function Wallet() {
           {/* Mobile: stacked cards */}
           <div className="space-y-3 md:hidden">
             {deposits?.items.length === 0 && (
-              <p className="card text-center text-sm text-on-surface-variant">{t("wallet.noDeposits")}</p>
+              <div className="card">
+                <EmptyState icon="wallet" title={t("wallet.noDeposits")} />
+              </div>
             )}
             {deposits?.items.map((d: { id: string; createdAt: string; method: string; amount: string; bonusAmount: string; status: string }) => (
-              <div key={d.id} className="rounded-lg border border-outline-variant bg-surface-container p-4">
+              <div key={d.id} className="rounded-card border border-outline-variant bg-surface-card p-4">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-on-surface">{d.method}</p>
                     <p className="mt-0.5 text-xs text-on-surface-variant">{new Date(d.createdAt).toLocaleDateString()}</p>
                   </div>
-                  <span
-                    className={`badge shrink-0 ${d.status === "APPROVED" ? "bg-success/15 text-success" : d.status === "REJECTED" ? "bg-error/15 text-error" : "bg-warning/15 text-warning"}`}
-                  >
-                    {t(`common.depositStatus.${d.status}`)}
-                  </span>
+                  <StatusBadge status={d.status} kind="deposit" className="shrink-0" />
                 </div>
                 <div className="mt-3 flex items-center justify-between gap-2 border-t border-outline-variant pt-3 text-sm">
                   <span className="font-mono">{formatCurrency(d.amount)}</span>
@@ -272,7 +267,7 @@ export default function Wallet() {
                     <td className="py-2 font-mono">{formatCurrency(d.amount)}</td>
                     <td className="py-2 font-mono text-success">{Number(d.bonusAmount) > 0 ? `+${formatCurrency(d.bonusAmount)}` : "—"}</td>
                     <td className="py-2">
-                      <span className={`badge ${d.status === "APPROVED" ? "bg-success/15 text-success" : d.status === "REJECTED" ? "bg-error/15 text-error" : "bg-warning/15 text-warning"}`}>{t(`common.depositStatus.${d.status}`)}</span>
+                      <StatusBadge status={d.status} kind="deposit" />
                     </td>
                   </tr>
                 ))}
@@ -386,8 +381,13 @@ export default function Wallet() {
               </button>
             ) : (
               <form onSubmit={onSubmitManual} className="space-y-3">
+                <BilingualNote
+                  tone="warning"
+                  en={t("bilingual.manualDepositEn")}
+                  bn={t("bilingual.manualDepositBn")}
+                />
                 {selected.instructions && (
-                  <p className="rounded-md bg-surface-container-high px-3 py-2 text-xs text-on-surface-variant">{selected.instructions}</p>
+                  <p className="rounded-control bg-surface-container-high px-3 py-2 text-xs text-on-surface-variant">{selected.instructions}</p>
                 )}
                 {selected.accountNumber && (
                   <div className="flex items-center justify-between gap-2 rounded-md bg-surface-container-high px-3 py-2">
@@ -409,9 +409,11 @@ export default function Wallet() {
                 <button type="submit" className="btn-primary w-full" disabled={submitting}>
                   {submitting ? t("wallet.submittingDeposit") : t("wallet.submitDeposit")}
                 </button>
-                <p className="text-xs text-on-surface-variant">
-                  {t("wallet.manualNote")}
-                </p>
+                <BilingualNote
+                  tone="info"
+                  en={t("bilingual.depositReviewEn")}
+                  bn={t("bilingual.depositReviewBn")}
+                />
               </form>
             )}
           </>

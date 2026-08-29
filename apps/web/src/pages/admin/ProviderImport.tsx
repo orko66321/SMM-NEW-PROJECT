@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   bulkImportAdminProviderServices,
@@ -8,6 +8,7 @@ import {
 } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 
 interface PreviewRow {
   providerServiceId: string;
@@ -124,10 +125,10 @@ export default function AdminProviderImport() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Providers", to: "/admin/providers" }, { label: "Bulk Import" }]} />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <Link to="/admin/providers" className="text-xs text-primary hover:underline">← Providers</Link>
-          <h1 className="mt-1 text-xl font-bold">Bulk Import Services {provider ? `— ${provider.name}` : ""}</h1>
+          <h1 className="text-xl font-bold">Bulk Import Services {provider ? `— ${provider.name}` : ""}</h1>
           <p className="text-sm text-on-surface-variant">
             প্রোভাইডারের সম্পূর্ণ ক্যাটালগ থেকে সরাসরি Service (ও প্রয়োজনে ক্যাটাগরি) তৈরি করে — একই সার্ভিস দুইবার ইম্পোর্ট হবে না।
           </p>

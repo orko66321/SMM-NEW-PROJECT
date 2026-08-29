@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { adjustUserWallet, getAdminUser, updateAdminUser } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { Badge, Breadcrumbs } from "../../components/ds/index.js";
 
 export default function AdminUserDetail() {
   const { id } = useParams<{ id: string }>();
@@ -62,11 +63,13 @@ export default function AdminUserDetail() {
   if (!user) return <p className="text-on-surface-variant">Loading…</p>;
 
   return (
+    <div className="space-y-4">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Users", to: "/admin/users" }, { label: `@${user.username}` }]} />
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="card space-y-3 lg:col-span-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h1 className="text-xl font-bold break-all">@{user.username}</h1>
-          <span className={`badge ${user.status === "ACTIVE" ? "bg-success/15 text-success" : "bg-error/15 text-error"}`}>{user.status}</span>
+          <Badge tone={user.status === "ACTIVE" ? "success" : "error"}>{user.status}</Badge>
         </div>
         <p className="text-sm text-on-surface-variant break-all">{user.email}</p>
         <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-3">
@@ -108,6 +111,7 @@ export default function AdminUserDetail() {
         </div>
         <button type="submit" className="btn-primary w-full" disabled={submitting}>{submitting ? "Applying…" : "Apply adjustment"}</button>
       </form>
+    </div>
     </div>
   );
 }

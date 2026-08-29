@@ -7,6 +7,7 @@ import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
+import { StatusBadge } from "../../components/ds/index.js";
 
 export default function TicketDetail() {
   const { id } = useParams<{ id: string }>();
@@ -44,12 +45,12 @@ export default function TicketDetail() {
     <div className="card mx-auto max-w-2xl space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-bold">{ticket.subject}</h1>
-        <span className="badge bg-primary/15 text-primary">{t(`common.ticketStatus.${ticket.status}`)}</span>
+        <StatusBadge status={ticket.status} kind="ticket" />
       </div>
 
       <div className="space-y-3">
         {ticket.messages.map((m: { id: string; senderRole: string; body: string; createdAt: string }) => (
-          <div key={m.id} className={`max-w-[85%] break-words rounded-md p-3 text-sm sm:max-w-[80%] ${m.senderRole === "ADMIN" ? "bg-primary/10" : "ml-auto bg-surface-container-high"}`}>
+          <div key={m.id} className={`max-w-[85%] break-words rounded-control p-3 text-sm sm:max-w-[80%] ${m.senderRole === "ADMIN" ? "border border-primary/25 bg-primary/10" : "ml-auto border border-outline-variant bg-surface-container-high"}`}>
             <p className="mb-1 text-xs font-semibold text-on-surface-variant">{m.senderRole === "ADMIN" ? t("ticketDetail.support") : t("ticketDetail.you")}</p>
             <p className="whitespace-pre-wrap">{m.body}</p>
           </div>

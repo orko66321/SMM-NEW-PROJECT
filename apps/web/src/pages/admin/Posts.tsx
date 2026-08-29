@@ -16,6 +16,7 @@ import {
   updateAdminPost,
 } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 import { useToast } from "../../components/ui/Toast.js";
 import MarkdownEditor from "../../components/ui/MarkdownEditor.js";
 import YouTubeEmbed from "../../components/ui/YouTubeEmbed.js";
@@ -238,6 +239,7 @@ export default function AdminPosts() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Documentation" }]} />
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold">Documentation / Blog</h1>

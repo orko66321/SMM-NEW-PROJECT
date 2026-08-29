@@ -6,6 +6,7 @@ import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
+import { EmptyState, PlatformChip, PlatformChipRow, ServiceTag } from "../../components/ds/index.js";
 
 interface Category {
   id: string;
@@ -69,29 +70,12 @@ export default function PublicServices() {
       </p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setPlatform(null)}
-            className={`rounded-full border px-3 py-1.5 text-sm font-medium transition ${
-              platform === null ? "border-primary bg-primary/10 text-primary" : "border-outline-variant text-on-surface-variant"
-            }`}
-          >
-            {t("publicServices.all")}
-          </button>
+        <PlatformChipRow className="flex-wrap sm:flex-nowrap">
+          <PlatformChip label={t("publicServices.all")} active={platform === null} onClick={() => setPlatform(null)} />
           {platforms.map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => setPlatform(p)}
-              className={`rounded-full border px-3 py-1.5 text-sm font-medium transition ${
-                platform === p ? "border-primary bg-primary/10 text-primary" : "border-outline-variant text-on-surface-variant"
-              }`}
-            >
-              {p}
-            </button>
+            <PlatformChip key={p} label={p} active={platform === p} onClick={() => setPlatform(p)} />
           ))}
-        </div>
+        </PlatformChipRow>
         <input
           className="input-field sm:w-64"
           placeholder={t("publicServices.searchPlaceholder")}
@@ -119,8 +103,8 @@ export default function PublicServices() {
             </div>
             {(s.refillEnabled || s.cancelEnabled) && (
               <div className="mt-3 flex gap-1.5">
-                {s.refillEnabled && <span className="badge bg-info/15 text-info">{t("common.refill")}</span>}
-                {s.cancelEnabled && <span className="badge bg-warning/15 text-warning">{t("common.cancelBadge")}</span>}
+                {s.refillEnabled && <ServiceTag label="Refill" />}
+                {s.cancelEnabled && <ServiceTag label="Cancel" />}
               </div>
             )}
             <button
@@ -133,14 +117,14 @@ export default function PublicServices() {
           </div>
         ))}
         {!isLoading && filtered.length === 0 && (
-          <p className="rounded-lg border border-outline-variant px-4 py-8 text-center text-on-surface-variant">{t("publicServices.noMatch")}</p>
+          <div className="card"><EmptyState icon="grid" title={t("publicServices.noMatch")} /></div>
         )}
       </div>
 
       {/* Desktop/tablet: full table. */}
-      <div className="mt-6 hidden overflow-x-auto rounded-lg border border-outline-variant md:block">
+      <div className="aio-scroll mt-6 hidden overflow-x-auto rounded-card border border-outline-variant md:block">
         <table className="w-full min-w-[720px] text-sm">
-          <thead className="bg-surface-container-high text-left text-xs uppercase text-on-surface-variant">
+          <thead className="bg-surface-container-high text-left text-xs uppercase tracking-[0.05em] text-on-surface-variant">
             <tr>
               <th className="px-4 py-3">{t("publicServices.tableService")}</th>
               <th className="px-4 py-3">{t("publicServices.tablePlatform")}</th>
@@ -152,7 +136,7 @@ export default function PublicServices() {
           </thead>
           <tbody className="divide-y divide-outline-variant">
             {filtered.map((s) => (
-              <tr key={s.id} className="hover:bg-surface-container/40">
+              <tr key={s.id} className="row-hover">
                 <td className="max-w-[320px] px-4 py-3">
                   <p className="font-medium text-on-surface">{pickLang(lang, s.nameBn, s.name)}</p>
                   {pickLang(lang, s.descriptionBn, s.description) && (
@@ -166,8 +150,8 @@ export default function PublicServices() {
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">{s.minQuantity} – {s.maxQuantity}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1.5">
-                    {s.refillEnabled && <span className="badge bg-info/15 text-info">{t("common.refill")}</span>}
-                    {s.cancelEnabled && <span className="badge bg-warning/15 text-warning">{t("common.cancelBadge")}</span>}
+                    {s.refillEnabled && <ServiceTag label="Refill" />}
+                    {s.cancelEnabled && <ServiceTag label="Cancel" />}
                   </div>
                 </td>
                 <td className="px-4 py-3 text-right">

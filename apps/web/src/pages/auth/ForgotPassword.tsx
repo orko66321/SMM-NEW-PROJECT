@@ -40,7 +40,7 @@ export default function ForgotPassword() {
         </div>
       ) : (
         <form onSubmit={onSubmit} className="space-y-4">
-          {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
+          {error && <p className="rounded-control border border-error/30 bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
           <div>
             <label className="label" htmlFor="identifier">{t("auth.forgotPassword.identifierLabel")}</label>
             <input

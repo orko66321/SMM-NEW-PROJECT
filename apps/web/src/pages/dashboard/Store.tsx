@@ -9,6 +9,7 @@ import { useAuth } from "../../context/AuthContext.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { AuthPromptModal } from "../../components/auth/GuestGate.js";
+import { EmptyState } from "../../components/ds/index.js";
 
 interface BrandItem {
   id: string;
@@ -198,7 +199,7 @@ function PurchasePanel({ product, pkg, onDone }: { product: ProductItem; pkg: Pa
     return (
       <div className="card space-y-3">
         <h3 className="font-semibold text-success">{t("store.deliveredTitle")}</h3>
-        <code className="block break-all rounded-md bg-surface-container-highest px-3 py-2 text-sm">{deliveredCode}</code>
+        <code className="block break-all rounded-control bg-surface-container-highest px-3 py-2 font-mono text-sm">{deliveredCode}</code>
         <button type="button" className="btn-primary" onClick={onDone}>{t("common.close")}</button>
       </div>
     );
@@ -207,7 +208,7 @@ function PurchasePanel({ product, pkg, onDone }: { product: ProductItem; pkg: Pa
   return (
     <form onSubmit={onSubmit} className="card space-y-4">
       <h3 className="font-semibold">{pkg.name}</h3>
-      {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error break-words">{error}</p>}
+      {error && <p className="rounded-control border border-error/30 bg-error/15 px-3 py-2 text-sm text-error break-words">{error}</p>}
 
       <div>
         <label className="label" htmlFor="buyer-input">{product.userInputFieldName}</label>
@@ -220,7 +221,7 @@ function PurchasePanel({ product, pkg, onDone }: { product: ProductItem; pkg: Pa
         </a>
       )}
 
-      <div className="space-y-1 rounded-md bg-surface-container-high px-4 py-3 text-sm">
+      <div className="space-y-1 rounded-control border border-outline-variant bg-surface-container-high px-4 py-3 text-sm">
         <div className="flex justify-between"><span className="text-on-surface-variant">{t("store.basePrice")}</span><span className="font-mono">{formatCurrency(pkg.salePrice)}</span></div>
         {Number(pkg.extraFee) > 0 && (
           <div className="flex justify-between"><span className="text-on-surface-variant">{t("store.extraFee")}</span><span className="font-mono">{formatCurrency(pkg.extraFee)}</span></div>
@@ -299,7 +300,7 @@ export default function Store() {
         <>
           {brandsLoading && <p className="text-sm text-on-surface-variant">{t("common.loading")}</p>}
           {!brandsLoading && (brands as BrandItem[] | undefined)?.length === 0 && (
-            <p className="card text-center text-sm text-on-surface-variant">{t("store.noBrands")}</p>
+            <div className="card"><EmptyState icon="store" title={t("store.noBrands")} /></div>
           )}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-5">
             {(brands as BrandItem[] | undefined)?.map((b) => (

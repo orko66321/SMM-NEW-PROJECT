@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { getAdminOverviewStats } from "../../api/resources.js";
+import { StatCard } from "../../components/ds/index.js";
 
 interface OverviewStats {
   orders: {
@@ -46,16 +47,12 @@ interface CardDef {
 function StatCardGrid({ title, cards }: { title: string; cards: CardDef[] }) {
   return (
     <section className="space-y-3">
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">{title}</h2>
+      <h2 className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">{title}</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {cards.map((c) => (
-          <div key={c.label} className="card flex flex-col gap-2">
-            <p className="label">{c.label}</p>
-            <p className="font-mono text-2xl font-semibold">{c.value}</p>
-            <Link to={c.to} className="text-xs font-medium text-primary hover:underline">
-              More info →
-            </Link>
-          </div>
+          <Link key={c.label} to={c.to} className="group">
+            <StatCard label={c.label} value={c.value} className="h-full transition group-hover:border-primary/40" />
+          </Link>
         ))}
       </div>
     </section>
@@ -74,7 +71,7 @@ export default function AdminDashboard() {
     return (
       <div className="space-y-4">
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-        <div className="card text-sm text-error">Couldn&apos;t load dashboard stats. Try refreshing the page.</div>
+        <div className="card border-error/30 text-sm text-error">Couldn&apos;t load dashboard stats. Try refreshing the page.</div>
       </div>
     );
   }

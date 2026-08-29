@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PaymentGatewayKeys, type PaymentGatewayKey } from "@smm/shared";
 import { getAdminGatewayConfigs, updateAdminGatewayConfig } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 import { useToast } from "../../components/ui/Toast.js";
 
 interface GatewayConfigItem {
@@ -180,6 +181,7 @@ export default function AdminPaymentGateways() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Payment Gateways" }]} />
       <h1 className="text-xl font-bold">Payment Gateway API Settings</h1>
       <p className="text-sm text-on-surface-variant">
         Live gateway integrations. Once a gateway is enabled, deposits made through it are automatically verified

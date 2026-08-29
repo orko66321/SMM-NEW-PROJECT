@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
 import { getAdminUsers } from "../../api/resources.js";
+import { Badge, Breadcrumbs, EmptyState, Pagination } from "../../components/ds/index.js";
 
 export default function AdminUsers() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,6 +28,7 @@ export default function AdminUsers() {
 
   return (
     <div className="space-y-4">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Users" }]} />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold">Users</h1>
         <input
@@ -42,7 +44,7 @@ export default function AdminUsers() {
 
       {hasDateFilter && (
         <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="badge bg-primary/15 text-primary">Date-filtered</span>
+          <Badge tone="primary">Date-filtered</Badge>
           <button type="button" className="btn-ghost !min-h-0 !px-2 !py-1 text-xs" onClick={clearDateFilter}>
             Clear filter
           </button>
@@ -64,17 +66,20 @@ export default function AdminUsers() {
           </thead>
           <tbody className="divide-y divide-outline-variant">
             {isLoading && <tr><td colSpan={7} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
+            {!isLoading && data?.items.length === 0 && (
+              <tr><td colSpan={7} className="px-4 py-6"><EmptyState icon="users" title="No users found" /></td></tr>
+            )}
             {data?.items.map((u: { id: string; username: string; email: string; balance: string; ordersCount: number; role: string; status: string; createdAt: string }) => (
-              <tr key={u.id}>
+              <tr key={u.id} className="row-hover">
                 <td className="px-4 py-3">
-                  <Link to={`/admin/users/${u.id}`} className="font-medium text-primary hover:underline">{u.username}</Link>
+                  <Link to={`/admin/users/${u.id}`} className="font-medium text-accent-on-dark hover:underline">{u.username}</Link>
                 </td>
                 <td className="px-4 py-3 text-on-surface-variant">{u.email}</td>
                 <td className="px-4 py-3 font-mono text-success">${u.balance}</td>
                 <td className="px-4 py-3 font-mono">{u.ordersCount}</td>
                 <td className="px-4 py-3">{u.role}</td>
                 <td className="px-4 py-3">
-                  <span className={`badge ${u.status === "ACTIVE" ? "bg-success/15 text-success" : "bg-error/15 text-error"}`}>{u.status}</span>
+                  <Badge tone={u.status === "ACTIVE" ? "success" : "error"}>{u.status}</Badge>
                 </td>
                 <td className="px-4 py-3 text-xs">{new Date(u.createdAt).toLocaleDateString()}</td>
               </tr>
@@ -84,11 +89,7 @@ export default function AdminUsers() {
       </div>
 
       {data && data.total > data.pageSize && (
-        <div className="flex justify-center gap-2">
-          <button className="btn-ghost !px-3 !py-1.5 text-xs" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Prev</button>
-          <span className="self-center text-xs text-on-surface-variant">Page {page}</span>
-          <button className="btn-ghost !px-3 !py-1.5 text-xs" disabled={page * data.pageSize >= data.total} onClick={() => setPage((p) => p + 1)}>Next</button>
-        </div>
+        <Pagination page={page} totalPages={Math.ceil(data.total / data.pageSize)} onChange={setPage} />
       )}
     </div>
   );

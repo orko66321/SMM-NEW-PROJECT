@@ -2,6 +2,7 @@ import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createAdminBanner, deleteAdminBanner, getAdminBanners, updateAdminBanner } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
+import { Breadcrumbs } from "../../components/ds/index.js";
 import { useToast } from "../../components/ui/Toast.js";
 
 interface BannerRow {
@@ -113,6 +114,7 @@ export default function AdminBanner() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Banner Slider" }]} />
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold">Banner Slider</h1>
