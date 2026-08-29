@@ -8,6 +8,7 @@ import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
+import { Badge, EmptyState, Icon, Pagination, StatusBadge, Tabs } from "../../components/ds/index.js";
 
 const statusTabs = ["ALL", ...OrderStatusValues] as const;
 
@@ -81,7 +82,7 @@ function RefillButton({ orderId }: { orderId: string }) {
   });
 
   if (done) {
-    return <span className="badge shrink-0 bg-info/15 text-info">{t("ordersHistory.refillRequested")}</span>;
+    return <Badge tone="info" className="shrink-0">{t("ordersHistory.refillRequested")}</Badge>;
   }
 
   return (
@@ -116,18 +117,9 @@ function CopyIdButton({ id }: { id: string }) {
       onClick={onCopy}
       aria-label={t("ordersHistory.copyOrderId")}
       title={copied ? t("ordersHistory.copied") : t("ordersHistory.copyOrderId")}
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-on-surface-variant transition hover:bg-surface-container-high hover:text-on-surface"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-on-surface-variant transition hover:bg-surface-container-high hover:text-on-surface"
     >
-      {copied ? (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 text-success">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
-          <rect x="9" y="9" width="11" height="11" rx="2" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15H4a1 1 0 01-1-1V4a1 1 0 011-1h10a1 1 0 011 1v1" />
-        </svg>
-      )}
+      <Icon name={copied ? "check" : "copy"} size={18} className={copied ? "text-success" : undefined} />
     </button>
   );
 }
@@ -141,7 +133,7 @@ function OrderCard({ o }: { o: OrderRow }) {
           <p className="truncate text-sm font-semibold text-on-surface">{orderTitle(o, lang)}</p>
           <p className="mt-0.5 text-xs text-on-surface-variant">{new Date(o.createdAt).toLocaleDateString()}</p>
         </div>
-        <span className="badge shrink-0 bg-primary/15 text-primary">{t(`common.orderStatus.${o.status}`)}</span>
+        <StatusBadge status={o.status} className="shrink-0" />
       </div>
 
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-outline-variant pt-3">
@@ -198,28 +190,22 @@ export default function OrdersHistory() {
     <div className="space-y-4">
       <h1 className="text-xl font-bold">{t("ordersHistory.title")}</h1>
 
-      <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1 snap-x sm:flex-wrap sm:overflow-visible">
-        {statusTabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => {
-              setStatus(tab);
-              setPage(1);
-            }}
-            className={`shrink-0 snap-start rounded-full px-3 py-1.5 text-xs font-semibold ${
-              status === tab ? "bg-primary text-on-primary" : "bg-surface-container-high text-on-surface-variant"
-            }`}
-          >
-            {tabLabel(tab)}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        activeId={status}
+        onChange={(id) => {
+          setStatus(id as (typeof statusTabs)[number]);
+          setPage(1);
+        }}
+        items={statusTabs.map((tab) => ({ id: tab, label: tabLabel(tab) }))}
+      />
 
       {/* Mobile: stacked cards */}
       <div className="space-y-3 md:hidden">
         {isLoading && <p className="card text-center text-sm text-on-surface-variant">{t("common.loading")}</p>}
         {!isLoading && data?.items.length === 0 && (
-          <p className="card text-center text-sm text-on-surface-variant">{t("ordersHistory.noOrdersFound")}</p>
+          <div className="card">
+            <EmptyState icon="orders" title={t("ordersHistory.noOrdersFound")} />
+          </div>
         )}
         {data?.items.map((o: OrderRow) => (
           <OrderCard key={o.id} o={o} />
@@ -263,7 +249,7 @@ export default function OrdersHistory() {
                 <td className="px-4 py-3 font-mono">${o.charge}</td>
                 <td className="px-4 py-3 font-mono">{o.quantity}</td>
                 <td className="px-4 py-3 font-mono">{o.remains ?? "—"}</td>
-                <td className="px-4 py-3"><span className="badge bg-primary/15 text-primary">{t(`common.orderStatus.${o.status}`)}</span></td>
+                <td className="px-4 py-3"><StatusBadge status={o.status} /></td>
                 <td className="px-4 py-3">
                   {isRefillEligible(o) && <RefillButton orderId={o.id} />}
                   {o.stockCode && <RevealCodeButton orderId={o.id} />}
@@ -275,17 +261,16 @@ export default function OrdersHistory() {
       </div>
 
       {data && data.total > data.pageSize && (
-        <div className="flex justify-center gap-2">
-          <button className="btn-ghost !px-3 !py-1.5 text-xs" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>{t("ordersHistory.prev")}</button>
-          <span className="self-center text-xs text-on-surface-variant">{t("ordersHistory.page", { page })}</span>
-          <button
-            className="btn-ghost !px-3 !py-1.5 text-xs"
-            disabled={page * data.pageSize >= data.total}
-            onClick={() => setPage((p) => p + 1)}
-          >
-            {t("ordersHistory.next")}
-          </button>
-        </div>
+        <Pagination
+          page={page}
+          totalPages={Math.ceil(data.total / data.pageSize)}
+          onChange={setPage}
+          labels={{
+            prev: t("ordersHistory.prev"),
+            next: t("ordersHistory.next"),
+            status: t("ordersHistory.page", { page }),
+          }}
+        />
       )}
     </div>
   );

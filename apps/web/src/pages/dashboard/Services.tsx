@@ -5,6 +5,7 @@ import { getPublicCategories, getPublicServices } from "../../api/resources.js";
 import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
+import { Badge, EmptyState, Icon, ServiceTag, Skeleton } from "../../components/ds/index.js";
 
 interface ServiceRow {
   id: string;
@@ -23,15 +24,17 @@ interface ServiceRow {
 function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void }) {
   const { t, lang } = useLanguage();
   return (
-    <div className="rounded-lg border border-outline-variant bg-surface-container p-4">
+    <div className="card-interactive rounded-card border border-outline-variant bg-surface-card p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-semibold leading-snug text-on-surface">{pickLang(lang, s.nameBn, s.name)}</p>
-          {s.providerServiceId && (
-            <span className="badge mt-1.5 bg-surface-container-high font-mono text-[11px] text-on-surface-variant">
-              ID {s.providerServiceId}
-            </span>
-          )}
+          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+            {s.providerServiceId && (
+              <Badge mono className="!text-[11px]">ID {s.providerServiceId}</Badge>
+            )}
+            {s.refillEnabled && <ServiceTag label="Refill" />}
+            {!s.cancelEnabled && <ServiceTag label="No Cancel" />}
+          </div>
         </div>
         <p className="shrink-0 whitespace-nowrap text-right font-mono text-base font-semibold text-success">
           ${s.sellPricePer1000}
@@ -85,7 +88,7 @@ export default function Services() {
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1 sm:max-w-xs">
-          <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
+          <Icon name="search" size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
           <input
             className="input-field pl-9"
             placeholder={t("servicesPage.searchPlaceholder")}
@@ -109,9 +112,12 @@ export default function Services() {
 
       {/* Mobile: stacked cards */}
       <div className="space-y-3 md:hidden">
-        {isLoading && <p className="card text-center text-sm text-on-surface-variant">{t("common.loading")}</p>}
+        {isLoading &&
+          Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-28 w-full" />)}
         {!isLoading && items.length === 0 && (
-          <p className="card text-center text-sm text-on-surface-variant">{t("servicesPage.noMatch")}</p>
+          <div className="card">
+            <EmptyState icon="grid" title={t("servicesPage.noMatch")} />
+          </div>
         )}
         {items.map((s) => (
           <ServiceCard key={s.id} s={s} onDetails={() => setDetailsService(s)} />
@@ -138,16 +144,20 @@ export default function Services() {
               <tr><td colSpan={5} className="px-4 py-6 text-center text-on-surface-variant">{t("servicesPage.noMatch")}</td></tr>
             )}
             {items.map((s) => (
-              <tr key={s.id} className="transition hover:bg-surface-container-high/60">
+              <tr key={s.id} className="row-hover">
                 <td className="px-4 py-3">
                   {s.providerServiceId ? (
-                    <span className="badge bg-surface-container-high font-mono text-on-surface-variant">{s.providerServiceId}</span>
+                    <Badge mono>{s.providerServiceId}</Badge>
                   ) : (
                     <span className="text-xs text-on-surface-variant">—</span>
                   )}
                 </td>
                 <td className="max-w-[320px] px-4 py-3">
-                  <p>{pickLang(lang, s.nameBn, s.name)}</p>
+                  <p className="flex flex-wrap items-center gap-1.5">
+                    <span>{pickLang(lang, s.nameBn, s.name)}</span>
+                    {s.refillEnabled && <ServiceTag label="Refill" />}
+                    {!s.cancelEnabled && <ServiceTag label="No Cancel" />}
+                  </p>
                   {pickLang(lang, s.descriptionBn, s.description) && (
                     <p className="mt-0.5 truncate text-xs text-on-surface-variant" title={pickLang(lang, s.descriptionBn, s.description)}>
                       {pickLang(lang, s.descriptionBn, s.description)}
@@ -204,14 +214,5 @@ export default function Services() {
         />
       )}
     </div>
-  );
-}
-
-function SearchIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <circle cx="11" cy="11" r="7" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
   );
 }

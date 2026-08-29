@@ -48,6 +48,26 @@ const en = {
     goTo: "Go to slide {{n}}",
   },
 
+  ds: {
+    prev: "Prev",
+    next: "Next",
+    pageOf: "Page {{page}} of {{total}}",
+    noRecords: "No records",
+  },
+
+  bilingual: {
+    publicProfileEn: "Make sure the account/profile is set to PUBLIC. We cannot deliver to private accounts and refunds will not be issued.",
+    publicProfileBn: "নিশ্চিত করুন অ্যাকাউন্ট/প্রোফাইলটি পাবলিক করা আছে। আমরা ব্যক্তিগত অ্যাকাউন্টে ডেলিভারি করতে পারি না এবং রিফান্ড দেওয়া হবে না।",
+    linkFormatEn: "Paste the full link exactly as it appears in your browser — not a username. A wrong link cannot be refunded once the order starts.",
+    linkFormatBn: "ব্রাউজারে যেভাবে দেখাচ্ছে ঠিক সেই পুরো লিংকটি পেস্ট করুন — শুধু ইউজারনেম নয়। অর্ডার শুরু হয়ে গেলে ভুল লিংকের রিফান্ড দেওয়া যায় না।",
+    manualDepositEn: "Never send money to a personal number shared outside this page. Send only to the number shown here, then submit the transaction ID.",
+    manualDepositBn: "এই পেজের বাইরে শেয়ার করা কোনো ব্যক্তিগত নম্বরে টাকা পাঠাবেন না। শুধু এখানে দেখানো নম্বরেই পাঠান, তারপর ট্রানজেকশন আইডি জমা দিন।",
+    depositReviewEn: "Manual deposits are checked by an admin and credited once verified. This usually takes a few minutes.",
+    depositReviewBn: "ম্যানুয়াল ডিপোজিট একজন অ্যাডমিন যাচাই করে অনুমোদন দেন। সাধারণত কয়েক মিনিট সময় লাগে।",
+    apiKeyEn: "Anyone with this key can spend your balance. Keep it secret and rotate it if it leaks.",
+    apiKeyBn: "এই কী যার কাছে থাকবে সে আপনার ব্যালেন্স খরচ করতে পারবে। এটি গোপন রাখুন এবং ফাঁস হলে বদলে ফেলুন।",
+  },
+
   nav: {
     home: "Home",
     services: "Services",
@@ -535,6 +555,26 @@ const bn: Translations = {
     prev: "আগের স্লাইড",
     next: "পরের স্লাইড",
     goTo: "স্লাইড {{n}}-এ যান",
+  },
+
+  ds: {
+    prev: "আগের",
+    next: "পরের",
+    pageOf: "পৃষ্ঠা {{page}} / {{total}}",
+    noRecords: "কোনো রেকর্ড নেই",
+  },
+
+  bilingual: {
+    publicProfileEn: "Make sure the account/profile is set to PUBLIC. We cannot deliver to private accounts and refunds will not be issued.",
+    publicProfileBn: "নিশ্চিত করুন অ্যাকাউন্ট/প্রোফাইলটি পাবলিক করা আছে। আমরা ব্যক্তিগত অ্যাকাউন্টে ডেলিভারি করতে পারি না এবং রিফান্ড দেওয়া হবে না।",
+    linkFormatEn: "Paste the full link exactly as it appears in your browser — not a username. A wrong link cannot be refunded once the order starts.",
+    linkFormatBn: "ব্রাউজারে যেভাবে দেখাচ্ছে ঠিক সেই পুরো লিংকটি পেস্ট করুন — শুধু ইউজারনেম নয়। অর্ডার শুরু হয়ে গেলে ভুল লিংকের রিফান্ড দেওয়া যায় না।",
+    manualDepositEn: "Never send money to a personal number shared outside this page. Send only to the number shown here, then submit the transaction ID.",
+    manualDepositBn: "এই পেজের বাইরে শেয়ার করা কোনো ব্যক্তিগত নম্বরে টাকা পাঠাবেন না। শুধু এখানে দেখানো নম্বরেই পাঠান, তারপর ট্রানজেকশন আইডি জমা দিন।",
+    depositReviewEn: "Manual deposits are checked by an admin and credited once verified. This usually takes a few minutes.",
+    depositReviewBn: "ম্যানুয়াল ডিপোজিট একজন অ্যাডমিন যাচাই করে অনুমোদন দেন। সাধারণত কয়েক মিনিট সময় লাগে।",
+    apiKeyEn: "Anyone with this key can spend your balance. Keep it secret and rotate it if it leaks.",
+    apiKeyBn: "এই কী যার কাছে থাকবে সে আপনার ব্যালেন্স খরচ করতে পারবে। এটি গোপন রাখুন এবং ফাঁস হলে বদলে ফেলুন।",
   },
 
   nav: {

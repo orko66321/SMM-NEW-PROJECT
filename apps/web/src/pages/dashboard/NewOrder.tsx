@@ -10,6 +10,7 @@ import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import { AuthPromptModal } from "../../components/auth/GuestGate.js";
 import HowToOrderLink from "../../components/HowToOrderLink.js";
+import { BilingualNote, Card, Icon, ServiceTag } from "../../components/ds/index.js";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
 // throws when the wallet can't cover the charge (see AppError's `details`).
@@ -191,7 +192,13 @@ export default function NewOrder() {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <form onSubmit={onSubmit} className="card space-y-4 lg:col-span-2">
         <h1 className="text-lg font-bold sm:text-xl">{t("newOrder.title")}</h1>
-        {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error break-words">{error}</p>}
+        {error && <p className="rounded-control border border-error/30 bg-error/15 px-3 py-2 text-sm text-error break-words">{error}</p>}
+
+        <BilingualNote
+          tone="warning"
+          en={t("bilingual.publicProfileEn")}
+          bn={t("bilingual.publicProfileBn")}
+        />
 
         <div>
           <label className="label" htmlFor="category">{t("newOrder.categoryLabel")}</label>
@@ -221,8 +228,8 @@ export default function NewOrder() {
           </select>
           {selectedService && (
             <div className="mt-2 flex flex-wrap gap-2">
-              {selectedService.refillEnabled && <span className="badge bg-success/15 text-success">{t("common.refill")}</span>}
-              {!selectedService.cancelEnabled && <span className="badge bg-outline-variant/40 text-on-surface-variant">{t("serviceDetails.noCancel")}</span>}
+              {selectedService.refillEnabled && <ServiceTag label="Refill" />}
+              {!selectedService.cancelEnabled && <ServiceTag label="No Cancel" />}
             </div>
           )}
           {selectedService && pickLang(lang, selectedService.descriptionBn, selectedService.description) && (
@@ -241,6 +248,12 @@ export default function NewOrder() {
             value={link}
             onChange={(e) => setLink(e.target.value)}
             required
+          />
+          <BilingualNote
+            className="mt-2"
+            tone="info"
+            en={t("bilingual.linkFormatEn")}
+            bn={t("bilingual.linkFormatBn")}
           />
         </div>
 
@@ -265,8 +278,8 @@ export default function NewOrder() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-surface-container-high px-4 py-3">
-          <span className="text-sm text-on-surface-variant">{t("newOrder.estimatedCharge")}</span>
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-control border border-outline-variant bg-surface-container-high px-4 py-3">
+          <span className="label mb-0">{t("newOrder.estimatedCharge")}</span>
           <span className="font-mono text-lg font-semibold text-success">${estimatedCharge}</span>
         </div>
 
@@ -279,10 +292,19 @@ export default function NewOrder() {
       </form>
 
       {(noticeTitle || noticeBody) && (
-        <aside className="card space-y-3 break-words text-sm text-on-surface-variant">
-          {noticeTitle && <h2 className="font-semibold text-on-surface">{noticeTitle}</h2>}
+        <Card
+          className="h-fit break-words text-sm text-on-surface-variant"
+          header={
+            noticeTitle ? (
+              <>
+                <Icon name="info" size={18} className="text-accent-on-dark" />
+                {noticeTitle}
+              </>
+            ) : undefined
+          }
+        >
           {noticeBody && <p className="whitespace-pre-line">{noticeBody}</p>}
-        </aside>
+        </Card>
       )}
 
       <AuthPromptModal
