@@ -39,7 +39,7 @@ export default function ResetPassword() {
   if (!token) {
     return (
       <AuthShell title={t("auth.resetPassword.missingTokenTitle")} subtitle={t("auth.resetPassword.missingTokenSubtitle")}>
-        <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">
+        <p className="rounded-control border border-error/30 bg-error/15 px-3 py-2 text-sm text-error">
           {t("auth.resetPassword.missingTokenMessage")}
         </p>
         <Link to="/forgot-password" className="btn-primary mt-4 block w-full text-center">{t("auth.resetPassword.requestNewLink")}</Link>
@@ -50,7 +50,7 @@ export default function ResetPassword() {
   return (
     <AuthShell title={t("auth.resetPassword.title")} subtitle={t("auth.resetPassword.subtitle")}>
       <form onSubmit={onSubmit} className="space-y-4">
-        {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
+        {error && <p className="rounded-control border border-error/30 bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
         <div>
           <label className="label" htmlFor="password">{t("auth.resetPassword.newPasswordLabel")}</label>
           <input

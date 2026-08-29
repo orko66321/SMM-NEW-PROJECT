@@ -25,7 +25,7 @@ export default function AuthShell({ title, subtitle, children }: { title: string
           <Logo size="lg" />
         </Link>
 
-        <div className="w-full rounded-xl border border-outline-variant/60 bg-surface-container/60 p-5 shadow-2xl shadow-primary/10 backdrop-blur-xl sm:p-8">
+        <div className="glass w-full rounded-card border border-outline-variant/60 p-5 shadow-overlay sm:p-8">
           <h1 className="text-xl font-bold text-on-surface sm:text-2xl">{title}</h1>
           <p className="mb-6 mt-1 text-sm text-on-surface-variant">{subtitle}</p>
           {children}

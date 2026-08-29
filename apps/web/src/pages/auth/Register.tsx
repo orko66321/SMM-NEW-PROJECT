@@ -37,7 +37,7 @@ export default function Register() {
   return (
     <AuthShell title={t("auth.register.title")} subtitle={t("auth.register.subtitle")}>
       <form onSubmit={onSubmit} className="space-y-4">
-        {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
+        {error && <p className="rounded-control border border-error/30 bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
         <div>
           <label className="label" htmlFor="username">{t("auth.register.usernameLabel")}</label>
           <input

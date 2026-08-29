@@ -5,6 +5,7 @@ import { getPublicServices, getPublicStats } from "../../api/resources.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
+import { Badge, Card } from "../../components/ds/index.js";
 
 interface PublicService {
   id: string;
@@ -39,8 +40,8 @@ function StatsBar({ startingPrice }: { startingPrice: string | null }) {
       <div className="mx-auto grid max-w-container grid-cols-2 gap-6 px-4 py-8 sm:grid-cols-4 sm:px-6">
         {cards.map((c) => (
           <div key={c.label} className="text-center">
-            <p className="font-mono text-2xl font-bold text-primary sm:text-3xl">{c.value}</p>
-            <p className="mt-1 text-xs uppercase tracking-wide text-on-surface-variant">{c.label}</p>
+            <p className="font-mono text-2xl font-bold text-accent-on-dark sm:text-3xl">{c.value}</p>
+            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">{c.label}</p>
           </div>
         ))}
       </div>
@@ -85,9 +86,9 @@ export default function Landing() {
           aria-hidden
         />
         <div className="relative mx-auto max-w-container px-4 py-16 text-center sm:px-6 lg:py-24">
-          <span className="badge mb-4 inline-flex items-center gap-2 bg-success/15 text-success">
+          <Badge tone="success" className="mb-4">
             <span className="h-1.5 w-1.5 rounded-full bg-success" /> {t("landing.badge")}
-          </span>
+          </Badge>
           <h1 className="mx-auto font-display text-3xl font-bold leading-tight text-on-surface sm:text-4xl md:text-5xl lg:text-6xl">
             {t("landing.heroTitle")}
           </h1>
@@ -107,7 +108,7 @@ export default function Landing() {
               onChange={(e) => setSearch(e.target.value)}
             />
             {filtered.length > 0 && (
-              <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-md border border-outline-variant bg-surface-container shadow-xl">
+              <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-control border border-outline-variant bg-surface-card shadow-overlay">
                 {filtered.map((s) => (
                   <Link
                     key={s.id}
@@ -132,10 +133,10 @@ export default function Landing() {
         <h2 className="text-center font-display text-2xl font-bold text-on-surface sm:text-3xl">{t("landing.whyHeading")}</h2>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {(["delivery", "pricing", "api", "support"] as const).map((key) => (
-            <div key={key} className="card">
+            <Card key={key} interactive>
               <p className="font-semibold text-on-surface">{t(`landing.features.${key}.title`)}</p>
               <p className="mt-1 text-sm text-on-surface-variant">{t(`landing.features.${key}.body`)}</p>
-            </div>
+            </Card>
           ))}
         </div>
       </section>
@@ -143,10 +144,10 @@ export default function Landing() {
       {platforms.length > 0 && (
         <section className="border-t border-outline-variant/60 bg-surface-container/20 py-10">
           <div className="mx-auto max-w-container px-4 text-center sm:px-6">
-            <p className="text-xs uppercase tracking-widest text-on-surface-variant">{t("landing.platformsHeading")}</p>
-            <div className="mt-4 flex flex-wrap justify-center gap-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">{t("landing.platformsHeading")}</p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
               {platforms.map((p) => (
-                <span key={p} className="badge bg-surface-container-high text-on-surface-variant">{p}</span>
+                <span key={p} className="inline-flex items-center rounded-full border border-outline-variant px-3.5 py-1.5 text-sm font-medium text-on-surface-variant">{p}</span>
               ))}
             </div>
           </div>
