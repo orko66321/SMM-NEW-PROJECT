@@ -7,31 +7,46 @@ If neither is configured, the app does not fail — password reset links are jus
 written to the API server logs instead of emailed. Fine for local dev, but real
 users can't reset their password until one of the two is set up.
 
-## Recommended: Brevo over HTTPS (works from Railway)
+## Recommended: an HTTPS API (works from Railway)
 
 A cPanel / shared-hosting mail server is very often **unreachable from a cloud
 host like Railway** — the SMTP ports (465/587) simply time out at a firewall,
 even though the same server works fine from a normal internet connection. An
-HTTPS API call on port 443 always gets through, so on Railway use Brevo's API
-instead of SMTP:
+HTTPS API call on port 443 always gets through, so on Railway use an email API
+instead of SMTP. Two are supported; pick one, set its key + `MAIL_FROM`, and
+you're done.
 
-1. Create a free account at [brevo.com](https://www.brevo.com) (300 emails/day
-   free).
-2. **Senders, Domains & Dedicated IPs → Senders** → add your from-address
-   (e.g. `noreplay@allinonsr.com`) and verify it (open that mailbox in cPanel
-   and click the confirmation link).
-3. **SMTP & API → API Keys** (or the **SMTP** tab) → generate a key.
-4. On the **Railway API service → Variables**, set:
-   - `BREVO_API_KEY` = the key from step 3
-   - `MAIL_FROM` = the verified sender address from step 2
+### Option 1 — Resend (no phone / SMS on signup)
+
+1. Sign up at [resend.com](https://resend.com) — GitHub / Google / email, no
+   phone verification.
+2. **Domains → Add Domain** → `allinonsr.com`. Resend shows ~3 DNS records
+   (an SPF `TXT`, a DKIM `TXT` or `CNAME`, and a return-path `MX`/`CNAME`).
+3. In **cPanel → Zone Editor** for `allinonsr.com`, add exactly those records,
+   then click **Verify** in Resend (takes a few minutes to propagate).
+4. **API Keys → Create API Key** → copy it (`re_...`).
+5. On the **Railway API service → Variables**, set:
+   - `RESEND_API_KEY` = the key from step 4
+   - `MAIL_FROM` = `noreply@allinonsr.com` (any address at the verified domain)
    - `FRONTEND_BASE_URL` = `https://allinonsr.com`
-5. Redeploy (Railway does this automatically when you change variables).
-6. In the admin panel, **/admin/settings → SMTP card → "Send test email"** —
-   you don't need to fill in the SMTP fields at all; the Brevo key takes
-   priority. Confirm you receive "SMTP test — `<site name>`".
 
-When `BREVO_API_KEY` is set it is used for every email and the SMTP settings
-below are ignored.
+### Option 2 — Brevo (lighter setup, but signup needs SMS)
+
+1. Free account at [brevo.com](https://www.brevo.com) (300 emails/day). Signup
+   requires a phone/SMS verification.
+2. **Senders, Domains & Dedicated IPs → Senders** → add your from-address
+   (e.g. `noreplay@allinonsr.com`) and verify it by clicking the link sent to
+   that mailbox (open it in cPanel webmail).
+3. **SMTP & API → API Keys** → generate a key.
+4. Railway variables: `BREVO_API_KEY`, `MAIL_FROM` = the verified sender,
+   `FRONTEND_BASE_URL` = `https://allinonsr.com`.
+
+### Then, for either option
+
+Railway redeploys automatically when you change variables (~2 min). In the
+admin panel, **/admin/settings → SMTP card → "Send test email"** — leave the
+SMTP fields blank; the API key takes priority. Confirm you receive
+"SMTP test — `<site name>`".
 
 ## Alternative: SMTP from the admin panel
 
@@ -80,8 +95,9 @@ TLS certificate verification (shared-hosting certs usually don't match the
   Railway internal URL. The reset link is built as
   `${FRONTEND_BASE_URL}/reset-password?token=...`, so if this is wrong the email
   sends fine but the link inside it is broken.
-- **`BREVO_API_KEY`** / **`MAIL_FROM`** — set both to send via Brevo over HTTPS
-  (see the top of this doc). Leave blank to use the admin-panel SMTP settings.
+- **`RESEND_API_KEY`** or **`BREVO_API_KEY`**, plus **`MAIL_FROM`** — set one
+  key + the sender to send over HTTPS (see the top of this doc). Leave all blank
+  to use the admin-panel SMTP settings.
 - **`ENCRYPTION_KEY`** — encrypts the SMTP password at rest in Postgres. Already
   set if payment gateways are configured.
 
@@ -90,9 +106,9 @@ TLS certificate verification (shared-hosting certs usually don't match the
 1. Configure Brevo (env vars) **or** SMTP (admin panel), as above.
 2. **/admin/settings → "Send test email"**, enter an address you can check, and
    confirm you receive "SMTP test — `<site name>`".
-3. If it fails, the toast shows the raw error — for Brevo, e.g.
-   `Brevo API error 401` (bad key) or `...unrecognised sender` (sender not
-   verified); for SMTP, e.g. "authentication failed" or a connection timeout
-   (the SMTP port is blocked — switch to Brevo). The same detail is in the
-   Railway logs for the API service.
+3. If it fails, the toast shows the raw error — for the HTTPS APIs, e.g.
+   `Resend API error 401` / `Brevo API error 401` (bad key) or a
+   sender/domain-not-verified message; for SMTP, e.g. "authentication failed"
+   or a connection timeout (the SMTP port is blocked — switch to an HTTPS API).
+   The same detail is in the Railway logs for the API service.
 4. Once the test succeeds, do a real end-to-end check with **/forgot-password**.

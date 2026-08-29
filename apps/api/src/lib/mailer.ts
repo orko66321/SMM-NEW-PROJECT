@@ -4,30 +4,33 @@ import { env } from "../env.js";
 import { logger } from "./logger.js";
 
 /**
- * Two ways to send:
+ * Ways to send, in priority order:
  *
- *  1. Brevo transactional API over HTTPS — used when BREVO_API_KEY is set on
- *     the API server. Preferred on a cloud host (Railway): shared-hosting
- *     (cPanel) SMTP servers are routinely unreachable from a datacenter IP
- *     (the SMTP ports time out at a firewall), while an HTTPS call on 443
- *     always gets through. Requires MAIL_FROM = a Brevo-verified sender.
+ *  1. Resend HTTPS API      — when RESEND_API_KEY is set
+ *  2. Brevo HTTPS API       — when BREVO_API_KEY is set
+ *  3. SMTP                  — admin-configured (Settings → Site Settings)
  *
- *  2. SMTP — admin-configured (Settings page → Site Settings), not env-based.
- *     Same "add/rotate from the UI, not a redeploy" philosophy as payment
- *     gateways.
+ * The HTTPS providers are preferred on a cloud host (Railway): shared-hosting
+ * (cPanel) SMTP servers are routinely unreachable from a datacenter IP — the
+ * SMTP ports time out at a firewall — while an HTTPS call on 443 always gets
+ * through. Both need MAIL_FROM = a sender address verified with that provider.
  *
- * If neither is configured, email isn't silently dropped: the content is
+ * If nothing is configured, email isn't silently dropped: the content is
  * logged instead, so flows like password reset still work end-to-end in dev
  * without a mail server.
  */
 
-/** True when at least one transport (Brevo API or full SMTP settings) is usable. */
+/** True when at least one transport (an HTTPS provider, or full SMTP settings) is usable. */
 export async function isMailConfigured(): Promise<boolean> {
-  if (env.brevoEmailEnabled) return true;
+  if (env.httpMailEnabled) return true;
   return (await getSmtpConfig()) !== null;
 }
 
 export async function sendMail(to: string, subject: string, text: string): Promise<void> {
+  if (env.RESEND_API_KEY) {
+    await sendViaResend(to, subject, text);
+    return;
+  }
   if (env.BREVO_API_KEY) {
     await sendViaBrevo(to, subject, text);
     return;
@@ -41,38 +44,51 @@ export async function sendMail(to: string, subject: string, text: string): Promi
   await sendViaSmtp(config, to, subject, text);
 }
 
-async function sendViaBrevo(to: string, subject: string, text: string): Promise<void> {
+function requireMailFrom(keyName: string): string {
   if (!env.MAIL_FROM) {
-    throw new Error("BREVO_API_KEY is set but MAIL_FROM is not — set MAIL_FROM to your Brevo-verified sender address");
+    throw new Error(`${keyName} is set but MAIL_FROM is not — set MAIL_FROM to your verified sender address`);
   }
+  return env.MAIL_FROM;
+}
 
-  let res: Response;
+async function postJson(url: string, headers: Record<string, string>, body: unknown): Promise<Response> {
   try {
-    res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    return await fetch(url, {
       method: "POST",
-      headers: {
-        "api-key": env.BREVO_API_KEY as string,
-        "content-type": "application/json",
-        accept: "application/json",
-      },
-      body: JSON.stringify({
-        sender: { email: env.MAIL_FROM },
-        to: [{ email: to }],
-        subject,
-        textContent: text,
-      }),
+      headers: { "content-type": "application/json", ...headers },
+      body: JSON.stringify(body),
       signal: AbortSignal.timeout(15_000),
     });
   } catch (err) {
-    logger.error({ err }, "Brevo API request failed");
-    throw new Error(err instanceof Error ? `Brevo API request failed: ${err.message}` : "Brevo API request failed");
+    logger.error({ err, url }, "Email API request failed");
+    throw new Error(err instanceof Error ? `Email API request failed: ${err.message}` : "Email API request failed");
   }
+}
 
+async function sendViaResend(to: string, subject: string, text: string): Promise<void> {
+  const from = requireMailFrom("RESEND_API_KEY");
+  const res = await postJson(
+    "https://api.resend.com/emails",
+    { authorization: `Bearer ${env.RESEND_API_KEY as string}` },
+    { from, to: [to], subject, text },
+  );
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    logger.error({ status: res.status, detail }, "Resend API rejected the email");
+    throw new Error(`Resend API error ${res.status}: ${detail.slice(0, 300)}`);
+  }
+}
+
+async function sendViaBrevo(to: string, subject: string, text: string): Promise<void> {
+  const from = requireMailFrom("BREVO_API_KEY");
+  const res = await postJson(
+    "https://api.brevo.com/v3/smtp/email",
+    { "api-key": env.BREVO_API_KEY as string, accept: "application/json" },
+    { sender: { email: from }, to: [{ email: to }], subject, textContent: text },
+  );
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
     logger.error({ status: res.status, detail }, "Brevo API rejected the email");
-    // Brevo returns { code, message } — surface it so the operator can fix
-    // the sender/key without digging through logs.
     throw new Error(`Brevo API error ${res.status}: ${detail.slice(0, 300)}`);
   }
 }
