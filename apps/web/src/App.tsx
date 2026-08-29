@@ -49,6 +49,7 @@ import AdminPackages from "./pages/admin/Packages.js";
 import AdminStockPools from "./pages/admin/StockPools.js";
 
 import Store from "./pages/dashboard/Store.js";
+import Leaderboard from "./pages/dashboard/Leaderboard.js";
 
 export default function App() {
   return (
@@ -79,6 +80,7 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Overview />} />
           <Route path="store" element={<Store />} />
+          <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="new-order" element={<NewOrder />} />
           <Route path="orders" element={<OrdersHistory />} />
           <Route path="services" element={<Services />} />

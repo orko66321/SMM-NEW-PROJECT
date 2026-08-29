@@ -217,6 +217,7 @@ const en = {
     nav: {
       overview: "Overview",
       store: "Store",
+      leaderboard: "Leaderboard",
       newOrder: "New Order",
       ordersHistory: "Orders History",
       services: "Services",
@@ -267,6 +268,25 @@ const en = {
     guestBrowseBody: "See live rates and place an order — you can look around before signing up.",
     storeSectionTitle: "Store",
     seeAll: "See all →",
+  },
+
+  leaderboard: {
+    eyebrow: "Leaderboard",
+    headingPrefix: "Top Spend",
+    headingAccent: "Leaderboard",
+    subtitle: "Top 10 spenders ranked by total amount spent",
+    viewFullCta: "View Full Leaderboard",
+    topSpenderBadge: "Top Spender",
+    pointsSuffix: "Pts",
+    you: "You",
+    empty: "No spenders yet — be the first to make the board.",
+    errorTitle: "Couldn't load the leaderboard.",
+    retry: "Retry",
+    rowMenuLabel: "More actions",
+    viewProfile: "View profile",
+    viewOrders: "View orders",
+    pageTitle: "Full Leaderboard",
+    pageSubtitle: "See how the top spenders stack up across the whole platform.",
   },
 
   store: {
@@ -686,6 +706,7 @@ const bn: Translations = {
     nav: {
       overview: "ওভারভিউ",
       store: "স্টোর",
+      leaderboard: "লিডারবোর্ড",
       newOrder: "নতুন অর্ডার",
       ordersHistory: "অর্ডার হিস্টোরি",
       services: "সার্ভিসেস",
@@ -732,6 +753,25 @@ const bn: Translations = {
     guestBrowseBody: "লাইভ রেট দেখুন আর অর্ডার করুন — সাইন আপের আগেই ঘুরে দেখতে পারেন।",
     storeSectionTitle: "স্টোর",
     seeAll: "সব দেখুন →",
+  },
+
+  leaderboard: {
+    eyebrow: "লিডারবোর্ড",
+    headingPrefix: "টপ স্পেন্ড",
+    headingAccent: "লিডারবোর্ড",
+    subtitle: "মোট খরচের ভিত্তিতে শীর্ষ ১০ জন স্পেন্ডারের র‍্যাংকিং",
+    viewFullCta: "সম্পূর্ণ লিডারবোর্ড দেখুন",
+    topSpenderBadge: "টপ স্পেন্ডার",
+    pointsSuffix: "পয়েন্ট",
+    you: "আপনি",
+    empty: "এখনো কোনো স্পেন্ডার নেই — বোর্ডে প্রথম হোন।",
+    errorTitle: "লিডারবোর্ড লোড করা যায়নি।",
+    retry: "আবার চেষ্টা করুন",
+    rowMenuLabel: "আরও অ্যাকশন",
+    viewProfile: "প্রোফাইল দেখুন",
+    viewOrders: "অর্ডার দেখুন",
+    pageTitle: "সম্পূর্ণ লিডারবোর্ড",
+    pageSubtitle: "পুরো প্ল্যাটফর্মে শীর্ষ স্পেন্ডাররা কেমন অবস্থানে আছেন দেখুন।",
   },
 
   store: {

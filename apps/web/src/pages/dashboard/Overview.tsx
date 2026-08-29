@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
+import { LeaderboardSection } from "../../components/leaderboard/LeaderboardSection.js";
 
 const PINNED_BRAND_LIMIT = 6;
 
@@ -151,6 +152,8 @@ export default function Overview() {
           <p className="text-sm text-on-surface-variant">{t("overview.noOrdersYet")}</p>
         )}
       </div>
+
+      <LeaderboardSection currentUserId={user.id} isAdmin={user.role === "ADMIN" || user.role === "STAFF"} />
     </div>
   );
 }

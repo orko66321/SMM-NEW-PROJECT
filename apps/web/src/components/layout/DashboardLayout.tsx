@@ -27,6 +27,7 @@ export default function DashboardLayout() {
   const navItems = [
     { to: "/dashboard", label: t("dashboardLayout.nav.overview"), end: true },
     { to: "/dashboard/store", label: t("dashboardLayout.nav.store") },
+    { to: "/dashboard/leaderboard", label: t("dashboardLayout.nav.leaderboard") },
     { to: "/dashboard/new-order", label: t("dashboardLayout.nav.newOrder") },
     { to: "/dashboard/orders", label: t("dashboardLayout.nav.ordersHistory") },
     { to: "/dashboard/services", label: t("dashboardLayout.nav.services") },
