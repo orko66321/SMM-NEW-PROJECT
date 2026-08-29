@@ -828,6 +828,14 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpFromAddress?: string | null | undefined;
 }>;
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;
+export declare const sendTestEmailSchema: z.ZodObject<{
+    to: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    to: string;
+}, {
+    to: string;
+}>;
+export type SendTestEmailInput = z.infer<typeof sendTestEmailSchema>;
 export declare const publicSettingsSchema: z.ZodObject<{
     siteName: z.ZodString;
     whatsappEnabled: z.ZodBoolean;

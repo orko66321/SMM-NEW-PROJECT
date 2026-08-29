@@ -448,6 +448,15 @@ export const updateSettingsSchema = z.object({
 });
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;
 
+// Admin-only "Send test email" action (Settings -> SMTP card) — lets the
+// operator confirm their saved SMTP config actually works without triggering
+// a real password-reset flow. Always uses the saved SMTP password
+// server-side; this just carries the destination address.
+export const sendTestEmailSchema = z.object({
+  to: z.string().trim().email(),
+});
+export type SendTestEmailInput = z.infer<typeof sendTestEmailSchema>;
+
 export const publicSettingsSchema = z.object({
   siteName: z.string(),
   whatsappEnabled: z.boolean(),
