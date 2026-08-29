@@ -249,3 +249,6 @@ export const changeMyPassword = (input: ChangePasswordInput) => apiClient.post("
 export const generateMyApiKey = () =>
   apiClient.post("/users/me/api-key").then((r) => r.data as { apiKey: string; prefix: string });
 export const revokeMyApiKey = () => apiClient.delete("/users/me/api-key");
+
+// ── Leaderboard (Top Spend) ──────────────────────────────────────────────
+export const getLeaderboard = () => apiClient.get("/leaderboard/top-spenders").then((r) => r.data.items);

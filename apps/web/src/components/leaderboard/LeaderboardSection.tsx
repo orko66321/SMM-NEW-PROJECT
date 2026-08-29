@@ -1,22 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { getLeaderboard } from "../../api/resources.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { AlertIcon, TrophyIcon } from "./icons.js";
 import { LeaderboardCard } from "./LeaderboardCard.js";
 import { LeaderboardRow } from "./LeaderboardRow.js";
 import { LeaderboardSkeleton } from "./LeaderboardSkeleton.js";
-import { PLACEHOLDER_LEADERBOARD, type LeaderboardEntry } from "./types.js";
+import type { LeaderboardEntry } from "./types.js";
 
-// Stand-in for a real endpoint (e.g. GET /leaderboard/top-spenders). Swap
-// this one function for a resources.ts call once the backend exists — every
-// other piece here (skeleton/empty/error states, podium, list) is already
-// wired for it via useQuery.
-function fetchLeaderboard(currentUserId?: string): Promise<LeaderboardEntry[]> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(PLACEHOLDER_LEADERBOARD.map((e) => ({ ...e, isCurrentUser: !!currentUserId && e.userId === currentUserId })));
-    }, 500);
-  });
+// Real GET /leaderboard/top-spenders (see apps/api/src/services/leaderboard.service.ts) —
+// ranked by each user's actual lifetime spend (sum of COMPLETED order
+// charges), not placeholder data. isCurrentUser is derived here since the
+// endpoint only returns userId, not who's asking.
+async function fetchLeaderboard(currentUserId?: string): Promise<LeaderboardEntry[]> {
+  const entries = (await getLeaderboard()) as LeaderboardEntry[];
+  return entries.map((e) => ({ ...e, isCurrentUser: !!currentUserId && e.userId === currentUserId }));
 }
 
 export function LeaderboardSection({ currentUserId, isAdmin }: { currentUserId?: string; isAdmin?: boolean }) {
