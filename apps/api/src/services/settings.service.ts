@@ -23,8 +23,6 @@ export async function getAdminSettings() {
   const s = await ensureSettings();
   return {
     siteName: s.siteName,
-    whatsappEnabled: s.whatsappEnabled,
-    whatsappNumber: s.whatsappNumber,
     liveChatProvider: s.liveChatProvider,
     liveChatWidgetId: s.liveChatWidgetId,
     howToOrderVideoUrl: s.howToOrderVideoUrl,
@@ -45,8 +43,6 @@ export async function updateSettings(input: UpdateSettingsInput) {
     where: { id: SETTINGS_ID },
     data: {
       siteName: input.siteName,
-      whatsappEnabled: input.whatsappEnabled,
-      whatsappNumber: input.whatsappNumber,
       liveChatProvider: input.liveChatProvider,
       liveChatWidgetId: input.liveChatWidgetId,
       // Normalise "" (admin cleared the field) to null so the frontend's
@@ -73,8 +69,6 @@ export async function getPublicSettings(): Promise<PublicSettings> {
   const s = await ensureSettings();
   return {
     siteName: s.siteName,
-    whatsappEnabled: s.whatsappEnabled,
-    whatsappNumber: s.whatsappNumber,
     liveChatProvider: s.liveChatProvider,
     liveChatWidgetId: s.liveChatWidgetId,
     howToOrderVideoUrl: s.howToOrderVideoUrl,

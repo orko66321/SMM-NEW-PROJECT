@@ -4,7 +4,7 @@ import { AdminRoute, GuestRoute } from "./routes/guards.js";
 import DashboardLayout from "./components/layout/DashboardLayout.js";
 import AdminLayout from "./components/layout/AdminLayout.js";
 import PublicLayout from "./components/layout/PublicLayout.js";
-import WhatsAppButton from "./components/support/WhatsAppButton.js";
+import HelpWidget from "./components/support/HelpWidget.js";
 import LiveChatLoader from "./components/support/LiveChatLoader.js";
 
 import Landing from "./pages/public/Landing.js";
@@ -39,6 +39,7 @@ import AdminProviderImport from "./pages/admin/ProviderImport.js";
 import AdminPaymentGateways from "./pages/admin/PaymentGateways.js";
 import AdminPaymentMethods from "./pages/admin/PaymentMethods.js";
 import AdminSettings from "./pages/admin/Settings.js";
+import AdminSupportChannels from "./pages/admin/SupportChannels.js";
 import AdminNoticeSettings from "./pages/admin/NoticeSettings.js";
 import AdminBanner from "./pages/admin/Banner.js";
 import AdminPosts from "./pages/admin/Posts.js";
@@ -55,7 +56,7 @@ export default function App() {
   return (
     <ToastProvider>
       <LiveChatLoader />
-      <WhatsAppButton />
+      <HelpWidget />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Landing />} />
@@ -111,6 +112,7 @@ export default function App() {
           <Route path="payment-gateways" element={<AdminPaymentGateways />} />
           <Route path="payment-methods" element={<AdminPaymentMethods />} />
           <Route path="settings" element={<AdminSettings />} />
+          <Route path="support-channels" element={<AdminSupportChannels />} />
           <Route path="notice-settings" element={<AdminNoticeSettings />} />
           <Route path="banner" element={<AdminBanner />} />
           <Route path="posts" element={<AdminPosts />} />

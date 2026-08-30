@@ -21,6 +21,8 @@ import type {
   SendTestEmailInput,
   ServiceInput,
   StockPoolInput,
+  SupportChannelType,
+  SupportChannelUpdateInput,
   UpdateSiteNoticeInput,
   UpdateGatewayConfigInput,
   UpdateOrderStatusInput,
@@ -148,6 +150,14 @@ export const getPublicCategories = () => apiClient.get("/public/categories").the
 export const getPublicServices = (params: { page?: number; pageSize?: number; categoryId?: string; search?: string }) =>
   apiClient.get("/public/services", { params }).then((r) => r.data);
 export const getPublicSiteNotice = () => apiClient.get("/public/notice").then((r) => r.data);
+
+// ── Support channels (floating "Need Help?" widget) ─────────────────────
+export const getPublicSupportChannels = () =>
+  apiClient.get("/public/support-channels").then((r) => r.data.items);
+export const getAdminSupportChannels = () =>
+  apiClient.get("/admin/support-channels").then((r) => r.data.items);
+export const updateAdminSupportChannel = (type: SupportChannelType, input: SupportChannelUpdateInput) =>
+  apiClient.put(`/admin/support-channels/${type}`, input).then((r) => r.data.channel);
 export const getPublicBanners = () => apiClient.get("/public/banners").then((r) => r.data.items);
 export const getPublicPosts = (params?: { category?: string }) =>
   apiClient.get("/public/posts", { params }).then((r) => r.data.items);

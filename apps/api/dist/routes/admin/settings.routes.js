@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { updateSettingsSchema } from "@smm/shared";
+import { sendTestEmailSchema, updateSettingsSchema } from "@smm/shared";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
-import { getAdminSettings, updateSettings } from "../../services/settings.service.js";
+import { getAdminSettings, sendTestEmail, updateSettings } from "../../services/settings.service.js";
 import { writeAuditLog } from "../../services/audit.service.js";
 export const adminSettingsRouter = Router();
 adminSettingsRouter.get("/", asyncHandler(async (_req, res) => {
@@ -20,4 +20,8 @@ adminSettingsRouter.put("/", validate(updateSettingsSchema), asyncHandler(async 
         ip: req.ip,
     });
     res.status(204).end();
+}));
+adminSettingsRouter.post("/test-email", validate(sendTestEmailSchema), asyncHandler(async (req, res) => {
+    await sendTestEmail(req.body.to);
+    res.status(200).json({ ok: true });
 }));
