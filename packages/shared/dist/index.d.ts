@@ -783,7 +783,7 @@ export declare const NoticeLevelValues: readonly ["INFO", "WARNING", "SUCCESS", 
 export type NoticeLevel = (typeof NoticeLevelValues)[number];
 export declare const updateSettingsSchema: z.ZodObject<{
     siteName: z.ZodString;
-    whatsappEnabled: z.ZodBoolean;
+    whatsappEnabled: z.ZodOptional<z.ZodBoolean>;
     whatsappNumber: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     liveChatProvider: z.ZodEnum<["NONE", "TAWKTO", "CRISP"]>;
     liveChatWidgetId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -798,11 +798,11 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpFromAddress: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
     siteName: string;
-    whatsappEnabled: boolean;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
     usdToBdtRate: number;
     defaultCurrency: "USD" | "BDT";
     smtpEnabled: boolean;
+    whatsappEnabled?: boolean | undefined;
     whatsappNumber?: string | null | undefined;
     liveChatWidgetId?: string | null | undefined;
     howToOrderVideoUrl?: string | null | undefined;
@@ -813,11 +813,11 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpFromAddress?: string | null | undefined;
 }, {
     siteName: string;
-    whatsappEnabled: boolean;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
     usdToBdtRate: number;
     defaultCurrency: "USD" | "BDT";
     smtpEnabled: boolean;
+    whatsappEnabled?: boolean | undefined;
     whatsappNumber?: string | null | undefined;
     liveChatWidgetId?: string | null | undefined;
     howToOrderVideoUrl?: string | null | undefined;
@@ -838,8 +838,6 @@ export declare const sendTestEmailSchema: z.ZodObject<{
 export type SendTestEmailInput = z.infer<typeof sendTestEmailSchema>;
 export declare const publicSettingsSchema: z.ZodObject<{
     siteName: z.ZodString;
-    whatsappEnabled: z.ZodBoolean;
-    whatsappNumber: z.ZodNullable<z.ZodString>;
     liveChatProvider: z.ZodEnum<["NONE", "TAWKTO", "CRISP"]>;
     liveChatWidgetId: z.ZodNullable<z.ZodString>;
     howToOrderVideoUrl: z.ZodNullable<z.ZodString>;
@@ -848,8 +846,6 @@ export declare const publicSettingsSchema: z.ZodObject<{
     googleAuthEnabled: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
     siteName: string;
-    whatsappEnabled: boolean;
-    whatsappNumber: string | null;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
     liveChatWidgetId: string | null;
     howToOrderVideoUrl: string | null;
@@ -858,8 +854,6 @@ export declare const publicSettingsSchema: z.ZodObject<{
     googleAuthEnabled: boolean;
 }, {
     siteName: string;
-    whatsappEnabled: boolean;
-    whatsappNumber: string | null;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
     liveChatWidgetId: string | null;
     howToOrderVideoUrl: string | null;
@@ -925,6 +919,62 @@ export declare const publicSiteNoticeSchema: z.ZodObject<{
     bodyEn: string | null;
 }>;
 export type PublicSiteNotice = z.infer<typeof publicSiteNoticeSchema>;
+export declare const SupportChannelTypeValues: readonly ["WHATSAPP", "TELEGRAM", "MESSENGER", "CUSTOM", "TICKET"];
+export type SupportChannelType = (typeof SupportChannelTypeValues)[number];
+export declare const supportChannelUpdateSchema: z.ZodObject<{
+    enabled: z.ZodBoolean;
+    value: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    label: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    sortOrder: z.ZodNumber;
+}, "strip", z.ZodTypeAny, {
+    sortOrder: number;
+    enabled: boolean;
+    value?: string | null | undefined;
+    label?: string | null | undefined;
+}, {
+    sortOrder: number;
+    enabled: boolean;
+    value?: string | null | undefined;
+    label?: string | null | undefined;
+}>;
+export type SupportChannelUpdateInput = z.infer<typeof supportChannelUpdateSchema>;
+export declare const adminSupportChannelSchema: z.ZodObject<{
+    type: z.ZodEnum<["WHATSAPP", "TELEGRAM", "MESSENGER", "CUSTOM", "TICKET"]>;
+    enabled: z.ZodBoolean;
+    value: z.ZodNullable<z.ZodString>;
+    label: z.ZodNullable<z.ZodString>;
+    sortOrder: z.ZodNumber;
+}, "strip", z.ZodTypeAny, {
+    value: string | null;
+    type: "WHATSAPP" | "TELEGRAM" | "MESSENGER" | "CUSTOM" | "TICKET";
+    sortOrder: number;
+    enabled: boolean;
+    label: string | null;
+}, {
+    value: string | null;
+    type: "WHATSAPP" | "TELEGRAM" | "MESSENGER" | "CUSTOM" | "TICKET";
+    sortOrder: number;
+    enabled: boolean;
+    label: string | null;
+}>;
+export type AdminSupportChannel = z.infer<typeof adminSupportChannelSchema>;
+export declare const publicSupportChannelSchema: z.ZodObject<{
+    type: z.ZodEnum<["WHATSAPP", "TELEGRAM", "MESSENGER", "CUSTOM", "TICKET"]>;
+    label: z.ZodString;
+    href: z.ZodNullable<z.ZodString>;
+    external: z.ZodBoolean;
+}, "strip", z.ZodTypeAny, {
+    type: "WHATSAPP" | "TELEGRAM" | "MESSENGER" | "CUSTOM" | "TICKET";
+    label: string;
+    href: string | null;
+    external: boolean;
+}, {
+    type: "WHATSAPP" | "TELEGRAM" | "MESSENGER" | "CUSTOM" | "TICKET";
+    label: string;
+    href: string | null;
+    external: boolean;
+}>;
+export type PublicSupportChannel = z.infer<typeof publicSupportChannelSchema>;
 export declare const bannerInputSchema: z.ZodObject<{
     link: z.ZodString;
     image: z.ZodString;

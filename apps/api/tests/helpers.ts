@@ -36,6 +36,7 @@ export async function resetDb() {
   await prisma.banner.deleteMany();
   await prisma.post.deleteMany();
   await prisma.siteSettings.deleteMany();
+  await prisma.supportChannel.deleteMany();
   await prisma.passwordResetToken.deleteMany();
   await prisma.refreshToken.deleteMany();
   await prisma.wallet.deleteMany();

@@ -6,6 +6,7 @@ import { listCategories, listServices } from "../services/catalog.service.js";
 import { getPublicSettings } from "../services/settings.service.js";
 import { listActiveNotices } from "../services/notice.service.js";
 import { getPublicSiteNotice } from "../services/siteNotice.service.js";
+import { listPublicSupportChannels } from "../services/supportChannel.service.js";
 import { listBannersPublic } from "../services/banner.service.js";
 import { getPublishedPostBySlug, listPublishedPostsPublic } from "../services/post.service.js";
 import { getPublicStats } from "../services/stats.service.js";
@@ -17,6 +18,9 @@ import { getPublicStats } from "../services/stats.service.js";
 export const publicRouter = Router();
 publicRouter.get("/settings", asyncHandler(async (_req, res) => {
     res.json(await getPublicSettings());
+}));
+publicRouter.get("/support-channels", asyncHandler(async (_req, res) => {
+    res.json({ items: await listPublicSupportChannels() });
 }));
 publicRouter.get("/notices", asyncHandler(async (_req, res) => {
     res.json({ items: await listActiveNotices() });

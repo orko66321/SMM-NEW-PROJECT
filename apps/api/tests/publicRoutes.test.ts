@@ -12,8 +12,6 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
   it("/api/public/settings never includes SMTP credentials, only display-safe fields", async () => {
     await updateSettings({
       siteName: "Test Panel",
-      whatsappEnabled: true,
-      whatsappNumber: "+8801700000000",
       liveChatProvider: "NONE",
       liveChatWidgetId: null,
       usdToBdtRate: 120,
@@ -36,8 +34,6 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
     // the two deterministic, env-mocked cases of that field itself.
     expect(res.body).toEqual({
       siteName: "Test Panel",
-      whatsappEnabled: true,
-      whatsappNumber: "+8801700000000",
       liveChatProvider: "NONE",
       liveChatWidgetId: null,
       howToOrderVideoUrl: null,
@@ -52,7 +48,6 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
   it("the admin settings view never re-displays the SMTP password, only whether it's configured", async () => {
     await updateSettings({
       siteName: "Test Panel",
-      whatsappEnabled: false,
       liveChatProvider: "NONE",
       usdToBdtRate: 120,
       defaultCurrency: "USD",

@@ -49,6 +49,16 @@ const envSchema = z.object({
     // flow used here but is captured for a future authorization-code flow.
     GOOGLE_CLIENT_ID: z.string().trim().min(1).optional(),
     GOOGLE_CLIENT_SECRET: z.string().trim().min(1).optional(),
+    // Transactional email over HTTPS instead of SMTP. Shared-hosting (cPanel)
+    // mail servers are frequently unreachable from a cloud host like Railway —
+    // the SMTP ports time out at the firewall — whereas an HTTPS API call on
+    // 443 always gets through. Set ONE of RESEND_API_KEY / BREVO_API_KEY plus
+    // MAIL_FROM (a sender address verified with that provider); lib/mailer.ts
+    // then uses that provider. With neither set it falls back to the
+    // admin-configured SMTP settings. All optional so the app boots without any.
+    RESEND_API_KEY: z.string().trim().min(1).optional(),
+    BREVO_API_KEY: z.string().trim().min(1).optional(),
+    MAIL_FROM: z.string().trim().email().optional(),
 });
 const parsed = envSchema.safeParse(process.env);
 if (!parsed.success) {
@@ -61,4 +71,5 @@ export const env = {
     isProduction: parsed.data.NODE_ENV === "production",
     corsOrigins: parsed.data.CORS_ORIGIN.split(",").map((s) => s.trim()).filter(Boolean),
     googleAuthEnabled: !!(parsed.data.GOOGLE_CLIENT_ID && parsed.data.GOOGLE_CLIENT_SECRET),
+    httpMailEnabled: !!(parsed.data.RESEND_API_KEY || parsed.data.BREVO_API_KEY),
 };

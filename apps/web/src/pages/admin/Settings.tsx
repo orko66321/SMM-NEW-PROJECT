@@ -3,14 +3,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { DisplayCurrency, LiveChatProvider } from "@smm/shared";
 import { getAdminSettings, sendAdminTestEmail, updateAdminSettings } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
+import { Link } from "react-router-dom";
 import { Breadcrumbs, Button } from "../../components/ds/index.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 
 interface AdminSettings {
   siteName: string;
-  whatsappEnabled: boolean;
-  whatsappNumber: string | null;
   liveChatProvider: LiveChatProvider;
   liveChatWidgetId: string | null;
   howToOrderVideoUrl: string | null;
@@ -32,8 +31,6 @@ export default function AdminSettingsPage() {
 
   const [form, setForm] = useState({
     siteName: "All In One Service",
-    whatsappEnabled: false,
-    whatsappNumber: "",
     liveChatProvider: "NONE" as LiveChatProvider,
     liveChatWidgetId: "",
     howToOrderVideoUrl: "",
@@ -59,8 +56,6 @@ export default function AdminSettingsPage() {
     const s = settings as AdminSettings;
     setForm({
       siteName: s.siteName,
-      whatsappEnabled: s.whatsappEnabled,
-      whatsappNumber: s.whatsappNumber ?? "",
       liveChatProvider: s.liveChatProvider,
       liveChatWidgetId: s.liveChatWidgetId ?? "",
       howToOrderVideoUrl: s.howToOrderVideoUrl ?? "",
@@ -81,8 +76,6 @@ export default function AdminSettingsPage() {
     try {
       await updateAdminSettings({
         siteName: form.siteName,
-        whatsappEnabled: form.whatsappEnabled,
-        whatsappNumber: form.whatsappNumber || null,
         liveChatProvider: form.liveChatProvider,
         liveChatWidgetId: form.liveChatWidgetId || null,
         howToOrderVideoUrl: form.howToOrderVideoUrl.trim() || null,
@@ -146,17 +139,13 @@ export default function AdminSettingsPage() {
         <p className="text-xs text-on-surface-variant">Display-only — every wallet balance and price stays USD-denominated in the database.</p>
       </div>
 
-      <div className="card space-y-3">
-        <h2 className="text-sm font-semibold">WhatsApp Support</h2>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={form.whatsappEnabled} onChange={(e) => setForm((f) => ({ ...f, whatsappEnabled: e.target.checked }))} /> Show floating WhatsApp button
-        </label>
-        <input
-          className="input-field"
-          placeholder="WhatsApp number, e.g. +8801700000000"
-          value={form.whatsappNumber}
-          onChange={(e) => setForm((f) => ({ ...f, whatsappNumber: e.target.value }))}
-        />
+      <div className="card space-y-2">
+        <h2 className="text-sm font-semibold">Floating Help Button</h2>
+        <p className="text-sm text-on-surface-variant">
+          WhatsApp, Telegram, Messenger and the &ldquo;Open a support ticket&rdquo; option in the floating
+          &ldquo;Need help?&rdquo; widget are managed under{" "}
+          <Link to="/admin/support-channels" className="text-primary hover:underline">Support Channels</Link>.
+        </p>
       </div>
 
       <div className="card space-y-3">

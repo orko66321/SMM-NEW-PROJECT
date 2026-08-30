@@ -321,7 +321,10 @@ export const NoticeLevelValues = ["INFO", "WARNING", "SUCCESS", "ERROR"];
 // encrypted value, since it's never re-displayed after saving).
 export const updateSettingsSchema = z.object({
     siteName: z.string().trim().min(1).max(100),
-    whatsappEnabled: z.boolean(),
+    // Legacy — the floating support button is now managed via SupportChannel
+    // (see supportChannelUpdateSchema below). Kept optional so an older admin
+    // client still validates; the API no longer reads or writes these.
+    whatsappEnabled: z.boolean().optional(),
     whatsappNumber: z.string().trim().max(20).nullable().optional(),
     liveChatProvider: z.enum(LiveChatProviderValues),
     liveChatWidgetId: z.string().trim().max(200).nullable().optional(),
@@ -347,8 +350,6 @@ export const sendTestEmailSchema = z.object({
 });
 export const publicSettingsSchema = z.object({
     siteName: z.string(),
-    whatsappEnabled: z.boolean(),
-    whatsappNumber: z.string().nullable(),
     liveChatProvider: z.enum(LiveChatProviderValues),
     liveChatWidgetId: z.string().nullable(),
     howToOrderVideoUrl: z.string().nullable(),
@@ -382,6 +383,45 @@ export const publicSiteNoticeSchema = z.object({
     titleEn: z.string().nullable(),
     bodyBn: z.string().nullable(),
     bodyEn: z.string().nullable(),
+});
+// ── Support channels (floating "Need Help?" widget) ─────────────────────
+// Fixed set — each has a server-side href template (services/supportChannel
+// .service.ts). TICKET is the built-in "open a support ticket" action and
+// carries no `value`. Keep in sync with the Prisma SupportChannelType enum.
+export const SupportChannelTypeValues = [
+    "WHATSAPP",
+    "TELEGRAM",
+    "MESSENGER",
+    "CUSTOM",
+    "TICKET",
+];
+// Admin edit for one channel row. `value` is the raw phone / handle / URL
+// (ignored for TICKET); `label` is an optional display-name override and is
+// required for CUSTOM. Per-type validity (non-empty value when enabling,
+// valid URL for CUSTOM) is enforced in the service so the message can be
+// specific.
+export const supportChannelUpdateSchema = z.object({
+    enabled: z.boolean(),
+    value: z.string().trim().max(2048).nullable().optional(),
+    label: z.string().trim().max(60).nullable().optional(),
+    sortOrder: z.coerce.number().int().min(0).max(999),
+});
+// Admin-facing row (raw stored fields).
+export const adminSupportChannelSchema = z.object({
+    type: z.enum(SupportChannelTypeValues),
+    enabled: z.boolean(),
+    value: z.string().nullable(),
+    label: z.string().nullable(),
+    sortOrder: z.number(),
+});
+// Public row — only enabled channels, href already built (null for TICKET,
+// which the widget handles with an in-app modal). `external` ⇒ open in a
+// new tab.
+export const publicSupportChannelSchema = z.object({
+    type: z.enum(SupportChannelTypeValues),
+    label: z.string(),
+    href: z.string().nullable(),
+    external: z.boolean(),
 });
 // Homepage + dashboard Overview banner slider. `image` is a base64 data URI
 // (see the Banner model comment in schema.prisma for why — no filesystem

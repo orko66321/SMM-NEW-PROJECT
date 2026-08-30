@@ -533,6 +533,15 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SupportChannelScalarFieldEnum = {
+  type: 'type',
+  enabled: 'enabled',
+  value: 'value',
+  label: 'label',
+  sortOrder: 'sortOrder',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.NoticeScalarFieldEnum = {
   id: 'id',
   messageBn: 'messageBn',
@@ -747,6 +756,14 @@ exports.DisplayCurrency = exports.$Enums.DisplayCurrency = {
   BDT: 'BDT'
 };
 
+exports.SupportChannelType = exports.$Enums.SupportChannelType = {
+  WHATSAPP: 'WHATSAPP',
+  TELEGRAM: 'TELEGRAM',
+  MESSENGER: 'MESSENGER',
+  CUSTOM: 'CUSTOM',
+  TICKET: 'TICKET'
+};
+
 exports.NoticeLevel = exports.$Enums.NoticeLevel = {
   INFO: 'INFO',
   WARNING: 'WARNING',
@@ -797,6 +814,7 @@ exports.Prisma.ModelName = {
   Coupon: 'Coupon',
   CouponRedemption: 'CouponRedemption',
   SiteSettings: 'SiteSettings',
+  SupportChannel: 'SupportChannel',
   Notice: 'Notice',
   SiteNotice: 'SiteNotice',
   Banner: 'Banner',

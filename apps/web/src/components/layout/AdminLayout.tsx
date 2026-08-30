@@ -25,6 +25,7 @@ const navRows: NavRow[] = [
   { to: "/admin/payment-gateways", label: "Payment Gateways", icon: "card" },
   { to: "/admin/payment-methods", label: "Payment Methods", icon: "card" },
   { section: "Content" },
+  { to: "/admin/support-channels", label: "Support Channels", icon: "support" },
   { to: "/admin/coupons", label: "Coupons", icon: "coupon" },
   { to: "/admin/notice-settings", label: "Notice Settings", icon: "campaign" },
   { to: "/admin/banner", label: "Banner Slider", icon: "image" },

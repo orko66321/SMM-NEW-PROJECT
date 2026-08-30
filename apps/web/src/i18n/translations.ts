@@ -509,6 +509,24 @@ const en = {
     keyGenFailedFallback: "Failed to generate API key",
     keyRevokeFailedFallback: "Failed to revoke API key",
   },
+
+  // Floating "Need Help?" launcher (components/support/HelpWidget.tsx) and
+  // its quick "open a support ticket" modal. Channel display names come
+  // from the API (admin-set label or a default), so they aren't listed here.
+  helpWidget: {
+    open: "Need help?",
+    close: "Close",
+    openTicket: "Open a support ticket",
+    ticketModalTitle: "Open a support ticket",
+    subjectLabel: "Subject",
+    messageLabel: "How can we help?",
+    submit: "Submit ticket",
+    submitting: "Submitting…",
+    submittedToast: "Ticket submitted — we'll reply by email and in your dashboard.",
+    failedFallback: "Couldn't submit the ticket",
+    signInPrompt: "Please sign in to open a support ticket.",
+    signIn: "Sign in",
+  },
 };
 
 // Deliberately not `as const` — every leaf must stay typed as `string`
@@ -1013,6 +1031,21 @@ const bn: Translations = {
     keyRevokedToast: "এপিআই কী বাতিল হয়েছে।",
     keyGenFailedFallback: "এপিআই কী জেনারেট করা যায়নি",
     keyRevokeFailedFallback: "এপিআই কী বাতিল করা যায়নি",
+  },
+
+  helpWidget: {
+    open: "সাহায্য দরকার?",
+    close: "বন্ধ করুন",
+    openTicket: "সাপোর্ট টিকিট খুলুন",
+    ticketModalTitle: "সাপোর্ট টিকিট খুলুন",
+    subjectLabel: "বিষয়",
+    messageLabel: "আমরা কীভাবে সাহায্য করতে পারি?",
+    submit: "টিকিট জমা দিন",
+    submitting: "জমা হচ্ছে…",
+    submittedToast: "টিকিট জমা হয়েছে — আমরা ইমেইলে ও আপনার ড্যাশবোর্ডে উত্তর দেব।",
+    failedFallback: "টিকিট জমা দেওয়া যায়নি",
+    signInPrompt: "সাপোর্ট টিকিট খুলতে অনুগ্রহ করে সাইন ইন করুন।",
+    signIn: "সাইন ইন",
   },
 };
 

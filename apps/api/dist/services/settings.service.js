@@ -1,6 +1,8 @@
 import { prisma } from "../lib/prisma.js";
 import { encrypt, decrypt } from "../lib/crypto.js";
 import { env } from "../env.js";
+import { AppError } from "../utils/AppError.js";
+import { sendMail, isMailConfigured } from "../lib/mailer.js";
 // Deliberately a singleton row (fixed id) rather than a key/value table —
 // see the model comment in schema.prisma. Upserted lazily on first read so
 // the app works before any admin has ever opened the Settings page.
@@ -17,8 +19,6 @@ export async function getAdminSettings() {
     const s = await ensureSettings();
     return {
         siteName: s.siteName,
-        whatsappEnabled: s.whatsappEnabled,
-        whatsappNumber: s.whatsappNumber,
         liveChatProvider: s.liveChatProvider,
         liveChatWidgetId: s.liveChatWidgetId,
         howToOrderVideoUrl: s.howToOrderVideoUrl,
@@ -38,8 +38,6 @@ export async function updateSettings(input) {
         where: { id: SETTINGS_ID },
         data: {
             siteName: input.siteName,
-            whatsappEnabled: input.whatsappEnabled,
-            whatsappNumber: input.whatsappNumber,
             liveChatProvider: input.liveChatProvider,
             liveChatWidgetId: input.liveChatWidgetId,
             // Normalise "" (admin cleared the field) to null so the frontend's
@@ -64,8 +62,6 @@ export async function getPublicSettings() {
     const s = await ensureSettings();
     return {
         siteName: s.siteName,
-        whatsappEnabled: s.whatsappEnabled,
-        whatsappNumber: s.whatsappNumber,
         liveChatProvider: s.liveChatProvider,
         liveChatWidgetId: s.liveChatWidgetId,
         howToOrderVideoUrl: s.howToOrderVideoUrl,
@@ -96,4 +92,24 @@ export async function getSmtpConfig() {
         pass: decrypt(s.smtpPassCiphertext),
         from: s.smtpFromAddress,
     };
+}
+/**
+ * Admin-only "Send test email" action — lets the operator confirm the saved
+ * SMTP config actually works right after saving it, without triggering a real
+ * password-reset flow. Always uses the saved SMTP password (via
+ * getSmtpConfig/sendMail); the caller only supplies the destination.
+ */
+export async function sendTestEmail(to) {
+    if (!(await isMailConfigured())) {
+        throw AppError.badRequest("Email isn't configured — either set BREVO_API_KEY + MAIL_FROM on the API server (recommended on Railway), or fill in and save the SMTP settings below (host, port, password, from-address)");
+    }
+    const s = await ensureSettings();
+    try {
+        await sendMail(to, `SMTP test — ${s.siteName}`, "This is a test email from your admin panel. If you received it, SMTP is working.");
+    }
+    catch (err) {
+        // Surface the mail-server error (auth failed, self-signed cert, …) so the
+        // operator can fix their config — but never a stack trace.
+        throw AppError.badRequest(err instanceof Error ? err.message : "Failed to send test email");
+    }
 }

@@ -169,6 +169,11 @@ export type CouponRedemption = $Result.DefaultSelection<Prisma.$CouponRedemption
  */
 export type SiteSettings = $Result.DefaultSelection<Prisma.$SiteSettingsPayload>
 /**
+ * Model SupportChannel
+ * 
+ */
+export type SupportChannel = $Result.DefaultSelection<Prisma.$SupportChannelPayload>
+/**
  * Model Notice
  * 
  */
@@ -419,6 +424,17 @@ export const DisplayCurrency: {
 export type DisplayCurrency = (typeof DisplayCurrency)[keyof typeof DisplayCurrency]
 
 
+export const SupportChannelType: {
+  WHATSAPP: 'WHATSAPP',
+  TELEGRAM: 'TELEGRAM',
+  MESSENGER: 'MESSENGER',
+  CUSTOM: 'CUSTOM',
+  TICKET: 'TICKET'
+};
+
+export type SupportChannelType = (typeof SupportChannelType)[keyof typeof SupportChannelType]
+
+
 export const NoticeLevel: {
   INFO: 'INFO',
   WARNING: 'WARNING',
@@ -546,6 +562,10 @@ export const LiveChatProvider: typeof $Enums.LiveChatProvider
 export type DisplayCurrency = $Enums.DisplayCurrency
 
 export const DisplayCurrency: typeof $Enums.DisplayCurrency
+
+export type SupportChannelType = $Enums.SupportChannelType
+
+export const SupportChannelType: typeof $Enums.SupportChannelType
 
 export type NoticeLevel = $Enums.NoticeLevel
 
@@ -991,6 +1011,16 @@ export class PrismaClient<
     * ```
     */
   get siteSettings(): Prisma.SiteSettingsDelegate<ExtArgs>;
+
+  /**
+   * `prisma.supportChannel`: Exposes CRUD operations for the **SupportChannel** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SupportChannels
+    * const supportChannels = await prisma.supportChannel.findMany()
+    * ```
+    */
+  get supportChannel(): Prisma.SupportChannelDelegate<ExtArgs>;
 
   /**
    * `prisma.notice`: Exposes CRUD operations for the **Notice** model.
@@ -1503,6 +1533,7 @@ export namespace Prisma {
     Coupon: 'Coupon',
     CouponRedemption: 'CouponRedemption',
     SiteSettings: 'SiteSettings',
+    SupportChannel: 'SupportChannel',
     Notice: 'Notice',
     SiteNotice: 'SiteNotice',
     Banner: 'Banner',
@@ -1522,7 +1553,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "brand" | "product" | "package" | "stockPool" | "packageStockPool" | "stockCode" | "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticket" | "ticketMessage" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "notice" | "siteNotice" | "banner" | "post"
+      modelProps: "brand" | "product" | "package" | "stockPool" | "packageStockPool" | "stockCode" | "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticket" | "ticketMessage" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "supportChannel" | "notice" | "siteNotice" | "banner" | "post"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3693,6 +3724,76 @@ export namespace Prisma {
           count: {
             args: Prisma.SiteSettingsCountArgs<ExtArgs>
             result: $Utils.Optional<SiteSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
+      SupportChannel: {
+        payload: Prisma.$SupportChannelPayload<ExtArgs>
+        fields: Prisma.SupportChannelFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SupportChannelFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SupportChannelFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload>
+          }
+          findFirst: {
+            args: Prisma.SupportChannelFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SupportChannelFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload>
+          }
+          findMany: {
+            args: Prisma.SupportChannelFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload>[]
+          }
+          create: {
+            args: Prisma.SupportChannelCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload>
+          }
+          createMany: {
+            args: Prisma.SupportChannelCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SupportChannelCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload>[]
+          }
+          delete: {
+            args: Prisma.SupportChannelDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload>
+          }
+          update: {
+            args: Prisma.SupportChannelUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload>
+          }
+          deleteMany: {
+            args: Prisma.SupportChannelDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SupportChannelUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SupportChannelUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SupportChannelPayload>
+          }
+          aggregate: {
+            args: Prisma.SupportChannelAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSupportChannel>
+          }
+          groupBy: {
+            args: Prisma.SupportChannelGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SupportChannelGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SupportChannelCountArgs<ExtArgs>
+            result: $Utils.Optional<SupportChannelCountAggregateOutputType> | number
           }
         }
       }
@@ -37161,6 +37262,930 @@ export namespace Prisma {
 
 
   /**
+   * Model SupportChannel
+   */
+
+  export type AggregateSupportChannel = {
+    _count: SupportChannelCountAggregateOutputType | null
+    _avg: SupportChannelAvgAggregateOutputType | null
+    _sum: SupportChannelSumAggregateOutputType | null
+    _min: SupportChannelMinAggregateOutputType | null
+    _max: SupportChannelMaxAggregateOutputType | null
+  }
+
+  export type SupportChannelAvgAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type SupportChannelSumAggregateOutputType = {
+    sortOrder: number | null
+  }
+
+  export type SupportChannelMinAggregateOutputType = {
+    type: $Enums.SupportChannelType | null
+    enabled: boolean | null
+    value: string | null
+    label: string | null
+    sortOrder: number | null
+    updatedAt: Date | null
+  }
+
+  export type SupportChannelMaxAggregateOutputType = {
+    type: $Enums.SupportChannelType | null
+    enabled: boolean | null
+    value: string | null
+    label: string | null
+    sortOrder: number | null
+    updatedAt: Date | null
+  }
+
+  export type SupportChannelCountAggregateOutputType = {
+    type: number
+    enabled: number
+    value: number
+    label: number
+    sortOrder: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SupportChannelAvgAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type SupportChannelSumAggregateInputType = {
+    sortOrder?: true
+  }
+
+  export type SupportChannelMinAggregateInputType = {
+    type?: true
+    enabled?: true
+    value?: true
+    label?: true
+    sortOrder?: true
+    updatedAt?: true
+  }
+
+  export type SupportChannelMaxAggregateInputType = {
+    type?: true
+    enabled?: true
+    value?: true
+    label?: true
+    sortOrder?: true
+    updatedAt?: true
+  }
+
+  export type SupportChannelCountAggregateInputType = {
+    type?: true
+    enabled?: true
+    value?: true
+    label?: true
+    sortOrder?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SupportChannelAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SupportChannel to aggregate.
+     */
+    where?: SupportChannelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportChannels to fetch.
+     */
+    orderBy?: SupportChannelOrderByWithRelationInput | SupportChannelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SupportChannelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportChannels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportChannels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SupportChannels
+    **/
+    _count?: true | SupportChannelCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SupportChannelAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SupportChannelSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SupportChannelMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SupportChannelMaxAggregateInputType
+  }
+
+  export type GetSupportChannelAggregateType<T extends SupportChannelAggregateArgs> = {
+        [P in keyof T & keyof AggregateSupportChannel]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSupportChannel[P]>
+      : GetScalarType<T[P], AggregateSupportChannel[P]>
+  }
+
+
+
+
+  export type SupportChannelGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SupportChannelWhereInput
+    orderBy?: SupportChannelOrderByWithAggregationInput | SupportChannelOrderByWithAggregationInput[]
+    by: SupportChannelScalarFieldEnum[] | SupportChannelScalarFieldEnum
+    having?: SupportChannelScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SupportChannelCountAggregateInputType | true
+    _avg?: SupportChannelAvgAggregateInputType
+    _sum?: SupportChannelSumAggregateInputType
+    _min?: SupportChannelMinAggregateInputType
+    _max?: SupportChannelMaxAggregateInputType
+  }
+
+  export type SupportChannelGroupByOutputType = {
+    type: $Enums.SupportChannelType
+    enabled: boolean
+    value: string | null
+    label: string | null
+    sortOrder: number
+    updatedAt: Date
+    _count: SupportChannelCountAggregateOutputType | null
+    _avg: SupportChannelAvgAggregateOutputType | null
+    _sum: SupportChannelSumAggregateOutputType | null
+    _min: SupportChannelMinAggregateOutputType | null
+    _max: SupportChannelMaxAggregateOutputType | null
+  }
+
+  type GetSupportChannelGroupByPayload<T extends SupportChannelGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SupportChannelGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SupportChannelGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SupportChannelGroupByOutputType[P]>
+            : GetScalarType<T[P], SupportChannelGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SupportChannelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    type?: boolean
+    enabled?: boolean
+    value?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["supportChannel"]>
+
+  export type SupportChannelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    type?: boolean
+    enabled?: boolean
+    value?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["supportChannel"]>
+
+  export type SupportChannelSelectScalar = {
+    type?: boolean
+    enabled?: boolean
+    value?: boolean
+    label?: boolean
+    sortOrder?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $SupportChannelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SupportChannel"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      type: $Enums.SupportChannelType
+      enabled: boolean
+      value: string | null
+      label: string | null
+      sortOrder: number
+      updatedAt: Date
+    }, ExtArgs["result"]["supportChannel"]>
+    composites: {}
+  }
+
+  type SupportChannelGetPayload<S extends boolean | null | undefined | SupportChannelDefaultArgs> = $Result.GetResult<Prisma.$SupportChannelPayload, S>
+
+  type SupportChannelCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SupportChannelFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SupportChannelCountAggregateInputType | true
+    }
+
+  export interface SupportChannelDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SupportChannel'], meta: { name: 'SupportChannel' } }
+    /**
+     * Find zero or one SupportChannel that matches the filter.
+     * @param {SupportChannelFindUniqueArgs} args - Arguments to find a SupportChannel
+     * @example
+     * // Get one SupportChannel
+     * const supportChannel = await prisma.supportChannel.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SupportChannelFindUniqueArgs>(args: SelectSubset<T, SupportChannelFindUniqueArgs<ExtArgs>>): Prisma__SupportChannelClient<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SupportChannel that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SupportChannelFindUniqueOrThrowArgs} args - Arguments to find a SupportChannel
+     * @example
+     * // Get one SupportChannel
+     * const supportChannel = await prisma.supportChannel.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SupportChannelFindUniqueOrThrowArgs>(args: SelectSubset<T, SupportChannelFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SupportChannelClient<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SupportChannel that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportChannelFindFirstArgs} args - Arguments to find a SupportChannel
+     * @example
+     * // Get one SupportChannel
+     * const supportChannel = await prisma.supportChannel.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SupportChannelFindFirstArgs>(args?: SelectSubset<T, SupportChannelFindFirstArgs<ExtArgs>>): Prisma__SupportChannelClient<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SupportChannel that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportChannelFindFirstOrThrowArgs} args - Arguments to find a SupportChannel
+     * @example
+     * // Get one SupportChannel
+     * const supportChannel = await prisma.supportChannel.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SupportChannelFindFirstOrThrowArgs>(args?: SelectSubset<T, SupportChannelFindFirstOrThrowArgs<ExtArgs>>): Prisma__SupportChannelClient<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SupportChannels that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportChannelFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SupportChannels
+     * const supportChannels = await prisma.supportChannel.findMany()
+     * 
+     * // Get first 10 SupportChannels
+     * const supportChannels = await prisma.supportChannel.findMany({ take: 10 })
+     * 
+     * // Only select the `enabled`
+     * const supportChannelWithEnabledOnly = await prisma.supportChannel.findMany({ select: { enabled: true } })
+     * 
+     */
+    findMany<T extends SupportChannelFindManyArgs>(args?: SelectSubset<T, SupportChannelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SupportChannel.
+     * @param {SupportChannelCreateArgs} args - Arguments to create a SupportChannel.
+     * @example
+     * // Create one SupportChannel
+     * const SupportChannel = await prisma.supportChannel.create({
+     *   data: {
+     *     // ... data to create a SupportChannel
+     *   }
+     * })
+     * 
+     */
+    create<T extends SupportChannelCreateArgs>(args: SelectSubset<T, SupportChannelCreateArgs<ExtArgs>>): Prisma__SupportChannelClient<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SupportChannels.
+     * @param {SupportChannelCreateManyArgs} args - Arguments to create many SupportChannels.
+     * @example
+     * // Create many SupportChannels
+     * const supportChannel = await prisma.supportChannel.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SupportChannelCreateManyArgs>(args?: SelectSubset<T, SupportChannelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SupportChannels and returns the data saved in the database.
+     * @param {SupportChannelCreateManyAndReturnArgs} args - Arguments to create many SupportChannels.
+     * @example
+     * // Create many SupportChannels
+     * const supportChannel = await prisma.supportChannel.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SupportChannels and only return the `enabled`
+     * const supportChannelWithEnabledOnly = await prisma.supportChannel.createManyAndReturn({ 
+     *   select: { enabled: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SupportChannelCreateManyAndReturnArgs>(args?: SelectSubset<T, SupportChannelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SupportChannel.
+     * @param {SupportChannelDeleteArgs} args - Arguments to delete one SupportChannel.
+     * @example
+     * // Delete one SupportChannel
+     * const SupportChannel = await prisma.supportChannel.delete({
+     *   where: {
+     *     // ... filter to delete one SupportChannel
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SupportChannelDeleteArgs>(args: SelectSubset<T, SupportChannelDeleteArgs<ExtArgs>>): Prisma__SupportChannelClient<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SupportChannel.
+     * @param {SupportChannelUpdateArgs} args - Arguments to update one SupportChannel.
+     * @example
+     * // Update one SupportChannel
+     * const supportChannel = await prisma.supportChannel.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SupportChannelUpdateArgs>(args: SelectSubset<T, SupportChannelUpdateArgs<ExtArgs>>): Prisma__SupportChannelClient<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SupportChannels.
+     * @param {SupportChannelDeleteManyArgs} args - Arguments to filter SupportChannels to delete.
+     * @example
+     * // Delete a few SupportChannels
+     * const { count } = await prisma.supportChannel.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SupportChannelDeleteManyArgs>(args?: SelectSubset<T, SupportChannelDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SupportChannels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportChannelUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SupportChannels
+     * const supportChannel = await prisma.supportChannel.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SupportChannelUpdateManyArgs>(args: SelectSubset<T, SupportChannelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SupportChannel.
+     * @param {SupportChannelUpsertArgs} args - Arguments to update or create a SupportChannel.
+     * @example
+     * // Update or create a SupportChannel
+     * const supportChannel = await prisma.supportChannel.upsert({
+     *   create: {
+     *     // ... data to create a SupportChannel
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SupportChannel we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SupportChannelUpsertArgs>(args: SelectSubset<T, SupportChannelUpsertArgs<ExtArgs>>): Prisma__SupportChannelClient<$Result.GetResult<Prisma.$SupportChannelPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SupportChannels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportChannelCountArgs} args - Arguments to filter SupportChannels to count.
+     * @example
+     * // Count the number of SupportChannels
+     * const count = await prisma.supportChannel.count({
+     *   where: {
+     *     // ... the filter for the SupportChannels we want to count
+     *   }
+     * })
+    **/
+    count<T extends SupportChannelCountArgs>(
+      args?: Subset<T, SupportChannelCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SupportChannelCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SupportChannel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportChannelAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SupportChannelAggregateArgs>(args: Subset<T, SupportChannelAggregateArgs>): Prisma.PrismaPromise<GetSupportChannelAggregateType<T>>
+
+    /**
+     * Group by SupportChannel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SupportChannelGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SupportChannelGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SupportChannelGroupByArgs['orderBy'] }
+        : { orderBy?: SupportChannelGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SupportChannelGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSupportChannelGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SupportChannel model
+   */
+  readonly fields: SupportChannelFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SupportChannel.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SupportChannelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SupportChannel model
+   */ 
+  interface SupportChannelFieldRefs {
+    readonly type: FieldRef<"SupportChannel", 'SupportChannelType'>
+    readonly enabled: FieldRef<"SupportChannel", 'Boolean'>
+    readonly value: FieldRef<"SupportChannel", 'String'>
+    readonly label: FieldRef<"SupportChannel", 'String'>
+    readonly sortOrder: FieldRef<"SupportChannel", 'Int'>
+    readonly updatedAt: FieldRef<"SupportChannel", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SupportChannel findUnique
+   */
+  export type SupportChannelFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+    /**
+     * Filter, which SupportChannel to fetch.
+     */
+    where: SupportChannelWhereUniqueInput
+  }
+
+  /**
+   * SupportChannel findUniqueOrThrow
+   */
+  export type SupportChannelFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+    /**
+     * Filter, which SupportChannel to fetch.
+     */
+    where: SupportChannelWhereUniqueInput
+  }
+
+  /**
+   * SupportChannel findFirst
+   */
+  export type SupportChannelFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+    /**
+     * Filter, which SupportChannel to fetch.
+     */
+    where?: SupportChannelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportChannels to fetch.
+     */
+    orderBy?: SupportChannelOrderByWithRelationInput | SupportChannelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SupportChannels.
+     */
+    cursor?: SupportChannelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportChannels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportChannels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SupportChannels.
+     */
+    distinct?: SupportChannelScalarFieldEnum | SupportChannelScalarFieldEnum[]
+  }
+
+  /**
+   * SupportChannel findFirstOrThrow
+   */
+  export type SupportChannelFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+    /**
+     * Filter, which SupportChannel to fetch.
+     */
+    where?: SupportChannelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportChannels to fetch.
+     */
+    orderBy?: SupportChannelOrderByWithRelationInput | SupportChannelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SupportChannels.
+     */
+    cursor?: SupportChannelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportChannels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportChannels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SupportChannels.
+     */
+    distinct?: SupportChannelScalarFieldEnum | SupportChannelScalarFieldEnum[]
+  }
+
+  /**
+   * SupportChannel findMany
+   */
+  export type SupportChannelFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+    /**
+     * Filter, which SupportChannels to fetch.
+     */
+    where?: SupportChannelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SupportChannels to fetch.
+     */
+    orderBy?: SupportChannelOrderByWithRelationInput | SupportChannelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SupportChannels.
+     */
+    cursor?: SupportChannelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SupportChannels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SupportChannels.
+     */
+    skip?: number
+    distinct?: SupportChannelScalarFieldEnum | SupportChannelScalarFieldEnum[]
+  }
+
+  /**
+   * SupportChannel create
+   */
+  export type SupportChannelCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+    /**
+     * The data needed to create a SupportChannel.
+     */
+    data: XOR<SupportChannelCreateInput, SupportChannelUncheckedCreateInput>
+  }
+
+  /**
+   * SupportChannel createMany
+   */
+  export type SupportChannelCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SupportChannels.
+     */
+    data: SupportChannelCreateManyInput | SupportChannelCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SupportChannel createManyAndReturn
+   */
+  export type SupportChannelCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SupportChannels.
+     */
+    data: SupportChannelCreateManyInput | SupportChannelCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SupportChannel update
+   */
+  export type SupportChannelUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+    /**
+     * The data needed to update a SupportChannel.
+     */
+    data: XOR<SupportChannelUpdateInput, SupportChannelUncheckedUpdateInput>
+    /**
+     * Choose, which SupportChannel to update.
+     */
+    where: SupportChannelWhereUniqueInput
+  }
+
+  /**
+   * SupportChannel updateMany
+   */
+  export type SupportChannelUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SupportChannels.
+     */
+    data: XOR<SupportChannelUpdateManyMutationInput, SupportChannelUncheckedUpdateManyInput>
+    /**
+     * Filter which SupportChannels to update
+     */
+    where?: SupportChannelWhereInput
+  }
+
+  /**
+   * SupportChannel upsert
+   */
+  export type SupportChannelUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+    /**
+     * The filter to search for the SupportChannel to update in case it exists.
+     */
+    where: SupportChannelWhereUniqueInput
+    /**
+     * In case the SupportChannel found by the `where` argument doesn't exist, create a new SupportChannel with this data.
+     */
+    create: XOR<SupportChannelCreateInput, SupportChannelUncheckedCreateInput>
+    /**
+     * In case the SupportChannel was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SupportChannelUpdateInput, SupportChannelUncheckedUpdateInput>
+  }
+
+  /**
+   * SupportChannel delete
+   */
+  export type SupportChannelDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+    /**
+     * Filter which SupportChannel to delete.
+     */
+    where: SupportChannelWhereUniqueInput
+  }
+
+  /**
+   * SupportChannel deleteMany
+   */
+  export type SupportChannelDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SupportChannels to delete
+     */
+    where?: SupportChannelWhereInput
+  }
+
+  /**
+   * SupportChannel without action
+   */
+  export type SupportChannelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SupportChannel
+     */
+    select?: SupportChannelSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Model Notice
    */
 
@@ -41428,6 +42453,18 @@ export namespace Prisma {
   export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
 
 
+  export const SupportChannelScalarFieldEnum: {
+    type: 'type',
+    enabled: 'enabled',
+    value: 'value',
+    label: 'label',
+    sortOrder: 'sortOrder',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SupportChannelScalarFieldEnum = (typeof SupportChannelScalarFieldEnum)[keyof typeof SupportChannelScalarFieldEnum]
+
+
   export const NoticeScalarFieldEnum: {
     id: 'id',
     messageBn: 'messageBn',
@@ -41928,6 +42965,20 @@ export namespace Prisma {
    * Reference to a field of type 'DisplayCurrency[]'
    */
   export type ListEnumDisplayCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DisplayCurrency[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SupportChannelType'
+   */
+  export type EnumSupportChannelTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupportChannelType'>
+    
+
+
+  /**
+   * Reference to a field of type 'SupportChannelType[]'
+   */
+  export type ListEnumSupportChannelTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupportChannelType[]'>
     
 
 
@@ -44663,6 +45714,65 @@ export namespace Prisma {
     smtpPassCiphertext?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSettings"> | Date | string
+  }
+
+  export type SupportChannelWhereInput = {
+    AND?: SupportChannelWhereInput | SupportChannelWhereInput[]
+    OR?: SupportChannelWhereInput[]
+    NOT?: SupportChannelWhereInput | SupportChannelWhereInput[]
+    type?: EnumSupportChannelTypeFilter<"SupportChannel"> | $Enums.SupportChannelType
+    enabled?: BoolFilter<"SupportChannel"> | boolean
+    value?: StringNullableFilter<"SupportChannel"> | string | null
+    label?: StringNullableFilter<"SupportChannel"> | string | null
+    sortOrder?: IntFilter<"SupportChannel"> | number
+    updatedAt?: DateTimeFilter<"SupportChannel"> | Date | string
+  }
+
+  export type SupportChannelOrderByWithRelationInput = {
+    type?: SortOrder
+    enabled?: SortOrder
+    value?: SortOrderInput | SortOrder
+    label?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SupportChannelWhereUniqueInput = Prisma.AtLeast<{
+    type?: $Enums.SupportChannelType
+    AND?: SupportChannelWhereInput | SupportChannelWhereInput[]
+    OR?: SupportChannelWhereInput[]
+    NOT?: SupportChannelWhereInput | SupportChannelWhereInput[]
+    enabled?: BoolFilter<"SupportChannel"> | boolean
+    value?: StringNullableFilter<"SupportChannel"> | string | null
+    label?: StringNullableFilter<"SupportChannel"> | string | null
+    sortOrder?: IntFilter<"SupportChannel"> | number
+    updatedAt?: DateTimeFilter<"SupportChannel"> | Date | string
+  }, "type">
+
+  export type SupportChannelOrderByWithAggregationInput = {
+    type?: SortOrder
+    enabled?: SortOrder
+    value?: SortOrderInput | SortOrder
+    label?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SupportChannelCountOrderByAggregateInput
+    _avg?: SupportChannelAvgOrderByAggregateInput
+    _max?: SupportChannelMaxOrderByAggregateInput
+    _min?: SupportChannelMinOrderByAggregateInput
+    _sum?: SupportChannelSumOrderByAggregateInput
+  }
+
+  export type SupportChannelScalarWhereWithAggregatesInput = {
+    AND?: SupportChannelScalarWhereWithAggregatesInput | SupportChannelScalarWhereWithAggregatesInput[]
+    OR?: SupportChannelScalarWhereWithAggregatesInput[]
+    NOT?: SupportChannelScalarWhereWithAggregatesInput | SupportChannelScalarWhereWithAggregatesInput[]
+    type?: EnumSupportChannelTypeWithAggregatesFilter<"SupportChannel"> | $Enums.SupportChannelType
+    enabled?: BoolWithAggregatesFilter<"SupportChannel"> | boolean
+    value?: StringNullableWithAggregatesFilter<"SupportChannel"> | string | null
+    label?: StringNullableWithAggregatesFilter<"SupportChannel"> | string | null
+    sortOrder?: IntWithAggregatesFilter<"SupportChannel"> | number
+    updatedAt?: DateTimeWithAggregatesFilter<"SupportChannel"> | Date | string
   }
 
   export type NoticeWhereInput = {
@@ -47942,6 +49052,69 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SupportChannelCreateInput = {
+    type: $Enums.SupportChannelType
+    enabled?: boolean
+    value?: string | null
+    label?: string | null
+    sortOrder?: number
+    updatedAt?: Date | string
+  }
+
+  export type SupportChannelUncheckedCreateInput = {
+    type: $Enums.SupportChannelType
+    enabled?: boolean
+    value?: string | null
+    label?: string | null
+    sortOrder?: number
+    updatedAt?: Date | string
+  }
+
+  export type SupportChannelUpdateInput = {
+    type?: EnumSupportChannelTypeFieldUpdateOperationsInput | $Enums.SupportChannelType
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    value?: NullableStringFieldUpdateOperationsInput | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportChannelUncheckedUpdateInput = {
+    type?: EnumSupportChannelTypeFieldUpdateOperationsInput | $Enums.SupportChannelType
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    value?: NullableStringFieldUpdateOperationsInput | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportChannelCreateManyInput = {
+    type: $Enums.SupportChannelType
+    enabled?: boolean
+    value?: string | null
+    label?: string | null
+    sortOrder?: number
+    updatedAt?: Date | string
+  }
+
+  export type SupportChannelUpdateManyMutationInput = {
+    type?: EnumSupportChannelTypeFieldUpdateOperationsInput | $Enums.SupportChannelType
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    value?: NullableStringFieldUpdateOperationsInput | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SupportChannelUncheckedUpdateManyInput = {
+    type?: EnumSupportChannelTypeFieldUpdateOperationsInput | $Enums.SupportChannelType
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    value?: NullableStringFieldUpdateOperationsInput | string | null
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type NoticeCreateInput = {
     id?: string
     messageBn?: string | null
@@ -50711,6 +51884,58 @@ export namespace Prisma {
     _max?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
   }
 
+  export type EnumSupportChannelTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SupportChannelType | EnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SupportChannelType[] | ListEnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SupportChannelType[] | ListEnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSupportChannelTypeFilter<$PrismaModel> | $Enums.SupportChannelType
+  }
+
+  export type SupportChannelCountOrderByAggregateInput = {
+    type?: SortOrder
+    enabled?: SortOrder
+    value?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SupportChannelAvgOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type SupportChannelMaxOrderByAggregateInput = {
+    type?: SortOrder
+    enabled?: SortOrder
+    value?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SupportChannelMinOrderByAggregateInput = {
+    type?: SortOrder
+    enabled?: SortOrder
+    value?: SortOrder
+    label?: SortOrder
+    sortOrder?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SupportChannelSumOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type EnumSupportChannelTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SupportChannelType | EnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SupportChannelType[] | ListEnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SupportChannelType[] | ListEnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSupportChannelTypeWithAggregatesFilter<$PrismaModel> | $Enums.SupportChannelType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSupportChannelTypeFilter<$PrismaModel>
+    _max?: NestedEnumSupportChannelTypeFilter<$PrismaModel>
+  }
+
   export type EnumNoticeLevelFilter<$PrismaModel = never> = {
     equals?: $Enums.NoticeLevel | EnumNoticeLevelFieldRefInput<$PrismaModel>
     in?: $Enums.NoticeLevel[] | ListEnumNoticeLevelFieldRefInput<$PrismaModel>
@@ -53009,6 +54234,10 @@ export namespace Prisma {
     set?: $Enums.DisplayCurrency
   }
 
+  export type EnumSupportChannelTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SupportChannelType
+  }
+
   export type EnumNoticeLevelFieldUpdateOperationsInput = {
     set?: $Enums.NoticeLevel
   }
@@ -53699,6 +54928,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
     _max?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSupportChannelTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SupportChannelType | EnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SupportChannelType[] | ListEnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SupportChannelType[] | ListEnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSupportChannelTypeFilter<$PrismaModel> | $Enums.SupportChannelType
+  }
+
+  export type NestedEnumSupportChannelTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SupportChannelType | EnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SupportChannelType[] | ListEnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SupportChannelType[] | ListEnumSupportChannelTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSupportChannelTypeWithAggregatesFilter<$PrismaModel> | $Enums.SupportChannelType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSupportChannelTypeFilter<$PrismaModel>
+    _max?: NestedEnumSupportChannelTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumNoticeLevelFilter<$PrismaModel = never> = {
@@ -62011,6 +63257,10 @@ export namespace Prisma {
      * @deprecated Use SiteSettingsDefaultArgs instead
      */
     export type SiteSettingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SiteSettingsDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SupportChannelDefaultArgs instead
+     */
+    export type SupportChannelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SupportChannelDefaultArgs<ExtArgs>
     /**
      * @deprecated Use NoticeDefaultArgs instead
      */

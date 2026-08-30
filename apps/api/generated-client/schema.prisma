@@ -161,6 +161,21 @@ enum PostStatus {
   PUBLISHED
 }
 
+// Known channel kinds the floating "Need Help?" widget can surface. Kept as
+// a fixed enum (not free-form rows) for the same reason LiveChatLoader only
+// speaks to known providers — each type has a server-built URL template
+// (see services/supportChannel.service.ts buildHref), so an admin-entered
+// value is only ever a phone number / handle / URL, never something that
+// executes. TICKET is the built-in "open a support ticket" action and has
+// no `value`.
+enum SupportChannelType {
+  WHATSAPP
+  TELEGRAM
+  MESSENGER
+  CUSTOM
+  TICKET
+}
+
 // ── Store: Brand → Product → Package (§2 of the brand-product-package spec) ─
 
 // A small, reusable set of card-grid layouts an admin picks per Brand/Product
@@ -1031,6 +1046,22 @@ model SiteSettings {
   smtpFromAddress    String?
 
   updatedAt DateTime @updatedAt
+}
+
+// Floating "Need Help?" widget config — one row per SupportChannelType,
+// lazily upserted on first admin read (same singleton-ish pattern as
+// SiteSettings). Only `enabled` rows are ever sent to the frontend, and the
+// public endpoint computes the final href server-side, so a toggled-off
+// channel never reaches the browser (enforced at the API layer, not CSS).
+// `value` holds the raw phone/handle/URL (null for TICKET); `label` is an
+// optional display-name override, required for CUSTOM.
+model SupportChannel {
+  type      SupportChannelType @id
+  enabled   Boolean            @default(false)
+  value     String?
+  label     String?
+  sortOrder Int                @default(0)
+  updatedAt DateTime           @updatedAt
 }
 
 // Bilingual — same fallback-to-other-language convention as SiteNotice
