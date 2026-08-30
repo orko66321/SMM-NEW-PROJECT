@@ -1034,7 +1034,7 @@ const bn: Translations = {
   },
 
   helpWidget: {
-    open: "সাহায্য দরকার?",
+    open: "সাহায্য লাগবে?",
     close: "বন্ধ করুন",
     openTicket: "সাপোর্ট টিকিট খুলুন",
     ticketModalTitle: "সাপোর্ট টিকিট খুলুন",

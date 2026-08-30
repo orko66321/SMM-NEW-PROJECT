@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "react-router-dom";
 import type { PublicSupportChannel, SupportChannelType } from "@smm/shared";
@@ -35,22 +35,31 @@ const GLYPHS: Record<SupportChannelType, { bg: string; path: string }> = {
   },
 };
 
-function ChannelCircle({ channel, className, style }: { channel: PublicSupportChannel; className?: string; style?: CSSProperties }) {
-  const glyph = GLYPHS[channel.type];
-  const branded = channel.type === "WHATSAPP" || channel.type === "TELEGRAM" || channel.type === "MESSENGER";
+function ChannelIcon({ type }: { type: SupportChannelType }) {
   return (
-    <span
-      className={cn(
-        "flex h-12 w-12 items-center justify-center rounded-full text-white shadow-raised ring-1 ring-black/5 transition-transform duration-200 group-hover:scale-110",
-        !branded && "bg-primary",
-        className,
-      )}
-      style={{ ...(branded ? { backgroundColor: glyph.bg } : null), ...style }}
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+      <path d={GLYPHS[type].path} />
+    </svg>
+  );
+}
+
+// Support headset — the collapsed launcher icon (matches the approved design).
+function HeadsetIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
     >
-      <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-        <path d={glyph.path} />
-      </svg>
-    </span>
+      <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
+      <path d="M20 15.5a2.5 2.5 0 0 1-2.5 2.5H17a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h1.5A2.5 2.5 0 0 1 21 14z" />
+      <path d="M4 15.5A2.5 2.5 0 0 0 6.5 18H7a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H5.5A2.5 2.5 0 0 0 3 14z" />
+      <path d="M20 18v1a3 3 0 0 1-3 3h-3" />
+    </svg>
   );
 }
 
@@ -86,45 +95,62 @@ export default function HelpWidget() {
   if (location.pathname.startsWith("/admin")) return null;
   if (channels.length === 0) return null;
 
-  // Nearest-to-the-button item animates first on open, last on close.
-  const stagger = (i: number) => (open ? (channels.length - 1 - i) * 40 : i * 30);
+  // Nearest-to-the-button item animates in first on open, out last on close.
+  const stagger = (i: number) => (open ? (channels.length - 1 - i) * 45 : i * 35);
+
+  function isBranded(type: SupportChannelType) {
+    return type === "WHATSAPP" || type === "TELEGRAM" || type === "MESSENGER";
+  }
 
   return (
     <>
-      <div className="fixed bottom-20 right-4 z-40 flex flex-col items-end gap-3 sm:right-5 md:bottom-6">
-        <ul className={cn("flex flex-col items-end gap-3", !open && "pointer-events-none")}>
+      {/* Tap-away catcher — only while the tray is open, no dimming. */}
+      {open && (
+        <button
+          type="button"
+          aria-hidden
+          tabIndex={-1}
+          className="fixed inset-0 z-40 cursor-default"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      <div className="fixed bottom-20 right-8 z-40 flex flex-col items-end gap-4 md:bottom-7">
+        {/* Channel tray */}
+        <ul className={cn("flex flex-col items-end gap-3.5", !open && "pointer-events-none")}>
           {channels.map((channel, i) => {
             const label = channel.label;
-            const inner: ReactNode = (
-              <>
-                <span className="rounded-full bg-surface-container/95 px-3 py-1.5 text-sm font-medium text-on-surface shadow-raised ring-1 ring-outline-variant/60 backdrop-blur">
-                  {label}
-                </span>
-                <ChannelCircle channel={channel} />
-              </>
+            const circleClass = cn(
+              "help-channel relative flex h-14 w-14 items-center justify-center rounded-full text-white",
+              "transition-transform duration-200 ease-ds hover:scale-110",
+              !isBranded(channel.type) && "bg-primary",
+            );
+            const circleStyle = isBranded(channel.type) ? { backgroundColor: GLYPHS[channel.type].bg } : undefined;
+            const hoverLabel = (
+              <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-full bg-surface-card/95 px-3 py-1.5 text-sm font-medium text-on-surface opacity-0 shadow-raised ring-1 ring-white/10 backdrop-blur transition-opacity duration-150 group-hover:opacity-100">
+                {label}
+              </span>
             );
             const itemClass = cn(
-              "group flex items-center gap-2.5 transition-all duration-300 ease-ds",
+              "group flex items-center justify-end transition-all duration-300 ease-ds",
               open ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-90 opacity-0",
             );
             return (
-              <li
-                key={channel.type}
-                style={{ transitionDelay: `${stagger(i)}ms` }}
-                className={itemClass}
-                aria-hidden={!open}
-              >
+              <li key={channel.type} style={{ transitionDelay: `${stagger(i)}ms` }} className={itemClass} aria-hidden={!open}>
                 {channel.type === "TICKET" ? (
                   <button
                     type="button"
                     tabIndex={open ? 0 : -1}
-                    className="flex items-center gap-2.5"
+                    aria-label={label}
+                    className={cn(circleClass, "focus:outline-none focus-visible:ring-2 focus-visible:ring-white")}
+                    style={circleStyle}
                     onClick={() => {
                       setTicketOpen(true);
                       setOpen(false);
                     }}
                   >
-                    {inner}
+                    {hoverLabel}
+                    <ChannelIcon type={channel.type} />
                   </button>
                 ) : (
                   <a
@@ -132,10 +158,14 @@ export default function HelpWidget() {
                     target="_blank"
                     rel="noopener noreferrer"
                     tabIndex={open ? 0 : -1}
-                    className="flex items-center gap-2.5"
+                    aria-label={label}
+                    title={label}
+                    className={cn(circleClass, "focus:outline-none focus-visible:ring-2 focus-visible:ring-white")}
+                    style={circleStyle}
                     onClick={() => setOpen(false)}
                   >
-                    {inner}
+                    {hoverLabel}
+                    <ChannelIcon type={channel.type} />
                   </a>
                 )}
               </li>
@@ -143,27 +173,50 @@ export default function HelpWidget() {
           })}
         </ul>
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={open ? t("helpWidget.close") : t("helpWidget.open")}
-          className={cn(
-            "flex h-14 w-14 items-center justify-center rounded-full bg-primary text-on-primary shadow-overlay ring-1 ring-black/10 transition-transform duration-300 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-            open && "rotate-90",
-          )}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" className="h-6 w-6">
-            {open ? (
-              <path d="M6 6l12 12M18 6L6 18" />
-            ) : (
-              <>
-                <path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 3-3 3" />
-                <path d="M12 17h.01" />
-              </>
+        {/* Trigger row: persistent "Need help?" pill + the launcher */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            tabIndex={open ? -1 : 0}
+            aria-hidden={open}
+            onClick={() => setOpen(true)}
+            className={cn(
+              "help-stack relative flex items-center gap-2.5 rounded-full bg-surface-card/95 py-2.5 pl-2.5 pr-4 shadow-overlay ring-1 ring-white/10 backdrop-blur transition-all duration-300 ease-ds hover:ring-white/20",
+              open ? "pointer-events-none translate-x-4 opacity-0" : "translate-x-0 opacity-100",
             )}
-          </svg>
-        </button>
+          >
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-accent-on-dark">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                <path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4.3 3.7A1 1 0 0 1 3 20V6a2 2 0 0 1 1-2z" />
+                <circle cx="9" cy="10.5" r="1.15" fill="#fff" />
+                <circle cx="13" cy="10.5" r="1.15" fill="#fff" />
+              </svg>
+            </span>
+            <span className="text-sm font-semibold text-on-surface">{t("helpWidget.open")}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-label={open ? t("helpWidget.close") : t("helpWidget.open")}
+            className={cn(
+              "help-fab help-stack relative flex h-16 w-16 items-center justify-center rounded-full text-white",
+              "transition-transform duration-300 ease-ds hover:scale-105 active:scale-95",
+              "focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/40",
+              open && "help-fab--open",
+            )}
+          >
+            <span className={cn("absolute transition-all duration-300 ease-ds", open ? "scale-50 opacity-0" : "scale-100 opacity-100")}>
+              <HeadsetIcon className="h-7 w-7" />
+            </span>
+            <span className={cn("absolute transition-all duration-300 ease-ds", open ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-50 opacity-0")}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" className="h-6 w-6">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </span>
+          </button>
+        </div>
       </div>
 
       {ticketOpen && <SupportTicketModal onClose={() => setTicketOpen(false)} />}
