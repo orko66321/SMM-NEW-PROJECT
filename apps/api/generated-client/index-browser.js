@@ -377,6 +377,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   status: 'status',
   mode: 'mode',
   providerOrderId: 'providerOrderId',
+  priority: 'priority',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -406,11 +407,31 @@ exports.Prisma.RefillRequestScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TicketCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isAutomated: 'isAutomated',
+  enabled: 'enabled',
+  sortOrder: 'sortOrder'
+};
+
+exports.Prisma.TicketSubcategoryScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  name: 'name',
+  actionKey: 'actionKey',
+  enabled: 'enabled',
+  sortOrder: 'sortOrder'
+};
+
 exports.Prisma.TicketScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  categoryId: 'categoryId',
+  subcategoryId: 'subcategoryId',
   subject: 'subject',
   status: 'status',
+  orderIds: 'orderIds',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -421,6 +442,16 @@ exports.Prisma.TicketMessageScalarFieldEnum = {
   senderId: 'senderId',
   senderRole: 'senderRole',
   body: 'body',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TicketOrderActionScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  orderId: 'orderId',
+  actionKey: 'actionKey',
+  result: 'result',
+  detail: 'detail',
   createdAt: 'createdAt'
 };
 
@@ -716,16 +747,39 @@ exports.RefillStatus = exports.$Enums.RefillStatus = {
   REJECTED: 'REJECTED'
 };
 
+exports.TicketActionKey = exports.$Enums.TicketActionKey = {
+  REFILL: 'REFILL',
+  CANCEL: 'CANCEL',
+  SPEED_UP: 'SPEED_UP',
+  RESTART: 'RESTART',
+  FAKE_COMPLETE: 'FAKE_COMPLETE',
+  OTHER: 'OTHER'
+};
+
 exports.TicketStatus = exports.$Enums.TicketStatus = {
   OPEN: 'OPEN',
   PENDING_ADMIN: 'PENDING_ADMIN',
   PENDING_USER: 'PENDING_USER',
-  CLOSED: 'CLOSED'
+  CLOSED: 'CLOSED',
+  AI_PROCESSING: 'AI_PROCESSING',
+  RESOLVED: 'RESOLVED',
+  ESCALATED: 'ESCALATED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  REPLIED: 'REPLIED'
 };
 
 exports.TicketSender = exports.$Enums.TicketSender = {
   USER: 'USER',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  SYSTEM: 'SYSTEM'
+};
+
+exports.TicketOrderActionResult = exports.$Enums.TicketOrderActionResult = {
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  NOT_ELIGIBLE: 'NOT_ELIGIBLE',
+  ESCALATED: 'ESCALATED',
+  PENDING: 'PENDING'
 };
 
 exports.DepositStatus = exports.$Enums.DepositStatus = {
@@ -804,8 +858,11 @@ exports.Prisma.ModelName = {
   Order: 'Order',
   OrderIntent: 'OrderIntent',
   RefillRequest: 'RefillRequest',
+  TicketCategory: 'TicketCategory',
+  TicketSubcategory: 'TicketSubcategory',
   Ticket: 'Ticket',
   TicketMessage: 'TicketMessage',
+  TicketOrderAction: 'TicketOrderAction',
   Deposit: 'Deposit',
   AdminAuditLog: 'AdminAuditLog',
   DripFeed: 'DripFeed',

@@ -4,7 +4,13 @@ import type { CreateOrderInput, ResolveManualRefillInput, UpdateOrderStatusInput
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import { adjustWalletBalance } from "./wallet.service.js";
-import { getProviderOrThrow, submitProviderRefill } from "./providerClient.service.js";
+import {
+  getProviderOrThrow,
+  getProviderOrderStatus,
+  mapProviderOrderStatus,
+  submitProviderCancel,
+  submitProviderRefill,
+} from "./providerClient.service.js";
 
 function requestFingerprint(input: CreateOrderInput): string {
   return crypto.createHash("sha256").update(JSON.stringify(input)).digest("hex");
@@ -347,7 +353,8 @@ export async function findPendingAutoSubmitOrders(limit = 25) {
   return prisma.order.findMany({
     where: { status: "PENDING", providerOrderId: null, service: { autoSubmit: true } },
     include: { service: { include: { provider: true, backupProvider: true } } },
-    orderBy: { createdAt: "asc" },
+    // AI Support "Speed up" flags an order `priority` — process those first.
+    orderBy: [{ priority: "desc" }, { createdAt: "asc" }],
     take: limit,
   });
 }
@@ -364,8 +371,91 @@ export async function findActiveProviderOrders(limit = 200) {
   return prisma.order.findMany({
     where: { status: { in: ["PROCESSING", "IN_PROGRESS"] }, providerOrderId: { not: null } },
     include: { service: { include: { provider: true } } },
+    orderBy: [{ priority: "desc" }, { createdAt: "asc" }],
     take: limit,
   });
+}
+
+// ── AI Support / agent-override order actions ───────────────────────────────
+// These are the single service-layer entry points the ticket automation
+// engine (services/ticketAutomation.service.ts) AND the admin manual-override
+// buttons both call — never a second copy of the logic. Each throws AppError
+// on ineligibility so the caller can turn it into a ticket escalation or an
+// admin-facing message.
+
+const CANCELLABLE_STATUSES = ["PENDING", "PROCESSING", "IN_PROGRESS"];
+
+/**
+ * Cancels a still-cancellable order: `action=cancel` upstream for an AUTO
+ * order that reached a provider, then flips status to CANCELED —
+ * updateOrderStatus issues the wallet refund atomically on that transition
+ * (reusing the exact same refund path as an admin status change).
+ */
+export async function cancelOrderForUser(userId: string, orderId: string) {
+  const order = await prisma.order.findFirst({
+    where: { id: orderId, userId },
+    include: { service: true },
+  });
+  if (!order) throw AppError.notFound("Order not found");
+  if (!order.service?.cancelEnabled) {
+    throw AppError.badRequest("This service does not support cancellation");
+  }
+  if (!CANCELLABLE_STATUSES.includes(order.status)) {
+    throw AppError.badRequest("This order can no longer be canceled");
+  }
+  if (order.mode === "AUTO" && order.providerOrderId && order.service.providerId) {
+    const provider = await getProviderOrThrow(order.service.providerId);
+    await submitProviderCancel(provider, order.providerOrderId);
+  } else {
+    throw AppError.badRequest("This order has no provider to cancel automatically — a human needs to handle it");
+  }
+  return updateOrderStatus(orderId, { status: "CANCELED" });
+}
+
+/** Re-checks a stuck order against the provider and reconciles local status/remains. */
+export async function refreshOrderFromProvider(userId: string, orderId: string) {
+  const order = await prisma.order.findFirst({
+    where: { id: orderId, userId },
+    include: { service: true },
+  });
+  if (!order) throw AppError.notFound("Order not found");
+  if (order.mode !== "AUTO" || !order.providerOrderId || !order.service?.providerId) {
+    throw AppError.badRequest("This order has no provider state to refresh — a human needs to check it");
+  }
+  const provider = await getProviderOrThrow(order.service.providerId);
+  const remote = await getProviderOrderStatus(provider, order.providerOrderId);
+  const mapped = mapProviderOrderStatus(remote.status);
+  const updated = await updateOrderStatus(orderId, {
+    status: mapped,
+    startCount: remote.start_count !== undefined ? Number(remote.start_count) : undefined,
+    remains: remote.remains !== undefined ? Number(remote.remains) : undefined,
+  });
+  return { order: updated, providerStatus: remote.status };
+}
+
+/** Panel-side "priority" flag for the AI Support "Speed up" action. */
+export async function prioritizeOrderForUser(userId: string, orderId: string) {
+  const order = await prisma.order.findFirst({ where: { id: orderId, userId } });
+  if (!order) throw AppError.notFound("Order not found");
+  return prisma.order.update({ where: { id: orderId }, data: { priority: true } });
+}
+
+/** Fetches the current provider-reported status for a linked order, or null if there is nothing to fetch. */
+export async function peekProviderStatus(userId: string, orderId: string): Promise<string | null> {
+  const order = await prisma.order.findFirst({
+    where: { id: orderId, userId },
+    include: { service: true },
+  });
+  if (!order || order.mode !== "AUTO" || !order.providerOrderId || !order.service?.providerId) {
+    return null;
+  }
+  try {
+    const provider = await getProviderOrThrow(order.service.providerId);
+    const remote = await getProviderOrderStatus(provider, order.providerOrderId);
+    return remote.status ?? null;
+  } catch {
+    return null;
+  }
 }
 
 // ── Refills ────────────────────────────────────────────────────────────────

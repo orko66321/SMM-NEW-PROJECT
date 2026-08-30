@@ -119,8 +119,9 @@ describe("list query filters actually reach the route handlers", () => {
   it("tickets (admin): status filter narrows the list", async () => {
     const admin = await createUser({ role: "ADMIN" });
     const buyer = await createUser();
-    await createTicket(buyer.id, { subject: "Open one", message: "help" });
-    const closedOne = await createTicket(buyer.id, { subject: "Closed one", message: "help" });
+    const human = await prisma.ticketCategory.findFirstOrThrow({ where: { isAutomated: false } });
+    await createTicket(buyer.id, { categoryId: human.id, message: "Open one — help" });
+    const closedOne = await createTicket(buyer.id, { categoryId: human.id, message: "Closed one — help" });
     await prisma.ticket.update({ where: { id: closedOne.id }, data: { status: "CLOSED" } });
 
     const res = await request(app)
@@ -130,7 +131,7 @@ describe("list query filters actually reach the route handlers", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.items).toHaveLength(1);
-    expect(res.body.items[0].subject).toBe("Closed one");
+    expect(res.body.items[0].subject).toContain("Closed one");
   });
 
   it("users (admin): search filter narrows the list by username/email", async () => {

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createTicket, getMyTickets } from "../../api/resources.js";
@@ -7,30 +7,34 @@ import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
-import { EmptyState, StatusBadge } from "../../components/ds/index.js";
+import { EmptyState, StatusBadge, Tabs } from "../../components/ds/index.js";
+import { TicketForm, type TicketFormValue } from "../../components/tickets/TicketForm.js";
 
 export default function Tickets() {
   const toast = useToast();
   const queryClient = useQueryClient();
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { data } = useQuery({ queryKey: ["tickets"], queryFn: () => getMyTickets({ page: 1, pageSize: 20 }), enabled: !!user });
+  const { data } = useQuery({
+    queryKey: ["tickets"],
+    queryFn: () => getMyTickets({ page: 1, pageSize: 20 }),
+    enabled: !!user,
+  });
 
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
+  const [tab, setTab] = useState<"new" | "history">("new");
+  const [formKey, setFormKey] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
+  async function onSubmit(value: TicketFormValue) {
     setSubmitting(true);
     setError(null);
     try {
-      await createTicket({ subject, message });
+      await createTicket(value);
       toast.push(t("tickets.submittedToast"), "success");
-      setSubject("");
-      setMessage("");
+      setFormKey((k) => k + 1);
       queryClient.invalidateQueries({ queryKey: ["tickets"] });
+      setTab("history");
     } catch (err) {
       setError(apiErrorMessage(err, t("tickets.failedFallback")));
     } finally {
@@ -44,42 +48,57 @@ export default function Tickets() {
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-      <div className="card lg:col-span-2">
-        <h2 className="mb-3 text-sm font-semibold">{t("tickets.ticketHistory")}</h2>
-        <ul className="divide-y divide-outline-variant">
-          {data?.items.map((t2: { id: string; subject: string; status: string; updatedAt: string }) => (
-            <li key={t2.id}>
-              <Link
-                to={`/dashboard/tickets/${t2.id}`}
-                className="flex min-h-[44px] flex-wrap items-center justify-between gap-x-3 gap-y-1 py-3 text-sm hover:text-primary"
-              >
-                <span className="min-w-0 flex-1 basis-full truncate sm:basis-auto">{t2.subject}</span>
-                <span className="flex shrink-0 items-center gap-3">
-                  <span className="text-xs text-on-surface-variant">{new Date(t2.updatedAt).toLocaleDateString()}</span>
-                  <StatusBadge status={t2.status} kind="ticket" />
-                </span>
-              </Link>
-            </li>
-          ))}
-          {data?.items.length === 0 && <EmptyState icon="support" title={t("tickets.noTicketsYet")} />}
-        </ul>
+      <div className="space-y-4 lg:col-span-2">
+        <Tabs
+          items={[
+            { id: "new", label: t("tickets.tabNew") },
+            { id: "history", label: t("tickets.tabHistory"), count: data?.total },
+          ]}
+          activeId={tab}
+          onChange={(id) => setTab(id as "new" | "history")}
+        />
+
+        {tab === "new" ? (
+          <div className="card space-y-4">
+            <h2 className="text-lg font-bold">{t("tickets.newTicket")}</h2>
+            <TicketForm
+              key={formKey}
+              onSubmit={onSubmit}
+              submitting={submitting}
+              error={error}
+              submitLabel={t("tickets.submit")}
+            />
+          </div>
+        ) : (
+          <div className="card">
+            <h2 className="mb-3 text-sm font-semibold">{t("tickets.ticketHistory")}</h2>
+            <ul className="divide-y divide-outline-variant">
+              {data?.items.map((tk: { id: string; subject: string; status: string; updatedAt: string }) => (
+                <li key={tk.id}>
+                  <Link
+                    to={`/dashboard/tickets/${tk.id}`}
+                    className="flex min-h-[44px] flex-wrap items-center justify-between gap-x-3 gap-y-1 py-3 text-sm hover:text-primary"
+                  >
+                    <span className="min-w-0 flex-1 basis-full truncate sm:basis-auto">{tk.subject}</span>
+                    <span className="flex shrink-0 items-center gap-3">
+                      <span className="text-xs text-on-surface-variant">{new Date(tk.updatedAt).toLocaleDateString()}</span>
+                      <StatusBadge status={tk.status} kind="ticket" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+              {data?.items.length === 0 && <EmptyState icon="support" title={t("tickets.noTicketsYet")} />}
+            </ul>
+          </div>
+        )}
       </div>
 
-      <form onSubmit={onSubmit} className="card h-fit space-y-4">
-        <h2 className="text-lg font-bold">{t("tickets.newTicket")}</h2>
-        {error && <p className="rounded-control border border-error/30 bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
-        <div>
-          <label className="label" htmlFor="subject">{t("tickets.subjectLabel")}</label>
-          <input id="subject" className="input-field" value={subject} onChange={(e) => setSubject(e.target.value)} required />
-        </div>
-        <div>
-          <label className="label" htmlFor="message">{t("tickets.messageLabel")}</label>
-          <textarea id="message" rows={5} className="input-field" value={message} onChange={(e) => setMessage(e.target.value)} required />
-        </div>
-        <button type="submit" className="btn-primary w-full" disabled={submitting}>
-          {submitting ? t("tickets.submitting") : t("tickets.submit")}
-        </button>
-      </form>
+      <aside className="card h-fit space-y-3 text-sm">
+        <h2 className="text-sm font-semibold">{t("tickets.readBeforeTitle")}</h2>
+        <p className="text-on-surface-variant">{t("tickets.guidelineAi")}</p>
+        <p className="text-on-surface-variant">{t("tickets.guidelineHuman")}</p>
+        <p className="text-on-surface-variant">{t("tickets.guidelineOne")}</p>
+      </aside>
     </div>
   );
 }
