@@ -11,6 +11,7 @@ export async function resetDb() {
   await prisma.walletTransaction.deleteMany();
   await prisma.idempotencyKey.deleteMany();
   await prisma.adminAuditLog.deleteMany();
+  await prisma.ticketOrderAction.deleteMany();
   await prisma.ticketMessage.deleteMany();
   await prisma.ticket.deleteMany();
   await prisma.refillRequest.deleteMany();

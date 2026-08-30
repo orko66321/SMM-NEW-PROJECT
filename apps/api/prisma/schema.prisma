@@ -67,11 +67,47 @@ enum TicketStatus {
   PENDING_ADMIN
   PENDING_USER
   CLOSED
+  // AI Support (automated) lifecycle — see services/ticketAutomation.service.ts.
+  // A fully automated ticket goes OPEN → AI_PROCESSING → RESOLVED; anything the
+  // engine can't cleanly resolve goes → ESCALATED and then follows the human
+  // path (IN_PROGRESS → REPLIED → CLOSED), landing in the same admin queue as
+  // Human Support tickets.
+  AI_PROCESSING
+  RESOLVED
+  ESCALATED
+  IN_PROGRESS
+  REPLIED
 }
 
 enum TicketSender {
   USER
   ADMIN
+  // The automated resolution engine posts its per-order findings as SYSTEM
+  // messages, so the customer sees one thread whether the ticket was
+  // AI-resolved or handed to a human.
+  SYSTEM
+}
+
+// Internal action verb for an AI Support subcategory — drives the dispatch in
+// services/ticketAutomation.service.ts. Kept as an enum (not a free-form
+// string) so a typo in an admin-renamed subcategory can never silently route
+// to the wrong handler.
+enum TicketActionKey {
+  REFILL
+  CANCEL
+  SPEED_UP
+  RESTART
+  FAKE_COMPLETE
+  OTHER
+}
+
+// Per-order-per-action outcome for the AI Support audit trail (TicketOrderAction).
+enum TicketOrderActionResult {
+  SUCCESS
+  FAILED
+  NOT_ELIGIBLE
+  ESCALATED
+  PENDING
 }
 
 enum ServiceStatus {
@@ -745,10 +781,16 @@ model Order {
   mode            OrderMode   @default(MANUAL)
   providerOrderId String?
 
+  // Set by the AI Support "Speed up" action — the order-status polling cron
+  // and the pending-submit cron process priority orders first (there is no
+  // universal provider "priority" flag, so this is panel-side only).
+  priority Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  refillRequests RefillRequest[]
+  refillRequests     RefillRequest[]
+  ticketOrderActions TicketOrderAction[]
 
   @@index([userId, createdAt])
   @@index([status])
@@ -822,32 +864,91 @@ model RefillRequest {
 
 // ── Support tickets ──────────────────────────────────────────────────────
 
-model Ticket {
-  id        String       @id @default(cuid())
-  userId    String
-  user      User         @relation(fields: [userId], references: [id])
-  subject   String
-  status    TicketStatus @default(OPEN)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+// DB-driven so admins can add / rename / disable categories and subcategories
+// without a deploy. Seeded (idempotently) by the same migration that creates
+// the tables — "AI Support" (isAutomated) and "Human Support" — because the
+// cPanel host never runs `db:seed`.
+model TicketCategory {
+  id          String  @id @default(cuid())
+  name        String
+  isAutomated Boolean @default(false)
+  enabled     Boolean @default(true)
+  sortOrder   Int     @default(0)
 
-  messages TicketMessage[]
+  subcategories TicketSubcategory[]
+  tickets       Ticket[]
+}
+
+model TicketSubcategory {
+  id         String          @id @default(cuid())
+  categoryId String
+  category   TicketCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name       String
+  actionKey  TicketActionKey
+  enabled    Boolean         @default(true)
+  sortOrder  Int             @default(0)
+
+  tickets Ticket[]
+
+  @@index([categoryId])
+}
+
+model Ticket {
+  id            String             @id @default(cuid())
+  userId        String
+  user          User               @relation(fields: [userId], references: [id])
+  categoryId    String?
+  category      TicketCategory?    @relation(fields: [categoryId], references: [id])
+  subcategoryId String?
+  subcategory   TicketSubcategory? @relation(fields: [subcategoryId], references: [id])
+  subject       String
+  status        TicketStatus       @default(OPEN)
+  // Parsed from the comma-separated Order ID input (AI Support only). Order
+  // ids are cuids in this panel, not integers — the spec's Int[] becomes
+  // String[] here.
+  orderIds      String[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  messages     TicketMessage[]
+  orderActions TicketOrderAction[]
 
   @@index([userId])
   @@index([status])
+  @@index([categoryId])
 }
 
 model TicketMessage {
   id         String       @id @default(cuid())
   ticketId   String
   ticket     Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  senderId   String
-  sender     User         @relation(fields: [senderId], references: [id])
+  // Null for SYSTEM messages posted by the automation engine.
+  senderId   String?
+  sender     User?        @relation(fields: [senderId], references: [id])
   senderRole TicketSender
-  body       String // sanitized with DOMPurify before persisting
+  body       String // sanitized with sanitize-html before persisting
   createdAt  DateTime     @default(now())
 
   @@index([ticketId, createdAt])
+}
+
+// Audit trail for the AI Support engine: one row per (ticket, order, action)
+// so a single ticket carrying several Order IDs has a per-order result rather
+// than one status smeared across the whole ticket. See
+// services/ticketAutomation.service.ts.
+model TicketOrderAction {
+  id        String                  @id @default(cuid())
+  ticketId  String
+  ticket    Ticket                  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  orderId   String
+  order     Order                   @relation(fields: [orderId], references: [id])
+  actionKey TicketActionKey
+  result    TicketOrderActionResult @default(PENDING)
+  detail    String?
+  createdAt DateTime                @default(now())
+
+  @@index([ticketId])
+  @@index([orderId])
 }
 
 // ── Deposits (manual admin-approval flow, plus Phase 2 gateway-confirmed flow) ──

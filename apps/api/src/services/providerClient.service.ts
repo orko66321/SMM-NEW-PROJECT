@@ -152,6 +152,20 @@ export async function submitProviderRefill(
   return String(res.refill);
 }
 
+/**
+ * JAP-standard `action=cancel` — requests cancellation of one already-placed
+ * provider order. Some panels return `{ cancel: 1 }`, others an array of
+ * per-order `{ order, cancel }` objects; anything without a top-level `error`
+ * (already handled in postAction) is treated as accepted — the order-status
+ * poll is what ultimately confirms the order actually moved to canceled.
+ */
+export async function submitProviderCancel(
+  provider: { id: string; apiUrl: string; apiKeyCiphertext: string },
+  providerOrderId: string,
+): Promise<void> {
+  await postAction<unknown>(provider, "cancel", { order: providerOrderId });
+}
+
 /** JAP-standard `action=refill_status` — polled by cron/pollRefillStatus.ts. */
 export async function getProviderRefillStatus(
   provider: { id: string; apiUrl: string; apiKeyCiphertext: string },

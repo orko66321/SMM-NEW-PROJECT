@@ -9,6 +9,9 @@ import type {
   CreateOrderInput,
   CreateProviderInput,
   CreateTicketInput,
+  TicketReplyInput,
+  TicketCategoryDto,
+  AdminTicketActionInput,
   NoticeInput,
   PackageInput,
   PaymentGatewayKey,
@@ -57,12 +60,14 @@ export const requestOrderRefill = (orderId: string) =>
   apiClient.post(`/orders/${orderId}/refill`).then((r) => r.data.refill);
 
 // ── Tickets ──────────────────────────────────────────────────────────────
+export const getTicketCategories = (): Promise<TicketCategoryDto[]> =>
+  apiClient.get("/tickets/categories").then((r) => r.data.categories);
 export const getMyTickets = (params: { page?: number; pageSize?: number }) =>
   apiClient.get("/tickets", { params }).then((r) => r.data);
 export const getTicket = (id: string) => apiClient.get(`/tickets/${id}`).then((r) => r.data.ticket);
 export const createTicket = (input: CreateTicketInput) => apiClient.post("/tickets", input).then((r) => r.data.ticket);
-export const replyToTicket = (id: string, message: string) =>
-  apiClient.post(`/tickets/${id}/messages`, { message }).then((r) => r.data.message);
+export const replyToTicket = (id: string, input: TicketReplyInput) =>
+  apiClient.post(`/tickets/${id}/messages`, input).then((r) => r.data.ticket);
 
 // ── Admin ────────────────────────────────────────────────────────────────
 export const getAdminStats = () => apiClient.get("/admin/stats").then((r) => r.data);
@@ -99,11 +104,15 @@ export const getAdminDeposits = (params: { page?: number; pageSize?: number; sta
 export const reviewAdminDeposit = (id: string, action: "APPROVE" | "REJECT", note?: string) =>
   apiClient.post(`/admin/deposits/${id}/review`, { action, note }).then((r) => r.data.deposit);
 
-export const getAdminTickets = (params: { page?: number; pageSize?: number; status?: string }) =>
+export const getAdminTickets = (params: { page?: number; pageSize?: number; status?: string; categoryId?: string; subcategoryId?: string }) =>
   apiClient.get("/admin/tickets", { params }).then((r) => r.data);
+export const getAdminTicketCategories = (): Promise<TicketCategoryDto[]> =>
+  apiClient.get("/admin/tickets/categories").then((r) => r.data.categories);
 export const getAdminTicket = (id: string) => apiClient.get(`/admin/tickets/${id}`).then((r) => r.data.ticket);
 export const replyToAdminTicket = (id: string, message: string) =>
   apiClient.post(`/admin/tickets/${id}/messages`, { message }).then((r) => r.data.message);
+export const runAdminTicketAction = (id: string, input: AdminTicketActionInput) =>
+  apiClient.post(`/admin/tickets/${id}/action`, input).then((r) => r.data.ticket);
 export const updateAdminTicketStatus = (id: string, status: string) =>
   apiClient.patch(`/admin/tickets/${id}/status`, { status }).then((r) => r.data.ticket);
 

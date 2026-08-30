@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "react-router-dom";
 import type { PublicSupportChannel, SupportChannelType } from "@smm/shared";
-import { createTicket, getPublicSupportChannels } from "../../api/resources.js";
+import { createTicket, getPublicSupportChannels, getTicketCategories } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
@@ -235,6 +235,15 @@ function SupportTicketModal({ onClose }: { onClose: () => void }) {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // The widget's quick form always opens a Human Support ticket — AI Support
+  // (structured order actions) lives on the full Tickets page.
+  const { data: ticketCategories } = useQuery({
+    queryKey: ["ticket-categories"],
+    queryFn: getTicketCategories,
+    enabled: !!user,
+  });
+  const humanCategory = ticketCategories?.find((c) => !c.isAutomated);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -252,9 +261,16 @@ function SupportTicketModal({ onClose }: { onClose: () => void }) {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!humanCategory) {
+      toast.push(apiErrorMessage(null, t("helpWidget.failedFallback")), "error");
+      return;
+    }
     setSubmitting(true);
     try {
-      await createTicket({ subject: subject.trim(), message: message.trim() });
+      await createTicket({
+        categoryId: humanCategory.id,
+        message: `${subject.trim()}\n\n${message.trim()}`,
+      });
       toast.push(t("helpWidget.submittedToast"), "success");
       queryClient.invalidateQueries({ queryKey: ["tickets"] });
       onClose();

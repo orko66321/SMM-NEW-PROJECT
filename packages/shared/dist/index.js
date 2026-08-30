@@ -15,7 +15,34 @@ export const OrderStatusValues = [
     "CANCELED",
     "FAILED",
 ];
-export const TicketStatusValues = ["OPEN", "PENDING_ADMIN", "PENDING_USER", "CLOSED"];
+export const TicketStatusValues = [
+    "OPEN",
+    "PENDING_ADMIN",
+    "PENDING_USER",
+    "CLOSED",
+    "AI_PROCESSING",
+    "RESOLVED",
+    "ESCALATED",
+    "IN_PROGRESS",
+    "REPLIED",
+];
+// Internal verb for an AI Support subcategory — kept in sync with the
+// TicketActionKey enum in schema.prisma. Drives services/ticketAutomation.service.ts.
+export const TicketActionKeyValues = [
+    "REFILL",
+    "CANCEL",
+    "SPEED_UP",
+    "RESTART",
+    "FAKE_COMPLETE",
+    "OTHER",
+];
+export const TicketOrderActionResultValues = [
+    "SUCCESS",
+    "FAILED",
+    "NOT_ELIGIBLE",
+    "ESCALATED",
+    "PENDING",
+];
 export const DepositStatusValues = ["PENDING", "APPROVED", "REJECTED"];
 export const UserStatusValues = ["ACTIVE", "SUSPENDED"];
 export const RefillStatusValues = ["REQUESTED", "IN_PROGRESS", "COMPLETED", "REJECTED"];
@@ -61,6 +88,8 @@ export const depositListQuerySchema = paginationQuerySchema.extend({
 });
 export const ticketListQuerySchema = paginationQuerySchema.extend({
     status: z.enum(TicketStatusValues).optional(),
+    categoryId: z.string().optional(),
+    subcategoryId: z.string().optional(),
 });
 export const userListQuerySchema = paginationQuerySchema.extend({
     search: searchQueryField,
@@ -187,15 +216,55 @@ export const resolveManualRefillSchema = z.object({
     note: z.string().trim().max(500).optional(),
 });
 // ── Tickets ──────────────────────────────────────────────────────────────
+// One Category selector drives the rest of the form. "AI Support"
+// (isAutomated) needs subcategoryId + orderIds and no free text; "Human
+// Support" needs a message. The subject is generated server-side (see
+// services/ticket.service.ts buildSubject) — there is no subject input.
+// orderIds is the raw comma-separated string ("10867,10868") — parsed,
+// ownership-checked, and capped server-side, deliberately not constrained
+// here (matches the reference implementation).
 export const createTicketSchema = z.object({
-    subject: z.string().trim().min(3).max(200),
-    message: z.string().trim().min(1).max(5000),
+    categoryId: z.string().min(1),
+    subcategoryId: z.string().min(1).optional(),
+    orderIds: z.string().trim().max(1000).optional(),
+    message: z.string().trim().max(5000).optional(),
 });
+// The thread-view reply box re-uses the exact same form, so a user reply
+// carries the same shape as a create — it can submit another AI Support
+// action mid-conversation or switch to Human Support to escalate.
+export const ticketReplySchema = z.object({
+    categoryId: z.string().min(1).optional(),
+    subcategoryId: z.string().min(1).optional(),
+    orderIds: z.string().trim().max(1000).optional(),
+    message: z.string().trim().max(5000).optional(),
+});
+// Admin/agent replies are always plain free text.
 export const createTicketMessageSchema = z.object({
     message: z.string().trim().min(1).max(5000),
 });
 export const updateTicketStatusSchema = z.object({
     status: z.enum(TicketStatusValues),
+});
+// Agent manual-override buttons on the admin ticket view. refill/cancel/
+// restart call the SAME service functions the automation engine uses (one
+// service layer, two callers) against a single linked order.
+export const TicketAgentActionValues = ["refill", "cancel", "restart", "close", "reopen"];
+export const adminTicketActionSchema = z.object({
+    action: z.enum(TicketAgentActionValues),
+    orderId: z.string().min(1).optional(),
+    note: z.string().trim().max(1000).optional(),
+});
+// Public shape for the category/subcategory list the ticket form renders from.
+export const ticketSubcategoryDtoSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    actionKey: z.enum(TicketActionKeyValues),
+});
+export const ticketCategoryDtoSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    isAutomated: z.boolean(),
+    subcategories: z.array(ticketSubcategoryDtoSchema),
 });
 // ── Admin: users ─────────────────────────────────────────────────────────
 export const updateUserSchema = z.object({

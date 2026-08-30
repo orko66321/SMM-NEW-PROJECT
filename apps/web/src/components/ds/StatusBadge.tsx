@@ -28,6 +28,11 @@ const TICKET_TONE: Record<string, BadgeTone> = {
   PENDING_ADMIN: "warning",
   PENDING_USER: "primary",
   CLOSED: "neutral",
+  AI_PROCESSING: "info",
+  RESOLVED: "success",
+  ESCALATED: "error",
+  IN_PROGRESS: "warning",
+  REPLIED: "primary",
 };
 
 const TONE_MAP: Record<Kind, Record<string, BadgeTone>> = {

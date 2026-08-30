@@ -8,8 +8,12 @@ export declare const RoleValues: readonly ["USER", "STAFF", "ADMIN"];
 export type Role = (typeof RoleValues)[number];
 export declare const OrderStatusValues: readonly ["PENDING", "PROCESSING", "IN_PROGRESS", "COMPLETED", "PARTIAL", "CANCELED", "FAILED"];
 export type OrderStatus = (typeof OrderStatusValues)[number];
-export declare const TicketStatusValues: readonly ["OPEN", "PENDING_ADMIN", "PENDING_USER", "CLOSED"];
+export declare const TicketStatusValues: readonly ["OPEN", "PENDING_ADMIN", "PENDING_USER", "CLOSED", "AI_PROCESSING", "RESOLVED", "ESCALATED", "IN_PROGRESS", "REPLIED"];
 export type TicketStatus = (typeof TicketStatusValues)[number];
+export declare const TicketActionKeyValues: readonly ["REFILL", "CANCEL", "SPEED_UP", "RESTART", "FAKE_COMPLETE", "OTHER"];
+export type TicketActionKey = (typeof TicketActionKeyValues)[number];
+export declare const TicketOrderActionResultValues: readonly ["SUCCESS", "FAILED", "NOT_ELIGIBLE", "ESCALATED", "PENDING"];
+export type TicketOrderActionResult = (typeof TicketOrderActionResultValues)[number];
 export declare const DepositStatusValues: readonly ["PENDING", "APPROVED", "REJECTED"];
 export type DepositStatus = (typeof DepositStatusValues)[number];
 export declare const UserStatusValues: readonly ["ACTIVE", "SUSPENDED"];
@@ -121,15 +125,21 @@ export declare const ticketListQuerySchema: z.ZodObject<{
     page: z.ZodDefault<z.ZodNumber>;
     pageSize: z.ZodDefault<z.ZodNumber>;
 } & {
-    status: z.ZodOptional<z.ZodEnum<["OPEN", "PENDING_ADMIN", "PENDING_USER", "CLOSED"]>>;
+    status: z.ZodOptional<z.ZodEnum<["OPEN", "PENDING_ADMIN", "PENDING_USER", "CLOSED", "AI_PROCESSING", "RESOLVED", "ESCALATED", "IN_PROGRESS", "REPLIED"]>>;
+    categoryId: z.ZodOptional<z.ZodString>;
+    subcategoryId: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     page: number;
     pageSize: number;
-    status?: "OPEN" | "PENDING_ADMIN" | "PENDING_USER" | "CLOSED" | undefined;
+    status?: "IN_PROGRESS" | "OPEN" | "PENDING_ADMIN" | "PENDING_USER" | "CLOSED" | "AI_PROCESSING" | "RESOLVED" | "ESCALATED" | "REPLIED" | undefined;
+    categoryId?: string | undefined;
+    subcategoryId?: string | undefined;
 }, {
     page?: number | undefined;
     pageSize?: number | undefined;
-    status?: "OPEN" | "PENDING_ADMIN" | "PENDING_USER" | "CLOSED" | undefined;
+    status?: "IN_PROGRESS" | "OPEN" | "PENDING_ADMIN" | "PENDING_USER" | "CLOSED" | "AI_PROCESSING" | "RESOLVED" | "ESCALATED" | "REPLIED" | undefined;
+    categoryId?: string | undefined;
+    subcategoryId?: string | undefined;
 }>;
 export type TicketListQuery = z.infer<typeof ticketListQuerySchema>;
 export declare const userListQuerySchema: z.ZodObject<{
@@ -453,16 +463,39 @@ export declare const resolveManualRefillSchema: z.ZodObject<{
 }>;
 export type ResolveManualRefillInput = z.infer<typeof resolveManualRefillSchema>;
 export declare const createTicketSchema: z.ZodObject<{
-    subject: z.ZodString;
-    message: z.ZodString;
+    categoryId: z.ZodString;
+    subcategoryId: z.ZodOptional<z.ZodString>;
+    orderIds: z.ZodOptional<z.ZodString>;
+    message: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    message: string;
-    subject: string;
+    categoryId: string;
+    message?: string | undefined;
+    subcategoryId?: string | undefined;
+    orderIds?: string | undefined;
 }, {
-    message: string;
-    subject: string;
+    categoryId: string;
+    message?: string | undefined;
+    subcategoryId?: string | undefined;
+    orderIds?: string | undefined;
 }>;
 export type CreateTicketInput = z.infer<typeof createTicketSchema>;
+export declare const ticketReplySchema: z.ZodObject<{
+    categoryId: z.ZodOptional<z.ZodString>;
+    subcategoryId: z.ZodOptional<z.ZodString>;
+    orderIds: z.ZodOptional<z.ZodString>;
+    message: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    message?: string | undefined;
+    categoryId?: string | undefined;
+    subcategoryId?: string | undefined;
+    orderIds?: string | undefined;
+}, {
+    message?: string | undefined;
+    categoryId?: string | undefined;
+    subcategoryId?: string | undefined;
+    orderIds?: string | undefined;
+}>;
+export type TicketReplyInput = z.infer<typeof ticketReplySchema>;
 export declare const createTicketMessageSchema: z.ZodObject<{
     message: z.ZodString;
 }, "strip", z.ZodTypeAny, {
@@ -472,13 +505,79 @@ export declare const createTicketMessageSchema: z.ZodObject<{
 }>;
 export type CreateTicketMessageInput = z.infer<typeof createTicketMessageSchema>;
 export declare const updateTicketStatusSchema: z.ZodObject<{
-    status: z.ZodEnum<["OPEN", "PENDING_ADMIN", "PENDING_USER", "CLOSED"]>;
+    status: z.ZodEnum<["OPEN", "PENDING_ADMIN", "PENDING_USER", "CLOSED", "AI_PROCESSING", "RESOLVED", "ESCALATED", "IN_PROGRESS", "REPLIED"]>;
 }, "strip", z.ZodTypeAny, {
-    status: "OPEN" | "PENDING_ADMIN" | "PENDING_USER" | "CLOSED";
+    status: "IN_PROGRESS" | "OPEN" | "PENDING_ADMIN" | "PENDING_USER" | "CLOSED" | "AI_PROCESSING" | "RESOLVED" | "ESCALATED" | "REPLIED";
 }, {
-    status: "OPEN" | "PENDING_ADMIN" | "PENDING_USER" | "CLOSED";
+    status: "IN_PROGRESS" | "OPEN" | "PENDING_ADMIN" | "PENDING_USER" | "CLOSED" | "AI_PROCESSING" | "RESOLVED" | "ESCALATED" | "REPLIED";
 }>;
 export type UpdateTicketStatusInput = z.infer<typeof updateTicketStatusSchema>;
+export declare const TicketAgentActionValues: readonly ["refill", "cancel", "restart", "close", "reopen"];
+export type TicketAgentAction = (typeof TicketAgentActionValues)[number];
+export declare const adminTicketActionSchema: z.ZodObject<{
+    action: z.ZodEnum<["refill", "cancel", "restart", "close", "reopen"]>;
+    orderId: z.ZodOptional<z.ZodString>;
+    note: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    action: "refill" | "cancel" | "restart" | "close" | "reopen";
+    note?: string | undefined;
+    orderId?: string | undefined;
+}, {
+    action: "refill" | "cancel" | "restart" | "close" | "reopen";
+    note?: string | undefined;
+    orderId?: string | undefined;
+}>;
+export type AdminTicketActionInput = z.infer<typeof adminTicketActionSchema>;
+export declare const ticketSubcategoryDtoSchema: z.ZodObject<{
+    id: z.ZodString;
+    name: z.ZodString;
+    actionKey: z.ZodEnum<["REFILL", "CANCEL", "SPEED_UP", "RESTART", "FAKE_COMPLETE", "OTHER"]>;
+}, "strip", z.ZodTypeAny, {
+    id: string;
+    name: string;
+    actionKey: "REFILL" | "CANCEL" | "SPEED_UP" | "RESTART" | "FAKE_COMPLETE" | "OTHER";
+}, {
+    id: string;
+    name: string;
+    actionKey: "REFILL" | "CANCEL" | "SPEED_UP" | "RESTART" | "FAKE_COMPLETE" | "OTHER";
+}>;
+export declare const ticketCategoryDtoSchema: z.ZodObject<{
+    id: z.ZodString;
+    name: z.ZodString;
+    isAutomated: z.ZodBoolean;
+    subcategories: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        name: z.ZodString;
+        actionKey: z.ZodEnum<["REFILL", "CANCEL", "SPEED_UP", "RESTART", "FAKE_COMPLETE", "OTHER"]>;
+    }, "strip", z.ZodTypeAny, {
+        id: string;
+        name: string;
+        actionKey: "REFILL" | "CANCEL" | "SPEED_UP" | "RESTART" | "FAKE_COMPLETE" | "OTHER";
+    }, {
+        id: string;
+        name: string;
+        actionKey: "REFILL" | "CANCEL" | "SPEED_UP" | "RESTART" | "FAKE_COMPLETE" | "OTHER";
+    }>, "many">;
+}, "strip", z.ZodTypeAny, {
+    id: string;
+    name: string;
+    isAutomated: boolean;
+    subcategories: {
+        id: string;
+        name: string;
+        actionKey: "REFILL" | "CANCEL" | "SPEED_UP" | "RESTART" | "FAKE_COMPLETE" | "OTHER";
+    }[];
+}, {
+    id: string;
+    name: string;
+    isAutomated: boolean;
+    subcategories: {
+        id: string;
+        name: string;
+        actionKey: "REFILL" | "CANCEL" | "SPEED_UP" | "RESTART" | "FAKE_COMPLETE" | "OTHER";
+    }[];
+}>;
+export type TicketCategoryDto = z.infer<typeof ticketCategoryDtoSchema>;
 export declare const updateUserSchema: z.ZodObject<{
     status: z.ZodOptional<z.ZodEnum<["ACTIVE", "SUSPENDED"]>>;
     role: z.ZodOptional<z.ZodEnum<["USER", "STAFF", "ADMIN"]>>;
@@ -997,7 +1096,7 @@ export declare const noticeObjectSchema: z.ZodObject<{
     startsAt: z.ZodOptional<z.ZodNullable<z.ZodDate>>;
     endsAt: z.ZodOptional<z.ZodNullable<z.ZodDate>>;
 }, "strip", z.ZodTypeAny, {
-    level: "INFO" | "WARNING" | "SUCCESS" | "ERROR";
+    level: "SUCCESS" | "INFO" | "WARNING" | "ERROR";
     active: boolean;
     messageBn?: string | null | undefined;
     messageEn?: string | null | undefined;
@@ -1006,7 +1105,7 @@ export declare const noticeObjectSchema: z.ZodObject<{
 }, {
     messageBn?: string | null | undefined;
     messageEn?: string | null | undefined;
-    level?: "INFO" | "WARNING" | "SUCCESS" | "ERROR" | undefined;
+    level?: "SUCCESS" | "INFO" | "WARNING" | "ERROR" | undefined;
     active?: boolean | undefined;
     startsAt?: Date | null | undefined;
     endsAt?: Date | null | undefined;
@@ -1019,7 +1118,7 @@ export declare const noticeInputSchema: z.ZodEffects<z.ZodObject<{
     startsAt: z.ZodOptional<z.ZodNullable<z.ZodDate>>;
     endsAt: z.ZodOptional<z.ZodNullable<z.ZodDate>>;
 }, "strip", z.ZodTypeAny, {
-    level: "INFO" | "WARNING" | "SUCCESS" | "ERROR";
+    level: "SUCCESS" | "INFO" | "WARNING" | "ERROR";
     active: boolean;
     messageBn?: string | null | undefined;
     messageEn?: string | null | undefined;
@@ -1028,12 +1127,12 @@ export declare const noticeInputSchema: z.ZodEffects<z.ZodObject<{
 }, {
     messageBn?: string | null | undefined;
     messageEn?: string | null | undefined;
-    level?: "INFO" | "WARNING" | "SUCCESS" | "ERROR" | undefined;
+    level?: "SUCCESS" | "INFO" | "WARNING" | "ERROR" | undefined;
     active?: boolean | undefined;
     startsAt?: Date | null | undefined;
     endsAt?: Date | null | undefined;
 }>, {
-    level: "INFO" | "WARNING" | "SUCCESS" | "ERROR";
+    level: "SUCCESS" | "INFO" | "WARNING" | "ERROR";
     active: boolean;
     messageBn?: string | null | undefined;
     messageEn?: string | null | undefined;
@@ -1042,7 +1141,7 @@ export declare const noticeInputSchema: z.ZodEffects<z.ZodObject<{
 }, {
     messageBn?: string | null | undefined;
     messageEn?: string | null | undefined;
-    level?: "INFO" | "WARNING" | "SUCCESS" | "ERROR" | undefined;
+    level?: "SUCCESS" | "INFO" | "WARNING" | "ERROR" | undefined;
     active?: boolean | undefined;
     startsAt?: Date | null | undefined;
     endsAt?: Date | null | undefined;
