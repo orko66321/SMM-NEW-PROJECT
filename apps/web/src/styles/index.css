@@ -127,6 +127,38 @@
     background: var(--row-hover);
   }
 
+  /* ── Floating "Need help?" widget ───────────────────────────────────────
+     Glossy violet launcher on the brand gradient, a soft "stacked card"
+     sitting behind it, and a pulsing halo while the channel tray is open. */
+  .help-fab {
+    background:
+      radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.42), transparent 55%),
+      var(--brand-gradient);
+    box-shadow:
+      0 0 0 6px rgba(139, 92, 246, 0.14),
+      0 18px 38px -10px rgba(109, 40, 217, 0.6),
+      inset 0 1px 1px rgba(255, 255, 255, 0.45);
+  }
+  .help-fab--open {
+    animation: help-glow 2.6s var(--ease) infinite;
+  }
+  .help-stack::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -9px 9px 9px -9px;
+    border-radius: 22px;
+    background: rgb(var(--sf-card) / 0.92);
+    border: 1px solid rgb(255 255 255 / 0.06);
+    box-shadow: var(--shadow-raised);
+  }
+  .help-channel {
+    box-shadow:
+      0 0 0 3px rgb(var(--sf-page) / 0.9),
+      0 0 0 4px rgb(255 255 255 / 0.1),
+      0 10px 20px -6px rgba(2, 6, 23, 0.7);
+  }
+
   /* ── Thin scrollbar for nav / table scroll areas ─────────────────────── */
   .aio-scroll {
     scrollbar-width: thin;
@@ -142,5 +174,25 @@
   .aio-scroll::-webkit-scrollbar-thumb {
     background: rgb(var(--sf-highest));
     border-radius: 20px;
+  }
+}
+
+@keyframes help-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 6px rgba(139, 92, 246, 0.14),
+      0 0 0 0 rgba(139, 92, 246, 0.5);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(139, 92, 246, 0.22),
+      0 0 16px 5px rgba(139, 92, 246, 0.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .help-fab--open {
+    animation: none;
   }
 }
