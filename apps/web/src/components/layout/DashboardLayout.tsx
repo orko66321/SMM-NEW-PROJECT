@@ -215,7 +215,9 @@ export default function DashboardLayout() {
           </div>
         </header>
         <NoticeBar />
-        <main className="flex-1 p-4 pb-24 sm:p-6 md:pb-6">
+        {/* Extra bottom padding clears the mobile bottom-nav and the floating
+            HelpWidget launcher so page content never ends up underneath it. */}
+        <main className="flex-1 p-4 pb-28 sm:p-6 sm:pb-28">
           <Outlet />
         </main>
       </div>
