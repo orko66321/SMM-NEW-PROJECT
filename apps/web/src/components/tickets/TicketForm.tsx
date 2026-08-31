@@ -20,11 +20,16 @@ export function TicketForm({
   submitting,
   error,
   submitLabel,
+  idPrefix = "ticket",
 }: {
   onSubmit: (value: TicketFormValue) => void | Promise<void>;
   submitting: boolean;
   error?: string | null;
   submitLabel: string;
+  // Namespaces the field `id`s so the form can be mounted more than once on
+  // a page (e.g. the Tickets page card + the HelpWidget popover) without
+  // colliding `id` / `htmlFor` pairs.
+  idPrefix?: string;
 }) {
   const { t } = useLanguage();
   const { data: categories } = useQuery({
@@ -60,9 +65,9 @@ export function TicketForm({
       )}
 
       <div>
-        <label className="label" htmlFor="ticket-category">{t("tickets.categoryLabel")}</label>
+        <label className="label" htmlFor={`${idPrefix}-category`}>{t("tickets.categoryLabel")}</label>
         <select
-          id="ticket-category"
+          id={`${idPrefix}-category`}
           className="input-field"
           value={categoryId}
           onChange={(e) => {
@@ -81,9 +86,9 @@ export function TicketForm({
       {isAutomated ? (
         <>
           <div>
-            <label className="label" htmlFor="ticket-subcategory">{t("tickets.subcategoryLabel")}</label>
+            <label className="label" htmlFor={`${idPrefix}-subcategory`}>{t("tickets.subcategoryLabel")}</label>
             <select
-              id="ticket-subcategory"
+              id={`${idPrefix}-subcategory`}
               className="input-field"
               value={subcategoryId}
               onChange={(e) => setSubcategoryId(e.target.value)}
@@ -96,9 +101,9 @@ export function TicketForm({
             </select>
           </div>
           <div>
-            <label className="label" htmlFor="ticket-orderids">{t("tickets.orderIdsLabel")}</label>
+            <label className="label" htmlFor={`${idPrefix}-orderids`}>{t("tickets.orderIdsLabel")}</label>
             <input
-              id="ticket-orderids"
+              id={`${idPrefix}-orderids`}
               className="input-field"
               value={orderIds}
               onChange={(e) => setOrderIds(e.target.value)}
@@ -110,9 +115,9 @@ export function TicketForm({
         </>
       ) : categoryId ? (
         <div>
-          <label className="label" htmlFor="ticket-message">{t("tickets.messageLabel")}</label>
+          <label className="label" htmlFor={`${idPrefix}-message`}>{t("tickets.messageLabel")}</label>
           <textarea
-            id="ticket-message"
+            id={`${idPrefix}-message`}
             rows={5}
             className="input-field"
             value={message}
