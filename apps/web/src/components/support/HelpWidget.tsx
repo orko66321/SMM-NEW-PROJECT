@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "react-router-dom";
 import type { PublicSupportChannel, SupportChannelType } from "@smm/shared";
-import { createTicket, getPublicSupportChannels, getTicketCategories } from "../../api/resources.js";
+import { createTicket, getPublicSupportChannels } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { cn } from "../ds/cn.js";
+import { TicketForm, type TicketFormValue } from "../tickets/TicketForm.js";
 
 // Brand glyphs kept local to the widget — these are third-party logos, not
 // part of the design-system Icon set. `bg` is the brand colour for the
@@ -75,6 +76,7 @@ export default function HelpWidget() {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [ticketOpen, setTicketOpen] = useState(false);
+  const fabRef = useRef<HTMLButtonElement>(null);
 
   const { data: channels = [] } = useQuery<PublicSupportChannel[]>({
     queryKey: ["public-support-channels"],
@@ -182,6 +184,7 @@ export default function HelpWidget() {
             itself and never sits on top of page text (any breakpoint).
             Size steps up from 56px on mobile to 64px at md+. */}
         <button
+          ref={fabRef}
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
@@ -219,117 +222,140 @@ export default function HelpWidget() {
         </button>
       </div>
 
-      {ticketOpen && <SupportTicketModal onClose={() => setTicketOpen(false)} />}
+      {ticketOpen && <SupportTicketPopover onClose={() => setTicketOpen(false)} returnFocusRef={fabRef} />}
     </>
   );
 }
 
-function SupportTicketModal({ onClose }: { onClose: () => void }) {
+/**
+ * Compact "open a support ticket" panel launched from the widget — renders
+ * the SAME `<TicketForm>` the /dashboard/tickets card uses (Category → AI vs
+ * Human Support → subcategory + order IDs / message), so a customer can file
+ * a ticket without leaving the page. Bottom sheet on mobile, anchored bottom-
+ * right on desktop. Scrim + Esc + click-outside close it; focus is trapped
+ * while open and restored to the launcher on close.
+ */
+function SupportTicketPopover({
+  onClose,
+  returnFocusRef,
+}: {
+  onClose: () => void;
+  returnFocusRef: RefObject<HTMLElement | null>;
+}) {
   const { t } = useLanguage();
   const toast = useToast();
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  // The widget's quick form always opens a Human Support ticket — AI Support
-  // (structured order actions) lives on the full Tickets page.
-  const { data: ticketCategories } = useQuery({
-    queryKey: ["ticket-categories"],
-    queryFn: getTicketCategories,
-    enabled: !!user,
-  });
-  const humanCategory = ticketCategories?.find((c) => !c.isAutomated);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const launcher = returnFocusRef.current;
+
+    const focusables = () =>
+      panelRef.current
+        ? Array.from(
+            panelRef.current.querySelectorAll<HTMLElement>(
+              'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])',
+            ),
+          ).filter((el) => el.offsetParent !== null)
+        : [];
+
+    focusables()[0]?.focus();
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0]!;
+      const last = items[items.length - 1]!;
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && (active === first || !panelRef.current?.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !panelRef.current?.contains(active))) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown, true);
     return () => {
-      document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKeyDown, true);
+      document.body.style.overflow = prevOverflow;
+      launcher?.focus?.();
     };
-  }, []);
+  }, [onClose, returnFocusRef]);
 
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!humanCategory) {
-      toast.push(apiErrorMessage(null, t("helpWidget.failedFallback")), "error");
-      return;
-    }
+  async function submit(value: TicketFormValue) {
     setSubmitting(true);
+    setError(null);
     try {
-      await createTicket({
-        categoryId: humanCategory.id,
-        message: `${subject.trim()}\n\n${message.trim()}`,
-      });
+      await createTicket(value);
       toast.push(t("helpWidget.submittedToast"), "success");
       queryClient.invalidateQueries({ queryKey: ["tickets"] });
       onClose();
     } catch (err) {
-      toast.push(apiErrorMessage(err, t("helpWidget.failedFallback")), "error");
+      setError(apiErrorMessage(err, t("helpWidget.failedFallback")));
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label={t("helpWidget.ticketModalTitle")}>
-      <div className="absolute inset-0 bg-surface-deep/70 backdrop-blur-sm" onClick={onClose} aria-hidden />
-      <div ref={dialogRef} className="relative w-full max-w-md rounded-t-xl border border-outline-variant bg-surface-container p-5 shadow-2xl sm:rounded-xl">
-        <div className="mb-4 flex items-start justify-between gap-3">
-          <h2 className="text-base font-bold text-on-surface">{t("helpWidget.ticketModalTitle")}</h2>
-          <button type="button" aria-label={t("helpWidget.close")} onClick={onClose} className="rounded-control p-1 text-on-surface-variant hover:bg-surface-container-highest">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5"><path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" /></svg>
+    <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-labelledby="hw-ticket-title">
+      <div className="absolute inset-0 bg-surface-deep/60 backdrop-blur-sm" onClick={onClose} aria-hidden />
+      <div
+        ref={panelRef}
+        className={cn(
+          "glass absolute flex max-h-[85vh] flex-col overflow-hidden border border-outline-variant shadow-overlay",
+          "inset-x-0 bottom-0 rounded-t-card",
+          "sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-[384px] sm:max-w-[calc(100vw-3rem)] sm:rounded-card",
+        )}
+      >
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-outline-variant px-5 py-4">
+          <h2 id="hw-ticket-title" className="text-base font-bold text-on-surface">
+            {t("helpWidget.ticketModalTitle")}
+          </h2>
+          <button
+            type="button"
+            aria-label={t("helpWidget.close")}
+            onClick={onClose}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control text-on-surface-variant transition hover:bg-surface-container-high hover:text-on-surface"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
+              <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+            </svg>
           </button>
         </div>
 
-        {!user ? (
-          <div className="space-y-4">
-            <p className="text-sm text-on-surface-variant">{t("helpWidget.signInPrompt")}</p>
-            <Link to="/login" onClick={onClose} className="btn-primary inline-flex w-full justify-center">
-              {t("helpWidget.signIn")}
-            </Link>
-          </div>
-        ) : (
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div>
-              <label className="label" htmlFor="hw-subject">{t("helpWidget.subjectLabel")}</label>
-              <input
-                id="hw-subject"
-                className="input-field"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                minLength={3}
-                maxLength={200}
-                required
-              />
+        <div className="aio-scroll min-h-0 flex-1 overflow-y-auto px-5 py-4">
+          {!user ? (
+            <div className="space-y-4">
+              <p className="text-sm text-on-surface-variant">{t("helpWidget.signInPrompt")}</p>
+              <Link to="/login" onClick={onClose} className="btn-primary inline-flex w-full justify-center">
+                {t("helpWidget.signIn")}
+              </Link>
             </div>
-            <div>
-              <label className="label" htmlFor="hw-message">{t("helpWidget.messageLabel")}</label>
-              <textarea
-                id="hw-message"
-                rows={4}
-                className="input-field"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                maxLength={5000}
-                required
-              />
-            </div>
-            <button type="submit" className="btn-primary w-full" disabled={submitting}>
-              {submitting ? t("helpWidget.submitting") : t("helpWidget.submit")}
-            </button>
-          </form>
-        )}
+          ) : (
+            <TicketForm
+              idPrefix="hw-ticket"
+              onSubmit={submit}
+              submitting={submitting}
+              error={error}
+              submitLabel={t("helpWidget.submit")}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
