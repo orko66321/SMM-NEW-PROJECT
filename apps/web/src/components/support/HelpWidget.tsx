@@ -104,18 +104,21 @@ export default function HelpWidget() {
 
   return (
     <>
-      {/* Tap-away catcher — only while the tray is open, no dimming. */}
-      {open && (
-        <button
-          type="button"
-          aria-hidden
-          tabIndex={-1}
-          className="fixed inset-0 z-40 cursor-default"
-          onClick={() => setOpen(false)}
-        />
-      )}
+      {/* Scrim — dims the page so the expanded tray reads as an overlay,
+          not broken UI floating over content. Also the tap-away catcher.
+          Kept mounted so it can fade. */}
+      <button
+        type="button"
+        aria-hidden
+        tabIndex={-1}
+        onClick={() => setOpen(false)}
+        className={cn(
+          "fixed inset-0 z-40 cursor-default bg-surface-deep/50 backdrop-blur-[2px] transition-opacity duration-300",
+          open ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+      />
 
-      <div className="fixed bottom-20 right-8 z-40 flex flex-col items-end gap-4 md:bottom-7">
+      <div className="fixed bottom-20 right-8 z-50 flex flex-col items-end gap-4 md:bottom-7">
         {/* Channel tray */}
         <ul className={cn("flex flex-col items-end gap-3.5", !open && "pointer-events-none")}>
           {channels.map((channel, i) => {
@@ -141,7 +144,8 @@ export default function HelpWidget() {
                   <button
                     type="button"
                     tabIndex={open ? 0 : -1}
-                    aria-label={label}
+                    aria-label={t("helpWidget.openTicket")}
+                    title={t("helpWidget.openTicket")}
                     className={cn(circleClass, "focus:outline-none focus-visible:ring-2 focus-visible:ring-white")}
                     style={circleStyle}
                     onClick={() => {
@@ -173,37 +177,32 @@ export default function HelpWidget() {
           })}
         </ul>
 
-        {/* Trigger row: persistent "Need help?" pill + the launcher */}
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            tabIndex={open ? -1 : 0}
-            aria-hidden={open}
-            onClick={() => setOpen(true)}
+        {/* Launcher — one toggle control. The "Need help?" label is a
+            hover / focus reveal, so the resting footprint is just the 64px
+            button and never sits on top of page text (any breakpoint). */}
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-label={open ? t("helpWidget.close") : t("helpWidget.open")}
+          className="group/fab flex items-center rounded-full outline-none transition-transform duration-300 ease-ds hover:scale-[1.03] active:scale-95"
+        >
+          <span
             className={cn(
-              "help-stack relative flex items-center gap-2.5 rounded-full bg-surface-card/95 py-2.5 pl-2.5 pr-4 shadow-overlay ring-1 ring-white/10 backdrop-blur transition-all duration-300 ease-ds hover:ring-white/20",
-              open ? "pointer-events-none translate-x-4 opacity-0" : "translate-x-0 opacity-100",
+              "pointer-events-none flex max-w-0 items-center overflow-hidden opacity-0 transition-all duration-300 ease-ds",
+              !open &&
+                "group-hover/fab:max-w-[220px] group-hover/fab:opacity-100 group-focus-visible/fab:max-w-[220px] group-focus-visible/fab:opacity-100",
             )}
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-accent-on-dark">
-              <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
-                <path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-4.3 3.7A1 1 0 0 1 3 20V6a2 2 0 0 1 1-2z" />
-                <circle cx="9" cy="10.5" r="1.15" fill="#fff" />
-                <circle cx="13" cy="10.5" r="1.15" fill="#fff" />
-              </svg>
+            <span className="mr-3 whitespace-nowrap rounded-full bg-surface-card/95 px-4 py-3 text-sm font-semibold text-on-surface shadow-overlay ring-1 ring-white/10 backdrop-blur">
+              {t("helpWidget.open")}
             </span>
-            <span className="text-sm font-semibold text-on-surface">{t("helpWidget.open")}</span>
-          </button>
+          </span>
 
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-label={open ? t("helpWidget.close") : t("helpWidget.open")}
+          <span
             className={cn(
-              "help-fab help-stack relative flex h-16 w-16 items-center justify-center rounded-full text-white",
-              "transition-transform duration-300 ease-ds hover:scale-105 active:scale-95",
-              "focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/40",
+              "help-fab help-stack relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-white",
+              "ring-4 ring-transparent transition-shadow duration-300 group-focus-visible/fab:ring-primary/40",
               open && "help-fab--open",
             )}
           >
@@ -215,8 +214,8 @@ export default function HelpWidget() {
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
             </span>
-          </button>
-        </div>
+          </span>
+        </button>
       </div>
 
       {ticketOpen && <SupportTicketModal onClose={() => setTicketOpen(false)} />}
