@@ -128,29 +128,21 @@
   }
 
   /* ── Floating "Need help?" widget ───────────────────────────────────────
-     Glossy violet launcher on the brand gradient, a soft "stacked card"
-     sitting behind it, and a pulsing halo while the channel tray is open. */
+     Glossy violet launcher on the brand gradient with a pulsing halo while
+     the channel tray is open. All shadows are on the round button itself
+     (no offset pseudo-element) so they track its circular shape exactly. */
   .help-fab {
     background:
       radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.42), transparent 55%),
       var(--brand-gradient);
     box-shadow:
-      0 0 0 6px rgba(139, 92, 246, 0.14),
-      0 18px 38px -10px rgba(109, 40, 217, 0.6),
+      0 0 0 5px rgba(139, 92, 246, 0.14),
+      0 4px 12px -2px rgba(2, 6, 23, 0.45),
+      0 16px 34px -10px rgba(109, 40, 217, 0.55),
       inset 0 1px 1px rgba(255, 255, 255, 0.45);
   }
   .help-fab--open {
     animation: help-glow 2.6s var(--ease) infinite;
-  }
-  .help-stack::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset: -9px 9px 9px -9px;
-    border-radius: 22px;
-    background: rgb(var(--sf-card) / 0.92);
-    border: 1px solid rgb(255 255 255 / 0.06);
-    box-shadow: var(--shadow-raised);
   }
   .help-channel {
     box-shadow:
