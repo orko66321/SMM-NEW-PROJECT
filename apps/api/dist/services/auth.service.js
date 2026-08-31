@@ -27,7 +27,8 @@ function publicUser(user) {
         // a lock on a VIP/Reseller-only product without a round trip; purchase
         // is still re-checked server-side regardless (see store.service.ts).
         isVip: user.isVip ?? false,
-        isReseller: !!user.apiKeyHash,
+        // Admin-granted reseller flag OR a self-generated reseller API key.
+        isReseller: (user.isReseller ?? false) || !!user.apiKeyHash,
     };
 }
 export async function registerUser(input) {

@@ -66,7 +66,7 @@ export async function purchasePackage(userId, input, idempotencyKey) {
                 throw AppError.badRequest("This package is not available");
             }
             const { product } = pkg;
-            const user = await tx.user.findUnique({ where: { id: userId }, select: { isVip: true, apiKeyHash: true } });
+            const user = await tx.user.findUnique({ where: { id: userId }, select: { isVip: true, isReseller: true, apiKeyHash: true } });
             if (!canUserAccessProduct(product, user)) {
                 throw AppError.forbidden("You don't have access to this product");
             }

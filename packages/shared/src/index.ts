@@ -8,8 +8,14 @@ import { z } from "zod";
 
 // ── Enums ────────────────────────────────────────────────────────────────
 
-export const RoleValues = ["USER", "STAFF", "ADMIN"] as const;
+// Keep in sync with the Prisma `Role` enum. MODERATOR = support agent
+// (see apps/api/src/routes/admin/index.ts for exactly what it can reach).
+export const RoleValues = ["USER", "MODERATOR", "ADMIN"] as const;
 export type Role = (typeof RoleValues)[number];
+
+// Admin-assignable roles, in ascending order of privilege — powers the
+// Role <select> on the admin User Detail page.
+export const AssignableRoleValues = ["USER", "MODERATOR", "ADMIN"] as const;
 
 export const OrderStatusValues = [
   "PENDING",
@@ -353,8 +359,9 @@ export type TicketCategoryDto = z.infer<typeof ticketCategoryDtoSchema>;
 export const updateUserSchema = z.object({
   status: z.enum(UserStatusValues).optional(),
   role: z.enum(RoleValues).optional(),
-  // Store Access Type gating (Product.accessType = "VIP") — see User.isVip.
+  // Store Access Type gating (Product.accessType) — see User.isVip / User.isReseller.
   isVip: z.boolean().optional(),
+  isReseller: z.boolean().optional(),
 });
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 

@@ -1,20 +1,34 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { AssignableRoleValues, type Role } from "@smm/shared";
 import { adjustUserWallet, getAdminUser, updateAdminUser } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
+import { useAuth } from "../../context/AuthContext.js";
 import { Badge, Breadcrumbs } from "../../components/ds/index.js";
+
+const ROLE_LABELS: Record<Role, string> = { USER: "User", MODERATOR: "Moderator", ADMIN: "Admin" };
 
 export default function AdminUserDetail() {
   const { id } = useParams<{ id: string }>();
   const toast = useToast();
   const queryClient = useQueryClient();
+  const { user: currentUser } = useAuth();
   const { data: user } = useQuery({ queryKey: ["admin-user", id], queryFn: () => getAdminUser(id!), enabled: !!id });
 
   const [amount, setAmount] = useState<number | "">("");
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [role, setRole] = useState<Role>("USER");
+  const [savingRole, setSavingRole] = useState(false);
+
+  useEffect(() => {
+    if (user?.role) setRole(user.role as Role);
+  }, [user?.role]);
+
+  const isSelf = !!currentUser && currentUser.id === id;
+  const canEditRoles = currentUser?.role === "ADMIN";
 
   function refresh() {
     queryClient.invalidateQueries({ queryKey: ["admin-user", id] });
@@ -60,6 +74,32 @@ export default function AdminUserDetail() {
     }
   }
 
+  async function toggleReseller() {
+    if (!id || !user) return;
+    try {
+      await updateAdminUser(id, { isReseller: !user.isReseller });
+      toast.push(user.isReseller ? "Reseller access removed." : "Reseller access granted.", "success");
+      refresh();
+    } catch (err) {
+      toast.push(apiErrorMessage(err, "Failed to update reseller status"), "error");
+    }
+  }
+
+  async function saveRole() {
+    if (!id || !user || role === user.role) return;
+    setSavingRole(true);
+    try {
+      await updateAdminUser(id, { role });
+      toast.push(`Role updated to ${ROLE_LABELS[role]}.`, "success");
+      refresh();
+    } catch (err) {
+      setRole(user.role as Role); // revert the select on failure
+      toast.push(apiErrorMessage(err, "Failed to update role"), "error");
+    } finally {
+      setSavingRole(false);
+    }
+  }
+
   if (!user) return <p className="text-on-surface-variant">Loading…</p>;
 
   return (
@@ -81,21 +121,60 @@ export default function AdminUserDetail() {
             <p className="label">Orders</p>
             <p className="font-mono text-lg">{user._count?.orders ?? 0}</p>
           </div>
-          <div>
-            <p className="label">Role</p>
-            <p className="text-lg">{user.role}</p>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Badge tone={user.role === "ADMIN" ? "primary" : user.role === "MODERATOR" ? "warning" : "neutral"}>
+              {ROLE_LABELS[user.role as Role] ?? user.role}
+            </Badge>
+            {user.isVip && <Badge tone="primary">VIP</Badge>}
+            {user.isReseller && <Badge tone="primary">Reseller</Badge>}
           </div>
         </div>
+
+        {/* Role management (ADMIN only) */}
+        <div className="mt-3 rounded-card border border-outline-variant p-4">
+          <p className="label">Role</p>
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            <select
+              className="input-field max-w-[200px]"
+              value={role}
+              disabled={!canEditRoles || isSelf}
+              onChange={(e) => setRole(e.target.value as Role)}
+            >
+              {AssignableRoleValues.map((r) => (
+                <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+              ))}
+            </select>
+            <button
+              className="btn-primary"
+              onClick={saveRole}
+              disabled={!canEditRoles || isSelf || savingRole || role === user.role}
+            >
+              {savingRole ? "Saving…" : "Save role"}
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-on-surface-variant">
+            {!canEditRoles
+              ? "Only an Admin can change roles."
+              : isSelf
+                ? "You can't change your own role."
+                : "Admin = full access. Moderator = support agent (view everything, work tickets / deposits / order status; no settings, wallet, catalogue or role changes)."}
+          </p>
+        </div>
+
         <div className="mt-2 flex flex-wrap gap-2">
-          <button className="btn-ghost" onClick={toggleStatus}>
+          <button className="btn-ghost" onClick={toggleStatus} disabled={isSelf}>
             {user.status === "ACTIVE" ? "Suspend user" : "Reactivate user"}
           </button>
           <button className="btn-ghost" onClick={toggleVip}>
             {user.isVip ? "Remove VIP access" : "Grant VIP access"}
           </button>
-          {user.isVip && <span className="badge self-center bg-primary/15 text-primary">VIP</span>}
+          <button className="btn-ghost" onClick={toggleReseller}>
+            {user.isReseller ? "Remove reseller access" : "Grant reseller access"}
+          </button>
         </div>
-        <p className="mt-1 text-xs text-on-surface-variant">VIP gates access to Store products marked "VIP" (Access Type). Reseller-gated products use whether this user has generated a reseller API key instead.</p>
+        <p className="mt-1 text-xs text-on-surface-variant">
+          VIP and Reseller are Store Access-Type grants, independent of role. Reseller access is also granted automatically once a user generates a reseller API key.
+        </p>
       </div>
 
       <form onSubmit={onAdjust} className="card h-fit space-y-4">

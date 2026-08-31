@@ -12,7 +12,7 @@ export default function Leaderboard() {
         <h1 className="text-xl font-bold sm:text-2xl">{t("leaderboard.pageTitle")}</h1>
         <p className="mt-1 text-sm text-on-surface-variant">{t("leaderboard.pageSubtitle")}</p>
       </div>
-      <LeaderboardSection currentUserId={user?.id} isAdmin={user?.role === "ADMIN" || user?.role === "STAFF"} />
+      <LeaderboardSection currentUserId={user?.id} isAdmin={user?.role === "ADMIN" || user?.role === "MODERATOR"} />
     </div>
   );
 }

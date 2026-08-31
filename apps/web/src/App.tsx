@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastProvider } from "./components/ui/Toast.js";
-import { AdminRoute, GuestRoute } from "./routes/guards.js";
+import { AdminOnlyRoute, AdminRoute, GuestRoute } from "./routes/guards.js";
 import DashboardLayout from "./components/layout/DashboardLayout.js";
 import AdminLayout from "./components/layout/AdminLayout.js";
 import PublicLayout from "./components/layout/PublicLayout.js";
@@ -99,28 +99,33 @@ export default function App() {
             </AdminRoute>
           }
         >
+          {/* ADMIN + MODERATOR */}
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="users/:id" element={<AdminUserDetail />} />
-          <Route path="services" element={<AdminServices />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="deposits" element={<AdminDeposits />} />
           <Route path="tickets" element={<AdminTickets />} />
           <Route path="tickets/:id" element={<AdminTicketDetail />} />
-          <Route path="providers" element={<AdminProviders />} />
-          <Route path="providers/:id/import" element={<AdminProviderImport />} />
-          <Route path="payment-gateways" element={<AdminPaymentGateways />} />
-          <Route path="payment-methods" element={<AdminPaymentMethods />} />
-          <Route path="settings" element={<AdminSettings />} />
-          <Route path="support-channels" element={<AdminSupportChannels />} />
-          <Route path="notice-settings" element={<AdminNoticeSettings />} />
-          <Route path="banner" element={<AdminBanner />} />
-          <Route path="posts" element={<AdminPosts />} />
-          <Route path="coupons" element={<AdminCoupons />} />
-          <Route path="brands" element={<AdminBrands />} />
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="packages" element={<AdminPackages />} />
-          <Route path="stock-pools" element={<AdminStockPools />} />
+
+          {/* ADMIN only — mirrors the `adminOnly` sub-routers in the API */}
+          <Route element={<AdminOnlyRoute />}>
+            <Route path="services" element={<AdminServices />} />
+            <Route path="providers" element={<AdminProviders />} />
+            <Route path="providers/:id/import" element={<AdminProviderImport />} />
+            <Route path="payment-gateways" element={<AdminPaymentGateways />} />
+            <Route path="payment-methods" element={<AdminPaymentMethods />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="support-channels" element={<AdminSupportChannels />} />
+            <Route path="notice-settings" element={<AdminNoticeSettings />} />
+            <Route path="banner" element={<AdminBanner />} />
+            <Route path="posts" element={<AdminPosts />} />
+            <Route path="coupons" element={<AdminCoupons />} />
+            <Route path="brands" element={<AdminBrands />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="packages" element={<AdminPackages />} />
+            <Route path="stock-pools" element={<AdminStockPools />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

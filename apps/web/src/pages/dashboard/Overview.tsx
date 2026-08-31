@@ -155,7 +155,7 @@ export default function Overview() {
         )}
       </div>
 
-      <LeaderboardSection currentUserId={user.id} isAdmin={user.role === "ADMIN" || user.role === "STAFF"} />
+      <LeaderboardSection currentUserId={user.id} isAdmin={user.role === "ADMIN" || user.role === "MODERATOR"} />
     </div>
   );
 }
