@@ -37,7 +37,7 @@ const GLYPHS: Record<SupportChannelType, { bg: string; path: string }> = {
 
 function ChannelIcon({ type }: { type: SupportChannelType }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 md:h-6 md:w-6">
       <path d={GLYPHS[type].path} />
     </svg>
   );
@@ -118,13 +118,13 @@ export default function HelpWidget() {
         )}
       />
 
-      <div className="fixed bottom-20 right-8 z-50 flex flex-col items-end gap-4 md:bottom-7">
+      <div className="fixed bottom-20 right-5 z-50 flex flex-col items-end gap-3.5 md:bottom-7 md:right-8 md:gap-4">
         {/* Channel tray */}
-        <ul className={cn("flex flex-col items-end gap-3.5", !open && "pointer-events-none")}>
+        <ul className={cn("flex flex-col items-end gap-3 md:gap-3.5", !open && "pointer-events-none")}>
           {channels.map((channel, i) => {
             const label = channel.label;
             const circleClass = cn(
-              "help-channel relative flex h-14 w-14 items-center justify-center rounded-full text-white",
+              "help-channel relative flex h-12 w-12 items-center justify-center rounded-full text-white md:h-14 md:w-14",
               "transition-transform duration-200 ease-ds hover:scale-110",
               !isBranded(channel.type) && "bg-primary",
             );
@@ -178,8 +178,9 @@ export default function HelpWidget() {
         </ul>
 
         {/* Launcher — one toggle control. The "Need help?" label is a
-            hover / focus reveal, so the resting footprint is just the 64px
-            button and never sits on top of page text (any breakpoint). */}
+            hover / focus reveal, so the resting footprint is just the button
+            itself and never sits on top of page text (any breakpoint).
+            Size steps up from 56px on mobile to 64px at md+. */}
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -194,23 +195,23 @@ export default function HelpWidget() {
                 "group-hover/fab:max-w-[220px] group-hover/fab:opacity-100 group-focus-visible/fab:max-w-[220px] group-focus-visible/fab:opacity-100",
             )}
           >
-            <span className="mr-3 whitespace-nowrap rounded-full bg-surface-card/95 px-4 py-3 text-sm font-semibold text-on-surface shadow-overlay ring-1 ring-white/10 backdrop-blur">
+            <span className="mr-3 whitespace-nowrap rounded-full bg-surface-card/95 px-4 py-2.5 text-sm font-semibold text-on-surface shadow-overlay ring-1 ring-white/10 backdrop-blur">
               {t("helpWidget.open")}
             </span>
           </span>
 
           <span
             className={cn(
-              "help-fab help-stack relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-white",
+              "help-fab relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-white md:h-16 md:w-16",
               "ring-4 ring-transparent transition-shadow duration-300 group-focus-visible/fab:ring-primary/40",
               open && "help-fab--open",
             )}
           >
             <span className={cn("absolute transition-all duration-300 ease-ds", open ? "scale-50 opacity-0" : "scale-100 opacity-100")}>
-              <HeadsetIcon className="h-7 w-7" />
+              <HeadsetIcon className="h-6 w-6 md:h-7 md:w-7" />
             </span>
             <span className={cn("absolute transition-all duration-300 ease-ds", open ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-50 opacity-0")}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" className="h-6 w-6">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" className="h-5 w-5 md:h-6 md:w-6">
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
             </span>
