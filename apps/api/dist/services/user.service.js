@@ -34,6 +34,8 @@ export async function listUsers(page, pageSize, search, dateRange) {
             email: u.email,
             role: u.role,
             status: u.status,
+            isVip: u.isVip,
+            isReseller: u.isReseller,
             balance: u.wallet?.balance.toString() ?? "0",
             ordersCount: u._count.orders,
             createdAt: u.createdAt.toISOString(),
@@ -63,10 +65,21 @@ async function assertNotLastAdmin(userId) {
         throw AppError.badRequest("Cannot demote or suspend the last remaining active admin");
     }
 }
-export async function updateUser(userId, input) {
+export async function updateUser(userId, actorId, input) {
     const existing = await prisma.user.findUnique({ where: { id: userId } });
     if (!existing)
         throw AppError.notFound("User not found");
+    // An admin can't demote or suspend their own account — stops someone
+    // locking themselves out with one mis-click, and makes "who removed my
+    // access" always a different actor in the audit log.
+    if (userId === actorId) {
+        if (input.role && input.role !== existing.role) {
+            throw AppError.badRequest("You can't change your own role");
+        }
+        if (input.status && input.status !== existing.status) {
+            throw AppError.badRequest("You can't change your own account status");
+        }
+    }
     if ((input.role && input.role !== "ADMIN") || input.status === "SUSPENDED") {
         await assertNotLastAdmin(userId);
     }

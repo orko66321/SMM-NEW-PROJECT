@@ -5,7 +5,12 @@ import { z } from "zod";
  * with the enum values in apps/api/prisma/schema.prisma.
  */
 // ── Enums ────────────────────────────────────────────────────────────────
-export const RoleValues = ["USER", "STAFF", "ADMIN"];
+// Keep in sync with the Prisma `Role` enum. MODERATOR = support agent
+// (see apps/api/src/routes/admin/index.ts for exactly what it can reach).
+export const RoleValues = ["USER", "MODERATOR", "ADMIN"];
+// Admin-assignable roles, in ascending order of privilege — powers the
+// Role <select> on the admin User Detail page.
+export const AssignableRoleValues = ["USER", "MODERATOR", "ADMIN"];
 export const OrderStatusValues = [
     "PENDING",
     "PROCESSING",
@@ -270,8 +275,9 @@ export const ticketCategoryDtoSchema = z.object({
 export const updateUserSchema = z.object({
     status: z.enum(UserStatusValues).optional(),
     role: z.enum(RoleValues).optional(),
-    // Store Access Type gating (Product.accessType = "VIP") — see User.isVip.
+    // Store Access Type gating (Product.accessType) — see User.isVip / User.isReseller.
     isVip: z.boolean().optional(),
+    isReseller: z.boolean().optional(),
 });
 // ── Providers (Phase 2: upstream SMM reseller API) ─────────────────────────
 export const createProviderSchema = z.object({

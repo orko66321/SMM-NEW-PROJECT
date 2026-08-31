@@ -77,10 +77,10 @@ export async function deleteProduct(id) {
     await prisma.product.update({ where: { id }, data: { isActive: false } });
 }
 /**
- * Access Type gating (All / VIP / Reseller). RESELLER reuses the existing
- * "has generated a reseller API key" signal on User rather than a second
- * tier flag — see User.apiKeyHash in schema.prisma. VIP is a plain
- * admin-toggled flag (User.isVip) since no broader tier system exists yet.
+ * Access Type gating (All / VIP / Reseller). VIP = User.isVip. RESELLER =
+ * the admin-granted User.isReseller flag OR a self-generated reseller API
+ * key (User.apiKeyHash). Both flags are admin-toggled from the User Detail
+ * page and independent of the account's `role`.
  */
 export function canUserAccessProduct(product, user) {
     if (product.accessType === "ALL")
@@ -90,7 +90,7 @@ export function canUserAccessProduct(product, user) {
     if (product.accessType === "VIP")
         return user.isVip;
     if (product.accessType === "RESELLER")
-        return !!user.apiKeyHash;
+        return user.isReseller || !!user.apiKeyHash;
     return false;
 }
 /**

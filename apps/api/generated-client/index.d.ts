@@ -260,7 +260,7 @@ export type StockCodeStatus = (typeof StockCodeStatus)[keyof typeof StockCodeSta
 
 export const Role: {
   USER: 'USER',
-  STAFF: 'STAFF',
+  MODERATOR: 'MODERATOR',
   ADMIN: 'ADMIN'
 };
 
@@ -11647,6 +11647,7 @@ export namespace Prisma {
     apiKeyPrefix: string | null
     apiKeyCreatedAt: Date | null
     isVip: boolean | null
+    isReseller: boolean | null
     phone: string | null
     notifyEmail: boolean | null
     notifyOrderUpdates: boolean | null
@@ -11670,6 +11671,7 @@ export namespace Prisma {
     apiKeyPrefix: string | null
     apiKeyCreatedAt: Date | null
     isVip: boolean | null
+    isReseller: boolean | null
     phone: string | null
     notifyEmail: boolean | null
     notifyOrderUpdates: boolean | null
@@ -11693,6 +11695,7 @@ export namespace Prisma {
     apiKeyPrefix: number
     apiKeyCreatedAt: number
     isVip: number
+    isReseller: number
     phone: number
     notifyEmail: number
     notifyOrderUpdates: number
@@ -11718,6 +11721,7 @@ export namespace Prisma {
     apiKeyPrefix?: true
     apiKeyCreatedAt?: true
     isVip?: true
+    isReseller?: true
     phone?: true
     notifyEmail?: true
     notifyOrderUpdates?: true
@@ -11741,6 +11745,7 @@ export namespace Prisma {
     apiKeyPrefix?: true
     apiKeyCreatedAt?: true
     isVip?: true
+    isReseller?: true
     phone?: true
     notifyEmail?: true
     notifyOrderUpdates?: true
@@ -11764,6 +11769,7 @@ export namespace Prisma {
     apiKeyPrefix?: true
     apiKeyCreatedAt?: true
     isVip?: true
+    isReseller?: true
     phone?: true
     notifyEmail?: true
     notifyOrderUpdates?: true
@@ -11860,6 +11866,7 @@ export namespace Prisma {
     apiKeyPrefix: string | null
     apiKeyCreatedAt: Date | null
     isVip: boolean
+    isReseller: boolean
     phone: string | null
     notifyEmail: boolean
     notifyOrderUpdates: boolean
@@ -11900,6 +11907,7 @@ export namespace Prisma {
     apiKeyPrefix?: boolean
     apiKeyCreatedAt?: boolean
     isVip?: boolean
+    isReseller?: boolean
     phone?: boolean
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -11937,6 +11945,7 @@ export namespace Prisma {
     apiKeyPrefix?: boolean
     apiKeyCreatedAt?: boolean
     isVip?: boolean
+    isReseller?: boolean
     phone?: boolean
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -11960,6 +11969,7 @@ export namespace Prisma {
     apiKeyPrefix?: boolean
     apiKeyCreatedAt?: boolean
     isVip?: boolean
+    isReseller?: boolean
     phone?: boolean
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -12018,6 +12028,7 @@ export namespace Prisma {
       apiKeyPrefix: string | null
       apiKeyCreatedAt: Date | null
       isVip: boolean
+      isReseller: boolean
       phone: string | null
       notifyEmail: boolean
       notifyOrderUpdates: boolean
@@ -12444,6 +12455,7 @@ export namespace Prisma {
     readonly apiKeyPrefix: FieldRef<"User", 'String'>
     readonly apiKeyCreatedAt: FieldRef<"User", 'DateTime'>
     readonly isVip: FieldRef<"User", 'Boolean'>
+    readonly isReseller: FieldRef<"User", 'Boolean'>
     readonly phone: FieldRef<"User", 'String'>
     readonly notifyEmail: FieldRef<"User", 'Boolean'>
     readonly notifyOrderUpdates: FieldRef<"User", 'Boolean'>
@@ -45578,6 +45590,7 @@ export namespace Prisma {
     apiKeyPrefix: 'apiKeyPrefix',
     apiKeyCreatedAt: 'apiKeyCreatedAt',
     isVip: 'isVip',
+    isReseller: 'isReseller',
     phone: 'phone',
     notifyEmail: 'notifyEmail',
     notifyOrderUpdates: 'notifyOrderUpdates',
@@ -47197,6 +47210,7 @@ export namespace Prisma {
     apiKeyPrefix?: StringNullableFilter<"User"> | string | null
     apiKeyCreatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     isVip?: BoolFilter<"User"> | boolean
+    isReseller?: BoolFilter<"User"> | boolean
     phone?: StringNullableFilter<"User"> | string | null
     notifyEmail?: BoolFilter<"User"> | boolean
     notifyOrderUpdates?: BoolFilter<"User"> | boolean
@@ -47233,6 +47247,7 @@ export namespace Prisma {
     apiKeyPrefix?: SortOrderInput | SortOrder
     apiKeyCreatedAt?: SortOrderInput | SortOrder
     isVip?: SortOrder
+    isReseller?: SortOrder
     phone?: SortOrderInput | SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -47272,6 +47287,7 @@ export namespace Prisma {
     apiKeyPrefix?: StringNullableFilter<"User"> | string | null
     apiKeyCreatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     isVip?: BoolFilter<"User"> | boolean
+    isReseller?: BoolFilter<"User"> | boolean
     phone?: StringNullableFilter<"User"> | string | null
     notifyEmail?: BoolFilter<"User"> | boolean
     notifyOrderUpdates?: BoolFilter<"User"> | boolean
@@ -47308,6 +47324,7 @@ export namespace Prisma {
     apiKeyPrefix?: SortOrderInput | SortOrder
     apiKeyCreatedAt?: SortOrderInput | SortOrder
     isVip?: SortOrder
+    isReseller?: SortOrder
     phone?: SortOrderInput | SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -47337,6 +47354,7 @@ export namespace Prisma {
     apiKeyPrefix?: StringNullableWithAggregatesFilter<"User"> | string | null
     apiKeyCreatedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     isVip?: BoolWithAggregatesFilter<"User"> | boolean
+    isReseller?: BoolWithAggregatesFilter<"User"> | boolean
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     notifyEmail?: BoolWithAggregatesFilter<"User"> | boolean
     notifyOrderUpdates?: BoolWithAggregatesFilter<"User"> | boolean
@@ -50525,6 +50543,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -50561,6 +50580,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -50597,6 +50617,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -50633,6 +50654,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -50669,6 +50691,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -50692,6 +50715,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -50715,6 +50739,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -54339,6 +54364,7 @@ export namespace Prisma {
     apiKeyPrefix?: SortOrder
     apiKeyCreatedAt?: SortOrder
     isVip?: SortOrder
+    isReseller?: SortOrder
     phone?: SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -54362,6 +54388,7 @@ export namespace Prisma {
     apiKeyPrefix?: SortOrder
     apiKeyCreatedAt?: SortOrder
     isVip?: SortOrder
+    isReseller?: SortOrder
     phone?: SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -54385,6 +54412,7 @@ export namespace Prisma {
     apiKeyPrefix?: SortOrder
     apiKeyCreatedAt?: SortOrder
     isVip?: SortOrder
+    isReseller?: SortOrder
     phone?: SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -61467,6 +61495,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -61502,6 +61531,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -61553,6 +61583,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -61588,6 +61619,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -61623,6 +61655,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -61658,6 +61691,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -61709,6 +61743,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -61744,6 +61779,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -61779,6 +61815,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -61814,6 +61851,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -61897,6 +61935,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -61932,6 +61971,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -62979,6 +63019,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -63014,6 +63055,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -63240,6 +63282,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -63275,6 +63318,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -63505,6 +63549,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -63540,6 +63585,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -63700,6 +63746,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -63735,6 +63782,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -64159,6 +64207,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -64194,6 +64243,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -64345,6 +64395,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -64380,6 +64431,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -64536,6 +64588,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -64571,6 +64624,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -64659,6 +64713,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -64694,6 +64749,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -64897,6 +64953,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -64932,6 +64989,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -64972,6 +65030,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -65007,6 +65066,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -65163,6 +65223,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -65198,6 +65259,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -65244,6 +65306,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -65279,6 +65342,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -65437,6 +65501,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -65472,6 +65537,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -65523,6 +65589,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -65558,6 +65625,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -65709,6 +65777,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -65744,6 +65813,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -65795,6 +65865,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -65830,6 +65901,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -65865,6 +65937,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -65900,6 +65973,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -65951,6 +66025,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -65986,6 +66061,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -66162,6 +66238,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -66197,6 +66274,7 @@ export namespace Prisma {
     apiKeyPrefix?: string | null
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
+    isReseller?: boolean
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -66285,6 +66363,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -66320,6 +66399,7 @@ export namespace Prisma {
     apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean

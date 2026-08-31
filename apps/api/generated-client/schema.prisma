@@ -29,9 +29,15 @@ datasource db {
 
 // ── Enums ────────────────────────────────────────────────────────────────
 
+// Account tier / access level, set by an admin from the User Detail page.
+// MODERATOR = support agent: reads the whole admin panel + works tickets,
+// deposits and order status, but cannot change roles, adjust wallets, or
+// touch settings / catalogue (enforced in routes/admin/index.ts). VIP and
+// Reseller are separate boolean grants (User.isVip / User.isReseller), not
+// values here — a user can hold either on top of any role.
 enum Role {
   USER
-  STAFF
+  MODERATOR
   ADMIN
 }
 
@@ -486,10 +492,12 @@ model User {
   apiKeyPrefix    String?
   apiKeyCreatedAt DateTime?
 
-  // Store Access Type gating (Product.accessType VIP): admin-toggled, no
-  // separate tier system exists yet. RESELLER gating reuses the existing
-  // apiKeyHash-not-null signal above rather than a second flag.
-  isVip Boolean @default(false)
+  // Store Access Type gating (Product.accessType). Both are admin-toggled
+  // from the User Detail page and are independent of `role`. `isReseller`
+  // OR a generated reseller API key (apiKeyHash not null) grants RESELLER
+  // access — see services/product.service.ts userCanAccessProduct.
+  isVip      Boolean @default(false)
+  isReseller Boolean @default(false)
 
   phone              String?
   notifyEmail        Boolean @default(true)

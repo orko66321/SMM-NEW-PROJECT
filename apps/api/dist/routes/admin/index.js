@@ -22,35 +22,39 @@ import { adminProductsRouter } from "./products.routes.js";
 import { adminPackagesRouter } from "./packages.routes.js";
 import { adminStockPoolsRouter } from "./stockPools.routes.js";
 export const adminRouter = Router();
-// Every single route under /api/admin/* passes through both of these,
-// with no exceptions — this is the one gate that must never be bypassed.
+// Every route under /api/admin/* is authenticated and role-gated here —
 // `requireRole` checks the DB-verified role on `req.user` set by
 // `authenticate`, so no request body/query/param can influence it
 // (see middleware/auth.ts for why role tampering cannot work here).
 //
-// Phase 1 grants full admin access to the ADMIN role only. STAFF exists in
-// the schema for the granular permission matrix planned in a later phase,
-// but is intentionally granted nothing here yet — safer to under-grant
-// than to accidentally over-grant a role before the permission model exists.
-adminRouter.use(authenticate, requireRole("ADMIN"));
-adminRouter.use("/users", adminUsersRouter);
-adminRouter.use("/services", adminServicesRouter);
+// Two tiers:
+//   ADMIN     — everything.
+//   MODERATOR — support agent: read the whole panel + work tickets, review
+//               deposits, change order status. The `adminOnly` sub-routers
+//               below (settings, wallet, catalogue, gateways, role changes)
+//               reject MODERATOR.
+adminRouter.use(authenticate, requireRole("ADMIN", "MODERATOR"));
+const adminOnly = requireRole("ADMIN");
+// ── Shared by ADMIN + MODERATOR ─────────────────────────────────────────
+adminRouter.use("/stats", adminStatsRouter);
+adminRouter.use("/users", adminUsersRouter); // list/detail open; PATCH is adminOnly inside the router
 adminRouter.use("/orders", adminOrdersRouter);
-adminRouter.use("/wallet", adminWalletRouter);
 adminRouter.use("/deposits", adminDepositsRouter);
 adminRouter.use("/tickets", adminTicketsRouter);
-adminRouter.use("/stats", adminStatsRouter);
-adminRouter.use("/providers", adminProvidersRouter);
-adminRouter.use("/payment-gateways", adminPaymentGatewaysRouter);
-adminRouter.use("/payment-methods", adminPaymentMethodsRouter);
-adminRouter.use("/settings", adminSettingsRouter);
-adminRouter.use("/notices", adminNoticesRouter);
-adminRouter.use("/site-notice", adminSiteNoticeRouter);
-adminRouter.use("/support-channels", adminSupportChannelsRouter);
-adminRouter.use("/banners", adminBannersRouter);
-adminRouter.use("/posts", adminPostsRouter);
-adminRouter.use("/coupons", adminCouponsRouter);
-adminRouter.use("/brands", adminBrandsRouter);
-adminRouter.use("/products", adminProductsRouter);
-adminRouter.use("/packages", adminPackagesRouter);
-adminRouter.use("/stock-pools", adminStockPoolsRouter);
+// ── ADMIN only ─────────────────────────────────────────────────────────
+adminRouter.use("/services", adminOnly, adminServicesRouter);
+adminRouter.use("/wallet", adminOnly, adminWalletRouter);
+adminRouter.use("/providers", adminOnly, adminProvidersRouter);
+adminRouter.use("/payment-gateways", adminOnly, adminPaymentGatewaysRouter);
+adminRouter.use("/payment-methods", adminOnly, adminPaymentMethodsRouter);
+adminRouter.use("/settings", adminOnly, adminSettingsRouter);
+adminRouter.use("/notices", adminOnly, adminNoticesRouter);
+adminRouter.use("/site-notice", adminOnly, adminSiteNoticeRouter);
+adminRouter.use("/support-channels", adminOnly, adminSupportChannelsRouter);
+adminRouter.use("/banners", adminOnly, adminBannersRouter);
+adminRouter.use("/posts", adminOnly, adminPostsRouter);
+adminRouter.use("/coupons", adminOnly, adminCouponsRouter);
+adminRouter.use("/brands", adminOnly, adminBrandsRouter);
+adminRouter.use("/products", adminOnly, adminProductsRouter);
+adminRouter.use("/packages", adminOnly, adminPackagesRouter);
+adminRouter.use("/stock-pools", adminOnly, adminStockPoolsRouter);

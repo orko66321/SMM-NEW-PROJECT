@@ -6,7 +6,12 @@ import { Logo } from "../Logo.js";
 import { Icon, type IconName } from "../ds/Icon.js";
 import { cn } from "../ds/cn.js";
 
-type NavRow = { section: string } | { to: string; label: string; end?: boolean; icon: IconName };
+// `adminOnly` rows/sections are hidden from MODERATOR accounts — the server
+// rejects them anyway (routes/admin/index.ts), this just keeps the nav
+// honest. Kept in sync with the `adminOnly` sub-routers there.
+type NavRow =
+  | { section: string; adminOnly?: boolean }
+  | { to: string; label: string; end?: boolean; icon: IconName; adminOnly?: boolean };
 
 const navRows: NavRow[] = [
   { to: "/admin", label: "Dashboard", end: true, icon: "dashboard" },
@@ -14,24 +19,24 @@ const navRows: NavRow[] = [
   { to: "/admin/orders", label: "Orders", icon: "orders" },
   { to: "/admin/deposits", label: "Deposits", icon: "wallet" },
   { to: "/admin/tickets", label: "Tickets", icon: "support" },
-  { section: "Catalogue" },
-  { to: "/admin/services", label: "Services", icon: "grid" },
-  { to: "/admin/brands", label: "Store: Brands", icon: "tag" },
-  { to: "/admin/products", label: "Store: Products", icon: "package" },
-  { to: "/admin/packages", label: "Store: Packages", icon: "package" },
-  { to: "/admin/stock-pools", label: "Store: Stock Pools", icon: "package" },
-  { section: "Integrations" },
-  { to: "/admin/providers", label: "Providers", icon: "provider" },
-  { to: "/admin/payment-gateways", label: "Payment Gateways", icon: "card" },
-  { to: "/admin/payment-methods", label: "Payment Methods", icon: "card" },
-  { section: "Content" },
-  { to: "/admin/support-channels", label: "Support Channels", icon: "support" },
-  { to: "/admin/coupons", label: "Coupons", icon: "coupon" },
-  { to: "/admin/notice-settings", label: "Notice Settings", icon: "campaign" },
-  { to: "/admin/banner", label: "Banner Slider", icon: "image" },
-  { to: "/admin/posts", label: "Documentation", icon: "docs" },
-  { section: "System" },
-  { to: "/admin/settings", label: "Settings", icon: "settings" },
+  { section: "Catalogue", adminOnly: true },
+  { to: "/admin/services", label: "Services", icon: "grid", adminOnly: true },
+  { to: "/admin/brands", label: "Store: Brands", icon: "tag", adminOnly: true },
+  { to: "/admin/products", label: "Store: Products", icon: "package", adminOnly: true },
+  { to: "/admin/packages", label: "Store: Packages", icon: "package", adminOnly: true },
+  { to: "/admin/stock-pools", label: "Store: Stock Pools", icon: "package", adminOnly: true },
+  { section: "Integrations", adminOnly: true },
+  { to: "/admin/providers", label: "Providers", icon: "provider", adminOnly: true },
+  { to: "/admin/payment-gateways", label: "Payment Gateways", icon: "card", adminOnly: true },
+  { to: "/admin/payment-methods", label: "Payment Methods", icon: "card", adminOnly: true },
+  { section: "Content", adminOnly: true },
+  { to: "/admin/support-channels", label: "Support Channels", icon: "support", adminOnly: true },
+  { to: "/admin/coupons", label: "Coupons", icon: "coupon", adminOnly: true },
+  { to: "/admin/notice-settings", label: "Notice Settings", icon: "campaign", adminOnly: true },
+  { to: "/admin/banner", label: "Banner Slider", icon: "image", adminOnly: true },
+  { to: "/admin/posts", label: "Documentation", icon: "docs", adminOnly: true },
+  { section: "System", adminOnly: true },
+  { to: "/admin/settings", label: "Settings", icon: "settings", adminOnly: true },
 ];
 
 const bottomNavItems: { to: string; label: string; end?: boolean; icon: IconName }[] = [
@@ -71,10 +76,13 @@ export default function AdminLayout() {
         : "border-transparent font-medium text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface",
     );
 
+  const isModerator = user?.role === "MODERATOR";
+  const visibleNavRows = isModerator ? navRows.filter((row) => !row.adminOnly) : navRows;
+
   function NavList() {
     return (
       <>
-        {navRows.map((row, i) =>
+        {visibleNavRows.map((row, i) =>
           "section" in row ? (
             <div
               key={`s-${i}`}
@@ -103,7 +111,7 @@ export default function AdminLayout() {
       <aside className="hidden w-[260px] shrink-0 border-r border-outline-variant bg-surface-card md:block">
         <div className="flex h-16 items-center gap-2 px-6">
           <Logo />
-          <span className="badge badge-primary">Admin</span>
+          <span className="badge badge-primary">{isModerator ? "Moderator" : "Admin"}</span>
         </div>
         <nav className="aio-scroll flex max-h-[calc(100vh-4rem)] flex-col gap-0.5 overflow-y-auto px-3 pb-6">
           <NavList />
@@ -129,7 +137,7 @@ export default function AdminLayout() {
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-outline-variant px-4">
             <span className="flex items-center gap-2">
               <Logo />
-              <span className="badge badge-primary">Admin</span>
+              <span className="badge badge-primary">{isModerator ? "Moderator" : "Admin"}</span>
             </span>
             <button
               type="button"

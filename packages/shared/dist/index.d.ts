@@ -4,8 +4,9 @@ import { z } from "zod";
  * apps/api and apps/web. String literal unions here MUST stay in sync
  * with the enum values in apps/api/prisma/schema.prisma.
  */
-export declare const RoleValues: readonly ["USER", "STAFF", "ADMIN"];
+export declare const RoleValues: readonly ["USER", "MODERATOR", "ADMIN"];
 export type Role = (typeof RoleValues)[number];
+export declare const AssignableRoleValues: readonly ["USER", "MODERATOR", "ADMIN"];
 export declare const OrderStatusValues: readonly ["PENDING", "PROCESSING", "IN_PROGRESS", "COMPLETED", "PARTIAL", "CANCELED", "FAILED"];
 export type OrderStatus = (typeof OrderStatusValues)[number];
 export declare const TicketStatusValues: readonly ["OPEN", "PENDING_ADMIN", "PENDING_USER", "CLOSED", "AI_PROCESSING", "RESOLVED", "ESCALATED", "IN_PROGRESS", "REPLIED"];
@@ -200,7 +201,7 @@ export declare const authUserSchema: z.ZodObject<{
     id: z.ZodString;
     username: z.ZodString;
     email: z.ZodString;
-    role: z.ZodEnum<["USER", "STAFF", "ADMIN"]>;
+    role: z.ZodEnum<["USER", "MODERATOR", "ADMIN"]>;
     status: z.ZodEnum<["ACTIVE", "SUSPENDED"]>;
     avatarUrl: z.ZodNullable<z.ZodString>;
     createdAt: z.ZodString;
@@ -211,7 +212,7 @@ export declare const authUserSchema: z.ZodObject<{
     username: string;
     email: string;
     id: string;
-    role: "USER" | "STAFF" | "ADMIN";
+    role: "USER" | "MODERATOR" | "ADMIN";
     avatarUrl: string | null;
     createdAt: string;
     isVip: boolean;
@@ -221,7 +222,7 @@ export declare const authUserSchema: z.ZodObject<{
     username: string;
     email: string;
     id: string;
-    role: "USER" | "STAFF" | "ADMIN";
+    role: "USER" | "MODERATOR" | "ADMIN";
     avatarUrl: string | null;
     createdAt: string;
     isVip: boolean;
@@ -580,16 +581,19 @@ export declare const ticketCategoryDtoSchema: z.ZodObject<{
 export type TicketCategoryDto = z.infer<typeof ticketCategoryDtoSchema>;
 export declare const updateUserSchema: z.ZodObject<{
     status: z.ZodOptional<z.ZodEnum<["ACTIVE", "SUSPENDED"]>>;
-    role: z.ZodOptional<z.ZodEnum<["USER", "STAFF", "ADMIN"]>>;
+    role: z.ZodOptional<z.ZodEnum<["USER", "MODERATOR", "ADMIN"]>>;
     isVip: z.ZodOptional<z.ZodBoolean>;
+    isReseller: z.ZodOptional<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     status?: "ACTIVE" | "SUSPENDED" | undefined;
-    role?: "USER" | "STAFF" | "ADMIN" | undefined;
+    role?: "USER" | "MODERATOR" | "ADMIN" | undefined;
     isVip?: boolean | undefined;
+    isReseller?: boolean | undefined;
 }, {
     status?: "ACTIVE" | "SUSPENDED" | undefined;
-    role?: "USER" | "STAFF" | "ADMIN" | undefined;
+    role?: "USER" | "MODERATOR" | "ADMIN" | undefined;
     isVip?: boolean | undefined;
+    isReseller?: boolean | undefined;
 }>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 export declare const createProviderSchema: z.ZodObject<{

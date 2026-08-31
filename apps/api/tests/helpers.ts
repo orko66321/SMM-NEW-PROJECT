@@ -44,7 +44,7 @@ export async function resetDb() {
   await prisma.user.deleteMany();
 }
 
-export async function createUser(opts: { role?: "USER" | "STAFF" | "ADMIN"; balance?: number } = {}) {
+export async function createUser(opts: { role?: "USER" | "MODERATOR" | "ADMIN"; balance?: number } = {}) {
   const passwordHash = await argon2.hash("Password123!", ARGON2_OPTIONS);
   const user = await prisma.user.create({
     data: {

@@ -226,6 +226,7 @@ exports.Prisma.UserScalarFieldEnum = {
   apiKeyPrefix: 'apiKeyPrefix',
   apiKeyCreatedAt: 'apiKeyCreatedAt',
   isVip: 'isVip',
+  isReseller: 'isReseller',
   phone: 'phone',
   notifyEmail: 'notifyEmail',
   notifyOrderUpdates: 'notifyOrderUpdates',
@@ -668,7 +669,7 @@ exports.StockCodeStatus = exports.$Enums.StockCodeStatus = {
 
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
-  STAFF: 'STAFF',
+  MODERATOR: 'MODERATOR',
   ADMIN: 'ADMIN'
 };
 

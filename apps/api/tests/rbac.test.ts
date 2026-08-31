@@ -82,9 +82,39 @@ describe("admin RBAC boundary", () => {
     expect(res.status).toBe(200);
   });
 
-  it("STAFF has no admin access yet (Phase 1: ADMIN-only, granular permissions are a later phase)", async () => {
-    const staff = await createUser({ role: "STAFF" });
-    const res = await request(app).get("/api/admin/stats").set("Authorization", `Bearer ${tokenFor(staff.id)}`);
+});
+
+describe("MODERATOR (support agent) scope", () => {
+  const readable = [
+    "/api/admin/stats",
+    "/api/admin/users",
+    "/api/admin/orders",
+    "/api/admin/deposits",
+    "/api/admin/tickets",
+  ] as const;
+
+  it.each(readable)("a MODERATOR can GET %s", async (path) => {
+    const mod = await createUser({ role: "MODERATOR" });
+    const res = await request(app).get(path).set("Authorization", `Bearer ${tokenFor(mod.id)}`);
+    expect(res.status).toBe(200);
+  });
+
+  const adminOnly: Array<[method: "get" | "post" | "put" | "patch", path: string]> = [
+    ["patch", "/api/admin/users/does-not-matter"],
+    ["post", "/api/admin/wallet/does-not-matter/adjust"],
+    ["put", "/api/admin/settings"],
+    ["post", "/api/admin/services"],
+    ["get", "/api/admin/payment-gateways"],
+    ["get", "/api/admin/support-channels"],
+    ["get", "/api/admin/banners"],
+  ];
+
+  it.each(adminOnly)("a MODERATOR gets 403 on %s %s", async (method, path) => {
+    const mod = await createUser({ role: "MODERATOR" });
+    const res = await request(app)
+      [method](path)
+      .set("Authorization", `Bearer ${tokenFor(mod.id)}`)
+      .send({ role: "USER", isVip: true, amount: 1, reason: "x", siteName: "x" });
     expect(res.status).toBe(403);
   });
 });
