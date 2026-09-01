@@ -6,6 +6,7 @@ import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
 import { LeaderboardSection } from "../../components/leaderboard/LeaderboardSection.js";
+import { PlatformShortcuts } from "../../components/dashboard/PlatformShortcuts.js";
 import { EmptyState, StatCard, StatusBadge } from "../../components/ds/index.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 
@@ -72,6 +73,8 @@ function GuestOverview() {
         ))}
       </div>
 
+      <PlatformShortcuts />
+
       <StoreSection />
 
       <div className="card">
@@ -134,6 +137,8 @@ export default function Overview() {
           </Link>
         </div>
       </div>
+
+      <PlatformShortcuts />
 
       <StoreSection />
 
