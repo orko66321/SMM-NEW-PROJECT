@@ -293,6 +293,7 @@ const en = {
     guestBrowseBody: "See live rates and place an order — you can look around before signing up.",
     storeSectionTitle: "Store",
     seeAll: "See all →",
+    platformSectionTitle: "Order by platform",
   },
 
   leaderboard: {
@@ -343,6 +344,8 @@ const en = {
     title: "New Order",
     categoryLabel: "Category",
     allCategories: "All categories",
+    platformFilter: "{{platform}} only",
+    clearPlatformFilter: "Clear platform filter",
     serviceLabel: "Service",
     selectService: "Select a service…",
     linkLabel: "Link",
@@ -838,6 +841,7 @@ const bn: Translations = {
     guestBrowseBody: "লাইভ রেট দেখুন আর অর্ডার করুন — সাইন আপের আগেই ঘুরে দেখতে পারেন।",
     storeSectionTitle: "স্টোর",
     seeAll: "সব দেখুন →",
+    platformSectionTitle: "প্ল্যাটফর্ম অনুযায়ী অর্ডার",
   },
 
   leaderboard: {
@@ -888,6 +892,8 @@ const bn: Translations = {
     title: "নতুন অর্ডার",
     categoryLabel: "ক্যাটাগরি",
     allCategories: "সব ক্যাটাগরি",
+    platformFilter: "শুধু {{platform}}",
+    clearPlatformFilter: "প্ল্যাটফর্ম ফিল্টার সরান",
     serviceLabel: "সার্ভিস",
     selectService: "একটা সার্ভিস বেছে নিন…",
     linkLabel: "লিংক",

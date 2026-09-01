@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { getPublicCategories, getPublicServices, getPublicSiteNotice, placeOrder } from "../../api/resources.js";
+import { usePlatformFilter } from "./usePlatformFilter.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
@@ -107,6 +108,13 @@ export default function NewOrder() {
   // Order" submit is gated (see onSubmit below).
   const { data: categories } = useQuery({ queryKey: ["public-categories"], queryFn: getPublicCategories });
   const [categoryId, setCategoryId] = useState<string>(draft?.categoryId ?? "");
+  // `?platform=<slug>` deep link from the Overview PlatformShortcuts — narrows
+  // the Category list and auto-picks the first match so Service cascades.
+  const { platformLabel, visibleCategories, isFiltered, clearFilter } = usePlatformFilter(
+    categories,
+    categoryId,
+    setCategoryId,
+  );
   const { data: servicesData } = useQuery({
     queryKey: ["public-services", categoryId],
     queryFn: () => getPublicServices({ page: 1, pageSize: 100, categoryId: categoryId || undefined }),
@@ -202,6 +210,23 @@ export default function NewOrder() {
 
         <div>
           <label className="label" htmlFor="category">{t("newOrder.categoryLabel")}</label>
+          {isFiltered && platformLabel && (
+            <div className="mb-2 flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-accent-on-dark">
+                {t("newOrder.platformFilter", { platform: platformLabel })}
+                <button
+                  type="button"
+                  onClick={clearFilter}
+                  aria-label={t("newOrder.clearPlatformFilter")}
+                  className="-mr-1 rounded-full p-0.5 hover:bg-primary/20"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" className="h-3 w-3">
+                    <path d="M6 6l12 12M18 6L6 18" />
+                  </svg>
+                </button>
+              </span>
+            </div>
+          )}
           <select
             id="category"
             className="input-field"
@@ -212,7 +237,7 @@ export default function NewOrder() {
             }}
           >
             <option value="">{t("newOrder.allCategories")}</option>
-            {categories?.map((c: { id: string; name: string; platform: string }) => (
+            {visibleCategories.map((c: { id: string; name: string; platform: string }) => (
               <option key={c.id} value={c.id}>{c.platform} — {c.name}</option>
             ))}
           </select>
