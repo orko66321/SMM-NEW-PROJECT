@@ -54,7 +54,13 @@ export const RefillStatusValues = ["REQUESTED", "IN_PROGRESS", "COMPLETED", "REJ
 // ── Common ───────────────────────────────────────────────────────────────
 export const paginationQuerySchema = z.object({
     page: z.coerce.number().int().min(1).default(1),
-    pageSize: z.coerce.number().int().min(1).max(100).default(20),
+    // Upper bound is 200, not 100: several admin screens deliberately fetch a
+    // whole bounded list in one page to populate a <select> (Packages → product
+    // & stock-pool pickers, Products → services picker all request pageSize=200).
+    // A stricter cap here silently 400s those requests and leaves the dropdowns
+    // empty. Keep it high enough for those "load all options" calls but still
+    // bounded so a list endpoint can't be asked for an unbounded page.
+    pageSize: z.coerce.number().int().min(1).max(200).default(20),
 });
 // Every "list" route that also accepts a filter (status/search/categoryId)
 // beyond page/pageSize needs its OWN schema, not the bare
