@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { adminOrderListQuerySchema, adminRefillListQuerySchema, resolveManualRefillSchema, updateOrderStatusSchema } from "@smm/shared";
+import { adminOrderListQuerySchema, adminRefillListQuerySchema, orderCommentSchema, resolveManualRefillSchema, updateOrderStatusSchema, } from "@smm/shared";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
-import { listOrdersForAdmin, listRefillsForAdmin, resendOrderToProvider, resolveManualRefill, updateOrderStatus, } from "../../services/order.service.js";
+import { listOrdersForAdmin, listRefillsForAdmin, resendOrderToProvider, resolveManualRefill, setOrderAdminComment, updateOrderStatus, } from "../../services/order.service.js";
 import { writeAuditLog } from "../../services/audit.service.js";
 export const adminOrdersRouter = Router();
 adminOrdersRouter.get("/", validate(adminOrderListQuerySchema, "query"), asyncHandler(async (req, res) => {
@@ -26,6 +26,21 @@ adminOrdersRouter.patch("/:id/status", validate(updateOrderStatusSchema), asyncH
         targetType: "Order",
         targetId: req.params.id,
         after: req.body,
+        ip: req.ip,
+    });
+    res.json({ order: { ...order, charge: order.charge.toString(), providerCost: order.providerCost.toString() } });
+}));
+// Generic per-order "Comment" — saves the customer-facing note in isolation,
+// without changing the order's status. (The cancel/edit flows carry the note
+// on the /status request instead.)
+adminOrdersRouter.post("/:id/comment", validate(orderCommentSchema), asyncHandler(async (req, res) => {
+    const order = await setOrderAdminComment(req.params.id, req.body);
+    await writeAuditLog({
+        actorId: req.user.id,
+        action: "order.comment",
+        targetType: "Order",
+        targetId: req.params.id,
+        after: { hasComment: !!order.adminComment },
         ip: req.ip,
     });
     res.json({ order: { ...order, charge: order.charge.toString(), providerCost: order.providerCost.toString() } });

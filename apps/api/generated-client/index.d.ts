@@ -208,6 +208,11 @@ export type Banner = $Result.DefaultSelection<Prisma.$BannerPayload>
  * 
  */
 export type Post = $Result.DefaultSelection<Prisma.$PostPayload>
+/**
+ * Model CommentTemplate
+ * 
+ */
+export type CommentTemplate = $Result.DefaultSelection<Prisma.$CommentTemplatePayload>
 
 /**
  * Enums
@@ -1155,6 +1160,16 @@ export class PrismaClient<
     * ```
     */
   get post(): Prisma.PostDelegate<ExtArgs>;
+
+  /**
+   * `prisma.commentTemplate`: Exposes CRUD operations for the **CommentTemplate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CommentTemplates
+    * const commentTemplates = await prisma.commentTemplate.findMany()
+    * ```
+    */
+  get commentTemplate(): Prisma.CommentTemplateDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1634,7 +1649,8 @@ export namespace Prisma {
     Notice: 'Notice',
     SiteNotice: 'SiteNotice',
     Banner: 'Banner',
-    Post: 'Post'
+    Post: 'Post',
+    CommentTemplate: 'CommentTemplate'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1650,7 +1666,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "brand" | "product" | "package" | "stockPool" | "packageStockPool" | "stockCode" | "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticketCategory" | "ticketSubcategory" | "ticket" | "ticketMessage" | "ticketOrderAction" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "supportChannel" | "notice" | "siteNotice" | "banner" | "post"
+      modelProps: "brand" | "product" | "package" | "stockPool" | "packageStockPool" | "stockCode" | "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticketCategory" | "ticketSubcategory" | "ticket" | "ticketMessage" | "ticketOrderAction" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "supportChannel" | "notice" | "siteNotice" | "banner" | "post" | "commentTemplate"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4381,6 +4397,76 @@ export namespace Prisma {
           count: {
             args: Prisma.PostCountArgs<ExtArgs>
             result: $Utils.Optional<PostCountAggregateOutputType> | number
+          }
+        }
+      }
+      CommentTemplate: {
+        payload: Prisma.$CommentTemplatePayload<ExtArgs>
+        fields: Prisma.CommentTemplateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CommentTemplateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CommentTemplateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload>
+          }
+          findFirst: {
+            args: Prisma.CommentTemplateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CommentTemplateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload>
+          }
+          findMany: {
+            args: Prisma.CommentTemplateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload>[]
+          }
+          create: {
+            args: Prisma.CommentTemplateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload>
+          }
+          createMany: {
+            args: Prisma.CommentTemplateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CommentTemplateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload>[]
+          }
+          delete: {
+            args: Prisma.CommentTemplateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload>
+          }
+          update: {
+            args: Prisma.CommentTemplateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload>
+          }
+          deleteMany: {
+            args: Prisma.CommentTemplateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CommentTemplateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CommentTemplateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentTemplatePayload>
+          }
+          aggregate: {
+            args: Prisma.CommentTemplateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCommentTemplate>
+          }
+          groupBy: {
+            args: Prisma.CommentTemplateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CommentTemplateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CommentTemplateCountArgs<ExtArgs>
+            result: $Utils.Optional<CommentTemplateCountAggregateOutputType> | number
           }
         }
       }
@@ -24259,6 +24345,9 @@ export namespace Prisma {
     mode: $Enums.OrderMode | null
     providerOrderId: string | null
     apiErrorResponse: string | null
+    adminComment: string | null
+    adminCommentLink: string | null
+    adminCommentUpdatedAt: Date | null
     priority: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -24279,6 +24368,9 @@ export namespace Prisma {
     mode: $Enums.OrderMode | null
     providerOrderId: string | null
     apiErrorResponse: string | null
+    adminComment: string | null
+    adminCommentLink: string | null
+    adminCommentUpdatedAt: Date | null
     priority: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -24299,6 +24391,9 @@ export namespace Prisma {
     mode: number
     providerOrderId: number
     apiErrorResponse: number
+    adminComment: number
+    adminCommentLink: number
+    adminCommentUpdatedAt: number
     priority: number
     createdAt: number
     updatedAt: number
@@ -24337,6 +24432,9 @@ export namespace Prisma {
     mode?: true
     providerOrderId?: true
     apiErrorResponse?: true
+    adminComment?: true
+    adminCommentLink?: true
+    adminCommentUpdatedAt?: true
     priority?: true
     createdAt?: true
     updatedAt?: true
@@ -24357,6 +24455,9 @@ export namespace Prisma {
     mode?: true
     providerOrderId?: true
     apiErrorResponse?: true
+    adminComment?: true
+    adminCommentLink?: true
+    adminCommentUpdatedAt?: true
     priority?: true
     createdAt?: true
     updatedAt?: true
@@ -24377,6 +24478,9 @@ export namespace Prisma {
     mode?: true
     providerOrderId?: true
     apiErrorResponse?: true
+    adminComment?: true
+    adminCommentLink?: true
+    adminCommentUpdatedAt?: true
     priority?: true
     createdAt?: true
     updatedAt?: true
@@ -24484,6 +24588,9 @@ export namespace Prisma {
     mode: $Enums.OrderMode
     providerOrderId: string | null
     apiErrorResponse: string | null
+    adminComment: string | null
+    adminCommentLink: string | null
+    adminCommentUpdatedAt: Date | null
     priority: boolean
     createdAt: Date
     updatedAt: Date
@@ -24523,6 +24630,9 @@ export namespace Prisma {
     mode?: boolean
     providerOrderId?: boolean
     apiErrorResponse?: boolean
+    adminComment?: boolean
+    adminCommentLink?: boolean
+    adminCommentUpdatedAt?: boolean
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -24550,6 +24660,9 @@ export namespace Prisma {
     mode?: boolean
     providerOrderId?: boolean
     apiErrorResponse?: boolean
+    adminComment?: boolean
+    adminCommentLink?: boolean
+    adminCommentUpdatedAt?: boolean
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -24573,6 +24686,9 @@ export namespace Prisma {
     mode?: boolean
     providerOrderId?: boolean
     apiErrorResponse?: boolean
+    adminComment?: boolean
+    adminCommentLink?: boolean
+    adminCommentUpdatedAt?: boolean
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -24618,6 +24734,9 @@ export namespace Prisma {
       mode: $Enums.OrderMode
       providerOrderId: string | null
       apiErrorResponse: string | null
+      adminComment: string | null
+      adminCommentLink: string | null
+      adminCommentUpdatedAt: Date | null
       priority: boolean
       createdAt: Date
       updatedAt: Date
@@ -25034,6 +25153,9 @@ export namespace Prisma {
     readonly mode: FieldRef<"Order", 'OrderMode'>
     readonly providerOrderId: FieldRef<"Order", 'String'>
     readonly apiErrorResponse: FieldRef<"Order", 'String'>
+    readonly adminComment: FieldRef<"Order", 'String'>
+    readonly adminCommentLink: FieldRef<"Order", 'String'>
+    readonly adminCommentUpdatedAt: FieldRef<"Order", 'DateTime'>
     readonly priority: FieldRef<"Order", 'Boolean'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
@@ -45584,6 +45706,884 @@ export namespace Prisma {
 
 
   /**
+   * Model CommentTemplate
+   */
+
+  export type AggregateCommentTemplate = {
+    _count: CommentTemplateCountAggregateOutputType | null
+    _min: CommentTemplateMinAggregateOutputType | null
+    _max: CommentTemplateMaxAggregateOutputType | null
+  }
+
+  export type CommentTemplateMinAggregateOutputType = {
+    id: string | null
+    text: string | null
+    link: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CommentTemplateMaxAggregateOutputType = {
+    id: string | null
+    text: string | null
+    link: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CommentTemplateCountAggregateOutputType = {
+    id: number
+    text: number
+    link: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CommentTemplateMinAggregateInputType = {
+    id?: true
+    text?: true
+    link?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CommentTemplateMaxAggregateInputType = {
+    id?: true
+    text?: true
+    link?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CommentTemplateCountAggregateInputType = {
+    id?: true
+    text?: true
+    link?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CommentTemplateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CommentTemplate to aggregate.
+     */
+    where?: CommentTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommentTemplates to fetch.
+     */
+    orderBy?: CommentTemplateOrderByWithRelationInput | CommentTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CommentTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommentTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommentTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CommentTemplates
+    **/
+    _count?: true | CommentTemplateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CommentTemplateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CommentTemplateMaxAggregateInputType
+  }
+
+  export type GetCommentTemplateAggregateType<T extends CommentTemplateAggregateArgs> = {
+        [P in keyof T & keyof AggregateCommentTemplate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCommentTemplate[P]>
+      : GetScalarType<T[P], AggregateCommentTemplate[P]>
+  }
+
+
+
+
+  export type CommentTemplateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommentTemplateWhereInput
+    orderBy?: CommentTemplateOrderByWithAggregationInput | CommentTemplateOrderByWithAggregationInput[]
+    by: CommentTemplateScalarFieldEnum[] | CommentTemplateScalarFieldEnum
+    having?: CommentTemplateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CommentTemplateCountAggregateInputType | true
+    _min?: CommentTemplateMinAggregateInputType
+    _max?: CommentTemplateMaxAggregateInputType
+  }
+
+  export type CommentTemplateGroupByOutputType = {
+    id: string
+    text: string
+    link: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CommentTemplateCountAggregateOutputType | null
+    _min: CommentTemplateMinAggregateOutputType | null
+    _max: CommentTemplateMaxAggregateOutputType | null
+  }
+
+  type GetCommentTemplateGroupByPayload<T extends CommentTemplateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CommentTemplateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CommentTemplateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CommentTemplateGroupByOutputType[P]>
+            : GetScalarType<T[P], CommentTemplateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CommentTemplateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    text?: boolean
+    link?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["commentTemplate"]>
+
+  export type CommentTemplateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    text?: boolean
+    link?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["commentTemplate"]>
+
+  export type CommentTemplateSelectScalar = {
+    id?: boolean
+    text?: boolean
+    link?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $CommentTemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CommentTemplate"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      text: string
+      link: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["commentTemplate"]>
+    composites: {}
+  }
+
+  type CommentTemplateGetPayload<S extends boolean | null | undefined | CommentTemplateDefaultArgs> = $Result.GetResult<Prisma.$CommentTemplatePayload, S>
+
+  type CommentTemplateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<CommentTemplateFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: CommentTemplateCountAggregateInputType | true
+    }
+
+  export interface CommentTemplateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CommentTemplate'], meta: { name: 'CommentTemplate' } }
+    /**
+     * Find zero or one CommentTemplate that matches the filter.
+     * @param {CommentTemplateFindUniqueArgs} args - Arguments to find a CommentTemplate
+     * @example
+     * // Get one CommentTemplate
+     * const commentTemplate = await prisma.commentTemplate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CommentTemplateFindUniqueArgs>(args: SelectSubset<T, CommentTemplateFindUniqueArgs<ExtArgs>>): Prisma__CommentTemplateClient<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one CommentTemplate that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {CommentTemplateFindUniqueOrThrowArgs} args - Arguments to find a CommentTemplate
+     * @example
+     * // Get one CommentTemplate
+     * const commentTemplate = await prisma.commentTemplate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CommentTemplateFindUniqueOrThrowArgs>(args: SelectSubset<T, CommentTemplateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CommentTemplateClient<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first CommentTemplate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentTemplateFindFirstArgs} args - Arguments to find a CommentTemplate
+     * @example
+     * // Get one CommentTemplate
+     * const commentTemplate = await prisma.commentTemplate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CommentTemplateFindFirstArgs>(args?: SelectSubset<T, CommentTemplateFindFirstArgs<ExtArgs>>): Prisma__CommentTemplateClient<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first CommentTemplate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentTemplateFindFirstOrThrowArgs} args - Arguments to find a CommentTemplate
+     * @example
+     * // Get one CommentTemplate
+     * const commentTemplate = await prisma.commentTemplate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CommentTemplateFindFirstOrThrowArgs>(args?: SelectSubset<T, CommentTemplateFindFirstOrThrowArgs<ExtArgs>>): Prisma__CommentTemplateClient<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more CommentTemplates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentTemplateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CommentTemplates
+     * const commentTemplates = await prisma.commentTemplate.findMany()
+     * 
+     * // Get first 10 CommentTemplates
+     * const commentTemplates = await prisma.commentTemplate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const commentTemplateWithIdOnly = await prisma.commentTemplate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CommentTemplateFindManyArgs>(args?: SelectSubset<T, CommentTemplateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a CommentTemplate.
+     * @param {CommentTemplateCreateArgs} args - Arguments to create a CommentTemplate.
+     * @example
+     * // Create one CommentTemplate
+     * const CommentTemplate = await prisma.commentTemplate.create({
+     *   data: {
+     *     // ... data to create a CommentTemplate
+     *   }
+     * })
+     * 
+     */
+    create<T extends CommentTemplateCreateArgs>(args: SelectSubset<T, CommentTemplateCreateArgs<ExtArgs>>): Prisma__CommentTemplateClient<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many CommentTemplates.
+     * @param {CommentTemplateCreateManyArgs} args - Arguments to create many CommentTemplates.
+     * @example
+     * // Create many CommentTemplates
+     * const commentTemplate = await prisma.commentTemplate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CommentTemplateCreateManyArgs>(args?: SelectSubset<T, CommentTemplateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CommentTemplates and returns the data saved in the database.
+     * @param {CommentTemplateCreateManyAndReturnArgs} args - Arguments to create many CommentTemplates.
+     * @example
+     * // Create many CommentTemplates
+     * const commentTemplate = await prisma.commentTemplate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CommentTemplates and only return the `id`
+     * const commentTemplateWithIdOnly = await prisma.commentTemplate.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CommentTemplateCreateManyAndReturnArgs>(args?: SelectSubset<T, CommentTemplateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a CommentTemplate.
+     * @param {CommentTemplateDeleteArgs} args - Arguments to delete one CommentTemplate.
+     * @example
+     * // Delete one CommentTemplate
+     * const CommentTemplate = await prisma.commentTemplate.delete({
+     *   where: {
+     *     // ... filter to delete one CommentTemplate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CommentTemplateDeleteArgs>(args: SelectSubset<T, CommentTemplateDeleteArgs<ExtArgs>>): Prisma__CommentTemplateClient<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one CommentTemplate.
+     * @param {CommentTemplateUpdateArgs} args - Arguments to update one CommentTemplate.
+     * @example
+     * // Update one CommentTemplate
+     * const commentTemplate = await prisma.commentTemplate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CommentTemplateUpdateArgs>(args: SelectSubset<T, CommentTemplateUpdateArgs<ExtArgs>>): Prisma__CommentTemplateClient<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more CommentTemplates.
+     * @param {CommentTemplateDeleteManyArgs} args - Arguments to filter CommentTemplates to delete.
+     * @example
+     * // Delete a few CommentTemplates
+     * const { count } = await prisma.commentTemplate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CommentTemplateDeleteManyArgs>(args?: SelectSubset<T, CommentTemplateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CommentTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentTemplateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CommentTemplates
+     * const commentTemplate = await prisma.commentTemplate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CommentTemplateUpdateManyArgs>(args: SelectSubset<T, CommentTemplateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CommentTemplate.
+     * @param {CommentTemplateUpsertArgs} args - Arguments to update or create a CommentTemplate.
+     * @example
+     * // Update or create a CommentTemplate
+     * const commentTemplate = await prisma.commentTemplate.upsert({
+     *   create: {
+     *     // ... data to create a CommentTemplate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CommentTemplate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CommentTemplateUpsertArgs>(args: SelectSubset<T, CommentTemplateUpsertArgs<ExtArgs>>): Prisma__CommentTemplateClient<$Result.GetResult<Prisma.$CommentTemplatePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of CommentTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentTemplateCountArgs} args - Arguments to filter CommentTemplates to count.
+     * @example
+     * // Count the number of CommentTemplates
+     * const count = await prisma.commentTemplate.count({
+     *   where: {
+     *     // ... the filter for the CommentTemplates we want to count
+     *   }
+     * })
+    **/
+    count<T extends CommentTemplateCountArgs>(
+      args?: Subset<T, CommentTemplateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CommentTemplateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CommentTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentTemplateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CommentTemplateAggregateArgs>(args: Subset<T, CommentTemplateAggregateArgs>): Prisma.PrismaPromise<GetCommentTemplateAggregateType<T>>
+
+    /**
+     * Group by CommentTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentTemplateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CommentTemplateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CommentTemplateGroupByArgs['orderBy'] }
+        : { orderBy?: CommentTemplateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CommentTemplateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommentTemplateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CommentTemplate model
+   */
+  readonly fields: CommentTemplateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CommentTemplate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CommentTemplateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CommentTemplate model
+   */ 
+  interface CommentTemplateFieldRefs {
+    readonly id: FieldRef<"CommentTemplate", 'String'>
+    readonly text: FieldRef<"CommentTemplate", 'String'>
+    readonly link: FieldRef<"CommentTemplate", 'String'>
+    readonly createdAt: FieldRef<"CommentTemplate", 'DateTime'>
+    readonly updatedAt: FieldRef<"CommentTemplate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CommentTemplate findUnique
+   */
+  export type CommentTemplateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+    /**
+     * Filter, which CommentTemplate to fetch.
+     */
+    where: CommentTemplateWhereUniqueInput
+  }
+
+  /**
+   * CommentTemplate findUniqueOrThrow
+   */
+  export type CommentTemplateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+    /**
+     * Filter, which CommentTemplate to fetch.
+     */
+    where: CommentTemplateWhereUniqueInput
+  }
+
+  /**
+   * CommentTemplate findFirst
+   */
+  export type CommentTemplateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+    /**
+     * Filter, which CommentTemplate to fetch.
+     */
+    where?: CommentTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommentTemplates to fetch.
+     */
+    orderBy?: CommentTemplateOrderByWithRelationInput | CommentTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CommentTemplates.
+     */
+    cursor?: CommentTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommentTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommentTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommentTemplates.
+     */
+    distinct?: CommentTemplateScalarFieldEnum | CommentTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * CommentTemplate findFirstOrThrow
+   */
+  export type CommentTemplateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+    /**
+     * Filter, which CommentTemplate to fetch.
+     */
+    where?: CommentTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommentTemplates to fetch.
+     */
+    orderBy?: CommentTemplateOrderByWithRelationInput | CommentTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CommentTemplates.
+     */
+    cursor?: CommentTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommentTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommentTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommentTemplates.
+     */
+    distinct?: CommentTemplateScalarFieldEnum | CommentTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * CommentTemplate findMany
+   */
+  export type CommentTemplateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+    /**
+     * Filter, which CommentTemplates to fetch.
+     */
+    where?: CommentTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommentTemplates to fetch.
+     */
+    orderBy?: CommentTemplateOrderByWithRelationInput | CommentTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CommentTemplates.
+     */
+    cursor?: CommentTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommentTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommentTemplates.
+     */
+    skip?: number
+    distinct?: CommentTemplateScalarFieldEnum | CommentTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * CommentTemplate create
+   */
+  export type CommentTemplateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+    /**
+     * The data needed to create a CommentTemplate.
+     */
+    data: XOR<CommentTemplateCreateInput, CommentTemplateUncheckedCreateInput>
+  }
+
+  /**
+   * CommentTemplate createMany
+   */
+  export type CommentTemplateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CommentTemplates.
+     */
+    data: CommentTemplateCreateManyInput | CommentTemplateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CommentTemplate createManyAndReturn
+   */
+  export type CommentTemplateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many CommentTemplates.
+     */
+    data: CommentTemplateCreateManyInput | CommentTemplateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CommentTemplate update
+   */
+  export type CommentTemplateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+    /**
+     * The data needed to update a CommentTemplate.
+     */
+    data: XOR<CommentTemplateUpdateInput, CommentTemplateUncheckedUpdateInput>
+    /**
+     * Choose, which CommentTemplate to update.
+     */
+    where: CommentTemplateWhereUniqueInput
+  }
+
+  /**
+   * CommentTemplate updateMany
+   */
+  export type CommentTemplateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CommentTemplates.
+     */
+    data: XOR<CommentTemplateUpdateManyMutationInput, CommentTemplateUncheckedUpdateManyInput>
+    /**
+     * Filter which CommentTemplates to update
+     */
+    where?: CommentTemplateWhereInput
+  }
+
+  /**
+   * CommentTemplate upsert
+   */
+  export type CommentTemplateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+    /**
+     * The filter to search for the CommentTemplate to update in case it exists.
+     */
+    where: CommentTemplateWhereUniqueInput
+    /**
+     * In case the CommentTemplate found by the `where` argument doesn't exist, create a new CommentTemplate with this data.
+     */
+    create: XOR<CommentTemplateCreateInput, CommentTemplateUncheckedCreateInput>
+    /**
+     * In case the CommentTemplate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CommentTemplateUpdateInput, CommentTemplateUncheckedUpdateInput>
+  }
+
+  /**
+   * CommentTemplate delete
+   */
+  export type CommentTemplateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+    /**
+     * Filter which CommentTemplate to delete.
+     */
+    where: CommentTemplateWhereUniqueInput
+  }
+
+  /**
+   * CommentTemplate deleteMany
+   */
+  export type CommentTemplateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CommentTemplates to delete
+     */
+    where?: CommentTemplateWhereInput
+  }
+
+  /**
+   * CommentTemplate without action
+   */
+  export type CommentTemplateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentTemplate
+     */
+    select?: CommentTemplateSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -45908,6 +46908,9 @@ export namespace Prisma {
     mode: 'mode',
     providerOrderId: 'providerOrderId',
     apiErrorResponse: 'apiErrorResponse',
+    adminComment: 'adminComment',
+    adminCommentLink: 'adminCommentLink',
+    adminCommentUpdatedAt: 'adminCommentUpdatedAt',
     priority: 'priority',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -46217,6 +47220,17 @@ export namespace Prisma {
   };
 
   export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+  export const CommentTemplateScalarFieldEnum: {
+    id: 'id',
+    text: 'text',
+    link: 'link',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CommentTemplateScalarFieldEnum = (typeof CommentTemplateScalarFieldEnum)[keyof typeof CommentTemplateScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -48376,6 +49390,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableFilter<"Order"> | string | null
     apiErrorResponse?: StringNullableFilter<"Order"> | string | null
+    adminComment?: StringNullableFilter<"Order"> | string | null
+    adminCommentLink?: StringNullableFilter<"Order"> | string | null
+    adminCommentUpdatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     priority?: BoolFilter<"Order"> | boolean
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -48402,6 +49419,9 @@ export namespace Prisma {
     mode?: SortOrder
     providerOrderId?: SortOrderInput | SortOrder
     apiErrorResponse?: SortOrderInput | SortOrder
+    adminComment?: SortOrderInput | SortOrder
+    adminCommentLink?: SortOrderInput | SortOrder
+    adminCommentUpdatedAt?: SortOrderInput | SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -48431,6 +49451,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableFilter<"Order"> | string | null
     apiErrorResponse?: StringNullableFilter<"Order"> | string | null
+    adminComment?: StringNullableFilter<"Order"> | string | null
+    adminCommentLink?: StringNullableFilter<"Order"> | string | null
+    adminCommentUpdatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     priority?: BoolFilter<"Order"> | boolean
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -48457,6 +49480,9 @@ export namespace Prisma {
     mode?: SortOrder
     providerOrderId?: SortOrderInput | SortOrder
     apiErrorResponse?: SortOrderInput | SortOrder
+    adminComment?: SortOrderInput | SortOrder
+    adminCommentLink?: SortOrderInput | SortOrder
+    adminCommentUpdatedAt?: SortOrderInput | SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -48485,6 +49511,9 @@ export namespace Prisma {
     mode?: EnumOrderModeWithAggregatesFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableWithAggregatesFilter<"Order"> | string | null
     apiErrorResponse?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    adminComment?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    adminCommentLink?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    adminCommentUpdatedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     priority?: BoolWithAggregatesFilter<"Order"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -50059,6 +51088,58 @@ export namespace Prisma {
     publishedAt?: DateTimeNullableWithAggregatesFilter<"Post"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
+  }
+
+  export type CommentTemplateWhereInput = {
+    AND?: CommentTemplateWhereInput | CommentTemplateWhereInput[]
+    OR?: CommentTemplateWhereInput[]
+    NOT?: CommentTemplateWhereInput | CommentTemplateWhereInput[]
+    id?: StringFilter<"CommentTemplate"> | string
+    text?: StringFilter<"CommentTemplate"> | string
+    link?: StringNullableFilter<"CommentTemplate"> | string | null
+    createdAt?: DateTimeFilter<"CommentTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"CommentTemplate"> | Date | string
+  }
+
+  export type CommentTemplateOrderByWithRelationInput = {
+    id?: SortOrder
+    text?: SortOrder
+    link?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CommentTemplateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CommentTemplateWhereInput | CommentTemplateWhereInput[]
+    OR?: CommentTemplateWhereInput[]
+    NOT?: CommentTemplateWhereInput | CommentTemplateWhereInput[]
+    text?: StringFilter<"CommentTemplate"> | string
+    link?: StringNullableFilter<"CommentTemplate"> | string | null
+    createdAt?: DateTimeFilter<"CommentTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"CommentTemplate"> | Date | string
+  }, "id">
+
+  export type CommentTemplateOrderByWithAggregationInput = {
+    id?: SortOrder
+    text?: SortOrder
+    link?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CommentTemplateCountOrderByAggregateInput
+    _max?: CommentTemplateMaxOrderByAggregateInput
+    _min?: CommentTemplateMinOrderByAggregateInput
+  }
+
+  export type CommentTemplateScalarWhereWithAggregatesInput = {
+    AND?: CommentTemplateScalarWhereWithAggregatesInput | CommentTemplateScalarWhereWithAggregatesInput[]
+    OR?: CommentTemplateScalarWhereWithAggregatesInput[]
+    NOT?: CommentTemplateScalarWhereWithAggregatesInput | CommentTemplateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CommentTemplate"> | string
+    text?: StringWithAggregatesFilter<"CommentTemplate"> | string
+    link?: StringNullableWithAggregatesFilter<"CommentTemplate"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CommentTemplate"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CommentTemplate"> | Date | string
   }
 
   export type BrandCreateInput = {
@@ -51872,6 +52953,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51898,6 +52982,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51918,6 +53005,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51944,6 +53034,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51967,6 +53060,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51984,6 +53080,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52004,6 +53103,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53719,6 +54821,62 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CommentTemplateCreateInput = {
+    id?: string
+    text: string
+    link?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CommentTemplateUncheckedCreateInput = {
+    id?: string
+    text: string
+    link?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CommentTemplateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentTemplateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentTemplateCreateManyInput = {
+    id?: string
+    text: string
+    link?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CommentTemplateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentTemplateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -55347,6 +56505,9 @@ export namespace Prisma {
     mode?: SortOrder
     providerOrderId?: SortOrder
     apiErrorResponse?: SortOrder
+    adminComment?: SortOrder
+    adminCommentLink?: SortOrder
+    adminCommentUpdatedAt?: SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -55375,6 +56536,9 @@ export namespace Prisma {
     mode?: SortOrder
     providerOrderId?: SortOrder
     apiErrorResponse?: SortOrder
+    adminComment?: SortOrder
+    adminCommentLink?: SortOrder
+    adminCommentUpdatedAt?: SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -55395,6 +56559,9 @@ export namespace Prisma {
     mode?: SortOrder
     providerOrderId?: SortOrder
     apiErrorResponse?: SortOrder
+    adminComment?: SortOrder
+    adminCommentLink?: SortOrder
+    adminCommentUpdatedAt?: SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -56617,6 +57784,30 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPostStatusFilter<$PrismaModel>
     _max?: NestedEnumPostStatusFilter<$PrismaModel>
+  }
+
+  export type CommentTemplateCountOrderByAggregateInput = {
+    id?: SortOrder
+    text?: SortOrder
+    link?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CommentTemplateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    text?: SortOrder
+    link?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CommentTemplateMinOrderByAggregateInput = {
+    id?: SortOrder
+    text?: SortOrder
+    link?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProductCreateNestedManyWithoutBrandInput = {
@@ -60409,6 +61600,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60433,6 +61627,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60641,6 +61838,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableFilter<"Order"> | string | null
     apiErrorResponse?: StringNullableFilter<"Order"> | string | null
+    adminComment?: StringNullableFilter<"Order"> | string | null
+    adminCommentLink?: StringNullableFilter<"Order"> | string | null
+    adminCommentUpdatedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     priority?: BoolFilter<"Order"> | boolean
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -60948,6 +62148,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60973,6 +62176,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -61035,6 +62241,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61060,6 +62269,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61132,6 +62344,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -61156,6 +62371,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -63014,6 +64232,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -63038,6 +64259,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64389,6 +65613,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64414,6 +65641,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64449,6 +65679,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64474,6 +65707,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65314,6 +66550,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65339,6 +66578,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65411,6 +66653,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65436,6 +66681,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67172,6 +68420,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -67220,6 +68471,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67244,6 +68498,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67266,6 +68523,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67402,6 +68662,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -67557,6 +68820,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67581,6 +68847,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67603,6 +68872,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68383,6 +69655,9 @@ export namespace Prisma {
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
     apiErrorResponse?: string | null
+    adminComment?: string | null
+    adminCommentLink?: string | null
+    adminCommentUpdatedAt?: Date | string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68465,6 +69740,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68489,6 +69767,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68511,6 +69792,9 @@ export namespace Prisma {
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    adminComment?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
+    adminCommentUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -69414,6 +70698,10 @@ export namespace Prisma {
      * @deprecated Use PostDefaultArgs instead
      */
     export type PostArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PostDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CommentTemplateDefaultArgs instead
+     */
+    export type CommentTemplateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CommentTemplateDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

@@ -21,6 +21,7 @@ import { adminBrandsRouter } from "./brands.routes.js";
 import { adminProductsRouter } from "./products.routes.js";
 import { adminPackagesRouter } from "./packages.routes.js";
 import { adminStockPoolsRouter } from "./stockPools.routes.js";
+import { adminCommentTemplatesRouter } from "./commentTemplates.routes.js";
 
 export const adminRouter = Router();
 
@@ -59,6 +60,7 @@ adminRouter.use("/support-channels", adminOnly, adminSupportChannelsRouter);
 adminRouter.use("/banners", adminOnly, adminBannersRouter);
 adminRouter.use("/posts", adminOnly, adminPostsRouter);
 adminRouter.use("/coupons", adminOnly, adminCouponsRouter);
+adminRouter.use("/comment-templates", adminOnly, adminCommentTemplatesRouter);
 adminRouter.use("/brands", adminOnly, adminBrandsRouter);
 adminRouter.use("/products", adminOnly, adminProductsRouter);
 adminRouter.use("/packages", adminOnly, adminPackagesRouter);

@@ -44,6 +44,7 @@ import AdminNoticeSettings from "./pages/admin/NoticeSettings.js";
 import AdminBanner from "./pages/admin/Banner.js";
 import AdminPosts from "./pages/admin/Posts.js";
 import AdminCoupons from "./pages/admin/Coupons.js";
+import AdminCommentTemplates from "./pages/admin/CommentTemplates.js";
 import AdminBrands from "./pages/admin/Brands.js";
 import AdminProducts from "./pages/admin/Products.js";
 import AdminPackages from "./pages/admin/Packages.js";
@@ -121,6 +122,7 @@ export default function App() {
             <Route path="banner" element={<AdminBanner />} />
             <Route path="posts" element={<AdminPosts />} />
             <Route path="coupons" element={<AdminCoupons />} />
+            <Route path="comments" element={<AdminCommentTemplates />} />
             <Route path="brands" element={<AdminBrands />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="packages" element={<AdminPackages />} />

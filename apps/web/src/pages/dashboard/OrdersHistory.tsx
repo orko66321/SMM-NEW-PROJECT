@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { OrderStatusValues } from "@smm/shared";
 import { apiErrorMessage } from "../../api/client.js";
@@ -24,6 +24,11 @@ type OrderRow = {
   quantity: number;
   remains: number | null;
   status: string;
+  // Admin-authored note about this specific order (wrong UID, cancelled &
+  // refunded, delayed, contact support…). Empty ⇒ nothing rendered.
+  adminComment: string | null;
+  adminCommentLink: string | null;
+  adminCommentUpdatedAt: string | null;
 };
 
 function isRefillEligible(o: OrderRow) {
@@ -163,6 +168,28 @@ function OrderCard({ o }: { o: OrderRow }) {
           <dd className="font-mono">{o.remains ?? "—"}</dd>
         </div>
       </dl>
+
+      {o.adminComment && (
+        <div className="mt-3 rounded-control border border-info/30 bg-info/10 px-3 py-2">
+          <p className="text-xs font-semibold text-info">{t("ordersHistory.adminNoteLabel")}</p>
+          <p className="mt-0.5 whitespace-pre-wrap text-sm text-on-surface">{o.adminComment}</p>
+          {o.adminCommentLink && (
+            <a
+              href={o.adminCommentLink}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            >
+              {t("ordersHistory.adminNoteLink")} <Icon name="external" size={12} />
+            </a>
+          )}
+          {o.adminCommentUpdatedAt && (
+            <p className="mt-1 text-[11px] text-on-surface-variant">
+              {t("ordersHistory.adminNoteUpdated", { date: new Date(o.adminCommentUpdatedAt).toLocaleString() })}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -236,7 +263,8 @@ export default function OrdersHistory() {
               <tr><td colSpan={9} className="px-4 py-6 text-center text-on-surface-variant">{t("ordersHistory.noOrdersFound")}</td></tr>
             )}
             {data?.items.map((o: OrderRow) => (
-              <tr key={o.id}>
+              <Fragment key={o.id}>
+              <tr className={o.adminComment ? "border-b-0" : ""}>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1 font-mono text-xs text-on-surface-variant">
                     <span>{o.id.slice(0, 8)}</span>
@@ -255,6 +283,27 @@ export default function OrdersHistory() {
                   {o.stockCode && <RevealCodeButton orderId={o.id} />}
                 </td>
               </tr>
+              {o.adminComment && (
+                <tr>
+                  <td colSpan={9} className="px-4 pb-3">
+                    <div className="rounded-control border border-info/30 bg-info/10 px-3 py-2">
+                      <p className="text-xs font-semibold text-info">{t("ordersHistory.adminNoteLabel")}</p>
+                      <p className="mt-0.5 whitespace-pre-wrap text-sm text-on-surface">{o.adminComment}</p>
+                      {o.adminCommentLink && (
+                        <a href={o.adminCommentLink} target="_blank" rel="noreferrer" className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+                          {t("ordersHistory.adminNoteLink")} <Icon name="external" size={12} />
+                        </a>
+                      )}
+                      {o.adminCommentUpdatedAt && (
+                        <p className="mt-1 text-[11px] text-on-surface-variant">
+                          {t("ordersHistory.adminNoteUpdated", { date: new Date(o.adminCommentUpdatedAt).toLocaleString() })}
+                        </p>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              )}
+              </Fragment>
             ))}
           </tbody>
         </table>

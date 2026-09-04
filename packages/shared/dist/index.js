@@ -214,10 +214,30 @@ export const createOrderSchema = z.object({
     link: z.string().trim().url().max(2048),
     quantity: z.coerce.number().int().positive().max(2_147_483_647),
 });
+// `comment` / `commentLink`: an optional customer-facing note the admin can
+// attach in the SAME request that changes the status (e.g. picking the
+// "wrong UID" or "cancelled & refunded" template while cancelling). Empty
+// string / null clears any existing note; omitted leaves it untouched.
+const orderCommentText = z.string().trim().max(2000);
+const orderCommentUrl = z.string().trim().url().max(2048).or(z.literal(""));
 export const updateOrderStatusSchema = z.object({
     status: z.enum(OrderStatusValues),
     startCount: z.coerce.number().int().nonnegative().optional(),
     remains: z.coerce.number().int().nonnegative().optional(),
+    comment: orderCommentText.nullable().optional(),
+    commentLink: orderCommentUrl.nullable().optional(),
+});
+// Standalone "save the per-order note" (POST /admin/orders/:id/comment) —
+// touches only the note, never the order status.
+export const orderCommentSchema = z.object({
+    comment: orderCommentText.nullable().optional(),
+    commentLink: orderCommentUrl.nullable().optional(),
+});
+// Canned notice templates (admin "Comment" menu). `link` is an optional CTA
+// URL shown next to the note on the customer's order.
+export const commentTemplateInputSchema = z.object({
+    text: z.string().trim().min(1).max(2000),
+    link: orderCommentUrl.nullable().optional(),
 });
 // A manual-mode (or never-auto-submitted) refill has no provider to poll —
 // an admin resolves it by hand, same REQUESTED-queue shape as manual deposit

@@ -96,6 +96,18 @@ export const updateAdminOrderStatus = (id: string, input: UpdateOrderStatusInput
   apiClient.patch(`/admin/orders/${id}/status`, input).then((r) => r.data.order);
 export const resendAdminOrder = (id: string) =>
   apiClient.post(`/admin/orders/${id}/resend`).then((r) => r.data.order);
+export const setAdminOrderComment = (id: string, input: { comment: string | null; commentLink: string | null }) =>
+  apiClient.post(`/admin/orders/${id}/comment`, input).then((r) => r.data.order);
+
+// ── Admin: canned "Comment" templates ───────────────────────────────────
+export interface CommentTemplateRow { id: string; text: string; link: string | null; createdAt: string; updatedAt: string }
+export const getCommentTemplates = () =>
+  apiClient.get("/admin/comment-templates").then((r) => r.data.items as CommentTemplateRow[]);
+export const createCommentTemplate = (input: { text: string; link: string | null }) =>
+  apiClient.post("/admin/comment-templates", input).then((r) => r.data.template as CommentTemplateRow);
+export const updateCommentTemplate = (id: string, input: { text: string; link: string | null }) =>
+  apiClient.put(`/admin/comment-templates/${id}`, input).then((r) => r.data.template as CommentTemplateRow);
+export const deleteCommentTemplate = (id: string) => apiClient.delete(`/admin/comment-templates/${id}`);
 export const getAdminRefills = (params: { page?: number; pageSize?: number; status?: string }) =>
   apiClient.get("/admin/orders/refills", { params }).then((r) => r.data);
 export const resolveAdminRefill = (id: string, input: ResolveManualRefillInput) =>

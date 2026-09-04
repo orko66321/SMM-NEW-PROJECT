@@ -6,9 +6,12 @@ import {
   getAdminOrders,
   getAdminRefills,
   getAdminSettings,
+  getCommentTemplates,
   resendAdminOrder,
   resolveAdminRefill,
+  setAdminOrderComment,
   updateAdminOrderStatus,
+  type CommentTemplateRow,
 } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
@@ -27,8 +30,98 @@ type AdminOrderRow = {
   link: string;
   providerOrderId: string | null;
   apiErrorResponse: string | null;
+  adminComment: string | null;
+  adminCommentLink: string | null;
+  adminCommentUpdatedAt: string | null;
   createdAt: string;
 };
+
+/**
+ * Per-order customer-facing note editor shown inside the expanded row. The
+ * canned CommentTemplate list is offered as a picker (the "select a template
+ * while cancelling / editing" flow from the spec); picking one fills the
+ * fields, which the admin can still edit before saving.
+ */
+function OrderNoteEditor({ order, templates }: { order: AdminOrderRow; templates: CommentTemplateRow[] }) {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const [text, setText] = useState(order.adminComment ?? "");
+  const [link, setLink] = useState(order.adminCommentLink ?? "");
+
+  const mutation = useMutation({
+    mutationFn: (payload: { comment: string | null; commentLink: string | null }) =>
+      setAdminOrderComment(order.id, payload),
+    onSuccess: () => {
+      toast.push("Customer note saved.", "success");
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+    },
+    onError: (err) => toast.push(apiErrorMessage(err, "Failed to save note"), "error"),
+  });
+
+  function applyTemplate(id: string) {
+    const tmpl = templates.find((t) => t.id === id);
+    if (!tmpl) return;
+    setText(tmpl.text);
+    setLink(tmpl.link ?? "");
+  }
+
+  return (
+    <div className="space-y-2 border-t border-outline-variant pt-3">
+      <p className="font-semibold text-on-surface">Customer note</p>
+      <p className="text-on-surface-variant">Shown to the customer on their order history. Leave empty to clear it.</p>
+      {templates.length > 0 && (
+        <select
+          className="input-field !py-1.5 text-xs"
+          value=""
+          onChange={(e) => { applyTemplate(e.target.value); e.target.value = ""; }}
+        >
+          <option value="">Insert a saved comment…</option>
+          {templates.map((tmpl) => (
+            <option key={tmpl.id} value={tmpl.id}>{tmpl.text.slice(0, 80)}{tmpl.text.length > 80 ? "…" : ""}</option>
+          ))}
+        </select>
+      )}
+      <textarea
+        className="input-field min-h-[70px] text-xs"
+        placeholder="e.g. আপনার UID ভুল। চেক করে আবার অর্ডার করুন।"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <input
+        type="url"
+        className="input-field !py-1.5 text-xs"
+        placeholder="Optional link (WhatsApp / reorder / help article)"
+        value={link}
+        onChange={(e) => setLink(e.target.value)}
+      />
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          className="btn-primary !min-h-[36px] !px-4 !py-1.5 text-xs"
+          disabled={mutation.isPending}
+          onClick={() => mutation.mutate({ comment: text.trim() || null, commentLink: link.trim() || null })}
+        >
+          {mutation.isPending ? "Saving…" : "Comment Save"}
+        </button>
+        {order.adminComment && (
+          <button
+            type="button"
+            className="btn-ghost !min-h-[36px] !px-3 !py-1.5 text-xs text-error"
+            disabled={mutation.isPending}
+            onClick={() => { setText(""); setLink(""); mutation.mutate({ comment: null, commentLink: null }); }}
+          >
+            Clear note
+          </button>
+        )}
+        {order.adminCommentUpdatedAt && (
+          <span className="text-[11px] text-on-surface-variant">
+            saved {new Date(order.adminCommentUpdatedAt).toLocaleString()}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const RESENDABLE = new Set(["PENDING", "FAILED"]);
 
@@ -142,6 +235,7 @@ export default function AdminOrders() {
 
   const { data: adminSettings } = useQuery({ queryKey: ["admin-settings"], queryFn: getAdminSettings, staleTime: 60_000 });
   const resendEnabled = (adminSettings as { resendOrderButtonEnabled?: boolean } | undefined)?.resendOrderButtonEnabled ?? false;
+  const { data: commentTemplates } = useQuery({ queryKey: ["comment-templates"], queryFn: getCommentTemplates, staleTime: 60_000 });
   const from = searchParams.get("from") ?? undefined;
   const to = searchParams.get("to") ?? undefined;
   const likeOnly = searchParams.get("likeOnly") === "true";
@@ -337,6 +431,9 @@ export default function AdminOrders() {
                           </button>
                         )}
                       </div>
+                    </div>
+                    <div className="mt-3 text-xs">
+                      <OrderNoteEditor key={o.id} order={o} templates={commentTemplates ?? []} />
                     </div>
                   </td>
                 </tr>
