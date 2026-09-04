@@ -790,6 +790,12 @@ model Order {
   mode            OrderMode   @default(MANUAL)
   providerOrderId String?
 
+  // Raw error text from the last failed third-party provider submission
+  // (e.g. "Insufficient balance", "Out of stock"). ADMIN-ONLY — deliberately
+  // stripped from listOrdersForUser so a customer only ever sees the order
+  // status, never the upstream reason. Cleared on a successful (re)submit.
+  apiErrorResponse String?
+
   // Set by the AI Support "Speed up" action — the order-status polling cron
   // and the pending-submit cron process priority orders first (there is no
   // universal provider "priority" flag, so this is panel-side only).
@@ -1169,6 +1175,10 @@ model SiteSettings {
   smtpUser           String?
   smtpPassCiphertext String?
   smtpFromAddress    String?
+
+  // Kill-switch for the admin Orders "Resend to provider" button (and its
+  // endpoint). Default on — it is a normal part of the admin workflow.
+  resendOrderButtonEnabled Boolean @default(true)
 
   updatedAt DateTime @updatedAt
 }

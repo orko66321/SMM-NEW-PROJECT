@@ -24258,6 +24258,7 @@ export namespace Prisma {
     status: $Enums.OrderStatus | null
     mode: $Enums.OrderMode | null
     providerOrderId: string | null
+    apiErrorResponse: string | null
     priority: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -24277,6 +24278,7 @@ export namespace Prisma {
     status: $Enums.OrderStatus | null
     mode: $Enums.OrderMode | null
     providerOrderId: string | null
+    apiErrorResponse: string | null
     priority: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -24296,6 +24298,7 @@ export namespace Prisma {
     status: number
     mode: number
     providerOrderId: number
+    apiErrorResponse: number
     priority: number
     createdAt: number
     updatedAt: number
@@ -24333,6 +24336,7 @@ export namespace Prisma {
     status?: true
     mode?: true
     providerOrderId?: true
+    apiErrorResponse?: true
     priority?: true
     createdAt?: true
     updatedAt?: true
@@ -24352,6 +24356,7 @@ export namespace Prisma {
     status?: true
     mode?: true
     providerOrderId?: true
+    apiErrorResponse?: true
     priority?: true
     createdAt?: true
     updatedAt?: true
@@ -24371,6 +24376,7 @@ export namespace Prisma {
     status?: true
     mode?: true
     providerOrderId?: true
+    apiErrorResponse?: true
     priority?: true
     createdAt?: true
     updatedAt?: true
@@ -24477,6 +24483,7 @@ export namespace Prisma {
     status: $Enums.OrderStatus
     mode: $Enums.OrderMode
     providerOrderId: string | null
+    apiErrorResponse: string | null
     priority: boolean
     createdAt: Date
     updatedAt: Date
@@ -24515,6 +24522,7 @@ export namespace Prisma {
     status?: boolean
     mode?: boolean
     providerOrderId?: boolean
+    apiErrorResponse?: boolean
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -24541,6 +24549,7 @@ export namespace Prisma {
     status?: boolean
     mode?: boolean
     providerOrderId?: boolean
+    apiErrorResponse?: boolean
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -24563,6 +24572,7 @@ export namespace Prisma {
     status?: boolean
     mode?: boolean
     providerOrderId?: boolean
+    apiErrorResponse?: boolean
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -24607,6 +24617,7 @@ export namespace Prisma {
       status: $Enums.OrderStatus
       mode: $Enums.OrderMode
       providerOrderId: string | null
+      apiErrorResponse: string | null
       priority: boolean
       createdAt: Date
       updatedAt: Date
@@ -25022,6 +25033,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly mode: FieldRef<"Order", 'OrderMode'>
     readonly providerOrderId: FieldRef<"Order", 'String'>
+    readonly apiErrorResponse: FieldRef<"Order", 'String'>
     readonly priority: FieldRef<"Order", 'Boolean'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
@@ -39875,6 +39887,7 @@ export namespace Prisma {
     smtpUser: string | null
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
+    resendOrderButtonEnabled: boolean | null
     updatedAt: Date | null
   }
 
@@ -39894,6 +39907,7 @@ export namespace Prisma {
     smtpUser: string | null
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
+    resendOrderButtonEnabled: boolean | null
     updatedAt: Date | null
   }
 
@@ -39913,6 +39927,7 @@ export namespace Prisma {
     smtpUser: number
     smtpPassCiphertext: number
     smtpFromAddress: number
+    resendOrderButtonEnabled: number
     updatedAt: number
     _all: number
   }
@@ -39944,6 +39959,7 @@ export namespace Prisma {
     smtpUser?: true
     smtpPassCiphertext?: true
     smtpFromAddress?: true
+    resendOrderButtonEnabled?: true
     updatedAt?: true
   }
 
@@ -39963,6 +39979,7 @@ export namespace Prisma {
     smtpUser?: true
     smtpPassCiphertext?: true
     smtpFromAddress?: true
+    resendOrderButtonEnabled?: true
     updatedAt?: true
   }
 
@@ -39982,6 +39999,7 @@ export namespace Prisma {
     smtpUser?: true
     smtpPassCiphertext?: true
     smtpFromAddress?: true
+    resendOrderButtonEnabled?: true
     updatedAt?: true
     _all?: true
   }
@@ -40088,6 +40106,7 @@ export namespace Prisma {
     smtpUser: string | null
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
+    resendOrderButtonEnabled: boolean
     updatedAt: Date
     _count: SiteSettingsCountAggregateOutputType | null
     _avg: SiteSettingsAvgAggregateOutputType | null
@@ -40126,6 +40145,7 @@ export namespace Prisma {
     smtpUser?: boolean
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
+    resendOrderButtonEnabled?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSettings"]>
 
@@ -40145,6 +40165,7 @@ export namespace Prisma {
     smtpUser?: boolean
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
+    resendOrderButtonEnabled?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSettings"]>
 
@@ -40164,6 +40185,7 @@ export namespace Prisma {
     smtpUser?: boolean
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
+    resendOrderButtonEnabled?: boolean
     updatedAt?: boolean
   }
 
@@ -40187,6 +40209,7 @@ export namespace Prisma {
       smtpUser: string | null
       smtpPassCiphertext: string | null
       smtpFromAddress: string | null
+      resendOrderButtonEnabled: boolean
       updatedAt: Date
     }, ExtArgs["result"]["siteSettings"]>
     composites: {}
@@ -40596,6 +40619,7 @@ export namespace Prisma {
     readonly smtpUser: FieldRef<"SiteSettings", 'String'>
     readonly smtpPassCiphertext: FieldRef<"SiteSettings", 'String'>
     readonly smtpFromAddress: FieldRef<"SiteSettings", 'String'>
+    readonly resendOrderButtonEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly updatedAt: FieldRef<"SiteSettings", 'DateTime'>
   }
     
@@ -45883,6 +45907,7 @@ export namespace Prisma {
     status: 'status',
     mode: 'mode',
     providerOrderId: 'providerOrderId',
+    apiErrorResponse: 'apiErrorResponse',
     priority: 'priority',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -46114,6 +46139,7 @@ export namespace Prisma {
     smtpUser: 'smtpUser',
     smtpPassCiphertext: 'smtpPassCiphertext',
     smtpFromAddress: 'smtpFromAddress',
+    resendOrderButtonEnabled: 'resendOrderButtonEnabled',
     updatedAt: 'updatedAt'
   };
 
@@ -48349,6 +48375,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableFilter<"Order"> | string | null
+    apiErrorResponse?: StringNullableFilter<"Order"> | string | null
     priority?: BoolFilter<"Order"> | boolean
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -48374,6 +48401,7 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrderInput | SortOrder
+    apiErrorResponse?: SortOrderInput | SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -48402,6 +48430,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableFilter<"Order"> | string | null
+    apiErrorResponse?: StringNullableFilter<"Order"> | string | null
     priority?: BoolFilter<"Order"> | boolean
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -48427,6 +48456,7 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrderInput | SortOrder
+    apiErrorResponse?: SortOrderInput | SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -48454,6 +48484,7 @@ export namespace Prisma {
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     mode?: EnumOrderModeWithAggregatesFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    apiErrorResponse?: StringNullableWithAggregatesFilter<"Order"> | string | null
     priority?: BoolWithAggregatesFilter<"Order"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -49581,6 +49612,7 @@ export namespace Prisma {
     smtpUser?: StringNullableFilter<"SiteSettings"> | string | null
     smtpPassCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableFilter<"SiteSettings"> | string | null
+    resendOrderButtonEnabled?: BoolFilter<"SiteSettings"> | boolean
     updatedAt?: DateTimeFilter<"SiteSettings"> | Date | string
   }
 
@@ -49600,6 +49632,7 @@ export namespace Prisma {
     smtpUser?: SortOrderInput | SortOrder
     smtpPassCiphertext?: SortOrderInput | SortOrder
     smtpFromAddress?: SortOrderInput | SortOrder
+    resendOrderButtonEnabled?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -49622,6 +49655,7 @@ export namespace Prisma {
     smtpUser?: StringNullableFilter<"SiteSettings"> | string | null
     smtpPassCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableFilter<"SiteSettings"> | string | null
+    resendOrderButtonEnabled?: BoolFilter<"SiteSettings"> | boolean
     updatedAt?: DateTimeFilter<"SiteSettings"> | Date | string
   }, "id">
 
@@ -49641,6 +49675,7 @@ export namespace Prisma {
     smtpUser?: SortOrderInput | SortOrder
     smtpPassCiphertext?: SortOrderInput | SortOrder
     smtpFromAddress?: SortOrderInput | SortOrder
+    resendOrderButtonEnabled?: SortOrder
     updatedAt?: SortOrder
     _count?: SiteSettingsCountOrderByAggregateInput
     _avg?: SiteSettingsAvgOrderByAggregateInput
@@ -49668,6 +49703,7 @@ export namespace Prisma {
     smtpUser?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smtpPassCiphertext?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    resendOrderButtonEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSettings"> | Date | string
   }
 
@@ -51835,6 +51871,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51860,6 +51897,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51879,6 +51917,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51904,6 +51943,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51926,6 +51966,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51942,6 +51983,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51961,6 +52003,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53146,6 +53189,7 @@ export namespace Prisma {
     smtpUser?: string | null
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
+    resendOrderButtonEnabled?: boolean
     updatedAt?: Date | string
   }
 
@@ -53165,6 +53209,7 @@ export namespace Prisma {
     smtpUser?: string | null
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
+    resendOrderButtonEnabled?: boolean
     updatedAt?: Date | string
   }
 
@@ -53184,6 +53229,7 @@ export namespace Prisma {
     smtpUser?: NullableStringFieldUpdateOperationsInput | string | null
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -53203,6 +53249,7 @@ export namespace Prisma {
     smtpUser?: NullableStringFieldUpdateOperationsInput | string | null
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -53222,6 +53269,7 @@ export namespace Prisma {
     smtpUser?: string | null
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
+    resendOrderButtonEnabled?: boolean
     updatedAt?: Date | string
   }
 
@@ -53241,6 +53289,7 @@ export namespace Prisma {
     smtpUser?: NullableStringFieldUpdateOperationsInput | string | null
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -53260,6 +53309,7 @@ export namespace Prisma {
     smtpUser?: NullableStringFieldUpdateOperationsInput | string | null
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -55296,6 +55346,7 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrder
+    apiErrorResponse?: SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -55323,6 +55374,7 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrder
+    apiErrorResponse?: SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -55342,6 +55394,7 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrder
+    apiErrorResponse?: SortOrder
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -56234,6 +56287,7 @@ export namespace Prisma {
     smtpUser?: SortOrder
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
+    resendOrderButtonEnabled?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -56258,6 +56312,7 @@ export namespace Prisma {
     smtpUser?: SortOrder
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
+    resendOrderButtonEnabled?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -56277,6 +56332,7 @@ export namespace Prisma {
     smtpUser?: SortOrder
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
+    resendOrderButtonEnabled?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -60352,6 +60408,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60375,6 +60432,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60582,6 +60640,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableFilter<"Order"> | string | null
+    apiErrorResponse?: StringNullableFilter<"Order"> | string | null
     priority?: BoolFilter<"Order"> | boolean
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -60888,6 +60947,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60912,6 +60972,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60973,6 +61034,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60997,6 +61059,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61068,6 +61131,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -61091,6 +61155,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -62948,6 +63013,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -62971,6 +63037,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64321,6 +64388,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64345,6 +64413,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64379,6 +64448,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64403,6 +64473,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65242,6 +65313,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65266,6 +65338,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65337,6 +65410,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65361,6 +65435,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67096,6 +67171,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -67143,6 +67219,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67166,6 +67243,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67187,6 +67265,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67322,6 +67401,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -67476,6 +67556,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67499,6 +67580,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67520,6 +67602,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68299,6 +68382,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    apiErrorResponse?: string | null
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68380,6 +68464,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68403,6 +68488,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68424,6 +68510,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

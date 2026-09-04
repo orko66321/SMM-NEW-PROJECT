@@ -1,5 +1,10 @@
 import { logger } from "../lib/logger.js";
-import { findPendingAutoSubmitOrders, markOrderSubmittedToProvider, updateOrderStatus } from "../services/order.service.js";
+import {
+  findPendingAutoSubmitOrders,
+  markOrderSubmittedToProvider,
+  recordOrderProviderError,
+  updateOrderStatus,
+} from "../services/order.service.js";
 import { submitProviderOrder } from "../services/providerClient.service.js";
 
 /**
@@ -59,6 +64,10 @@ export async function submitPendingOrders() {
       logger.info({ orderId: order.id, providerOrderId: submitted }, "Order auto-submitted to provider");
     } else {
       logger.error({ orderId: order.id, err: lastError }, "Order auto-submission exhausted all providers — marking FAILED and refunding");
+      // Keep the raw provider error for the admin Orders view (admin-only —
+      // the customer just sees the FAILED status). Record it before the
+      // status flip so it survives even if the refund path throws.
+      await recordOrderProviderError(order.id, lastError);
       await updateOrderStatus(order.id, { status: "FAILED" });
     }
   }

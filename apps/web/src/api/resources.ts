@@ -94,6 +94,8 @@ export const getAdminOrders = (params: { page?: number; pageSize?: number; statu
   apiClient.get("/admin/orders", { params }).then((r) => r.data);
 export const updateAdminOrderStatus = (id: string, input: UpdateOrderStatusInput) =>
   apiClient.patch(`/admin/orders/${id}/status`, input).then((r) => r.data.order);
+export const resendAdminOrder = (id: string) =>
+  apiClient.post(`/admin/orders/${id}/resend`).then((r) => r.data.order);
 export const getAdminRefills = (params: { page?: number; pageSize?: number; status?: string }) =>
   apiClient.get("/admin/orders/refills", { params }).then((r) => r.data);
 export const resolveAdminRefill = (id: string, input: ResolveManualRefillInput) =>

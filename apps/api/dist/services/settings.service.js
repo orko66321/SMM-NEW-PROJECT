@@ -30,7 +30,13 @@ export async function getAdminSettings() {
         smtpUser: s.smtpUser,
         smtpFromAddress: s.smtpFromAddress,
         smtpConfigured: !!s.smtpPassCiphertext,
+        resendOrderButtonEnabled: s.resendOrderButtonEnabled,
     };
+}
+/** Kill-switch for the admin Orders "Resend to provider" button + endpoint. */
+export async function isResendOrderButtonEnabled() {
+    const s = await ensureSettings();
+    return s.resendOrderButtonEnabled;
 }
 export async function updateSettings(input) {
     await ensureSettings();
@@ -54,6 +60,10 @@ export async function updateSettings(input) {
             // UI never re-displays it after saving, so there's nothing to prefill.
             ...(input.smtpPassword ? { smtpPassCiphertext: encrypt(input.smtpPassword) } : {}),
             smtpFromAddress: input.smtpFromAddress,
+            // Omitted by an older admin client ⇒ leave the stored value alone.
+            ...(input.resendOrderButtonEnabled === undefined
+                ? {}
+                : { resendOrderButtonEnabled: input.resendOrderButtonEnabled }),
         },
     });
 }

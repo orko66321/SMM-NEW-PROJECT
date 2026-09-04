@@ -21,6 +21,7 @@ interface AdminSettings {
   smtpUser: string | null;
   smtpFromAddress: string | null;
   smtpConfigured: boolean;
+  resendOrderButtonEnabled: boolean;
 }
 
 export default function AdminSettingsPage() {
@@ -42,6 +43,7 @@ export default function AdminSettingsPage() {
     smtpUser: "",
     smtpPassword: "",
     smtpFromAddress: "",
+    resendOrderButtonEnabled: true,
   });
   const [submitting, setSubmitting] = useState(false);
   const [testEmailTo, setTestEmailTo] = useState("");
@@ -67,6 +69,7 @@ export default function AdminSettingsPage() {
       smtpUser: s.smtpUser ?? "",
       smtpPassword: "",
       smtpFromAddress: s.smtpFromAddress ?? "",
+      resendOrderButtonEnabled: s.resendOrderButtonEnabled ?? true,
     });
   }, [settings]);
 
@@ -87,6 +90,7 @@ export default function AdminSettingsPage() {
         smtpUser: form.smtpUser || null,
         ...(form.smtpPassword ? { smtpPassword: form.smtpPassword } : {}),
         smtpFromAddress: form.smtpFromAddress || null,
+        resendOrderButtonEnabled: form.resendOrderButtonEnabled,
       });
       toast.push("Settings saved.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin-settings"] });
@@ -179,6 +183,22 @@ export default function AdminSettingsPage() {
           />
           <p className="mt-1 text-xs text-on-surface-variant">Leave empty to hide this link on the order page.</p>
         </div>
+      </div>
+
+      <div className="card space-y-2">
+        <h2 className="text-sm font-semibold">Admin Orders</h2>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={form.resendOrderButtonEnabled}
+            onChange={(e) => setForm((f) => ({ ...f, resendOrderButtonEnabled: e.target.checked }))}
+          />
+          Enable the &ldquo;Resend to provider&rdquo; button on the Orders page
+        </label>
+        <p className="text-xs text-on-surface-variant">
+          When off, the button is hidden and the resend endpoint is rejected. Failed orders can still be
+          resolved with the status dropdown.
+        </p>
       </div>
 
       <div className="card space-y-3">

@@ -378,6 +378,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   status: 'status',
   mode: 'mode',
   providerOrderId: 'providerOrderId',
+  apiErrorResponse: 'apiErrorResponse',
   priority: 'priority',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -564,6 +565,7 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   smtpUser: 'smtpUser',
   smtpPassCiphertext: 'smtpPassCiphertext',
   smtpFromAddress: 'smtpFromAddress',
+  resendOrderButtonEnabled: 'resendOrderButtonEnabled',
   updatedAt: 'updatedAt'
 };
 
