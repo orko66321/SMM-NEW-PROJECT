@@ -136,6 +136,41 @@ describe("ZiniPay integration (Phase 3)", () => {
     }
   });
 
+  it("webhook: parses invoice_id even when ZiniPay sends it as a raw JSON number, not a string", async () => {
+    // Regression: resolveWebhookGatewayRef used to require
+    // `typeof invoice_id === "string"` — a numeric invoice id in the
+    // webhook JSON body (the same "provider doesn't honor its own docs"
+    // quirk documented in providerClient.service.ts) would silently 400
+    // before confirmGatewayDeposit ever ran, leaving the deposit PENDING
+    // forever with no auto-verification despite a genuinely successful payment.
+    const mock = await startMockZiniPay({ invoiceId: "918273", verify: () => ({ invoice_id: "918273", status: "COMPLETED", amount: 25 }) });
+    try {
+      await enableMockZiniPay(mock.baseUrl);
+      const user = await createUser({ balance: 0 });
+
+      await request(app)
+        .post("/api/payments/zinipay/deposits")
+        .set("Authorization", `Bearer ${tokenFor(user.id)}`)
+        .send({ amount: 25 });
+
+      const { prisma } = await import("../src/lib/prisma.js");
+      const deposit = await prisma.deposit.findFirstOrThrow({ where: { userId: user.id } });
+      expect(deposit.gatewayRef).toBe("918273");
+
+      const webhook = await request(app)
+        .post("/api/payments/zinipay/webhook")
+        .send({ invoice_id: 918273 }); // JSON number, not a string
+      expect(webhook.status).toBe(200);
+
+      const wallet = await getWalletForUser(user.id);
+      expect(wallet.balance.toString()).toBe("25");
+      const depositAfter = await prisma.deposit.findUniqueOrThrow({ where: { id: deposit.id } });
+      expect(depositAfter.status).toBe("APPROVED");
+    } finally {
+      await mock.close();
+    }
+  });
+
   it("rejects an unknown gateway key", async () => {
     const user = await createUser();
     const res = await request(app)
