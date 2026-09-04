@@ -403,6 +403,7 @@ model Package {
 
   stockPoolLinks PackageStockPool[]
   orders         Order[]
+  orderIntents   OrderIntent[]
 
   @@index([productId, level])
 }
@@ -818,23 +819,37 @@ enum OrderIntentStatus {
   EXPIRED
 }
 
-// Insufficient-balance order flow: New Order's submit handler hits this
-// instead of failing outright when the wallet can't cover the charge. Holds
-// exactly what createOrder needs (serviceId/link/quantity + the same
-// Idempotency-Key the client already generated) so that once a deposit
-// funding the shortfall is confirmed, order.service.ts's
-// placeOrderInTransaction can run inside that SAME deposit-credit
-// transaction — "wallet credited" and "order placed" become one atomic
-// unit for this path too, same guarantee createOrder already gives the
-// direct (sufficient-balance) path. `charge` here is only a snapshot for
-// the frontend to pre-fill the payment amount with; fulfillment always
-// recalculates price fresh from the Service row, never trusts this column.
+// SERVICE = a New Order (serviceId/link/quantity), PACKAGE = a Store
+// checkout (packageId + buyerInput carried in `link`). API-internal only,
+// like OrderIntentStatus above — never sent to the client.
+enum OrderIntentKind {
+  SERVICE
+  PACKAGE
+}
+
+// Wallet-can't-cover flow, shared by New Order AND Store checkout: the
+// submit handler hits this instead of failing outright when the wallet
+// balance is below the FULL price. Holds exactly what the fulfillment path
+// needs (SERVICE: serviceId/link/quantity — PACKAGE: packageId + buyerInput
+// in `link` + quantity snapshot) plus the same Idempotency-Key the client
+// already generated, so that once a deposit for the full price is confirmed,
+// order.service.ts's placeOrderInTransaction / store.service.ts's
+// purchasePackageInTransaction runs inside that SAME deposit-credit
+// transaction — "wallet credited" and "order placed" become one atomic unit
+// for this path too. Net wallet effect is zero (credit full price, then the
+// order debits it right back); the user's pre-existing balance is left
+// untouched. `charge` here is only a snapshot for the frontend to pre-fill
+// the payment amount with; fulfillment always recalculates price fresh from
+// the Service / Package row, never trusts this column.
 model OrderIntent {
   id             String            @id @default(cuid())
   userId         String
   user           User              @relation(fields: [userId], references: [id])
-  serviceId      String
-  service        Service           @relation(fields: [serviceId], references: [id])
+  kind           OrderIntentKind   @default(SERVICE)
+  serviceId      String?
+  service        Service?          @relation(fields: [serviceId], references: [id])
+  packageId      String?
+  package        Package?          @relation(fields: [packageId], references: [id])
   link           String
   quantity       Int
   charge         Decimal           @db.Decimal(18, 4)
@@ -848,6 +863,7 @@ model OrderIntent {
   deposits Deposit[]
 
   @@index([userId, status])
+  @@index([packageId])
 }
 
 // A refill is a distinct provider-side request tied to a specific order, not

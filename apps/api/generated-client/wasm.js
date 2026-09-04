@@ -386,7 +386,9 @@ exports.Prisma.OrderScalarFieldEnum = {
 exports.Prisma.OrderIntentScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  kind: 'kind',
   serviceId: 'serviceId',
+  packageId: 'packageId',
   link: 'link',
   quantity: 'quantity',
   charge: 'charge',
@@ -732,6 +734,11 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
 exports.OrderMode = exports.$Enums.OrderMode = {
   AUTO: 'AUTO',
   MANUAL: 'MANUAL'
+};
+
+exports.OrderIntentKind = exports.$Enums.OrderIntentKind = {
+  SERVICE: 'SERVICE',
+  PACKAGE: 'PACKAGE'
 };
 
 exports.OrderIntentStatus = exports.$Enums.OrderIntentStatus = {

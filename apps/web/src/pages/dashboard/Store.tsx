@@ -1,8 +1,17 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import type { AccessType, ProductDesignTemplate, ProductType } from "@smm/shared";
-import { getStoreBrandProducts, getStoreBrands, getStoreProductPackages, purchaseStorePackage } from "../../api/resources.js";
+import {
+  getEnabledGateways,
+  getStoreBrandProducts,
+  getStoreBrands,
+  getStoreProductBySlug,
+  getStoreProductPackages,
+  initiateGatewayDeposit,
+  purchaseStorePackage,
+} from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
@@ -151,7 +160,17 @@ function ProductTile({
   );
 }
 
-function PurchasePanel({ product, pkg, onDone }: { product: ProductItem; pkg: PackageItem; onDone: () => void }) {
+function PurchasePanel({
+  product,
+  pkg,
+  zinipayEnabled,
+  onDone,
+}: {
+  product: ProductItem;
+  pkg: PackageItem;
+  zinipayEnabled: boolean;
+  onDone: () => void;
+}) {
   const { t } = useLanguage();
   const toast = useToast();
   const { user } = useAuth();
@@ -159,6 +178,7 @@ function PurchasePanel({ product, pkg, onDone }: { product: ProductItem; pkg: Pa
   const queryClient = useQueryClient();
   const [buyerInput, setBuyerInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
   const [deliveredCode, setDeliveredCode] = useState<string | null>(null);
@@ -187,6 +207,31 @@ function PurchasePanel({ product, pkg, onDone }: { product: ProductItem; pkg: Pa
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 401) {
         setAuthPromptOpen(true);
+        return;
+      }
+      // 402 = wallet can't cover the FULL package price (see
+      // store.service.ts's purchasePackageOrRedirect). Send the user
+      // straight into the ZiniPay checkout for that exact amount — the
+      // OrderIntent id rides along so the order places itself once the
+      // payment is confirmed (their existing wallet balance is untouched).
+      if (axios.isAxiosError(err) && err.response?.status === 402) {
+        const details = err.response.data?.details as { orderIntentId: string; charge: string } | undefined;
+        if (details && zinipayEnabled) {
+          setRedirecting(true);
+          try {
+            const redirectUrl = await initiateGatewayDeposit("ZINIPAY", {
+              amount: Number(details.charge),
+              orderIntentId: details.orderIntentId,
+            });
+            window.location.href = redirectUrl;
+            return;
+          } catch (payErr) {
+            setRedirecting(false);
+            setError(apiErrorMessage(payErr, t("store.payRedirectFailed")));
+            return;
+          }
+        }
+        setError(t("store.insufficientNoGateway"));
         return;
       }
       setError(apiErrorMessage(err, t("store.purchaseFailedFallback")));
@@ -229,8 +274,8 @@ function PurchasePanel({ product, pkg, onDone }: { product: ProductItem; pkg: Pa
         <div className="flex justify-between border-t border-outline-variant pt-1 font-semibold"><span>{t("store.total")}</span><span className="font-mono text-success">{formatCurrency(total)}</span></div>
       </div>
 
-      <button type="submit" className="btn-primary w-full" disabled={submitting}>
-        {submitting ? t("store.buying") : t("store.buyNow")}
+      <button type="submit" className="btn-primary w-full" disabled={submitting || redirecting}>
+        {redirecting ? t("store.redirectingToPayment") : submitting ? t("store.buying") : t("store.buyNow")}
       </button>
 
       <AuthPromptModal open={authPromptOpen} onClose={() => setAuthPromptOpen(false)} title={t("store.authPromptTitle")} body={t("store.authPromptBody")} />
@@ -242,10 +287,16 @@ export default function Store() {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { formatCurrency } = useCurrency();
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [brandId, setBrandId] = useState<string | null>(null);
   const [productId, setProductId] = useState<string | null>(null);
   const [selectedPackage, setSelectedPackage] = useState<PackageItem | null>(null);
+  // A package id from a ?pkg= deep link, applied once that product's
+  // packages have loaded (see the effect below).
+  const [pendingPackageId, setPendingPackageId] = useState<string | null>(null);
 
   const { data: brands, isLoading: brandsLoading } = useQuery({ queryKey: ["store-brands"], queryFn: () => getStoreBrands() });
   const { data: products } = useQuery({
@@ -258,9 +309,68 @@ export default function Store() {
     queryFn: () => getStoreProductPackages(productId!),
     enabled: !!productId,
   });
+  const { data: enabledGateways } = useQuery({ queryKey: ["enabled-gateways"], queryFn: getEnabledGateways, staleTime: 60_000 });
+  const zinipayEnabled = (enabledGateways ?? []).includes("ZINIPAY");
+
+  // Returning from the ZiniPay checkout (payments.routes.ts's
+  // postConfirmRedirect): ?purchase=<outcome>&product=<slug>&pkg=<id>.
+  // Restore the exact package the user was buying and surface the outcome;
+  // on success the order was already placed by the callback's confirm.
+  useEffect(() => {
+    const outcome = searchParams.get("purchase");
+    const slug = searchParams.get("product");
+    const pkgId = searchParams.get("pkg");
+
+    if (slug) {
+      getStoreProductBySlug(slug)
+        .then((p: { id: string; brandId: string }) => {
+          setBrandId(p.brandId);
+          setProductId(p.id);
+          if (pkgId) setPendingPackageId(pkgId);
+        })
+        .catch(() => {
+          /* product gone / renamed — just drop the deep link */
+        });
+    }
+
+    if (outcome) {
+      const messages: Record<string, [string, "success" | "error" | "info"]> = {
+        success: [t("store.purchasePaidToast"), "success"],
+        pending: [t("store.purchasePendingToast"), "info"],
+        failed: [t("store.purchaseCanceledToast"), "error"],
+        error: [t("store.purchaseCanceledToast"), "error"],
+      };
+      const [message, variant] = messages[outcome] ?? [t("store.purchaseCanceledToast"), "error"];
+      toast.push(message, variant);
+      queryClient.invalidateQueries({ queryKey: ["wallet"] });
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    }
+
+    if (outcome || slug || pkgId) {
+      setSearchParams(
+        (p) => {
+          p.delete("purchase");
+          p.delete("product");
+          p.delete("pkg");
+          return p;
+        },
+        { replace: true },
+      );
+    }
+    // One-shot on mount — the params are consumed and cleared immediately.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const selectedBrand = useMemo(() => (brands as BrandItem[] | undefined)?.find((b) => b.id === brandId) ?? null, [brands, brandId]);
   const selectedProduct = useMemo(() => (products as ProductItem[] | undefined)?.find((p) => p.id === productId) ?? null, [products, productId]);
+
+  // Apply the ?pkg= deep link once its product's package list is in.
+  useEffect(() => {
+    if (!pendingPackageId || !packages) return;
+    const match = (packages as PackageItem[]).find((p) => p.id === pendingPackageId);
+    if (match) setSelectedPackage(match);
+    setPendingPackageId(null);
+  }, [pendingPackageId, packages]);
 
   function reset() {
     setBrandId(null);
@@ -354,7 +464,12 @@ export default function Store() {
 
           <div>
             {selectedPackage ? (
-              <PurchasePanel product={selectedProduct} pkg={selectedPackage} onDone={() => setSelectedPackage(null)} />
+              <PurchasePanel
+                product={selectedProduct}
+                pkg={selectedPackage}
+                zinipayEnabled={zinipayEnabled}
+                onDone={() => setSelectedPackage(null)}
+              />
             ) : (
               <p className="card text-center text-sm text-on-surface-variant">{t("store.choosePackage")}</p>
             )}

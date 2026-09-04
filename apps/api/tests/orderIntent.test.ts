@@ -70,6 +70,47 @@ describe("insufficient-balance order flow (OrderIntent)", () => {
     }
   });
 
+  it("new full-price flow: the 402 carries the whole charge, and paying it leaves the user's pre-existing balance untouched", async () => {
+    const mock = await startMockZiniPay({ invoiceId: "intent-inv-full", verify: () => ({ invoiceId: "intent-inv-full", status: "COMPLETED", amount: 10 }) });
+    try {
+      await enableGateway("ZINIPAY", { apiKey: "test-key", baseUrl: mock.baseUrl });
+      const method = await createPaymentMethod({ gatewayType: "AUTOMATED", gatewayProvider: "ZINIPAY" });
+      const user = await createUser({ balance: 4 }); // partial balance that must NOT be consumed
+      const { service } = await createCategoryAndService({ sellPricePer1000: 10 }); // charge $10
+
+      const orderAttempt = await request(app)
+        .post("/api/orders")
+        .set("Authorization", `Bearer ${tokenFor(user.id)}`)
+        .set("Idempotency-Key", "flow-full-1")
+        .send({ serviceId: service.id, link: "https://instagram.com/someone", quantity: 1000 });
+      expect(orderAttempt.status).toBe(402);
+      expect(orderAttempt.body.details.kind).toBe("SERVICE");
+      expect(orderAttempt.body.details.charge).toBe("10"); // full charge, what the frontend now sends
+
+      const { orderIntentId, charge } = orderAttempt.body.details;
+      const deposit = await request(app)
+        .post("/api/payments/zinipay/deposits")
+        .set("Authorization", `Bearer ${tokenFor(user.id)}`)
+        .send({ amount: Number(charge), paymentMethodId: method.id, orderIntentId });
+      expect(deposit.status).toBe(201);
+
+      const depositRow = await prisma.deposit.findFirstOrThrow({ where: { userId: user.id } });
+      const callback = await request(app).get(`/api/payments/zinipay/callback?depositId=${depositRow.id}`);
+      expect(callback.headers.location).toContain("deposit=success");
+
+      // +10 credit, -10 order debit — the pre-existing $4 is left alone.
+      const wallet = await getWalletForUser(user.id);
+      expect(wallet.balance.toString()).toBe("4");
+
+      const intentAfter = await prisma.orderIntent.findUniqueOrThrow({ where: { id: orderIntentId } });
+      expect(intentAfter.status).toBe("FULFILLED");
+      const order = await prisma.order.findUniqueOrThrow({ where: { id: intentAfter.orderId! } });
+      expect(order.charge.toString()).toBe("10");
+    } finally {
+      await mock.close();
+    }
+  });
+
   it("a deposit that isn't enough to cover the order still credits the wallet, but leaves the intent FAILED (not auto-placed, no money lost)", async () => {
     const mock = await startMockZiniPay({ invoiceId: "intent-inv-2", verify: () => ({ invoiceId: "intent-inv-2", status: "COMPLETED", amount: 1 }) });
     try {

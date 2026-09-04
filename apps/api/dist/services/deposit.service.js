@@ -5,6 +5,7 @@ import { logger } from "../lib/logger.js";
 import { adjustWalletBalance } from "./wallet.service.js";
 import { redeemCouponForDeposit, validateCoupon } from "./coupon.service.js";
 import { fulfillOrderIntent } from "./order.service.js";
+import { fulfillStorePackageIntent } from "./store.service.js";
 /** Row-locks a Deposit within an existing transaction — see wallet.service.ts's adjustWalletBalance for the same pattern applied to wallets. */
 async function lockDeposit(tx, depositId) {
     const rows = await tx.$queryRaw `SELECT "id" FROM "Deposit" WHERE "id" = ${depositId} FOR UPDATE`;
@@ -286,7 +287,15 @@ options = { autoVerify: true }) {
             if (current.orderIntentId) {
                 const intent = await tx.orderIntent.findUnique({ where: { id: current.orderIntentId } });
                 if (intent && intent.status === "PENDING") {
-                    await fulfillOrderIntent(tx, intent);
+                    // Same flow for New Order (SERVICE) and Store checkout (PACKAGE) —
+                    // only the placement work differs. Both leave the credited money in
+                    // the wallet if their own fulfillment can't complete.
+                    if (intent.kind === "PACKAGE") {
+                        await fulfillStorePackageIntent(tx, intent);
+                    }
+                    else {
+                        await fulfillOrderIntent(tx, intent);
+                    }
                 }
             }
             // Same reasoning as reviewDeposit above — bonusAmount is written after

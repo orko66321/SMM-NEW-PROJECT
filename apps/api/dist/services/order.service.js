@@ -113,6 +113,7 @@ export async function createOrderOrRedirect(userId, input, idempotencyKey) {
     const intent = await prisma.orderIntent.create({
         data: {
             userId,
+            kind: "SERVICE",
             serviceId: service.id,
             link: input.link,
             quantity: input.quantity,
@@ -125,8 +126,14 @@ export async function createOrderOrRedirect(userId, input, idempotencyKey) {
             expiresAt: new Date(Date.now() + 30 * 60 * 1000),
         },
     });
+    // `charge` is the amount the frontend now sends to the gateway — the FULL
+    // order price, not the shortfall: the user's existing wallet balance is
+    // left untouched, matching the Store checkout flow (see
+    // store.service.ts's purchasePackageOrRedirect). `shortfall`/`balance`
+    // stay in the payload for the older Wallet-page fallback path.
     throw new AppError(402, "Insufficient wallet balance", {
         orderIntentId: intent.id,
+        kind: "SERVICE",
         charge: charge.toString(),
         balance: balance.toString(),
         shortfall: shortfall.toString(),
@@ -145,6 +152,16 @@ export async function createOrderOrRedirect(userId, input, idempotencyKey) {
  * PENDING by the caller.
  */
 export async function fulfillOrderIntent(tx, intent) {
+    // Store (PACKAGE-kind) intents are dispatched to store.service.ts's
+    // fulfillStorePackageIntent by the caller — this path only ever runs for a
+    // SERVICE intent, which always has a serviceId.
+    if (!intent.serviceId) {
+        await tx.orderIntent.update({
+            where: { id: intent.id },
+            data: { status: "FAILED", failureReason: "Order intent has no linked service" },
+        });
+        return;
+    }
     if (intent.expiresAt < new Date()) {
         await tx.orderIntent.update({ where: { id: intent.id }, data: { status: "EXPIRED" } });
         return;

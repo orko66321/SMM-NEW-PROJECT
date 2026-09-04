@@ -8,7 +8,7 @@ import { AppError } from "../utils/AppError.js";
 import { listBrandsPublic, getBrandPublic } from "../services/brand.service.js";
 import { getProductBySlugPublic, listProductsPublic } from "../services/product.service.js";
 import { listPackagesPublic } from "../services/package.service.js";
-import { getDeliveredCodeForOrder, purchasePackage } from "../services/store.service.js";
+import { getDeliveredCodeForOrder, purchasePackageOrRedirect } from "../services/store.service.js";
 
 function serializeDecimals<T extends Record<string, unknown>>(obj: T, keys: (keyof T)[]) {
   const out: Record<string, unknown> = { ...obj };
@@ -73,8 +73,12 @@ storeRouter.post(
     if (!idempotencyKey) {
       throw AppError.badRequest("Idempotency-Key header is required to place an order");
     }
-    const result = await purchasePackage(req.user!.id, req.body, idempotencyKey);
-    res.status(201).json(result);
+    // Sufficient balance -> { kind: "ORDER", order, deliveredCode } exactly
+    // as before. Insufficient -> a 402 AppError propagates (see
+    // purchasePackageOrRedirect) carrying the OrderIntent id + full charge
+    // for the frontend to hand straight to the ZiniPay checkout.
+    const result = await purchasePackageOrRedirect(req.user!.id, req.body, idempotencyKey);
+    res.status(201).json({ order: result.order, deliveredCode: result.deliveredCode });
   }),
 );
 
