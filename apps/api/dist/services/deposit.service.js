@@ -280,22 +280,35 @@ options = { autoVerify: true }) {
             // createOrderOrRedirect / fulfillOrderIntent) — this deposit was
             // initiated specifically to fund an order the user couldn't afford
             // yet. Attempt to place it now, atomically alongside the credit
-            // above. fulfillOrderIntent never throws — a failure there (price
-            // moved, service went inactive, already fulfilled by an earlier
-            // confirm, expired) leaves the credited money in the wallet rather
-            // than rolling back this deposit.
+            // above. fulfillOrderIntent/fulfillStorePackageIntent are themselves
+            // written to never throw (SAVEPOINT-guarded), but this deposit's own
+            // APPROVED status must NEVER be held hostage to that invariant holding
+            // forever — a customer who actually paid is credited and verified
+            // regardless of whether their specific order could be auto-placed.
+            // The `try` here is deliberately redundant with that guarantee: it's
+            // the difference between "this can't fail" and "this must never be
+            // allowed to fail the payment even if it does".
             if (current.orderIntentId) {
-                const intent = await tx.orderIntent.findUnique({ where: { id: current.orderIntentId } });
-                if (intent && intent.status === "PENDING") {
-                    // Same flow for New Order (SERVICE) and Store checkout (PACKAGE) —
-                    // only the placement work differs. Both leave the credited money in
-                    // the wallet if their own fulfillment can't complete.
-                    if (intent.kind === "PACKAGE") {
-                        await fulfillStorePackageIntent(tx, intent);
+                try {
+                    const intent = await tx.orderIntent.findUnique({ where: { id: current.orderIntentId } });
+                    if (intent && intent.status === "PENDING") {
+                        // Same flow for New Order (SERVICE) and Store checkout (PACKAGE) —
+                        // only the placement work differs. Both leave the credited money in
+                        // the wallet if their own fulfillment can't complete (see
+                        // cron/retryFailedOrderIntents.ts, which keeps trying a FAILED
+                        // intent — stock momentarily out, a transient provider error —
+                        // for as long as it hasn't expired, so a real hiccup here
+                        // self-heals instead of needing an admin to notice).
+                        if (intent.kind === "PACKAGE") {
+                            await fulfillStorePackageIntent(tx, intent);
+                        }
+                        else {
+                            await fulfillOrderIntent(tx, intent);
+                        }
                     }
-                    else {
-                        await fulfillOrderIntent(tx, intent);
-                    }
+                }
+                catch (err) {
+                    logger.error({ err, depositId: current.id, orderIntentId: current.orderIntentId, gatewayRef, gatewayProvider: result.gatewayProvider }, "Order-intent fulfillment threw during a confirmed payment — the deposit is still approved and the wallet credited; the retry cron and/or an admin need to place this order by hand");
                 }
             }
             // Same reasoning as reviewDeposit above — bonusAmount is written after

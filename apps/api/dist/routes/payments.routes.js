@@ -65,13 +65,26 @@ async function postConfirmRedirect(gatewayRef, outcome) {
     }
     return walletUrl;
 }
-/** Webhook payloads are gateway-specific too — ZiniPay sends `invoice_id` as JSON or query string. */
+/**
+ * Webhook payloads are gateway-specific too — ZiniPay sends `invoice_id` as
+ * JSON or query string. Coerce string OR number: this is the exact same
+ * "real providers don't honor their own docs" quirk documented in
+ * providerClient.service.ts's normalizeServiceEntry — a raw numeric
+ * `invoice_id` in the JSON body would otherwise fail the old `typeof ===
+ * "string"` check, return no gatewayRef, and 400 before confirmGatewayDeposit
+ * ever runs (this endpoint's only path to auto-verifying a payment). Every
+ * failure to resolve a ref is logged with the raw payload shape so a future
+ * ZiniPay payload change is diagnosable from logs instead of a silent 400.
+ */
 function resolveWebhookGatewayRef(key, req) {
     const body = req.body;
     if (key === "ZINIPAY") {
-        const fromBody = typeof body?.invoice_id === "string" ? body.invoice_id : undefined;
-        const fromQuery = typeof req.query.invoice_id === "string" ? req.query.invoice_id : undefined;
-        return fromBody ?? fromQuery;
+        const raw = body?.invoice_id ?? req.query.invoice_id;
+        const ref = typeof raw === "string" || typeof raw === "number" ? String(raw).trim() || undefined : undefined;
+        if (!ref) {
+            logger.warn({ gateway: key, bodyKeys: body ? Object.keys(body) : [], queryKeys: Object.keys(req.query) }, "ZiniPay webhook: could not resolve invoice_id from the payload");
+        }
+        return ref;
     }
     return undefined;
 }
