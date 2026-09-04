@@ -3,7 +3,14 @@ import { Prisma } from "#prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import { adjustWalletBalance } from "./wallet.service.js";
-import { getProviderOrThrow, getProviderOrderStatus, mapProviderOrderStatus, submitProviderCancel, submitProviderRefill, } from "./providerClient.service.js";
+import { getProviderOrThrow, getProviderOrderStatus, mapProviderOrderStatus, submitProviderCancel, submitProviderOrder, submitProviderRefill, } from "./providerClient.service.js";
+import { isResendOrderButtonEnabled } from "./settings.service.js";
+/** Provider error text can be long/HTML — keep the DB column and admin UI sane. */
+const MAX_API_ERROR_LEN = 4000;
+function providerErrorText(err) {
+    const raw = err instanceof Error ? err.message : String(err ?? "Unknown provider error");
+    return raw.slice(0, MAX_API_ERROR_LEN);
+}
 function requestFingerprint(input) {
     return crypto.createHash("sha256").update(JSON.stringify(input)).digest("hex");
 }
@@ -221,7 +228,10 @@ export async function listOrdersForUser(userId, page, pageSize, status) {
         }),
         prisma.order.count({ where }),
     ]);
-    return { items, total, page, pageSize };
+    // `apiErrorResponse` is admin-only — a customer sees the order status
+    // ("Pending" / "Failed") and nothing about the upstream provider.
+    const safeItems = items.map(({ apiErrorResponse: _adminOnly, ...rest }) => rest);
+    return { items: safeItems, total, page, pageSize };
 }
 export async function listOrdersForAdmin(page, pageSize, status, search, dateRange, likeOnly) {
     const where = {
@@ -273,10 +283,15 @@ export async function updateOrderStatus(orderId, input) {
         const isNewlyTerminatedWithoutRefund = (input.status === "CANCELED" || input.status === "FAILED") &&
             order.status !== "CANCELED" &&
             order.status !== "FAILED";
+        // Moving an order into a healthy state clears any stale provider-error
+        // text so the admin list doesn't keep flagging an order that's since
+        // been resolved by hand.
+        const clearsApiError = ["PROCESSING", "IN_PROGRESS", "COMPLETED"].includes(input.status);
         const updated = await tx.order.update({
             where: { id: orderId },
             data: {
                 status: input.status,
+                ...(clearsApiError ? { apiErrorResponse: null } : {}),
                 ...(input.startCount !== undefined ? { startCount: input.startCount } : {}),
                 ...(input.remains !== undefined ? { remains: input.remains } : {}),
             },
@@ -308,8 +323,113 @@ export async function findPendingAutoSubmitOrders(limit = 25) {
 export async function markOrderSubmittedToProvider(orderId, providerOrderId) {
     return prisma.order.update({
         where: { id: orderId },
-        data: { providerOrderId, status: "PROCESSING", mode: "AUTO" },
+        // A successful submit clears any previous failure text.
+        data: { providerOrderId, status: "PROCESSING", mode: "AUTO", apiErrorResponse: null },
     });
+}
+/** Records the raw provider error text on an order (admin-only field). */
+export async function recordOrderProviderError(orderId, err) {
+    await prisma.order.update({
+        where: { id: orderId },
+        data: { apiErrorResponse: providerErrorText(err) },
+    });
+}
+/**
+ * Submits `params` to the primary provider, falling back to the backup once
+ * — the same two-candidate logic cron/submitPendingOrders.ts uses, so the
+ * admin "Resend" action shares one code path with the automatic submitter.
+ * Only ever called after the caller has validated the provider mapping; on
+ * failure it throws the last provider error (a plain Error, not an AppError).
+ */
+async function submitToProviders(providerServiceId, candidates, params) {
+    let lastError;
+    for (const provider of candidates) {
+        try {
+            return await submitProviderOrder(provider, { service: providerServiceId, link: params.link, quantity: params.quantity });
+        }
+        catch (err) {
+            lastError = err;
+        }
+    }
+    throw lastError instanceof Error ? lastError : new Error("Provider submission failed");
+}
+/**
+ * Admin "Resend / Retry API" for a stuck order (see routes/admin/orders.routes.ts).
+ * Only PENDING or FAILED orders that were never actually accepted by a
+ * provider are eligible.
+ *
+ * A FAILED order has already been auto-refunded (see updateOrderStatus /
+ * submitPendingOrders), so resending it re-charges the customer's wallet
+ * first — atomically, and rejecting if their balance can no longer cover it
+ * — then flips the order back to a normal paid PENDING before touching the
+ * provider. That means a mid-flight crash leaves an ordinary pending paid
+ * order (which the auto-submitter or a second resend picks up), never a
+ * double charge or a charged-but-refunded limbo.
+ *
+ * On provider success: PROCESSING + new providerOrderId + cleared error.
+ * On provider failure: the new error text is saved and the order is left
+ * PENDING; this function throws so the route surfaces a toast to the admin.
+ */
+export async function resendOrderToProvider(orderId) {
+    if (!(await isResendOrderButtonEnabled())) {
+        throw AppError.forbidden("The Resend Order action is disabled in Settings");
+    }
+    const order = await prisma.order.findUnique({
+        where: { id: orderId },
+        include: { service: { include: { provider: true, backupProvider: true } } },
+    });
+    if (!order)
+        throw AppError.notFound("Order not found");
+    if (order.status !== "PENDING" && order.status !== "FAILED") {
+        throw AppError.badRequest("Only pending or failed orders can be resent to the provider");
+    }
+    if (order.providerOrderId) {
+        throw AppError.conflict(`This order was already submitted to a provider (ref ${order.providerOrderId})`);
+    }
+    if (!order.serviceId || !order.service) {
+        throw AppError.badRequest("This order has no provider-backed service — resolve it by hand");
+    }
+    // Validate the provider mapping up front so these config problems surface
+    // as a plain 400, not the 502 reserved for an actual provider rejection.
+    const service = order.service;
+    if (!service.providerServiceId) {
+        throw AppError.badRequest("This order's service has no provider service id mapped — resolve it by hand");
+    }
+    const candidates = [service.provider, service.backupProvider].filter((p) => p !== null);
+    if (candidates.length === 0) {
+        throw AppError.badRequest("This order's service has no provider configured — resolve it by hand");
+    }
+    // FAILED ⇒ already refunded. Re-charge and normalise to PENDING before the
+    // network call, so failure/crash can't leave money in a weird place.
+    if (order.status === "FAILED") {
+        await prisma.$transaction(async (tx) => {
+            await adjustWalletBalance(tx, {
+                userId: order.userId,
+                amount: new Prisma.Decimal(order.charge).negated(),
+                type: "ORDER_DEBIT",
+                referenceType: "ORDER",
+                referenceId: order.id,
+                note: "Re-charge — failed order resent to provider",
+            });
+            await tx.order.update({
+                where: { id: order.id },
+                data: { status: "PENDING", apiErrorResponse: null },
+            });
+        });
+    }
+    try {
+        const providerOrderId = await submitToProviders(service.providerServiceId, candidates, {
+            link: order.link,
+            quantity: order.quantity,
+        });
+        return await markOrderSubmittedToProvider(order.id, providerOrderId);
+    }
+    catch (err) {
+        await recordOrderProviderError(order.id, err);
+        // Order stays PENDING (re-charged if it was FAILED) — the admin can
+        // resend again or cancel it (which refunds) from the status control.
+        throw new AppError(502, providerErrorText(err));
+    }
 }
 /** Orders actively being fulfilled by a provider — what the status-polling cron reconciles. */
 export async function findActiveProviderOrders(limit = 200) {

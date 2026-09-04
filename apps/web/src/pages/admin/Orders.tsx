@@ -1,11 +1,36 @@
-import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Fragment, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { OrderStatusValues } from "@smm/shared";
-import { getAdminOrders, getAdminRefills, resolveAdminRefill, updateAdminOrderStatus } from "../../api/resources.js";
+import {
+  getAdminOrders,
+  getAdminRefills,
+  getAdminSettings,
+  resendAdminOrder,
+  resolveAdminRefill,
+  updateAdminOrderStatus,
+} from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
-import { Badge, type BadgeTone, Breadcrumbs, EmptyState, Pagination, StatusBadge } from "../../components/ds/index.js";
+import { Badge, type BadgeTone, Breadcrumbs, EmptyState, Icon, Pagination, StatusBadge } from "../../components/ds/index.js";
+
+type AdminOrderRow = {
+  id: string;
+  user: { username: string };
+  service: { name: string } | null;
+  package: { name: string; product: { name: string; brand: { name: string } } } | null;
+  charge: string;
+  providerCost: string;
+  quantity: number;
+  status: string;
+  mode: string;
+  link: string;
+  providerOrderId: string | null;
+  apiErrorResponse: string | null;
+  createdAt: string;
+};
+
+const RESENDABLE = new Set(["PENDING", "FAILED"]);
 
 type RefillRow = {
   id: string;
@@ -113,6 +138,10 @@ export default function AdminOrders() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const { data: adminSettings } = useQuery({ queryKey: ["admin-settings"], queryFn: getAdminSettings, staleTime: 60_000 });
+  const resendEnabled = (adminSettings as { resendOrderButtonEnabled?: boolean } | undefined)?.resendOrderButtonEnabled ?? false;
   const from = searchParams.get("from") ?? undefined;
   const to = searchParams.get("to") ?? undefined;
   const likeOnly = searchParams.get("likeOnly") === "true";
@@ -161,6 +190,19 @@ export default function AdminOrders() {
     }
   }
 
+  const resendMutation = useMutation({
+    mutationFn: (id: string) => resendAdminOrder(id),
+    onSuccess: (order: { status: string }) => {
+      toast.push(`Order resent — now ${String(order.status).toLowerCase()}.`, "success");
+    },
+    onError: (err) => {
+      // The provider error is already saved to the order; surface it and let
+      // the list refetch show the updated apiErrorResponse.
+      toast.push(apiErrorMessage(err, "Resend failed — provider rejected the order"), "error");
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["admin-orders"] }),
+  });
+
   return (
     <div className="space-y-4">
       <Breadcrumbs items={[{ label: "Admin", to: "/admin" }, { label: "Orders" }]} />
@@ -190,6 +232,7 @@ export default function AdminOrders() {
         <table className="w-full min-w-[900px] text-sm">
           <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
             <tr>
+              <th className="px-4 py-3" />
               <th className="px-4 py-3">ID</th>
               <th className="px-4 py-3">User</th>
               <th className="px-4 py-3">Service</th>
@@ -201,18 +244,26 @@ export default function AdminOrders() {
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
-            {isLoading && <tr><td colSpan={8} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
-            {data?.items.map((o: {
-              id: string;
-              user: { username: string };
-              service: { name: string } | null;
-              package: { name: string; product: { name: string; brand: { name: string } } } | null;
-              charge: string;
-              providerCost: string;
-              quantity: number;
-              status: string;
-            }) => (
-              <tr key={o.id} className="row-hover">
+            {isLoading && <tr><td colSpan={9} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
+            {(data?.items as AdminOrderRow[] | undefined)?.map((o) => {
+              const expanded = expandedId === o.id;
+              const hasError = !!o.apiErrorResponse;
+              const canResend = resendEnabled && RESENDABLE.has(o.status);
+              const resending = resendMutation.isPending && resendMutation.variables === o.id;
+              return (
+              <Fragment key={o.id}>
+              <tr className="row-hover">
+                <td className="px-4 py-3">
+                  <button
+                    type="button"
+                    className="flex h-8 w-8 items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high"
+                    onClick={() => setExpandedId(expanded ? null : o.id)}
+                    aria-label={expanded ? "Collapse order details" : "Expand order details"}
+                    aria-expanded={expanded}
+                  >
+                    <Icon name={expanded ? "chevron-down" : "chevron-right"} size={16} />
+                  </button>
+                </td>
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">
                   <button
                     type="button"
@@ -232,14 +283,67 @@ export default function AdminOrders() {
                 <td className="px-4 py-3 font-mono text-success">${o.charge}</td>
                 <td className="px-4 py-3 font-mono text-info">${(Number(o.charge) - Number(o.providerCost)).toFixed(4)}</td>
                 <td className="px-4 py-3 font-mono">{o.quantity}</td>
-                <td className="px-4 py-3"><StatusBadge status={o.status} /></td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <StatusBadge status={o.status} />
+                    {hasError && (
+                      <button
+                        type="button"
+                        onClick={() => setExpandedId(expanded ? null : o.id)}
+                        className="inline-flex items-center gap-1 rounded-full bg-error/15 px-2 py-0.5 text-[10px] font-semibold text-error"
+                        title="A provider API error was recorded for this order — click to view"
+                      >
+                        <Icon name="warning" size={11} /> API error
+                      </button>
+                    )}
+                  </div>
+                </td>
                 <td className="px-4 py-3">
                   <select className="input-field !py-1.5 text-xs" value={o.status} onChange={(e) => onStatusChange(o.id, e.target.value)}>
                     {OrderStatusValues.map((s) => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </td>
               </tr>
-            ))}
+              {expanded && (
+                <tr className="bg-surface-container-high/40">
+                  <td colSpan={9} className="px-4 py-4">
+                    <div className="grid gap-3 text-xs sm:grid-cols-2">
+                      <div className="space-y-1">
+                        <p><span className="text-on-surface-variant">Order ID:</span> <span className="font-mono">{o.id}</span></p>
+                        <p><span className="text-on-surface-variant">Link / target:</span> <span className="break-all font-mono">{o.link}</span></p>
+                        <p><span className="text-on-surface-variant">Mode:</span> {o.mode}</p>
+                        <p><span className="text-on-surface-variant">Provider ref:</span> <span className="font-mono">{o.providerOrderId ?? "—"}</span></p>
+                        <p><span className="text-on-surface-variant">Placed:</span> {new Date(o.createdAt).toLocaleString()}</p>
+                      </div>
+                      <div className="space-y-2">
+                        {hasError ? (
+                          <div>
+                            <p className="mb-1 font-semibold text-error">Last provider API error</p>
+                            <pre className="max-h-40 overflow-auto whitespace-pre-wrap break-all rounded-control border border-error/30 bg-error/10 p-2 font-mono text-[11px] text-error">
+                              {o.apiErrorResponse}
+                            </pre>
+                          </div>
+                        ) : (
+                          <p className="text-on-surface-variant">No provider API error recorded.</p>
+                        )}
+                        {resendEnabled && RESENDABLE.has(o.status) && (
+                          <button
+                            type="button"
+                            className="btn-primary !min-h-[36px] !px-4 !py-1.5 text-xs"
+                            disabled={!canResend || resending}
+                            onClick={() => resendMutation.mutate(o.id)}
+                          >
+                            {resending ? "Resending…" : "Resend to provider"}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              )}
+              </Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>

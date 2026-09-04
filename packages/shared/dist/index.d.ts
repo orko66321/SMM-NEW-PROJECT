@@ -899,6 +899,7 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpUser: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     smtpPassword: z.ZodOptional<z.ZodString>;
     smtpFromAddress: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    resendOrderButtonEnabled: z.ZodOptional<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     siteName: string;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
@@ -914,6 +915,7 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpUser?: string | null | undefined;
     smtpPassword?: string | undefined;
     smtpFromAddress?: string | null | undefined;
+    resendOrderButtonEnabled?: boolean | undefined;
 }, {
     siteName: string;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
@@ -929,6 +931,7 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpUser?: string | null | undefined;
     smtpPassword?: string | undefined;
     smtpFromAddress?: string | null | undefined;
+    resendOrderButtonEnabled?: boolean | undefined;
 }>;
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;
 export declare const sendTestEmailSchema: z.ZodObject<{

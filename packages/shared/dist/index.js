@@ -421,6 +421,9 @@ export const updateSettingsSchema = z.object({
     smtpUser: z.string().trim().max(255).nullable().optional(),
     smtpPassword: z.string().trim().max(500).optional(), // write-only; omit to keep existing
     smtpFromAddress: z.string().trim().max(255).nullable().optional(),
+    // Admin Orders "Resend to provider" kill-switch. Optional so an older
+    // admin client still validates; settings.service leaves it untouched when omitted.
+    resendOrderButtonEnabled: z.boolean().optional(),
 });
 // Admin-only "Send test email" action (Settings -> SMTP card) — lets the
 // operator confirm their saved SMTP config actually works without triggering
