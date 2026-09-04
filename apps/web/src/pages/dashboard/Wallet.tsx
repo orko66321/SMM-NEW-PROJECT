@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { PaymentGatewayKeys } from "@smm/shared";
 import { createDeposit, getMyDeposits, getPaymentMethods, getPublicSettings, getWallet, initiateGatewayDeposit, validateCoupon } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
@@ -9,6 +10,15 @@ import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 import { BilingualNote, EmptyState, Icon, StatusBadge, WalletBalance } from "../../components/ds/index.js";
+
+// A checkout-initiated gateway deposit (Store "Buy now" / New Order) has no
+// admin-titled PaymentMethod behind it, so it falls back to storing the raw
+// gateway key ("ZINIPAY") as Deposit.method — that's an internal/admin
+// identifier, not something to show a customer. An admin-titled method
+// (whatever they named it on the Add Funds picker) is left exactly as-is.
+function displayDepositMethod(method: string, t: (key: string) => string): string {
+  return (PaymentGatewayKeys as readonly string[]).includes(method) ? t("wallet.instantPaymentMethod") : method;
+}
 
 function CopyButton({ value, label }: { value: string; label: string }) {
   const { t } = useLanguage();
@@ -232,7 +242,7 @@ export default function Wallet() {
               <div key={d.id} className="rounded-card border border-outline-variant bg-surface-card p-4">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-on-surface">{d.method}</p>
+                    <p className="truncate text-sm font-semibold text-on-surface">{displayDepositMethod(d.method, t)}</p>
                     <p className="mt-0.5 text-xs text-on-surface-variant">{new Date(d.createdAt).toLocaleDateString()}</p>
                   </div>
                   <StatusBadge status={d.status} kind="deposit" className="shrink-0" />
@@ -263,7 +273,7 @@ export default function Wallet() {
                 {deposits?.items.map((d: { id: string; createdAt: string; method: string; amount: string; bonusAmount: string; status: string }) => (
                   <tr key={d.id}>
                     <td className="py-2 text-xs">{new Date(d.createdAt).toLocaleDateString()}</td>
-                    <td className="py-2">{d.method}</td>
+                    <td className="py-2">{displayDepositMethod(d.method, t)}</td>
                     <td className="py-2 font-mono">{formatCurrency(d.amount)}</td>
                     <td className="py-2 font-mono text-success">{Number(d.bonusAmount) > 0 ? `+${formatCurrency(d.bonusAmount)}` : "—"}</td>
                     <td className="py-2">
@@ -377,7 +387,7 @@ export default function Wallet() {
 
             {selected.gatewayType === "AUTOMATED" ? (
               <button type="button" className="btn-primary w-full" disabled={submitting || !amount} onClick={onPayAutomated}>
-                {submitting ? t("wallet.redirecting") : t("wallet.payInstantly", { provider: selected.gatewayProvider ?? "" })}
+                {submitting ? t("wallet.redirecting") : t("wallet.payInstantly")}
               </button>
             ) : (
               <form onSubmit={onSubmitManual} className="space-y-3">
