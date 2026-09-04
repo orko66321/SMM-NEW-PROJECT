@@ -32,10 +32,16 @@ async function claimStockCode(tx: Prisma.TransactionClient, poolIds: string[]): 
 }
 
 /**
- * The Store purchase transaction — mirrors placeOrderInTransaction's shape
+ * The Store purchase work — mirrors placeOrderInTransaction's shape
  * (order.service.ts) but prices from the Package snapshot, never from a
- * Service. Idempotency-keyed against the same IdempotencyKey table so a
- * duplicated submit (double click / retry) can never charge twice.
+ * Service. Runs inside a transaction the CALLER opened: `purchasePackage`
+ * below opens its own for the direct (sufficient-balance) path;
+ * `fulfillStorePackageIntent` calls this inside confirmGatewayDeposit's
+ * existing transaction so "wallet credited from the deposit" and "order
+ * placed" are one atomic unit for the ZiniPay-checkout path too.
+ * Idempotency-keyed against the same IdempotencyKey table so a duplicated
+ * submit (double click / retry / a second webhook confirming the same
+ * already-fulfilled intent) can never charge twice.
  *
  * Fulfillment path is decided by the package/product configuration, never
  * by client input:
@@ -50,115 +56,228 @@ async function claimStockCode(tx: Prisma.TransactionClient, poolIds: string[]): 
  *    existing admin Orders page (updateOrderStatus) — same manual-fulfillment
  *    convention plain Services already use.
  */
+export async function purchasePackageInTransaction(
+  tx: Prisma.TransactionClient,
+  userId: string,
+  input: PurchasePackageInput,
+  idempotencyKey: string,
+) {
+  const requestHash = requestFingerprint(input);
+  const existingKey = await tx.idempotencyKey.findUnique({ where: { userId_key: { userId, key: idempotencyKey } } });
+  if (existingKey) {
+    if (existingKey.requestHash !== requestHash) {
+      throw AppError.conflict("This idempotency key was already used for a different request");
+    }
+    return JSON.parse(existingKey.responseJson ?? "null");
+  }
+
+  const pkg = await tx.package.findUnique({
+    where: { id: input.packageId },
+    include: { product: { include: { brand: true, service: true } }, stockPoolLinks: true },
+  });
+  if (!pkg || !pkg.product.isActive || !pkg.product.brand.isActive) {
+    throw AppError.badRequest("This package is not available");
+  }
+  const { product } = pkg;
+
+  const user = await tx.user.findUnique({ where: { id: userId }, select: { isVip: true, isReseller: true, apiKeyHash: true } });
+  if (!canUserAccessProduct(product, user)) {
+    throw AppError.forbidden("You don't have access to this product");
+  }
+
+  await assertWithinOrderLimit(tx, userId, product);
+
+  const buyerInput = sanitizeBuyerInput(input.buyerInput, product.removeCharacters);
+  if (!buyerInput) {
+    throw AppError.badRequest(`${product.userInputFieldName} is required`);
+  }
+
+  const charge = new Prisma.Decimal(pkg.salePrice).plus(pkg.extraFee);
+  const providerCost = new Prisma.Decimal(pkg.buyPrice);
+
+  let claimedCodeId: string | null = null;
+  let deliveredCode: string | null = null;
+  let status: "PENDING" | "COMPLETED" = "PENDING";
+  let orderServiceId: string | null = null;
+
+  if (pkg.isAuto) {
+    if (product.productType !== "SMM" || !product.service || product.service.status !== "ACTIVE") {
+      throw AppError.badRequest("This package is not configured for automatic fulfillment");
+    }
+    orderServiceId = product.service.id;
+    // status stays PENDING — the existing submitPendingOrders cron
+    // promotes it once it submits to the provider, exactly like a
+    // normal Service order.
+  } else if (pkg.stockPoolLinks.length > 0) {
+    const claimed = await claimStockCode(
+      tx,
+      pkg.stockPoolLinks.map((l) => l.poolId),
+    );
+    if (!claimed) {
+      throw AppError.conflict("This item is temporarily out of stock. Please check back soon.");
+    }
+    claimedCodeId = claimed.id;
+    status = "COMPLETED";
+  }
+  // else: plain manual queue — stays PENDING for an admin to resolve by hand.
+
+  await adjustWalletBalance(tx, {
+    userId,
+    amount: charge.negated(),
+    type: "ORDER_DEBIT",
+    referenceType: "ORDER",
+    referenceId: pkg.id,
+    note: `Order for ${product.name} — ${pkg.name}`,
+  });
+
+  const order = await tx.order.create({
+    data: {
+      userId,
+      serviceId: orderServiceId,
+      packageId: pkg.id,
+      link: buyerInput,
+      quantity: pkg.amount,
+      charge,
+      providerCost,
+      status,
+      mode: "MANUAL",
+    },
+  });
+
+  if (claimedCodeId) {
+    const stockCode = await tx.stockCode.update({
+      where: { id: claimedCodeId },
+      data: { status: "CONSUMED", orderId: order.id, consumedAt: new Date() },
+    });
+    deliveredCode = decrypt(stockCode.codeCiphertext);
+  }
+
+  const responsePayload = {
+    order: serializeStoreOrder(order),
+    deliveredCode,
+  };
+
+  await tx.idempotencyKey.create({
+    data: { userId, key: idempotencyKey, requestHash, responseJson: JSON.stringify(responsePayload) },
+  });
+
+  return responsePayload;
+}
+
 export async function purchasePackage(userId: string, input: PurchasePackageInput, idempotencyKey: string) {
   try {
-    return await prisma.$transaction(async (tx) => {
-      const requestHash = requestFingerprint(input);
-      const existingKey = await tx.idempotencyKey.findUnique({ where: { userId_key: { userId, key: idempotencyKey } } });
-      if (existingKey) {
-        if (existingKey.requestHash !== requestHash) {
-          throw AppError.conflict("This idempotency key was already used for a different request");
-        }
-        return JSON.parse(existingKey.responseJson ?? "null");
-      }
-
-      const pkg = await tx.package.findUnique({
-        where: { id: input.packageId },
-        include: { product: { include: { brand: true, service: true } }, stockPoolLinks: true },
-      });
-      if (!pkg || !pkg.product.isActive || !pkg.product.brand.isActive) {
-        throw AppError.badRequest("This package is not available");
-      }
-      const { product } = pkg;
-
-      const user = await tx.user.findUnique({ where: { id: userId }, select: { isVip: true, isReseller: true, apiKeyHash: true } });
-      if (!canUserAccessProduct(product, user)) {
-        throw AppError.forbidden("You don't have access to this product");
-      }
-
-      await assertWithinOrderLimit(tx, userId, product);
-
-      const buyerInput = sanitizeBuyerInput(input.buyerInput, product.removeCharacters);
-      if (!buyerInput) {
-        throw AppError.badRequest(`${product.userInputFieldName} is required`);
-      }
-
-      const charge = new Prisma.Decimal(pkg.salePrice).plus(pkg.extraFee);
-      const providerCost = new Prisma.Decimal(pkg.buyPrice);
-
-      let claimedCodeId: string | null = null;
-      let deliveredCode: string | null = null;
-      let status: "PENDING" | "COMPLETED" = "PENDING";
-      let orderServiceId: string | null = null;
-
-      if (pkg.isAuto) {
-        if (product.productType !== "SMM" || !product.service || product.service.status !== "ACTIVE") {
-          throw AppError.badRequest("This package is not configured for automatic fulfillment");
-        }
-        orderServiceId = product.service.id;
-        // status stays PENDING — the existing submitPendingOrders cron
-        // promotes it once it submits to the provider, exactly like a
-        // normal Service order.
-      } else if (pkg.stockPoolLinks.length > 0) {
-        const claimed = await claimStockCode(
-          tx,
-          pkg.stockPoolLinks.map((l) => l.poolId),
-        );
-        if (!claimed) {
-          throw AppError.conflict("This item is temporarily out of stock. Please check back soon.");
-        }
-        claimedCodeId = claimed.id;
-        status = "COMPLETED";
-      }
-      // else: plain manual queue — stays PENDING for an admin to resolve by hand.
-
-      await adjustWalletBalance(tx, {
-        userId,
-        amount: charge.negated(),
-        type: "ORDER_DEBIT",
-        referenceType: "ORDER",
-        referenceId: pkg.id,
-        note: `Order for ${product.name} — ${pkg.name}`,
-      });
-
-      const order = await tx.order.create({
-        data: {
-          userId,
-          serviceId: orderServiceId,
-          packageId: pkg.id,
-          link: buyerInput,
-          quantity: pkg.amount,
-          charge,
-          providerCost,
-          status,
-          mode: "MANUAL",
-        },
-      });
-
-      if (claimedCodeId) {
-        const stockCode = await tx.stockCode.update({
-          where: { id: claimedCodeId },
-          data: { status: "CONSUMED", orderId: order.id, consumedAt: new Date() },
-        });
-        deliveredCode = decrypt(stockCode.codeCiphertext);
-      }
-
-      const responsePayload = {
-        order: serializeStoreOrder(order),
-        deliveredCode,
-      };
-
-      await tx.idempotencyKey.create({
-        data: { userId, key: idempotencyKey, requestHash, responseJson: JSON.stringify(responsePayload) },
-      });
-
-      return responsePayload;
-    });
+    return await prisma.$transaction((tx) => purchasePackageInTransaction(tx, userId, input, idempotencyKey));
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
       throw AppError.conflict("A duplicate request is already being processed. Please retry.");
     }
     throw err;
+  }
+}
+
+/**
+ * Store checkout's actual entry point (see routes/store.routes.ts). Wraps
+ * purchasePackage with a pre-check mirroring order.service.ts's
+ * createOrderOrRedirect: if the wallet can't cover the FULL package price, no
+ * money moves and no Order is created — instead an OrderIntent (kind PACKAGE)
+ * is stashed and a 402 is thrown carrying the intent id + full charge, so the
+ * frontend can send the user straight into the ZiniPay checkout for that
+ * exact amount (never balance-adjusted — the user's existing wallet balance
+ * is deliberately left untouched, see the OrderIntent model comment).
+ * purchasePackageInTransaction's own atomic FOR UPDATE debit is the
+ * authoritative overdraft guard if the balance changes between this
+ * pre-check and the real attempt.
+ */
+export async function purchasePackageOrRedirect(userId: string, input: PurchasePackageInput, idempotencyKey: string) {
+  const pkg = await prisma.package.findUnique({
+    where: { id: input.packageId },
+    include: { product: { include: { brand: true } } },
+  });
+  if (!pkg || !pkg.product.isActive || !pkg.product.brand.isActive) {
+    throw AppError.badRequest("This package is not available");
+  }
+
+  const buyerInput = sanitizeBuyerInput(input.buyerInput, pkg.product.removeCharacters);
+  if (!buyerInput) {
+    throw AppError.badRequest(`${pkg.product.userInputFieldName} is required`);
+  }
+
+  const charge = new Prisma.Decimal(pkg.salePrice).plus(pkg.extraFee);
+  const wallet = await prisma.wallet.findUnique({ where: { userId } });
+  const balance = wallet?.balance ?? new Prisma.Decimal(0);
+
+  if (balance.greaterThanOrEqualTo(charge)) {
+    const result = await purchasePackage(userId, input, idempotencyKey);
+    return { kind: "ORDER" as const, ...(result as { order: unknown; deliveredCode: string | null }) };
+  }
+
+  const intent = await prisma.orderIntent.create({
+    data: {
+      userId,
+      kind: "PACKAGE",
+      packageId: pkg.id,
+      // Store the sanitized buyer input in `link` (the same column a Store
+      // Order uses for it) so fulfillment re-runs against exactly what was
+      // submitted; `quantity` is the package's own amount snapshot.
+      link: buyerInput,
+      quantity: pkg.amount,
+      charge,
+      idempotencyKey,
+      expiresAt: new Date(Date.now() + 30 * 60 * 1000),
+    },
+  });
+
+  throw new AppError(402, "Insufficient wallet balance", {
+    orderIntentId: intent.id,
+    kind: "PACKAGE",
+    charge: charge.toString(),
+    balance: balance.toString(),
+  });
+}
+
+/**
+ * Called from inside confirmGatewayDeposit's transaction (deposit.service.ts)
+ * right after a PACKAGE-kind intent's deposit credit — the store equivalent
+ * of order.service.ts's fulfillOrderIntent. Same non-negotiables: never
+ * throws (a failure here — package went inactive, out of stock, access
+ * revoked, price moved, already fulfilled by a prior confirm, expired —
+ * leaves the credited money safely in the wallet rather than rolling back
+ * the deposit), and a SAVEPOINT (not a bare try/catch) so a caught failure
+ * discards purchasePackageInTransaction's partial writes without aborting
+ * the outer transaction. Only ever called with intent.status already
+ * confirmed PENDING by the caller.
+ */
+export async function fulfillStorePackageIntent(
+  tx: Prisma.TransactionClient,
+  intent: { id: string; userId: string; packageId: string | null; link: string; idempotencyKey: string; expiresAt: Date },
+) {
+  if (!intent.packageId) {
+    await tx.orderIntent.update({
+      where: { id: intent.id },
+      data: { status: "FAILED", failureReason: "Package no longer exists" },
+    });
+    return;
+  }
+  if (intent.expiresAt < new Date()) {
+    await tx.orderIntent.update({ where: { id: intent.id }, data: { status: "EXPIRED" } });
+    return;
+  }
+  await tx.$executeRawUnsafe("SAVEPOINT fulfill_store_package_intent");
+  try {
+    const result = (await purchasePackageInTransaction(
+      tx,
+      intent.userId,
+      { packageId: intent.packageId, buyerInput: intent.link },
+      intent.idempotencyKey,
+    )) as { order: { id: string } };
+    await tx.orderIntent.update({
+      where: { id: intent.id },
+      data: { status: "FULFILLED", orderId: result.order.id },
+    });
+  } catch (err) {
+    await tx.$executeRawUnsafe("ROLLBACK TO SAVEPOINT fulfill_store_package_intent");
+    const reason = err instanceof AppError ? err.message : "Store order placement failed";
+    await tx.orderIntent.update({ where: { id: intent.id }, data: { status: "FAILED", failureReason: reason } });
   }
 }
 

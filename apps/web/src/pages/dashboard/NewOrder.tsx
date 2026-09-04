@@ -2,7 +2,14 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { getPublicCategories, getPublicServices, getPublicSiteNotice, placeOrder } from "../../api/resources.js";
+import {
+  getEnabledGateways,
+  getPublicCategories,
+  getPublicServices,
+  getPublicSiteNotice,
+  initiateGatewayDeposit,
+  placeOrder,
+} from "../../api/resources.js";
 import { usePlatformFilter } from "./usePlatformFilter.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
@@ -17,6 +24,7 @@ import { BilingualNote, Card, Icon, ServiceTag } from "../../components/ds/index
 // throws when the wallet can't cover the charge (see AppError's `details`).
 interface InsufficientFundsDetails {
   orderIntentId: string;
+  kind?: "SERVICE" | "PACKAGE";
   charge: string;
   balance: string;
   shortfall: string;
@@ -119,6 +127,8 @@ export default function NewOrder() {
     queryKey: ["public-services", categoryId],
     queryFn: () => getPublicServices({ page: 1, pageSize: 100, categoryId: categoryId || undefined }),
   });
+  const { data: enabledGateways } = useQuery({ queryKey: ["enabled-gateways"], queryFn: getEnabledGateways, staleTime: 60_000 });
+  const zinipayEnabled = (enabledGateways ?? []).includes("ZINIPAY");
 
   const services: ServiceItem[] = useMemo(() => servicesData?.items ?? [], [servicesData]);
   const [serviceId, setServiceId] = useState<string>(searchParams.get("serviceId") ?? draft?.serviceId ?? "");
@@ -178,8 +188,27 @@ export default function NewOrder() {
       if (axios.isAxiosError(err) && err.response?.status === 402) {
         const details = err.response.data?.details as InsufficientFundsDetails | undefined;
         if (details) {
+          // Preferred path: straight into the ZiniPay checkout for the FULL
+          // order price (the wallet's existing balance is left untouched);
+          // the OrderIntent id rides along so the order places itself once
+          // payment confirms. Falls back to the Wallet "Add Funds" page when
+          // instant payment isn't available.
+          if (zinipayEnabled) {
+            toast.push(t("newOrder.insufficientPayToast"), "info");
+            try {
+              const redirectUrl = await initiateGatewayDeposit("ZINIPAY", {
+                amount: Number(details.charge),
+                orderIntentId: details.orderIntentId,
+              });
+              window.location.href = redirectUrl;
+              return;
+            } catch (payErr) {
+              setError(apiErrorMessage(payErr, t("newOrder.payRedirectFailed")));
+              return;
+            }
+          }
           toast.push(t("newOrder.insufficientToast"), "info");
-          navigate(`/dashboard/wallet?orderIntentId=${details.orderIntentId}&required=${details.shortfall}`);
+          navigate(`/dashboard/wallet?orderIntentId=${details.orderIntentId}&required=${details.charge}`);
           return;
         }
       }

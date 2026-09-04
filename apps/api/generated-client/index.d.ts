@@ -358,6 +358,14 @@ export const OrderMode: {
 export type OrderMode = (typeof OrderMode)[keyof typeof OrderMode]
 
 
+export const OrderIntentKind: {
+  SERVICE: 'SERVICE',
+  PACKAGE: 'PACKAGE'
+};
+
+export type OrderIntentKind = (typeof OrderIntentKind)[keyof typeof OrderIntentKind]
+
+
 export const OrderIntentStatus: {
   PENDING: 'PENDING',
   FULFILLED: 'FULFILLED',
@@ -570,6 +578,10 @@ export const OrderStatus: typeof $Enums.OrderStatus
 export type OrderMode = $Enums.OrderMode
 
 export const OrderMode: typeof $Enums.OrderMode
+
+export type OrderIntentKind = $Enums.OrderIntentKind
+
+export const OrderIntentKind: typeof $Enums.OrderIntentKind
 
 export type OrderIntentStatus = $Enums.OrderIntentStatus
 
@@ -4597,11 +4609,13 @@ export namespace Prisma {
   export type PackageCountOutputType = {
     stockPoolLinks: number
     orders: number
+    orderIntents: number
   }
 
   export type PackageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     stockPoolLinks?: boolean | PackageCountOutputTypeCountStockPoolLinksArgs
     orders?: boolean | PackageCountOutputTypeCountOrdersArgs
+    orderIntents?: boolean | PackageCountOutputTypeCountOrderIntentsArgs
   }
 
   // Custom InputTypes
@@ -4627,6 +4641,13 @@ export namespace Prisma {
    */
   export type PackageCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+  /**
+   * PackageCountOutputType without action
+   */
+  export type PackageCountOutputTypeCountOrderIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderIntentWhereInput
   }
 
 
@@ -7917,6 +7938,7 @@ export namespace Prisma {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     stockPoolLinks?: boolean | Package$stockPoolLinksArgs<ExtArgs>
     orders?: boolean | Package$ordersArgs<ExtArgs>
+    orderIntents?: boolean | Package$orderIntentsArgs<ExtArgs>
     _count?: boolean | PackageCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["package"]>
 
@@ -7959,6 +7981,7 @@ export namespace Prisma {
     product?: boolean | ProductDefaultArgs<ExtArgs>
     stockPoolLinks?: boolean | Package$stockPoolLinksArgs<ExtArgs>
     orders?: boolean | Package$ordersArgs<ExtArgs>
+    orderIntents?: boolean | Package$orderIntentsArgs<ExtArgs>
     _count?: boolean | PackageCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PackageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7971,6 +7994,7 @@ export namespace Prisma {
       product: Prisma.$ProductPayload<ExtArgs>
       stockPoolLinks: Prisma.$PackageStockPoolPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
+      orderIntents: Prisma.$OrderIntentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8354,6 +8378,7 @@ export namespace Prisma {
     product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     stockPoolLinks<T extends Package$stockPoolLinksArgs<ExtArgs> = {}>(args?: Subset<T, Package$stockPoolLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PackageStockPoolPayload<ExtArgs>, T, "findMany"> | Null>
     orders<T extends Package$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Package$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany"> | Null>
+    orderIntents<T extends Package$orderIntentsArgs<ExtArgs> = {}>(args?: Subset<T, Package$orderIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8752,6 +8777,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * Package.orderIntents
+   */
+  export type Package$orderIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderIntent
+     */
+    select?: OrderIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderIntentInclude<ExtArgs> | null
+    where?: OrderIntentWhereInput
+    orderBy?: OrderIntentOrderByWithRelationInput | OrderIntentOrderByWithRelationInput[]
+    cursor?: OrderIntentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderIntentScalarFieldEnum | OrderIntentScalarFieldEnum[]
   }
 
   /**
@@ -25422,7 +25467,9 @@ export namespace Prisma {
   export type OrderIntentMinAggregateOutputType = {
     id: string | null
     userId: string | null
+    kind: $Enums.OrderIntentKind | null
     serviceId: string | null
+    packageId: string | null
     link: string | null
     quantity: number | null
     charge: Decimal | null
@@ -25437,7 +25484,9 @@ export namespace Prisma {
   export type OrderIntentMaxAggregateOutputType = {
     id: string | null
     userId: string | null
+    kind: $Enums.OrderIntentKind | null
     serviceId: string | null
+    packageId: string | null
     link: string | null
     quantity: number | null
     charge: Decimal | null
@@ -25452,7 +25501,9 @@ export namespace Prisma {
   export type OrderIntentCountAggregateOutputType = {
     id: number
     userId: number
+    kind: number
     serviceId: number
+    packageId: number
     link: number
     quantity: number
     charge: number
@@ -25479,7 +25530,9 @@ export namespace Prisma {
   export type OrderIntentMinAggregateInputType = {
     id?: true
     userId?: true
+    kind?: true
     serviceId?: true
+    packageId?: true
     link?: true
     quantity?: true
     charge?: true
@@ -25494,7 +25547,9 @@ export namespace Prisma {
   export type OrderIntentMaxAggregateInputType = {
     id?: true
     userId?: true
+    kind?: true
     serviceId?: true
+    packageId?: true
     link?: true
     quantity?: true
     charge?: true
@@ -25509,7 +25564,9 @@ export namespace Prisma {
   export type OrderIntentCountAggregateInputType = {
     id?: true
     userId?: true
+    kind?: true
     serviceId?: true
+    packageId?: true
     link?: true
     quantity?: true
     charge?: true
@@ -25611,7 +25668,9 @@ export namespace Prisma {
   export type OrderIntentGroupByOutputType = {
     id: string
     userId: string
-    serviceId: string
+    kind: $Enums.OrderIntentKind
+    serviceId: string | null
+    packageId: string | null
     link: string
     quantity: number
     charge: Decimal
@@ -25645,7 +25704,9 @@ export namespace Prisma {
   export type OrderIntentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    kind?: boolean
     serviceId?: boolean
+    packageId?: boolean
     link?: boolean
     quantity?: boolean
     charge?: boolean
@@ -25656,7 +25717,8 @@ export namespace Prisma {
     createdAt?: boolean
     expiresAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    service?: boolean | ServiceDefaultArgs<ExtArgs>
+    service?: boolean | OrderIntent$serviceArgs<ExtArgs>
+    package?: boolean | OrderIntent$packageArgs<ExtArgs>
     deposits?: boolean | OrderIntent$depositsArgs<ExtArgs>
     _count?: boolean | OrderIntentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["orderIntent"]>
@@ -25664,7 +25726,9 @@ export namespace Prisma {
   export type OrderIntentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    kind?: boolean
     serviceId?: boolean
+    packageId?: boolean
     link?: boolean
     quantity?: boolean
     charge?: boolean
@@ -25675,13 +25739,16 @@ export namespace Prisma {
     createdAt?: boolean
     expiresAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    service?: boolean | ServiceDefaultArgs<ExtArgs>
+    service?: boolean | OrderIntent$serviceArgs<ExtArgs>
+    package?: boolean | OrderIntent$packageArgs<ExtArgs>
   }, ExtArgs["result"]["orderIntent"]>
 
   export type OrderIntentSelectScalar = {
     id?: boolean
     userId?: boolean
+    kind?: boolean
     serviceId?: boolean
+    packageId?: boolean
     link?: boolean
     quantity?: boolean
     charge?: boolean
@@ -25695,26 +25762,31 @@ export namespace Prisma {
 
   export type OrderIntentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    service?: boolean | ServiceDefaultArgs<ExtArgs>
+    service?: boolean | OrderIntent$serviceArgs<ExtArgs>
+    package?: boolean | OrderIntent$packageArgs<ExtArgs>
     deposits?: boolean | OrderIntent$depositsArgs<ExtArgs>
     _count?: boolean | OrderIntentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIntentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    service?: boolean | ServiceDefaultArgs<ExtArgs>
+    service?: boolean | OrderIntent$serviceArgs<ExtArgs>
+    package?: boolean | OrderIntent$packageArgs<ExtArgs>
   }
 
   export type $OrderIntentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "OrderIntent"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
-      service: Prisma.$ServicePayload<ExtArgs>
+      service: Prisma.$ServicePayload<ExtArgs> | null
+      package: Prisma.$PackagePayload<ExtArgs> | null
       deposits: Prisma.$DepositPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      serviceId: string
+      kind: $Enums.OrderIntentKind
+      serviceId: string | null
+      packageId: string | null
       link: string
       quantity: number
       charge: Prisma.Decimal
@@ -26089,7 +26161,8 @@ export namespace Prisma {
   export interface Prisma__OrderIntentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    service<T extends ServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceDefaultArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    service<T extends OrderIntent$serviceArgs<ExtArgs> = {}>(args?: Subset<T, OrderIntent$serviceArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    package<T extends OrderIntent$packageArgs<ExtArgs> = {}>(args?: Subset<T, OrderIntent$packageArgs<ExtArgs>>): Prisma__PackageClient<$Result.GetResult<Prisma.$PackagePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     deposits<T extends OrderIntent$depositsArgs<ExtArgs> = {}>(args?: Subset<T, OrderIntent$depositsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -26122,7 +26195,9 @@ export namespace Prisma {
   interface OrderIntentFieldRefs {
     readonly id: FieldRef<"OrderIntent", 'String'>
     readonly userId: FieldRef<"OrderIntent", 'String'>
+    readonly kind: FieldRef<"OrderIntent", 'OrderIntentKind'>
     readonly serviceId: FieldRef<"OrderIntent", 'String'>
+    readonly packageId: FieldRef<"OrderIntent", 'String'>
     readonly link: FieldRef<"OrderIntent", 'String'>
     readonly quantity: FieldRef<"OrderIntent", 'Int'>
     readonly charge: FieldRef<"OrderIntent", 'Decimal'>
@@ -26447,6 +26522,36 @@ export namespace Prisma {
      * Filter which OrderIntents to delete
      */
     where?: OrderIntentWhereInput
+  }
+
+  /**
+   * OrderIntent.service
+   */
+  export type OrderIntent$serviceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceInclude<ExtArgs> | null
+    where?: ServiceWhereInput
+  }
+
+  /**
+   * OrderIntent.package
+   */
+  export type OrderIntent$packageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Package
+     */
+    select?: PackageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PackageInclude<ExtArgs> | null
+    where?: PackageWhereInput
   }
 
   /**
@@ -45789,7 +45894,9 @@ export namespace Prisma {
   export const OrderIntentScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
+    kind: 'kind',
     serviceId: 'serviceId',
+    packageId: 'packageId',
     link: 'link',
     quantity: 'quantity',
     charge: 'charge',
@@ -46403,6 +46510,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'OrderIntentKind'
+   */
+  export type EnumOrderIntentKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderIntentKind'>
+    
+
+
+  /**
+   * Reference to a field of type 'OrderIntentKind[]'
+   */
+  export type ListEnumOrderIntentKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderIntentKind[]'>
+    
+
+
+  /**
    * Reference to a field of type 'OrderIntentStatus'
    */
   export type EnumOrderIntentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderIntentStatus'>
@@ -46935,6 +47056,7 @@ export namespace Prisma {
     product?: XOR<ProductRelationFilter, ProductWhereInput>
     stockPoolLinks?: PackageStockPoolListRelationFilter
     orders?: OrderListRelationFilter
+    orderIntents?: OrderIntentListRelationFilter
   }
 
   export type PackageOrderByWithRelationInput = {
@@ -46955,6 +47077,7 @@ export namespace Prisma {
     product?: ProductOrderByWithRelationInput
     stockPoolLinks?: PackageStockPoolOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
+    orderIntents?: OrderIntentOrderByRelationAggregateInput
   }
 
   export type PackageWhereUniqueInput = Prisma.AtLeast<{
@@ -46978,6 +47101,7 @@ export namespace Prisma {
     product?: XOR<ProductRelationFilter, ProductWhereInput>
     stockPoolLinks?: PackageStockPoolListRelationFilter
     orders?: OrderListRelationFilter
+    orderIntents?: OrderIntentListRelationFilter
   }, "id">
 
   export type PackageOrderByWithAggregationInput = {
@@ -48341,7 +48465,9 @@ export namespace Prisma {
     NOT?: OrderIntentWhereInput | OrderIntentWhereInput[]
     id?: StringFilter<"OrderIntent"> | string
     userId?: StringFilter<"OrderIntent"> | string
-    serviceId?: StringFilter<"OrderIntent"> | string
+    kind?: EnumOrderIntentKindFilter<"OrderIntent"> | $Enums.OrderIntentKind
+    serviceId?: StringNullableFilter<"OrderIntent"> | string | null
+    packageId?: StringNullableFilter<"OrderIntent"> | string | null
     link?: StringFilter<"OrderIntent"> | string
     quantity?: IntFilter<"OrderIntent"> | number
     charge?: DecimalFilter<"OrderIntent"> | Decimal | DecimalJsLike | number | string
@@ -48352,14 +48478,17 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"OrderIntent"> | Date | string
     expiresAt?: DateTimeFilter<"OrderIntent"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
-    service?: XOR<ServiceRelationFilter, ServiceWhereInput>
+    service?: XOR<ServiceNullableRelationFilter, ServiceWhereInput> | null
+    package?: XOR<PackageNullableRelationFilter, PackageWhereInput> | null
     deposits?: DepositListRelationFilter
   }
 
   export type OrderIntentOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    serviceId?: SortOrder
+    kind?: SortOrder
+    serviceId?: SortOrderInput | SortOrder
+    packageId?: SortOrderInput | SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -48371,6 +48500,7 @@ export namespace Prisma {
     expiresAt?: SortOrder
     user?: UserOrderByWithRelationInput
     service?: ServiceOrderByWithRelationInput
+    package?: PackageOrderByWithRelationInput
     deposits?: DepositOrderByRelationAggregateInput
   }
 
@@ -48380,7 +48510,9 @@ export namespace Prisma {
     OR?: OrderIntentWhereInput[]
     NOT?: OrderIntentWhereInput | OrderIntentWhereInput[]
     userId?: StringFilter<"OrderIntent"> | string
-    serviceId?: StringFilter<"OrderIntent"> | string
+    kind?: EnumOrderIntentKindFilter<"OrderIntent"> | $Enums.OrderIntentKind
+    serviceId?: StringNullableFilter<"OrderIntent"> | string | null
+    packageId?: StringNullableFilter<"OrderIntent"> | string | null
     link?: StringFilter<"OrderIntent"> | string
     quantity?: IntFilter<"OrderIntent"> | number
     charge?: DecimalFilter<"OrderIntent"> | Decimal | DecimalJsLike | number | string
@@ -48391,14 +48523,17 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"OrderIntent"> | Date | string
     expiresAt?: DateTimeFilter<"OrderIntent"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
-    service?: XOR<ServiceRelationFilter, ServiceWhereInput>
+    service?: XOR<ServiceNullableRelationFilter, ServiceWhereInput> | null
+    package?: XOR<PackageNullableRelationFilter, PackageWhereInput> | null
     deposits?: DepositListRelationFilter
   }, "id">
 
   export type OrderIntentOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    serviceId?: SortOrder
+    kind?: SortOrder
+    serviceId?: SortOrderInput | SortOrder
+    packageId?: SortOrderInput | SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -48421,7 +48556,9 @@ export namespace Prisma {
     NOT?: OrderIntentScalarWhereWithAggregatesInput | OrderIntentScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"OrderIntent"> | string
     userId?: StringWithAggregatesFilter<"OrderIntent"> | string
-    serviceId?: StringWithAggregatesFilter<"OrderIntent"> | string
+    kind?: EnumOrderIntentKindWithAggregatesFilter<"OrderIntent"> | $Enums.OrderIntentKind
+    serviceId?: StringNullableWithAggregatesFilter<"OrderIntent"> | string | null
+    packageId?: StringNullableWithAggregatesFilter<"OrderIntent"> | string | null
     link?: StringWithAggregatesFilter<"OrderIntent"> | string
     quantity?: IntWithAggregatesFilter<"OrderIntent"> | number
     charge?: DecimalWithAggregatesFilter<"OrderIntent"> | Decimal | DecimalJsLike | number | string
@@ -50254,6 +50391,7 @@ export namespace Prisma {
     product: ProductCreateNestedOneWithoutPackagesInput
     stockPoolLinks?: PackageStockPoolCreateNestedManyWithoutPackageInput
     orders?: OrderCreateNestedManyWithoutPackageInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutPackageInput
   }
 
   export type PackageUncheckedCreateInput = {
@@ -50273,6 +50411,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stockPoolLinks?: PackageStockPoolUncheckedCreateNestedManyWithoutPackageInput
     orders?: OrderUncheckedCreateNestedManyWithoutPackageInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutPackageInput
   }
 
   export type PackageUpdateInput = {
@@ -50292,6 +50431,7 @@ export namespace Prisma {
     product?: ProductUpdateOneRequiredWithoutPackagesNestedInput
     stockPoolLinks?: PackageStockPoolUpdateManyWithoutPackageNestedInput
     orders?: OrderUpdateManyWithoutPackageNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutPackageNestedInput
   }
 
   export type PackageUncheckedUpdateInput = {
@@ -50311,6 +50451,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stockPoolLinks?: PackageStockPoolUncheckedUpdateManyWithoutPackageNestedInput
     orders?: OrderUncheckedUpdateManyWithoutPackageNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutPackageNestedInput
   }
 
   export type PackageCreateManyInput = {
@@ -51827,6 +51968,7 @@ export namespace Prisma {
 
   export type OrderIntentCreateInput = {
     id?: string
+    kind?: $Enums.OrderIntentKind
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -51837,14 +51979,17 @@ export namespace Prisma {
     createdAt?: Date | string
     expiresAt: Date | string
     user: UserCreateNestedOneWithoutOrderIntentsInput
-    service: ServiceCreateNestedOneWithoutOrderIntentsInput
+    service?: ServiceCreateNestedOneWithoutOrderIntentsInput
+    package?: PackageCreateNestedOneWithoutOrderIntentsInput
     deposits?: DepositCreateNestedManyWithoutOrderIntentInput
   }
 
   export type OrderIntentUncheckedCreateInput = {
     id?: string
     userId: string
-    serviceId: string
+    kind?: $Enums.OrderIntentKind
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -51859,6 +52004,7 @@ export namespace Prisma {
 
   export type OrderIntentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -51869,14 +52015,17 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrderIntentsNestedInput
-    service?: ServiceUpdateOneRequiredWithoutOrderIntentsNestedInput
+    service?: ServiceUpdateOneWithoutOrderIntentsNestedInput
+    package?: PackageUpdateOneWithoutOrderIntentsNestedInput
     deposits?: DepositUpdateManyWithoutOrderIntentNestedInput
   }
 
   export type OrderIntentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -51892,7 +52041,9 @@ export namespace Prisma {
   export type OrderIntentCreateManyInput = {
     id?: string
     userId: string
-    serviceId: string
+    kind?: $Enums.OrderIntentKind
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -51906,6 +52057,7 @@ export namespace Prisma {
 
   export type OrderIntentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -51920,7 +52072,9 @@ export namespace Prisma {
   export type OrderIntentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -54022,11 +54176,21 @@ export namespace Prisma {
     none?: OrderWhereInput
   }
 
+  export type OrderIntentListRelationFilter = {
+    every?: OrderIntentWhereInput
+    some?: OrderIntentWhereInput
+    none?: OrderIntentWhereInput
+  }
+
   export type PackageStockPoolOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type OrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrderIntentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -54311,12 +54475,6 @@ export namespace Prisma {
     none?: PasswordResetTokenWhereInput
   }
 
-  export type OrderIntentListRelationFilter = {
-    every?: OrderIntentWhereInput
-    some?: OrderIntentWhereInput
-    none?: OrderIntentWhereInput
-  }
-
   export type RefreshTokenOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -54342,10 +54500,6 @@ export namespace Prisma {
   }
 
   export type PasswordResetTokenOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type OrderIntentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -55221,6 +55375,13 @@ export namespace Prisma {
     _max?: NestedEnumOrderModeFilter<$PrismaModel>
   }
 
+  export type EnumOrderIntentKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderIntentKind | EnumOrderIntentKindFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderIntentKind[] | ListEnumOrderIntentKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderIntentKind[] | ListEnumOrderIntentKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderIntentKindFilter<$PrismaModel> | $Enums.OrderIntentKind
+  }
+
   export type EnumOrderIntentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderIntentStatus | EnumOrderIntentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderIntentStatus[] | ListEnumOrderIntentStatusFieldRefInput<$PrismaModel>
@@ -55228,15 +55389,12 @@ export namespace Prisma {
     not?: NestedEnumOrderIntentStatusFilter<$PrismaModel> | $Enums.OrderIntentStatus
   }
 
-  export type ServiceRelationFilter = {
-    is?: ServiceWhereInput
-    isNot?: ServiceWhereInput
-  }
-
   export type OrderIntentCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    kind?: SortOrder
     serviceId?: SortOrder
+    packageId?: SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -55256,7 +55414,9 @@ export namespace Prisma {
   export type OrderIntentMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    kind?: SortOrder
     serviceId?: SortOrder
+    packageId?: SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -55271,7 +55431,9 @@ export namespace Prisma {
   export type OrderIntentMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    kind?: SortOrder
     serviceId?: SortOrder
+    packageId?: SortOrder
     link?: SortOrder
     quantity?: SortOrder
     charge?: SortOrder
@@ -55286,6 +55448,16 @@ export namespace Prisma {
   export type OrderIntentSumOrderByAggregateInput = {
     quantity?: SortOrder
     charge?: SortOrder
+  }
+
+  export type EnumOrderIntentKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderIntentKind | EnumOrderIntentKindFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderIntentKind[] | ListEnumOrderIntentKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderIntentKind[] | ListEnumOrderIntentKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderIntentKindWithAggregatesFilter<$PrismaModel> | $Enums.OrderIntentKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrderIntentKindFilter<$PrismaModel>
+    _max?: NestedEnumOrderIntentKindFilter<$PrismaModel>
   }
 
   export type EnumOrderIntentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -55766,6 +55938,11 @@ export namespace Prisma {
     afterJson?: SortOrder
     ip?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type ServiceRelationFilter = {
+    is?: ServiceWhereInput
+    isNot?: ServiceWhereInput
   }
 
   export type DripFeedCountOrderByAggregateInput = {
@@ -56584,6 +56761,13 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
+  export type OrderIntentCreateNestedManyWithoutPackageInput = {
+    create?: XOR<OrderIntentCreateWithoutPackageInput, OrderIntentUncheckedCreateWithoutPackageInput> | OrderIntentCreateWithoutPackageInput[] | OrderIntentUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutPackageInput | OrderIntentCreateOrConnectWithoutPackageInput[]
+    createMany?: OrderIntentCreateManyPackageInputEnvelope
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+  }
+
   export type PackageStockPoolUncheckedCreateNestedManyWithoutPackageInput = {
     create?: XOR<PackageStockPoolCreateWithoutPackageInput, PackageStockPoolUncheckedCreateWithoutPackageInput> | PackageStockPoolCreateWithoutPackageInput[] | PackageStockPoolUncheckedCreateWithoutPackageInput[]
     connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPackageInput | PackageStockPoolCreateOrConnectWithoutPackageInput[]
@@ -56596,6 +56780,13 @@ export namespace Prisma {
     connectOrCreate?: OrderCreateOrConnectWithoutPackageInput | OrderCreateOrConnectWithoutPackageInput[]
     createMany?: OrderCreateManyPackageInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type OrderIntentUncheckedCreateNestedManyWithoutPackageInput = {
+    create?: XOR<OrderIntentCreateWithoutPackageInput, OrderIntentUncheckedCreateWithoutPackageInput> | OrderIntentCreateWithoutPackageInput[] | OrderIntentUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutPackageInput | OrderIntentCreateOrConnectWithoutPackageInput[]
+    createMany?: OrderIntentCreateManyPackageInputEnvelope
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
   }
 
   export type ProductUpdateOneRequiredWithoutPackagesNestedInput = {
@@ -56634,6 +56825,20 @@ export namespace Prisma {
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
+  export type OrderIntentUpdateManyWithoutPackageNestedInput = {
+    create?: XOR<OrderIntentCreateWithoutPackageInput, OrderIntentUncheckedCreateWithoutPackageInput> | OrderIntentCreateWithoutPackageInput[] | OrderIntentUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutPackageInput | OrderIntentCreateOrConnectWithoutPackageInput[]
+    upsert?: OrderIntentUpsertWithWhereUniqueWithoutPackageInput | OrderIntentUpsertWithWhereUniqueWithoutPackageInput[]
+    createMany?: OrderIntentCreateManyPackageInputEnvelope
+    set?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    disconnect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    delete?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    update?: OrderIntentUpdateWithWhereUniqueWithoutPackageInput | OrderIntentUpdateWithWhereUniqueWithoutPackageInput[]
+    updateMany?: OrderIntentUpdateManyWithWhereWithoutPackageInput | OrderIntentUpdateManyWithWhereWithoutPackageInput[]
+    deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
+  }
+
   export type PackageStockPoolUncheckedUpdateManyWithoutPackageNestedInput = {
     create?: XOR<PackageStockPoolCreateWithoutPackageInput, PackageStockPoolUncheckedCreateWithoutPackageInput> | PackageStockPoolCreateWithoutPackageInput[] | PackageStockPoolUncheckedCreateWithoutPackageInput[]
     connectOrCreate?: PackageStockPoolCreateOrConnectWithoutPackageInput | PackageStockPoolCreateOrConnectWithoutPackageInput[]
@@ -56660,6 +56865,20 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutPackageInput | OrderUpdateWithWhereUniqueWithoutPackageInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutPackageInput | OrderUpdateManyWithWhereWithoutPackageInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type OrderIntentUncheckedUpdateManyWithoutPackageNestedInput = {
+    create?: XOR<OrderIntentCreateWithoutPackageInput, OrderIntentUncheckedCreateWithoutPackageInput> | OrderIntentCreateWithoutPackageInput[] | OrderIntentUncheckedCreateWithoutPackageInput[]
+    connectOrCreate?: OrderIntentCreateOrConnectWithoutPackageInput | OrderIntentCreateOrConnectWithoutPackageInput[]
+    upsert?: OrderIntentUpsertWithWhereUniqueWithoutPackageInput | OrderIntentUpsertWithWhereUniqueWithoutPackageInput[]
+    createMany?: OrderIntentCreateManyPackageInputEnvelope
+    set?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    disconnect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    delete?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+    update?: OrderIntentUpdateWithWhereUniqueWithoutPackageInput | OrderIntentUpdateWithWhereUniqueWithoutPackageInput[]
+    updateMany?: OrderIntentUpdateManyWithWhereWithoutPackageInput | OrderIntentUpdateManyWithWhereWithoutPackageInput[]
+    deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
   }
 
   export type StockCodeCreateNestedManyWithoutPoolInput = {
@@ -58082,6 +58301,12 @@ export namespace Prisma {
     connect?: ServiceWhereUniqueInput
   }
 
+  export type PackageCreateNestedOneWithoutOrderIntentsInput = {
+    create?: XOR<PackageCreateWithoutOrderIntentsInput, PackageUncheckedCreateWithoutOrderIntentsInput>
+    connectOrCreate?: PackageCreateOrConnectWithoutOrderIntentsInput
+    connect?: PackageWhereUniqueInput
+  }
+
   export type DepositCreateNestedManyWithoutOrderIntentInput = {
     create?: XOR<DepositCreateWithoutOrderIntentInput, DepositUncheckedCreateWithoutOrderIntentInput> | DepositCreateWithoutOrderIntentInput[] | DepositUncheckedCreateWithoutOrderIntentInput[]
     connectOrCreate?: DepositCreateOrConnectWithoutOrderIntentInput | DepositCreateOrConnectWithoutOrderIntentInput[]
@@ -58096,6 +58321,10 @@ export namespace Prisma {
     connect?: DepositWhereUniqueInput | DepositWhereUniqueInput[]
   }
 
+  export type EnumOrderIntentKindFieldUpdateOperationsInput = {
+    set?: $Enums.OrderIntentKind
+  }
+
   export type EnumOrderIntentStatusFieldUpdateOperationsInput = {
     set?: $Enums.OrderIntentStatus
   }
@@ -58108,12 +58337,24 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOrderIntentsInput, UserUpdateWithoutOrderIntentsInput>, UserUncheckedUpdateWithoutOrderIntentsInput>
   }
 
-  export type ServiceUpdateOneRequiredWithoutOrderIntentsNestedInput = {
+  export type ServiceUpdateOneWithoutOrderIntentsNestedInput = {
     create?: XOR<ServiceCreateWithoutOrderIntentsInput, ServiceUncheckedCreateWithoutOrderIntentsInput>
     connectOrCreate?: ServiceCreateOrConnectWithoutOrderIntentsInput
     upsert?: ServiceUpsertWithoutOrderIntentsInput
+    disconnect?: ServiceWhereInput | boolean
+    delete?: ServiceWhereInput | boolean
     connect?: ServiceWhereUniqueInput
     update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutOrderIntentsInput, ServiceUpdateWithoutOrderIntentsInput>, ServiceUncheckedUpdateWithoutOrderIntentsInput>
+  }
+
+  export type PackageUpdateOneWithoutOrderIntentsNestedInput = {
+    create?: XOR<PackageCreateWithoutOrderIntentsInput, PackageUncheckedCreateWithoutOrderIntentsInput>
+    connectOrCreate?: PackageCreateOrConnectWithoutOrderIntentsInput
+    upsert?: PackageUpsertWithoutOrderIntentsInput
+    disconnect?: PackageWhereInput | boolean
+    delete?: PackageWhereInput | boolean
+    connect?: PackageWhereUniqueInput
+    update?: XOR<XOR<PackageUpdateToOneWithWhereWithoutOrderIntentsInput, PackageUpdateWithoutOrderIntentsInput>, PackageUncheckedUpdateWithoutOrderIntentsInput>
   }
 
   export type DepositUpdateManyWithoutOrderIntentNestedInput = {
@@ -59324,11 +59565,28 @@ export namespace Prisma {
     _max?: NestedEnumOrderModeFilter<$PrismaModel>
   }
 
+  export type NestedEnumOrderIntentKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderIntentKind | EnumOrderIntentKindFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderIntentKind[] | ListEnumOrderIntentKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderIntentKind[] | ListEnumOrderIntentKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderIntentKindFilter<$PrismaModel> | $Enums.OrderIntentKind
+  }
+
   export type NestedEnumOrderIntentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderIntentStatus | EnumOrderIntentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderIntentStatus[] | ListEnumOrderIntentStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.OrderIntentStatus[] | ListEnumOrderIntentStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumOrderIntentStatusFilter<$PrismaModel> | $Enums.OrderIntentStatus
+  }
+
+  export type NestedEnumOrderIntentKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrderIntentKind | EnumOrderIntentKindFieldRefInput<$PrismaModel>
+    in?: $Enums.OrderIntentKind[] | ListEnumOrderIntentKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.OrderIntentKind[] | ListEnumOrderIntentKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumOrderIntentKindWithAggregatesFilter<$PrismaModel> | $Enums.OrderIntentKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrderIntentKindFilter<$PrismaModel>
+    _max?: NestedEnumOrderIntentKindFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderIntentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -59820,6 +60078,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stockPoolLinks?: PackageStockPoolCreateNestedManyWithoutPackageInput
     orders?: OrderCreateNestedManyWithoutPackageInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutPackageInput
   }
 
   export type PackageUncheckedCreateWithoutProductInput = {
@@ -59838,6 +60097,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stockPoolLinks?: PackageStockPoolUncheckedCreateNestedManyWithoutPackageInput
     orders?: OrderUncheckedCreateNestedManyWithoutPackageInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutPackageInput
   }
 
   export type PackageCreateOrConnectWithoutProductInput = {
@@ -60133,6 +60393,50 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OrderIntentCreateWithoutPackageInput = {
+    id?: string
+    kind?: $Enums.OrderIntentKind
+    link: string
+    quantity: number
+    charge: Decimal | DecimalJsLike | number | string
+    idempotencyKey: string
+    status?: $Enums.OrderIntentStatus
+    orderId?: string | null
+    failureReason?: string | null
+    createdAt?: Date | string
+    expiresAt: Date | string
+    user: UserCreateNestedOneWithoutOrderIntentsInput
+    service?: ServiceCreateNestedOneWithoutOrderIntentsInput
+    deposits?: DepositCreateNestedManyWithoutOrderIntentInput
+  }
+
+  export type OrderIntentUncheckedCreateWithoutPackageInput = {
+    id?: string
+    userId: string
+    kind?: $Enums.OrderIntentKind
+    serviceId?: string | null
+    link: string
+    quantity: number
+    charge: Decimal | DecimalJsLike | number | string
+    idempotencyKey: string
+    status?: $Enums.OrderIntentStatus
+    orderId?: string | null
+    failureReason?: string | null
+    createdAt?: Date | string
+    expiresAt: Date | string
+    deposits?: DepositUncheckedCreateNestedManyWithoutOrderIntentInput
+  }
+
+  export type OrderIntentCreateOrConnectWithoutPackageInput = {
+    where: OrderIntentWhereUniqueInput
+    create: XOR<OrderIntentCreateWithoutPackageInput, OrderIntentUncheckedCreateWithoutPackageInput>
+  }
+
+  export type OrderIntentCreateManyPackageInputEnvelope = {
+    data: OrderIntentCreateManyPackageInput | OrderIntentCreateManyPackageInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProductUpsertWithoutPackagesInput = {
     update: XOR<ProductUpdateWithoutPackagesInput, ProductUncheckedUpdateWithoutPackagesInput>
     create: XOR<ProductCreateWithoutPackagesInput, ProductUncheckedCreateWithoutPackagesInput>
@@ -60283,6 +60587,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Order"> | Date | string
   }
 
+  export type OrderIntentUpsertWithWhereUniqueWithoutPackageInput = {
+    where: OrderIntentWhereUniqueInput
+    update: XOR<OrderIntentUpdateWithoutPackageInput, OrderIntentUncheckedUpdateWithoutPackageInput>
+    create: XOR<OrderIntentCreateWithoutPackageInput, OrderIntentUncheckedCreateWithoutPackageInput>
+  }
+
+  export type OrderIntentUpdateWithWhereUniqueWithoutPackageInput = {
+    where: OrderIntentWhereUniqueInput
+    data: XOR<OrderIntentUpdateWithoutPackageInput, OrderIntentUncheckedUpdateWithoutPackageInput>
+  }
+
+  export type OrderIntentUpdateManyWithWhereWithoutPackageInput = {
+    where: OrderIntentScalarWhereInput
+    data: XOR<OrderIntentUpdateManyMutationInput, OrderIntentUncheckedUpdateManyWithoutPackageInput>
+  }
+
+  export type OrderIntentScalarWhereInput = {
+    AND?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
+    OR?: OrderIntentScalarWhereInput[]
+    NOT?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
+    id?: StringFilter<"OrderIntent"> | string
+    userId?: StringFilter<"OrderIntent"> | string
+    kind?: EnumOrderIntentKindFilter<"OrderIntent"> | $Enums.OrderIntentKind
+    serviceId?: StringNullableFilter<"OrderIntent"> | string | null
+    packageId?: StringNullableFilter<"OrderIntent"> | string | null
+    link?: StringFilter<"OrderIntent"> | string
+    quantity?: IntFilter<"OrderIntent"> | number
+    charge?: DecimalFilter<"OrderIntent"> | Decimal | DecimalJsLike | number | string
+    idempotencyKey?: StringFilter<"OrderIntent"> | string
+    status?: EnumOrderIntentStatusFilter<"OrderIntent"> | $Enums.OrderIntentStatus
+    orderId?: StringNullableFilter<"OrderIntent"> | string | null
+    failureReason?: StringNullableFilter<"OrderIntent"> | string | null
+    createdAt?: DateTimeFilter<"OrderIntent"> | Date | string
+    expiresAt?: DateTimeFilter<"OrderIntent"> | Date | string
+  }
+
   export type StockCodeCreateWithoutPoolInput = {
     id?: string
     codeCiphertext: string
@@ -60392,6 +60732,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     product: ProductCreateNestedOneWithoutPackagesInput
     orders?: OrderCreateNestedManyWithoutPackageInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutPackageInput
   }
 
   export type PackageUncheckedCreateWithoutStockPoolLinksInput = {
@@ -60410,6 +60751,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutPackageInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutPackageInput
   }
 
   export type PackageCreateOrConnectWithoutStockPoolLinksInput = {
@@ -60465,6 +60807,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: ProductUpdateOneRequiredWithoutPackagesNestedInput
     orders?: OrderUpdateManyWithoutPackageNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutPackageNestedInput
   }
 
   export type PackageUncheckedUpdateWithoutStockPoolLinksInput = {
@@ -60483,6 +60826,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutPackageNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutPackageNestedInput
   }
 
   export type StockPoolUpsertWithoutPackageLinksInput = {
@@ -61069,6 +61413,7 @@ export namespace Prisma {
 
   export type OrderIntentCreateWithoutUserInput = {
     id?: string
+    kind?: $Enums.OrderIntentKind
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -61078,13 +61423,16 @@ export namespace Prisma {
     failureReason?: string | null
     createdAt?: Date | string
     expiresAt: Date | string
-    service: ServiceCreateNestedOneWithoutOrderIntentsInput
+    service?: ServiceCreateNestedOneWithoutOrderIntentsInput
+    package?: PackageCreateNestedOneWithoutOrderIntentsInput
     deposits?: DepositCreateNestedManyWithoutOrderIntentInput
   }
 
   export type OrderIntentUncheckedCreateWithoutUserInput = {
     id?: string
-    serviceId: string
+    kind?: $Enums.OrderIntentKind
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -61460,24 +61808,6 @@ export namespace Prisma {
   export type OrderIntentUpdateManyWithWhereWithoutUserInput = {
     where: OrderIntentScalarWhereInput
     data: XOR<OrderIntentUpdateManyMutationInput, OrderIntentUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type OrderIntentScalarWhereInput = {
-    AND?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
-    OR?: OrderIntentScalarWhereInput[]
-    NOT?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
-    id?: StringFilter<"OrderIntent"> | string
-    userId?: StringFilter<"OrderIntent"> | string
-    serviceId?: StringFilter<"OrderIntent"> | string
-    link?: StringFilter<"OrderIntent"> | string
-    quantity?: IntFilter<"OrderIntent"> | number
-    charge?: DecimalFilter<"OrderIntent"> | Decimal | DecimalJsLike | number | string
-    idempotencyKey?: StringFilter<"OrderIntent"> | string
-    status?: EnumOrderIntentStatusFilter<"OrderIntent"> | $Enums.OrderIntentStatus
-    orderId?: StringNullableFilter<"OrderIntent"> | string | null
-    failureReason?: StringNullableFilter<"OrderIntent"> | string | null
-    createdAt?: DateTimeFilter<"OrderIntent"> | Date | string
-    expiresAt?: DateTimeFilter<"OrderIntent"> | Date | string
   }
 
   export type UserCreateWithoutPasswordResetTokensInput = {
@@ -62695,6 +63025,7 @@ export namespace Prisma {
 
   export type OrderIntentCreateWithoutServiceInput = {
     id?: string
+    kind?: $Enums.OrderIntentKind
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -62705,12 +63036,15 @@ export namespace Prisma {
     createdAt?: Date | string
     expiresAt: Date | string
     user: UserCreateNestedOneWithoutOrderIntentsInput
+    package?: PackageCreateNestedOneWithoutOrderIntentsInput
     deposits?: DepositCreateNestedManyWithoutOrderIntentInput
   }
 
   export type OrderIntentUncheckedCreateWithoutServiceInput = {
     id?: string
     userId: string
+    kind?: $Enums.OrderIntentKind
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -63152,6 +63486,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     product: ProductCreateNestedOneWithoutPackagesInput
     stockPoolLinks?: PackageStockPoolCreateNestedManyWithoutPackageInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutPackageInput
   }
 
   export type PackageUncheckedCreateWithoutOrdersInput = {
@@ -63170,6 +63505,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     stockPoolLinks?: PackageStockPoolUncheckedCreateNestedManyWithoutPackageInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutPackageInput
   }
 
   export type PackageCreateOrConnectWithoutOrdersInput = {
@@ -63427,6 +63763,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: ProductUpdateOneRequiredWithoutPackagesNestedInput
     stockPoolLinks?: PackageStockPoolUpdateManyWithoutPackageNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutPackageNestedInput
   }
 
   export type PackageUncheckedUpdateWithoutOrdersInput = {
@@ -63445,6 +63782,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stockPoolLinks?: PackageStockPoolUncheckedUpdateManyWithoutPackageNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutPackageNestedInput
   }
 
   export type StockCodeUpsertWithoutOrderInput = {
@@ -63666,6 +64004,49 @@ export namespace Prisma {
     create: XOR<ServiceCreateWithoutOrderIntentsInput, ServiceUncheckedCreateWithoutOrderIntentsInput>
   }
 
+  export type PackageCreateWithoutOrderIntentsInput = {
+    id?: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutPackagesInput
+    stockPoolLinks?: PackageStockPoolCreateNestedManyWithoutPackageInput
+    orders?: OrderCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageUncheckedCreateWithoutOrderIntentsInput = {
+    id?: string
+    productId: string
+    name: string
+    amount: number
+    salePrice: Decimal | DecimalJsLike | number | string
+    buyPrice?: Decimal | DecimalJsLike | number | string
+    commonPriceUsd: Decimal | DecimalJsLike | number | string
+    extraFee?: Decimal | DecimalJsLike | number | string
+    level?: number
+    isAuto?: boolean
+    isManual?: boolean
+    server?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stockPoolLinks?: PackageStockPoolUncheckedCreateNestedManyWithoutPackageInput
+    orders?: OrderUncheckedCreateNestedManyWithoutPackageInput
+  }
+
+  export type PackageCreateOrConnectWithoutOrderIntentsInput = {
+    where: PackageWhereUniqueInput
+    create: XOR<PackageCreateWithoutOrderIntentsInput, PackageUncheckedCreateWithoutOrderIntentsInput>
+  }
+
   export type DepositCreateWithoutOrderIntentInput = {
     id?: string
     method: string
@@ -63862,6 +64243,55 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
     dripFeeds?: DripFeedUncheckedUpdateManyWithoutServiceNestedInput
     products?: ProductUncheckedUpdateManyWithoutServiceNestedInput
+  }
+
+  export type PackageUpsertWithoutOrderIntentsInput = {
+    update: XOR<PackageUpdateWithoutOrderIntentsInput, PackageUncheckedUpdateWithoutOrderIntentsInput>
+    create: XOR<PackageCreateWithoutOrderIntentsInput, PackageUncheckedCreateWithoutOrderIntentsInput>
+    where?: PackageWhereInput
+  }
+
+  export type PackageUpdateToOneWithWhereWithoutOrderIntentsInput = {
+    where?: PackageWhereInput
+    data: XOR<PackageUpdateWithoutOrderIntentsInput, PackageUncheckedUpdateWithoutOrderIntentsInput>
+  }
+
+  export type PackageUpdateWithoutOrderIntentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutPackagesNestedInput
+    stockPoolLinks?: PackageStockPoolUpdateManyWithoutPackageNestedInput
+    orders?: OrderUpdateManyWithoutPackageNestedInput
+  }
+
+  export type PackageUncheckedUpdateWithoutOrderIntentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    salePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    buyPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    commonPriceUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    extraFee?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    level?: IntFieldUpdateOperationsInput | number
+    isAuto?: BoolFieldUpdateOperationsInput | boolean
+    isManual?: BoolFieldUpdateOperationsInput | boolean
+    server?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockPoolLinks?: PackageStockPoolUncheckedUpdateManyWithoutPackageNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutPackageNestedInput
   }
 
   export type DepositUpsertWithWhereUniqueWithoutOrderIntentInput = {
@@ -65133,6 +65563,7 @@ export namespace Prisma {
 
   export type OrderIntentCreateWithoutDepositsInput = {
     id?: string
+    kind?: $Enums.OrderIntentKind
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -65143,13 +65574,16 @@ export namespace Prisma {
     createdAt?: Date | string
     expiresAt: Date | string
     user: UserCreateNestedOneWithoutOrderIntentsInput
-    service: ServiceCreateNestedOneWithoutOrderIntentsInput
+    service?: ServiceCreateNestedOneWithoutOrderIntentsInput
+    package?: PackageCreateNestedOneWithoutOrderIntentsInput
   }
 
   export type OrderIntentUncheckedCreateWithoutDepositsInput = {
     id?: string
     userId: string
-    serviceId: string
+    kind?: $Enums.OrderIntentKind
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -65421,6 +65855,7 @@ export namespace Prisma {
 
   export type OrderIntentUpdateWithoutDepositsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -65431,13 +65866,16 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrderIntentsNestedInput
-    service?: ServiceUpdateOneRequiredWithoutOrderIntentsNestedInput
+    service?: ServiceUpdateOneWithoutOrderIntentsNestedInput
+    package?: PackageUpdateOneWithoutOrderIntentsNestedInput
   }
 
   export type OrderIntentUncheckedUpdateWithoutDepositsInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -66602,6 +67040,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stockPoolLinks?: PackageStockPoolUpdateManyWithoutPackageNestedInput
     orders?: OrderUpdateManyWithoutPackageNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutPackageNestedInput
   }
 
   export type PackageUncheckedUpdateWithoutProductInput = {
@@ -66620,6 +67059,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stockPoolLinks?: PackageStockPoolUncheckedUpdateManyWithoutPackageNestedInput
     orders?: OrderUncheckedUpdateManyWithoutPackageNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutPackageNestedInput
   }
 
   export type PackageUncheckedUpdateManyWithoutProductInput = {
@@ -66659,6 +67099,22 @@ export namespace Prisma {
     priority?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type OrderIntentCreateManyPackageInput = {
+    id?: string
+    userId: string
+    kind?: $Enums.OrderIntentKind
+    serviceId?: string | null
+    link: string
+    quantity: number
+    charge: Decimal | DecimalJsLike | number | string
+    idempotencyKey: string
+    status?: $Enums.OrderIntentStatus
+    orderId?: string | null
+    failureReason?: string | null
+    createdAt?: Date | string
+    expiresAt: Date | string
   }
 
   export type PackageStockPoolUpdateWithoutPackageInput = {
@@ -66734,6 +67190,56 @@ export namespace Prisma {
     priority?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderIntentUpdateWithoutPackageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    link?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderIntentStatusFieldUpdateOperationsInput | $Enums.OrderIntentStatus
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutOrderIntentsNestedInput
+    service?: ServiceUpdateOneWithoutOrderIntentsNestedInput
+    deposits?: DepositUpdateManyWithoutOrderIntentNestedInput
+  }
+
+  export type OrderIntentUncheckedUpdateWithoutPackageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderIntentStatusFieldUpdateOperationsInput | $Enums.OrderIntentStatus
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deposits?: DepositUncheckedUpdateManyWithoutOrderIntentNestedInput
+  }
+
+  export type OrderIntentUncheckedUpdateManyWithoutPackageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    idempotencyKey?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderIntentStatusFieldUpdateOperationsInput | $Enums.OrderIntentStatus
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StockCodeCreateManyPoolInput = {
@@ -66912,7 +67418,9 @@ export namespace Prisma {
 
   export type OrderIntentCreateManyUserInput = {
     id?: string
-    serviceId: string
+    kind?: $Enums.OrderIntentKind
+    serviceId?: string | null
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -67290,6 +67798,7 @@ export namespace Prisma {
 
   export type OrderIntentUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -67299,13 +67808,16 @@ export namespace Prisma {
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    service?: ServiceUpdateOneRequiredWithoutOrderIntentsNestedInput
+    service?: ServiceUpdateOneWithoutOrderIntentsNestedInput
+    package?: PackageUpdateOneWithoutOrderIntentsNestedInput
     deposits?: DepositUpdateManyWithoutOrderIntentNestedInput
   }
 
   export type OrderIntentUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -67320,7 +67832,9 @@ export namespace Prisma {
 
   export type OrderIntentUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    serviceId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    serviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -67805,6 +68319,8 @@ export namespace Prisma {
   export type OrderIntentCreateManyServiceInput = {
     id?: string
     userId: string
+    kind?: $Enums.OrderIntentKind
+    packageId?: string | null
     link: string
     quantity: number
     charge: Decimal | DecimalJsLike | number | string
@@ -67951,6 +68467,7 @@ export namespace Prisma {
 
   export type OrderIntentUpdateWithoutServiceInput = {
     id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -67961,12 +68478,15 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrderIntentsNestedInput
+    package?: PackageUpdateOneWithoutOrderIntentsNestedInput
     deposits?: DepositUpdateManyWithoutOrderIntentNestedInput
   }
 
   export type OrderIntentUncheckedUpdateWithoutServiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -67982,6 +68502,8 @@ export namespace Prisma {
   export type OrderIntentUncheckedUpdateManyWithoutServiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumOrderIntentKindFieldUpdateOperationsInput | $Enums.OrderIntentKind
+    packageId?: NullableStringFieldUpdateOperationsInput | string | null
     link?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     charge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string

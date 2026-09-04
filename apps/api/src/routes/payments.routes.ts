@@ -47,6 +47,32 @@ async function resolveCallbackGatewayRef(key: PaymentGatewayKey, req: Request): 
   return undefined;
 }
 
+/**
+ * Where the customer's browser lands after a gateway callback. A ZiniPay
+ * checkout that was funding a Store PACKAGE OrderIntent goes back to that
+ * package's Store page (covers the "payment abandoned -> back to the
+ * checkout page for that package" edge case, and shows the order-placed
+ * toast on success); every other deposit goes to the wallet page as before.
+ */
+async function postConfirmRedirect(gatewayRef: string | undefined, outcome: string): Promise<string> {
+  const walletUrl = `${env.FRONTEND_BASE_URL}/dashboard/wallet?deposit=${outcome}`;
+  if (!gatewayRef) return walletUrl;
+  const deposit = await prisma.deposit.findUnique({
+    where: { gatewayRef },
+    include: { orderIntent: { include: { package: { include: { product: { select: { slug: true } } } } } } },
+  });
+  const intent = deposit?.orderIntent;
+  if (intent?.kind === "PACKAGE" && intent.package) {
+    const params = new URLSearchParams({
+      purchase: outcome,
+      product: intent.package.product.slug,
+      pkg: intent.package.id,
+    });
+    return `${env.FRONTEND_BASE_URL}/dashboard/store?${params.toString()}`;
+  }
+  return walletUrl;
+}
+
 /** Webhook payloads are gateway-specific too — ZiniPay sends `invoice_id` as JSON or query string. */
 function resolveWebhookGatewayRef(key: PaymentGatewayKey, req: Request): string | undefined {
   const body = req.body as Record<string, unknown> | undefined;
@@ -164,10 +190,10 @@ paymentsRouter.get(
       const result = await adapter.confirm(credentials, gatewayRef);
       await confirmGatewayDeposit(gatewayRef, { status: result.status, gatewayProvider: key, amount: result.amount }, { autoVerify });
       const outcome = result.status === "PAID" ? "success" : result.status === "FAILED" ? "failed" : "pending";
-      return res.redirect(`${env.FRONTEND_BASE_URL}/dashboard/wallet?deposit=${outcome}`);
+      return res.redirect(await postConfirmRedirect(gatewayRef, outcome));
     } catch (err) {
       logger.error({ err, gateway: key, gatewayRef }, "Payment callback confirm failed");
-      return res.redirect(`${env.FRONTEND_BASE_URL}/dashboard/wallet?deposit=error`);
+      return res.redirect(await postConfirmRedirect(gatewayRef, "error"));
     }
   }),
 );
