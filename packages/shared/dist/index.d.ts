@@ -442,16 +442,44 @@ export declare const updateOrderStatusSchema: z.ZodObject<{
     status: z.ZodEnum<["PENDING", "PROCESSING", "IN_PROGRESS", "COMPLETED", "PARTIAL", "CANCELED", "FAILED"]>;
     startCount: z.ZodOptional<z.ZodNumber>;
     remains: z.ZodOptional<z.ZodNumber>;
+    comment: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    commentLink: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
 }, "strip", z.ZodTypeAny, {
     status: "PENDING" | "PROCESSING" | "IN_PROGRESS" | "COMPLETED" | "PARTIAL" | "CANCELED" | "FAILED";
     startCount?: number | undefined;
     remains?: number | undefined;
+    comment?: string | null | undefined;
+    commentLink?: string | null | undefined;
 }, {
     status: "PENDING" | "PROCESSING" | "IN_PROGRESS" | "COMPLETED" | "PARTIAL" | "CANCELED" | "FAILED";
     startCount?: number | undefined;
     remains?: number | undefined;
+    comment?: string | null | undefined;
+    commentLink?: string | null | undefined;
 }>;
 export type UpdateOrderStatusInput = z.infer<typeof updateOrderStatusSchema>;
+export declare const orderCommentSchema: z.ZodObject<{
+    comment: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    commentLink: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
+}, "strip", z.ZodTypeAny, {
+    comment?: string | null | undefined;
+    commentLink?: string | null | undefined;
+}, {
+    comment?: string | null | undefined;
+    commentLink?: string | null | undefined;
+}>;
+export type OrderCommentInput = z.infer<typeof orderCommentSchema>;
+export declare const commentTemplateInputSchema: z.ZodObject<{
+    text: z.ZodString;
+    link: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
+}, "strip", z.ZodTypeAny, {
+    text: string;
+    link?: string | null | undefined;
+}, {
+    text: string;
+    link?: string | null | undefined;
+}>;
+export type CommentTemplateInput = z.infer<typeof commentTemplateInputSchema>;
 export declare const resolveManualRefillSchema: z.ZodObject<{
     status: z.ZodEnum<["COMPLETED", "REJECTED"]>;
     note: z.ZodOptional<z.ZodString>;

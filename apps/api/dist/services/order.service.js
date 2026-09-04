@@ -271,6 +271,35 @@ export async function listOrdersForAdmin(page, pageSize, status, search, dateRan
     return { items, total, page, pageSize };
 }
 /**
+ * Translates the optional `comment` / `commentLink` on a status-update or
+ * standalone comment request into an Order update payload. An explicit empty
+ * string or null clears the note; `undefined` (field omitted) leaves it
+ * alone. Any change stamps `adminCommentUpdatedAt` so the customer UI can
+ * show "updated X ago".
+ */
+function adminCommentPatch(input) {
+    const patch = {};
+    if (input.comment !== undefined)
+        patch.adminComment = input.comment || null;
+    if (input.commentLink !== undefined)
+        patch.adminCommentLink = input.commentLink || null;
+    if (input.comment !== undefined || input.commentLink !== undefined) {
+        patch.adminCommentUpdatedAt = new Date();
+    }
+    return patch;
+}
+/**
+ * Standalone "save this order's customer-facing note" — the generic Comment
+ * action on the admin Orders row. Touches ONLY the note fields, never the
+ * order status, charge or anything else.
+ */
+export async function setOrderAdminComment(orderId, input) {
+    const order = await prisma.order.findUnique({ where: { id: orderId } });
+    if (!order)
+        throw AppError.notFound("Order not found");
+    return prisma.order.update({ where: { id: orderId }, data: adminCommentPatch(input) });
+}
+/**
  * Admin status update. If an order is canceled/failed after having been
  * charged, the customer is refunded atomically in the same transaction —
  * an order can never be left in "canceled but still charged" limbo.
@@ -294,6 +323,9 @@ export async function updateOrderStatus(orderId, input) {
                 ...(clearsApiError ? { apiErrorResponse: null } : {}),
                 ...(input.startCount !== undefined ? { startCount: input.startCount } : {}),
                 ...(input.remains !== undefined ? { remains: input.remains } : {}),
+                // Optional customer-facing note carried alongside the status change
+                // (e.g. a "cancelled & refunded" template picked while cancelling).
+                ...adminCommentPatch(input),
             },
         });
         if (isNewlyTerminatedWithoutRefund) {

@@ -379,6 +379,9 @@ exports.Prisma.OrderScalarFieldEnum = {
   mode: 'mode',
   providerOrderId: 'providerOrderId',
   apiErrorResponse: 'apiErrorResponse',
+  adminComment: 'adminComment',
+  adminCommentLink: 'adminCommentLink',
+  adminCommentUpdatedAt: 'adminCommentUpdatedAt',
   priority: 'priority',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -623,6 +626,14 @@ exports.Prisma.PostScalarFieldEnum = {
   contentEn: 'contentEn',
   contentBn: 'contentBn',
   publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentTemplateScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  link: 'link',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -885,7 +896,8 @@ exports.Prisma.ModelName = {
   Notice: 'Notice',
   SiteNotice: 'SiteNotice',
   Banner: 'Banner',
-  Post: 'Post'
+  Post: 'Post',
+  CommentTemplate: 'CommentTemplate'
 };
 
 /**

@@ -796,6 +796,14 @@ model Order {
   // status, never the upstream reason. Cleared on a successful (re)submit.
   apiErrorResponse String?
 
+  // Admin-authored note shown TO THE CUSTOMER on their order history (unlike
+  // apiErrorResponse). Written from the admin Orders row — free text, or
+  // picked from a CommentTemplate. adminCommentLink is an optional CTA URL
+  // (e.g. WhatsApp / reorder link) that rides along with it.
+  adminComment          String?
+  adminCommentLink      String?
+  adminCommentUpdatedAt DateTime?
+
   // Set by the AI Support "Speed up" action — the order-status polling cron
   // and the pending-submit cron process priority orders first (there is no
   // universal provider "priority" flag, so this is panel-side only).
@@ -1291,4 +1299,16 @@ model Post {
 
   @@index([status, category])
   @@index([publishedAt])
+}
+
+// Reusable "canned notice" the admin can attach to a customer's order
+// instead of retyping the same reason every time (wrong UID, cancelled and
+// refunded, contact on WhatsApp, delivery-delay apology, ...). Picked from
+// the admin Orders row; the chosen text lands in Order.adminComment.
+model CommentTemplate {
+  id        String   @id @default(cuid())
+  text      String
+  link      String? // optional CTA URL that travels with the text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
