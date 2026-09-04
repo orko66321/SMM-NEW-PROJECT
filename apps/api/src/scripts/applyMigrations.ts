@@ -13,6 +13,7 @@ import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { prisma } from "../lib/prisma.js";
+import { splitStatements } from "./splitStatements.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // dist/scripts/applyMigrations.js -> apps/api/prisma/migrations (the raw
@@ -36,21 +37,6 @@ CREATE TABLE IF NOT EXISTS "_prisma_migrations" (
 interface MigrationRow {
   migration_name: string;
   finished_at: Date | null;
-}
-
-// Prisma's query engine always runs raw queries as a Postgres prepared
-// statement, and Postgres refuses to prepare a string containing more than
-// one command — so a whole migration.sql (many `CREATE TABLE ... ;`
-// statements back to back) has to be split and executed one statement at a
-// time. Safe here because Prisma-generated migration.sql files are plain
-// DDL with a `;` terminating every statement and no semicolons inside
-// string literals or dollar-quoted bodies (verified across this project's
-// migrations) — this is not a general-purpose SQL statement splitter.
-function splitStatements(sql: string): string[] {
-  return sql
-    .split(";")
-    .map((statement) => statement.trim())
-    .filter((statement) => statement.length > 0);
 }
 
 async function listMigrationDirs(): Promise<string[]> {
