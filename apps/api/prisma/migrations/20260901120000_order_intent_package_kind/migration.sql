@@ -9,7 +9,7 @@ ALTER TABLE "OrderIntent" ADD COLUMN "kind" "OrderIntentKind" NOT NULL DEFAULT '
 
 ALTER TABLE "OrderIntent" ADD COLUMN "packageId" TEXT;
 
--- serviceId is now nullable (a PACKAGE intent has no Service); its FK
+-- serviceId is now nullable (a PACKAGE intent has no Service) and its FK
 -- switches to SET NULL to match the now-optional Prisma relation.
 ALTER TABLE "OrderIntent" DROP CONSTRAINT "OrderIntent_serviceId_fkey";
 
