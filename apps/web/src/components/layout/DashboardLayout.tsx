@@ -34,6 +34,7 @@ export default function DashboardLayout() {
     { to: "/dashboard/orders", label: t("dashboardLayout.nav.ordersHistory"), icon: "orders" },
     { to: "/dashboard/services", label: t("dashboardLayout.nav.services"), icon: "grid" },
     { to: "/dashboard/wallet", label: t("dashboardLayout.nav.addFunds"), icon: "wallet" },
+    { to: "/dashboard/refer", label: t("dashboardLayout.nav.refer"), icon: "users" },
     { to: "/dashboard/tickets", label: t("dashboardLayout.nav.tickets"), icon: "support" },
     { to: "/dashboard/profile", label: t("dashboardLayout.nav.profile"), icon: "user" },
     { to: "/docs", label: t("dashboardLayout.nav.docs"), icon: "docs" },

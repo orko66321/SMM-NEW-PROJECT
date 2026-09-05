@@ -292,6 +292,19 @@ export default function Wallet() {
 
       <div className="card h-fit space-y-4">
         <h2 className="text-lg font-bold">{t("wallet.addFunds")}</h2>
+        {user && !user.hasDeposited && settings?.firstDepositBonusEnabled && Number(settings.firstDepositBonusPercent) > 0 && (
+          <div className="rounded-control border border-success/30 bg-success/10 px-3 py-2.5 text-sm">
+            <p className="font-semibold text-success">🎁 {t("wallet.firstDepositOfferTitle")}</p>
+            <p className="mt-0.5 text-on-surface">
+              {t("wallet.firstDepositOfferBody", {
+                percent: settings.firstDepositBonusPercent,
+                min: formatCurrency(settings.firstDepositMinAmount),
+              })}
+              {Number(settings.firstDepositMaxBonus) > 0 &&
+                ` ${t("wallet.firstDepositOfferCap", { cap: formatCurrency(settings.firstDepositMaxBonus) })}`}
+            </p>
+          </div>
+        )}
         {orderIntentId && (
           <p className="rounded-md bg-primary/15 px-3 py-2 text-sm text-primary">
             {requiredAmount

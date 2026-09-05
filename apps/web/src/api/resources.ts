@@ -202,6 +202,31 @@ export const updateAdminNotice = (id: string, input: Partial<NoticeInput>) =>
   apiClient.put(`/admin/notices/${id}`, input).then((r) => r.data.notice);
 export const deleteAdminNotice = (id: string) => apiClient.delete(`/admin/notices/${id}`);
 
+// ── Referral program ────────────────────────────────────────────────────
+export interface ReferralSummary {
+  referralCode: string;
+  invitedCount: number;
+  totalEarnings: string;
+  history: {
+    refereeUsername: string;
+    registeredAt: string;
+    rewardedAt: string;
+    rewardAmount: string;
+    refereeDepositAmount: string;
+    status: "COMPLETED" | "FAILED";
+  }[];
+}
+export const getMyReferral = () => apiClient.get("/referral/me").then((r) => r.data as ReferralSummary);
+
+export interface ReferralAnalytics {
+  totalReferrerPayouts: string;
+  totalRefereeBonuses: string;
+  totalReferrals: number;
+  topReferrers: { username: string; referrals: number; earnings: string }[];
+}
+export const getAdminReferralAnalytics = () =>
+  apiClient.get("/admin/referral/analytics").then((r) => r.data as ReferralAnalytics);
+
 // ── Site settings (Phase 4, admin) ──────────────────────────────────────
 export const getAdminSettings = () => apiClient.get("/admin/settings").then((r) => r.data);
 export const updateAdminSettings = (input: UpdateSettingsInput) => apiClient.put("/admin/settings", input);

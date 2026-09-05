@@ -12,7 +12,8 @@ export default function Register() {
   const location = useLocation();
   const toast = useToast();
   const { t } = useLanguage();
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const refFromUrl = new URLSearchParams(location.search).get("ref")?.trim() ?? "";
+  const [form, setForm] = useState({ username: "", email: "", password: "", referralCode: refFromUrl });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +22,12 @@ export default function Register() {
     setSubmitting(true);
     setError(null);
     try {
-      await authApi.register(form);
+      await authApi.register({
+        username: form.username,
+        email: form.email,
+        password: form.password,
+        ...(form.referralCode.trim() ? { referralCode: form.referralCode.trim() } : {}),
+      });
       toast.push(t("auth.register.createdToast"), "success");
       // Forward the "where to return to" state so a guest who arrived here
       // via a Place Order / new ticket prompt still lands back where they
@@ -72,6 +78,18 @@ export default function Register() {
           <p className="mt-1 text-xs text-on-surface-variant">
             {t("auth.register.passwordHint")}
           </p>
+        </div>
+        <div>
+          <label className="label" htmlFor="referralCode">
+            {t("auth.register.referralLabel")} <span className="normal-case text-on-surface-variant">({t("common.optional")})</span>
+          </label>
+          <input
+            id="referralCode"
+            className="input-field"
+            value={form.referralCode}
+            onChange={(e) => setForm((f) => ({ ...f, referralCode: e.target.value.toUpperCase() }))}
+            placeholder={t("auth.register.referralPlaceholder")}
+          />
         </div>
         <button type="submit" className="btn-primary w-full" disabled={submitting}>
           {submitting ? t("auth.register.submitting") : t("auth.register.submit")}

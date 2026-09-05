@@ -135,6 +135,7 @@ enum WalletTxType {
   ADMIN_ADJUSTMENT
   AFFILIATE_PAYOUT
   CHILD_PANEL_FEE
+  REFERRAL_REWARD
 }
 
 enum ProviderStatus {
@@ -500,6 +501,22 @@ model User {
   isVip      Boolean @default(false)
   isReseller Boolean @default(false)
 
+  // Set true the first time ANY deposit of this user's is credited (gateway
+  // auto-confirm or manual admin approval — see deposit.service.ts's
+  // creditApprovedDeposit). Gates the one-time first-deposit bonus, the
+  // one-time referral reward, and the "First Deposit Offer" banner.
+  hasDeposited Boolean @default(false)
+
+  // Referral program. `referralCode` is generated on registration (unique,
+  // shareable). `referredById` is set once at registration if the new user
+  // arrived with a valid code. `totalReferralEarnings` is the running sum of
+  // REFERRAL_REWARD credits, mirrored here for the Refer & Earn stat card.
+  referralCode          String  @unique
+  referredById          String?
+  referredBy            User?   @relation("UserReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals             User[]  @relation("UserReferrals")
+  totalReferralEarnings Decimal @default(0) @db.Decimal(18, 4)
+
   phone              String?
   notifyEmail        Boolean @default(true)
   notifyOrderUpdates Boolean @default(true)
@@ -521,6 +538,8 @@ model User {
   couponRedemptions   CouponRedemption[]
   passwordResetTokens PasswordResetToken[]
   orderIntents        OrderIntent[]
+  referralsMade       ReferralLog[]        @relation("ReferralLogReferrer")
+  referralReceived    ReferralLog?         @relation("ReferralLogReferee")
 
   @@index([role])
   // Backs the admin dashboard's "Today User" / "Total User" cards (COUNT by
@@ -1188,7 +1207,54 @@ model SiteSettings {
   // endpoint). Default on — it is a normal part of the admin workflow.
   resendOrderButtonEnabled Boolean @default(true)
 
+  // One-time first-deposit bonus. All amounts are USD (like every other
+  // amount stored server-side — the frontend display-converts to BDT).
+  // firstDepositBonusPercent 0 or firstDepositBonusEnabled false ⇒ no bonus;
+  // firstDepositMaxBonus 0 ⇒ uncapped. See deposit.service.ts.
+  firstDepositBonusEnabled Boolean @default(false)
+  firstDepositBonusPercent Decimal @default(0) @db.Decimal(5, 2)
+  firstDepositMinAmount    Decimal @default(0) @db.Decimal(18, 4)
+  firstDepositMaxBonus     Decimal @default(0) @db.Decimal(18, 4)
+
+  // Referral program (all amounts USD). referrerRewardValue is read as a
+  // percent of the referee's first deposit when referrerRewardType is
+  // PERCENTAGE, or as a flat USD payout when FIXED. See deposit.service.ts /
+  // referral.service.ts.
+  referralSystemEnabled Boolean            @default(false)
+  referrerRewardType    ReferrerRewardType @default(PERCENTAGE)
+  referrerRewardValue   Decimal            @default(0) @db.Decimal(18, 4)
+  refereeBonusPercent   Decimal            @default(0) @db.Decimal(5, 2)
+
   updatedAt DateTime @updatedAt
+}
+
+enum ReferrerRewardType {
+  PERCENTAGE
+  FIXED
+}
+
+enum ReferralStatus {
+  COMPLETED
+  FAILED
+}
+
+// One row per referee whose first deposit triggered a referral payout — the
+// permanent record behind the Refer & Earn history table and the admin
+// analytics. `refereeId` is @unique: a referee can only ever generate one
+// referral reward, which is also the idempotency guard in creditApprovedDeposit.
+model ReferralLog {
+  id                   String         @id @default(cuid())
+  referrerId           String
+  referrer             User           @relation("ReferralLogReferrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  refereeId            String         @unique
+  referee              User           @relation("ReferralLogReferee", fields: [refereeId], references: [id], onDelete: Cascade)
+  rewardAmount         Decimal        @db.Decimal(18, 4)
+  refereeBonusAmount   Decimal        @default(0) @db.Decimal(18, 4)
+  refereeDepositAmount Decimal        @db.Decimal(18, 4)
+  status               ReferralStatus @default(COMPLETED)
+  createdAt            DateTime       @default(now())
+
+  @@index([referrerId])
 }
 
 // Floating "Need Help?" widget config — one row per SupportChannelType,

@@ -57,6 +57,103 @@ async function creditApprovedDeposit(tx, deposit) {
         if (couponBonus)
             bonusAmount = bonusAmount.plus(couponBonus);
     }
+    // ── First-deposit-only rewards ─────────────────────────────────────────
+    // Checked AFTER the principal credit above: adjustWalletBalance holds a
+    // `SELECT ... FOR UPDATE` on this user's wallet row for the rest of the
+    // transaction, so two of this user's deposits confirming at once are
+    // already serialised — the second one reads hasDeposited === true here.
+    const user = await tx.user.findUnique({
+        where: { id: deposit.userId },
+        select: { hasDeposited: true, referredById: true, username: true },
+    });
+    if (user && !user.hasDeposited) {
+        const s = await tx.siteSettings.findUnique({ where: { id: "default" } });
+        // 1. First-deposit bonus.
+        if (s?.firstDepositBonusEnabled &&
+            s.firstDepositBonusPercent.greaterThan(0) &&
+            deposit.amount.greaterThanOrEqualTo(s.firstDepositMinAmount)) {
+            let firstBonus = deposit.amount.mul(s.firstDepositBonusPercent).div(100);
+            if (s.firstDepositMaxBonus.greaterThan(0) && firstBonus.greaterThan(s.firstDepositMaxBonus)) {
+                firstBonus = s.firstDepositMaxBonus;
+            }
+            if (firstBonus.greaterThan(0)) {
+                bonusAmount = bonusAmount.plus(firstBonus);
+                await adjustWalletBalance(tx, {
+                    userId: deposit.userId,
+                    amount: firstBonus,
+                    type: "DEPOSIT_BONUS",
+                    referenceType: "DEPOSIT",
+                    referenceId: deposit.id,
+                    note: `First-deposit bonus (${s.firstDepositBonusPercent}%)`,
+                });
+            }
+        }
+        // 2. Referral rewards (referee bonus + referrer payout). `refereeId` is
+        // @unique on ReferralLog, so even a bug that got past the hasDeposited
+        // gate can only ever pay one reward per referee.
+        if (s?.referralSystemEnabled && user.referredById) {
+            const alreadyLogged = await tx.referralLog.findUnique({ where: { refereeId: deposit.userId } });
+            if (!alreadyLogged) {
+                const refereeBonus = s.refereeBonusPercent.greaterThan(0)
+                    ? deposit.amount.mul(s.refereeBonusPercent).div(100)
+                    : new Prisma.Decimal(0);
+                if (refereeBonus.greaterThan(0)) {
+                    bonusAmount = bonusAmount.plus(refereeBonus);
+                    await adjustWalletBalance(tx, {
+                        userId: deposit.userId,
+                        amount: refereeBonus,
+                        type: "DEPOSIT_BONUS",
+                        referenceType: "DEPOSIT",
+                        referenceId: deposit.id,
+                        note: `Referral sign-up bonus (${s.refereeBonusPercent}%)`,
+                    });
+                }
+                const referrerReward = s.referrerRewardType === "FIXED"
+                    ? s.referrerRewardValue
+                    : deposit.amount.mul(s.referrerRewardValue).div(100);
+                if (referrerReward.greaterThan(0)) {
+                    // Referrer's wallet — a second FOR UPDATE lock, taken after this
+                    // user's. Two mutually-referred users first-depositing in the same
+                    // instant could deadlock here; Postgres aborts one, and the
+                    // deposit-reconcile / retry crons re-confirm it cleanly.
+                    await adjustWalletBalance(tx, {
+                        userId: user.referredById,
+                        amount: referrerReward,
+                        type: "REFERRAL_REWARD",
+                        referenceType: "DEPOSIT",
+                        referenceId: deposit.id,
+                        note: `Referral reward — @${user.username}'s first deposit`,
+                    });
+                    await tx.user.update({
+                        where: { id: user.referredById },
+                        data: { totalReferralEarnings: { increment: referrerReward } },
+                    });
+                }
+                try {
+                    await tx.referralLog.create({
+                        data: {
+                            referrerId: user.referredById,
+                            refereeId: deposit.userId,
+                            rewardAmount: referrerReward,
+                            refereeBonusAmount: refereeBonus,
+                            refereeDepositAmount: deposit.amount,
+                            status: "COMPLETED",
+                        },
+                    });
+                }
+                catch (err) {
+                    // A concurrent confirm already logged it — the unique refereeId
+                    // constraint is the guarantee; this just keeps the race's loser
+                    // from failing the whole credit.
+                    if (!(err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002"))
+                        throw err;
+                }
+            }
+        }
+        // Consumes the "first deposit" slot regardless of whether any bonus
+        // actually applied (feature off / below min / 0% all still count).
+        await tx.user.update({ where: { id: deposit.userId }, data: { hasDeposited: true } });
+    }
     if (bonusAmount.greaterThan(0)) {
         await tx.deposit.update({ where: { id: deposit.id }, data: { bonusAmount } });
     }

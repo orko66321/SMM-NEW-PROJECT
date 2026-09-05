@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { DisplayCurrency, LiveChatProvider } from "@smm/shared";
+import type { DisplayCurrency, LiveChatProvider, ReferrerRewardType } from "@smm/shared";
 import { getAdminSettings, sendAdminTestEmail, updateAdminSettings } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { Link } from "react-router-dom";
@@ -22,6 +22,14 @@ interface AdminSettings {
   smtpFromAddress: string | null;
   smtpConfigured: boolean;
   resendOrderButtonEnabled: boolean;
+  firstDepositBonusEnabled: boolean;
+  firstDepositBonusPercent: string;
+  firstDepositMinAmount: string;
+  firstDepositMaxBonus: string;
+  referralSystemEnabled: boolean;
+  referrerRewardType: ReferrerRewardType;
+  referrerRewardValue: string;
+  refereeBonusPercent: string;
 }
 
 export default function AdminSettingsPage() {
@@ -44,6 +52,14 @@ export default function AdminSettingsPage() {
     smtpPassword: "",
     smtpFromAddress: "",
     resendOrderButtonEnabled: true,
+    firstDepositBonusEnabled: false,
+    firstDepositBonusPercent: "0",
+    firstDepositMinAmount: "0",
+    firstDepositMaxBonus: "0",
+    referralSystemEnabled: false,
+    referrerRewardType: "PERCENTAGE" as ReferrerRewardType,
+    referrerRewardValue: "0",
+    refereeBonusPercent: "0",
   });
   const [submitting, setSubmitting] = useState(false);
   const [testEmailTo, setTestEmailTo] = useState("");
@@ -70,6 +86,14 @@ export default function AdminSettingsPage() {
       smtpPassword: "",
       smtpFromAddress: s.smtpFromAddress ?? "",
       resendOrderButtonEnabled: s.resendOrderButtonEnabled ?? true,
+      firstDepositBonusEnabled: s.firstDepositBonusEnabled ?? false,
+      firstDepositBonusPercent: s.firstDepositBonusPercent ?? "0",
+      firstDepositMinAmount: s.firstDepositMinAmount ?? "0",
+      firstDepositMaxBonus: s.firstDepositMaxBonus ?? "0",
+      referralSystemEnabled: s.referralSystemEnabled ?? false,
+      referrerRewardType: s.referrerRewardType ?? "PERCENTAGE",
+      referrerRewardValue: s.referrerRewardValue ?? "0",
+      refereeBonusPercent: s.refereeBonusPercent ?? "0",
     });
   }, [settings]);
 
@@ -91,6 +115,14 @@ export default function AdminSettingsPage() {
         ...(form.smtpPassword ? { smtpPassword: form.smtpPassword } : {}),
         smtpFromAddress: form.smtpFromAddress || null,
         resendOrderButtonEnabled: form.resendOrderButtonEnabled,
+        firstDepositBonusEnabled: form.firstDepositBonusEnabled,
+        firstDepositBonusPercent: Number(form.firstDepositBonusPercent) || 0,
+        firstDepositMinAmount: Number(form.firstDepositMinAmount) || 0,
+        firstDepositMaxBonus: Number(form.firstDepositMaxBonus) || 0,
+        referralSystemEnabled: form.referralSystemEnabled,
+        referrerRewardType: form.referrerRewardType,
+        referrerRewardValue: Number(form.referrerRewardValue) || 0,
+        refereeBonusPercent: Number(form.refereeBonusPercent) || 0,
       });
       toast.push("Settings saved.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin-settings"] });
@@ -198,6 +230,70 @@ export default function AdminSettingsPage() {
         <p className="text-xs text-on-surface-variant">
           When off, the button is hidden and the resend endpoint is rejected. Failed orders can still be
           resolved with the status dropdown.
+        </p>
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold">First Deposit Bonus</h2>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={form.firstDepositBonusEnabled}
+            onChange={(e) => setForm((f) => ({ ...f, firstDepositBonusEnabled: e.target.checked }))}
+          />
+          Enable first-deposit bonus
+        </label>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div>
+            <label className="label" htmlFor="fdbPercent">Bonus %</label>
+            <input id="fdbPercent" type="number" step="0.01" min="0" max="100" className="input-field" value={form.firstDepositBonusPercent} onChange={(e) => setForm((f) => ({ ...f, firstDepositBonusPercent: e.target.value }))} />
+          </div>
+          <div>
+            <label className="label" htmlFor="fdbMin">Min deposit ($)</label>
+            <input id="fdbMin" type="number" step="0.01" min="0" className="input-field" value={form.firstDepositMinAmount} onChange={(e) => setForm((f) => ({ ...f, firstDepositMinAmount: e.target.value }))} />
+          </div>
+          <div>
+            <label className="label" htmlFor="fdbMax">Max bonus cap ($)</label>
+            <input id="fdbMax" type="number" step="0.01" min="0" className="input-field" value={form.firstDepositMaxBonus} onChange={(e) => setForm((f) => ({ ...f, firstDepositMaxBonus: e.target.value }))} />
+          </div>
+        </div>
+        <p className="text-xs text-on-surface-variant">
+          Credited once, on a user&rsquo;s first-ever deposit that meets the minimum. Max cap of 0 = uncapped. All
+          amounts are USD (displayed to users in their chosen currency).
+        </p>
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold">Referral Program</h2>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={form.referralSystemEnabled}
+            onChange={(e) => setForm((f) => ({ ...f, referralSystemEnabled: e.target.checked }))}
+          />
+          Enable the referral program
+        </label>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div>
+            <label className="label" htmlFor="refType">Referrer reward type</label>
+            <select id="refType" className="input-field" value={form.referrerRewardType} onChange={(e) => setForm((f) => ({ ...f, referrerRewardType: e.target.value as ReferrerRewardType }))}>
+              <option value="PERCENTAGE">Percentage of deposit</option>
+              <option value="FIXED">Fixed amount ($)</option>
+            </select>
+          </div>
+          <div>
+            <label className="label" htmlFor="refValue">{form.referrerRewardType === "FIXED" ? "Reward ($)" : "Reward %"}</label>
+            <input id="refValue" type="number" step="0.01" min="0" className="input-field" value={form.referrerRewardValue} onChange={(e) => setForm((f) => ({ ...f, referrerRewardValue: e.target.value }))} />
+          </div>
+          <div>
+            <label className="label" htmlFor="refereeBonus">Referee bonus %</label>
+            <input id="refereeBonus" type="number" step="0.01" min="0" max="100" className="input-field" value={form.refereeBonusPercent} onChange={(e) => setForm((f) => ({ ...f, refereeBonusPercent: e.target.value }))} />
+          </div>
+        </div>
+        <p className="text-xs text-on-surface-variant">
+          Both are paid once, on the referred user&rsquo;s first deposit: the referrer gets the reward credited to
+          their wallet, the new user gets the referee bonus on top of their deposit. See{" "}
+          <Link to="/admin/referrals" className="text-primary hover:underline">Referral Analytics</Link>.
         </p>
       </div>
 

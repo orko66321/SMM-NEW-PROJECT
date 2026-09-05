@@ -40,11 +40,16 @@ export async function resetDb() {
   await prisma.supportChannel.deleteMany();
   await prisma.passwordResetToken.deleteMany();
   await prisma.refreshToken.deleteMany();
+  await prisma.referralLog.deleteMany();
   await prisma.wallet.deleteMany();
+  // Break the User.referredById self-reference before deleting users.
+  await prisma.user.updateMany({ data: { referredById: null } });
   await prisma.user.deleteMany();
 }
 
-export async function createUser(opts: { role?: "USER" | "MODERATOR" | "ADMIN"; balance?: number } = {}) {
+export async function createUser(
+  opts: { role?: "USER" | "MODERATOR" | "ADMIN"; balance?: number; referredById?: string; referralCode?: string } = {},
+) {
   const passwordHash = await argon2.hash("Password123!", ARGON2_OPTIONS);
   const user = await prisma.user.create({
     data: {
@@ -52,6 +57,8 @@ export async function createUser(opts: { role?: "USER" | "MODERATOR" | "ADMIN"; 
       email: `${Math.random().toString(36).slice(2, 10)}@test.local`,
       passwordHash,
       role: opts.role ?? "USER",
+      referralCode: opts.referralCode ?? `T${Math.random().toString(36).slice(2, 9).toUpperCase()}`,
+      referredById: opts.referredById,
       wallet: { create: { balance: opts.balance ?? 0 } },
     },
   });

@@ -184,6 +184,11 @@ export type CouponRedemption = $Result.DefaultSelection<Prisma.$CouponRedemption
  */
 export type SiteSettings = $Result.DefaultSelection<Prisma.$SiteSettingsPayload>
 /**
+ * Model ReferralLog
+ * 
+ */
+export type ReferralLog = $Result.DefaultSelection<Prisma.$ReferralLogPayload>
+/**
  * Model SupportChannel
  * 
  */
@@ -287,7 +292,8 @@ export const WalletTxType: {
   ORDER_REFUND: 'ORDER_REFUND',
   ADMIN_ADJUSTMENT: 'ADMIN_ADJUSTMENT',
   AFFILIATE_PAYOUT: 'AFFILIATE_PAYOUT',
-  CHILD_PANEL_FEE: 'CHILD_PANEL_FEE'
+  CHILD_PANEL_FEE: 'CHILD_PANEL_FEE',
+  REFERRAL_REWARD: 'REFERRAL_REWARD'
 };
 
 export type WalletTxType = (typeof WalletTxType)[keyof typeof WalletTxType]
@@ -481,6 +487,22 @@ export const DisplayCurrency: {
 export type DisplayCurrency = (typeof DisplayCurrency)[keyof typeof DisplayCurrency]
 
 
+export const ReferrerRewardType: {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED'
+};
+
+export type ReferrerRewardType = (typeof ReferrerRewardType)[keyof typeof ReferrerRewardType]
+
+
+export const ReferralStatus: {
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type ReferralStatus = (typeof ReferralStatus)[keyof typeof ReferralStatus]
+
+
 export const SupportChannelType: {
   WHATSAPP: 'WHATSAPP',
   TELEGRAM: 'TELEGRAM',
@@ -631,6 +653,14 @@ export const LiveChatProvider: typeof $Enums.LiveChatProvider
 export type DisplayCurrency = $Enums.DisplayCurrency
 
 export const DisplayCurrency: typeof $Enums.DisplayCurrency
+
+export type ReferrerRewardType = $Enums.ReferrerRewardType
+
+export const ReferrerRewardType: typeof $Enums.ReferrerRewardType
+
+export type ReferralStatus = $Enums.ReferralStatus
+
+export const ReferralStatus: typeof $Enums.ReferralStatus
 
 export type SupportChannelType = $Enums.SupportChannelType
 
@@ -1110,6 +1140,16 @@ export class PrismaClient<
     * ```
     */
   get siteSettings(): Prisma.SiteSettingsDelegate<ExtArgs>;
+
+  /**
+   * `prisma.referralLog`: Exposes CRUD operations for the **ReferralLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ReferralLogs
+    * const referralLogs = await prisma.referralLog.findMany()
+    * ```
+    */
+  get referralLog(): Prisma.ReferralLogDelegate<ExtArgs>;
 
   /**
    * `prisma.supportChannel`: Exposes CRUD operations for the **SupportChannel** model.
@@ -1645,6 +1685,7 @@ export namespace Prisma {
     Coupon: 'Coupon',
     CouponRedemption: 'CouponRedemption',
     SiteSettings: 'SiteSettings',
+    ReferralLog: 'ReferralLog',
     SupportChannel: 'SupportChannel',
     Notice: 'Notice',
     SiteNotice: 'SiteNotice',
@@ -1666,7 +1707,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "brand" | "product" | "package" | "stockPool" | "packageStockPool" | "stockCode" | "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticketCategory" | "ticketSubcategory" | "ticket" | "ticketMessage" | "ticketOrderAction" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "supportChannel" | "notice" | "siteNotice" | "banner" | "post" | "commentTemplate"
+      modelProps: "brand" | "product" | "package" | "stockPool" | "packageStockPool" | "stockCode" | "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticketCategory" | "ticketSubcategory" | "ticket" | "ticketMessage" | "ticketOrderAction" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "referralLog" | "supportChannel" | "notice" | "siteNotice" | "banner" | "post" | "commentTemplate"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4050,6 +4091,76 @@ export namespace Prisma {
           }
         }
       }
+      ReferralLog: {
+        payload: Prisma.$ReferralLogPayload<ExtArgs>
+        fields: Prisma.ReferralLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReferralLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReferralLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload>
+          }
+          findFirst: {
+            args: Prisma.ReferralLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReferralLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload>
+          }
+          findMany: {
+            args: Prisma.ReferralLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload>[]
+          }
+          create: {
+            args: Prisma.ReferralLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload>
+          }
+          createMany: {
+            args: Prisma.ReferralLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReferralLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload>[]
+          }
+          delete: {
+            args: Prisma.ReferralLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload>
+          }
+          update: {
+            args: Prisma.ReferralLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReferralLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReferralLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ReferralLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralLogPayload>
+          }
+          aggregate: {
+            args: Prisma.ReferralLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReferralLog>
+          }
+          groupBy: {
+            args: Prisma.ReferralLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReferralLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReferralLogCountArgs<ExtArgs>
+            result: $Utils.Optional<ReferralLogCountAggregateOutputType> | number
+          }
+        }
+      }
       SupportChannel: {
         payload: Prisma.$SupportChannelPayload<ExtArgs>
         fields: Prisma.SupportChannelFieldRefs
@@ -4782,6 +4893,7 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
+    referrals: number
     refreshTokens: number
     orders: number
     tickets: number
@@ -4792,9 +4904,11 @@ export namespace Prisma {
     couponRedemptions: number
     passwordResetTokens: number
     orderIntents: number
+    referralsMade: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referrals?: boolean | UserCountOutputTypeCountReferralsArgs
     refreshTokens?: boolean | UserCountOutputTypeCountRefreshTokensArgs
     orders?: boolean | UserCountOutputTypeCountOrdersArgs
     tickets?: boolean | UserCountOutputTypeCountTicketsArgs
@@ -4805,6 +4919,7 @@ export namespace Prisma {
     couponRedemptions?: boolean | UserCountOutputTypeCountCouponRedemptionsArgs
     passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
     orderIntents?: boolean | UserCountOutputTypeCountOrderIntentsArgs
+    referralsMade?: boolean | UserCountOutputTypeCountReferralsMadeArgs
   }
 
   // Custom InputTypes
@@ -4816,6 +4931,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the UserCountOutputType
      */
     select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReferralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
   }
 
   /**
@@ -4886,6 +5008,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountOrderIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderIntentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReferralsMadeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferralLogWhereInput
   }
 
 
@@ -11759,8 +11888,18 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    totalReferralEarnings: Decimal | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    totalReferralEarnings: Decimal | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -11779,6 +11918,10 @@ export namespace Prisma {
     apiKeyCreatedAt: Date | null
     isVip: boolean | null
     isReseller: boolean | null
+    hasDeposited: boolean | null
+    referralCode: string | null
+    referredById: string | null
+    totalReferralEarnings: Decimal | null
     phone: string | null
     notifyEmail: boolean | null
     notifyOrderUpdates: boolean | null
@@ -11803,6 +11946,10 @@ export namespace Prisma {
     apiKeyCreatedAt: Date | null
     isVip: boolean | null
     isReseller: boolean | null
+    hasDeposited: boolean | null
+    referralCode: string | null
+    referredById: string | null
+    totalReferralEarnings: Decimal | null
     phone: string | null
     notifyEmail: boolean | null
     notifyOrderUpdates: boolean | null
@@ -11827,6 +11974,10 @@ export namespace Prisma {
     apiKeyCreatedAt: number
     isVip: number
     isReseller: number
+    hasDeposited: number
+    referralCode: number
+    referredById: number
+    totalReferralEarnings: number
     phone: number
     notifyEmail: number
     notifyOrderUpdates: number
@@ -11836,6 +11987,14 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type UserAvgAggregateInputType = {
+    totalReferralEarnings?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    totalReferralEarnings?: true
+  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -11853,6 +12012,10 @@ export namespace Prisma {
     apiKeyCreatedAt?: true
     isVip?: true
     isReseller?: true
+    hasDeposited?: true
+    referralCode?: true
+    referredById?: true
+    totalReferralEarnings?: true
     phone?: true
     notifyEmail?: true
     notifyOrderUpdates?: true
@@ -11877,6 +12040,10 @@ export namespace Prisma {
     apiKeyCreatedAt?: true
     isVip?: true
     isReseller?: true
+    hasDeposited?: true
+    referralCode?: true
+    referredById?: true
+    totalReferralEarnings?: true
     phone?: true
     notifyEmail?: true
     notifyOrderUpdates?: true
@@ -11901,6 +12068,10 @@ export namespace Prisma {
     apiKeyCreatedAt?: true
     isVip?: true
     isReseller?: true
+    hasDeposited?: true
+    referralCode?: true
+    referredById?: true
+    totalReferralEarnings?: true
     phone?: true
     notifyEmail?: true
     notifyOrderUpdates?: true
@@ -11948,6 +12119,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -11978,6 +12161,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -11998,6 +12183,10 @@ export namespace Prisma {
     apiKeyCreatedAt: Date | null
     isVip: boolean
     isReseller: boolean
+    hasDeposited: boolean
+    referralCode: string
+    referredById: string | null
+    totalReferralEarnings: Decimal
     phone: string | null
     notifyEmail: boolean
     notifyOrderUpdates: boolean
@@ -12005,6 +12194,8 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -12039,12 +12230,18 @@ export namespace Prisma {
     apiKeyCreatedAt?: boolean
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode?: boolean
+    referredById?: boolean
+    totalReferralEarnings?: boolean
     phone?: boolean
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    referredBy?: boolean | User$referredByArgs<ExtArgs>
+    referrals?: boolean | User$referralsArgs<ExtArgs>
     wallet?: boolean | User$walletArgs<ExtArgs>
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -12058,6 +12255,8 @@ export namespace Prisma {
     couponRedemptions?: boolean | User$couponRedemptionsArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     orderIntents?: boolean | User$orderIntentsArgs<ExtArgs>
+    referralsMade?: boolean | User$referralsMadeArgs<ExtArgs>
+    referralReceived?: boolean | User$referralReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -12077,12 +12276,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: boolean
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode?: boolean
+    referredById?: boolean
+    totalReferralEarnings?: boolean
     phone?: boolean
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    referredBy?: boolean | User$referredByArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -12101,6 +12305,10 @@ export namespace Prisma {
     apiKeyCreatedAt?: boolean
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode?: boolean
+    referredById?: boolean
+    totalReferralEarnings?: boolean
     phone?: boolean
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -12110,6 +12318,8 @@ export namespace Prisma {
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referredBy?: boolean | User$referredByArgs<ExtArgs>
+    referrals?: boolean | User$referralsArgs<ExtArgs>
     wallet?: boolean | User$walletArgs<ExtArgs>
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -12123,13 +12333,19 @@ export namespace Prisma {
     couponRedemptions?: boolean | User$couponRedemptionsArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     orderIntents?: boolean | User$orderIntentsArgs<ExtArgs>
+    referralsMade?: boolean | User$referralsMadeArgs<ExtArgs>
+    referralReceived?: boolean | User$referralReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referredBy?: boolean | User$referredByArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
+      referredBy: Prisma.$UserPayload<ExtArgs> | null
+      referrals: Prisma.$UserPayload<ExtArgs>[]
       wallet: Prisma.$WalletPayload<ExtArgs> | null
       refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
@@ -12143,6 +12359,8 @@ export namespace Prisma {
       couponRedemptions: Prisma.$CouponRedemptionPayload<ExtArgs>[]
       passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
       orderIntents: Prisma.$OrderIntentPayload<ExtArgs>[]
+      referralsMade: Prisma.$ReferralLogPayload<ExtArgs>[]
+      referralReceived: Prisma.$ReferralLogPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12160,6 +12378,10 @@ export namespace Prisma {
       apiKeyCreatedAt: Date | null
       isVip: boolean
       isReseller: boolean
+      hasDeposited: boolean
+      referralCode: string
+      referredById: string | null
+      totalReferralEarnings: Prisma.Decimal
       phone: string | null
       notifyEmail: boolean
       notifyOrderUpdates: boolean
@@ -12530,6 +12752,8 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    referredBy<T extends User$referredByArgs<ExtArgs> = {}>(args?: Subset<T, User$referredByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    referrals<T extends User$referralsArgs<ExtArgs> = {}>(args?: Subset<T, User$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
     wallet<T extends User$walletArgs<ExtArgs> = {}>(args?: Subset<T, User$walletArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     refreshTokens<T extends User$refreshTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany"> | Null>
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany"> | Null>
@@ -12543,6 +12767,8 @@ export namespace Prisma {
     couponRedemptions<T extends User$couponRedemptionsArgs<ExtArgs> = {}>(args?: Subset<T, User$couponRedemptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CouponRedemptionPayload<ExtArgs>, T, "findMany"> | Null>
     passwordResetTokens<T extends User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany"> | Null>
     orderIntents<T extends User$orderIntentsArgs<ExtArgs> = {}>(args?: Subset<T, User$orderIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderIntentPayload<ExtArgs>, T, "findMany"> | Null>
+    referralsMade<T extends User$referralsMadeArgs<ExtArgs> = {}>(args?: Subset<T, User$referralsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "findMany"> | Null>
+    referralReceived<T extends User$referralReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$referralReceivedArgs<ExtArgs>>): Prisma__ReferralLogClient<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12587,6 +12813,10 @@ export namespace Prisma {
     readonly apiKeyCreatedAt: FieldRef<"User", 'DateTime'>
     readonly isVip: FieldRef<"User", 'Boolean'>
     readonly isReseller: FieldRef<"User", 'Boolean'>
+    readonly hasDeposited: FieldRef<"User", 'Boolean'>
+    readonly referralCode: FieldRef<"User", 'String'>
+    readonly referredById: FieldRef<"User", 'String'>
+    readonly totalReferralEarnings: FieldRef<"User", 'Decimal'>
     readonly phone: FieldRef<"User", 'String'>
     readonly notifyEmail: FieldRef<"User", 'Boolean'>
     readonly notifyOrderUpdates: FieldRef<"User", 'Boolean'>
@@ -12814,6 +13044,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -12904,6 +13138,41 @@ export namespace Prisma {
      * Filter which Users to delete
      */
     where?: UserWhereInput
+  }
+
+  /**
+   * User.referredBy
+   */
+  export type User$referredByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * User.referrals
+   */
+  export type User$referralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -13149,6 +13418,41 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderIntentScalarFieldEnum | OrderIntentScalarFieldEnum[]
+  }
+
+  /**
+   * User.referralsMade
+   */
+  export type User$referralsMadeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    where?: ReferralLogWhereInput
+    orderBy?: ReferralLogOrderByWithRelationInput | ReferralLogOrderByWithRelationInput[]
+    cursor?: ReferralLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReferralLogScalarFieldEnum | ReferralLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.referralReceived
+   */
+  export type User$referralReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    where?: ReferralLogWhereInput
   }
 
   /**
@@ -39986,11 +40290,21 @@ export namespace Prisma {
   export type SiteSettingsAvgAggregateOutputType = {
     usdToBdtRate: Decimal | null
     smtpPort: number | null
+    firstDepositBonusPercent: Decimal | null
+    firstDepositMinAmount: Decimal | null
+    firstDepositMaxBonus: Decimal | null
+    referrerRewardValue: Decimal | null
+    refereeBonusPercent: Decimal | null
   }
 
   export type SiteSettingsSumAggregateOutputType = {
     usdToBdtRate: Decimal | null
     smtpPort: number | null
+    firstDepositBonusPercent: Decimal | null
+    firstDepositMinAmount: Decimal | null
+    firstDepositMaxBonus: Decimal | null
+    referrerRewardValue: Decimal | null
+    refereeBonusPercent: Decimal | null
   }
 
   export type SiteSettingsMinAggregateOutputType = {
@@ -40010,6 +40324,14 @@ export namespace Prisma {
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
     resendOrderButtonEnabled: boolean | null
+    firstDepositBonusEnabled: boolean | null
+    firstDepositBonusPercent: Decimal | null
+    firstDepositMinAmount: Decimal | null
+    firstDepositMaxBonus: Decimal | null
+    referralSystemEnabled: boolean | null
+    referrerRewardType: $Enums.ReferrerRewardType | null
+    referrerRewardValue: Decimal | null
+    refereeBonusPercent: Decimal | null
     updatedAt: Date | null
   }
 
@@ -40030,6 +40352,14 @@ export namespace Prisma {
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
     resendOrderButtonEnabled: boolean | null
+    firstDepositBonusEnabled: boolean | null
+    firstDepositBonusPercent: Decimal | null
+    firstDepositMinAmount: Decimal | null
+    firstDepositMaxBonus: Decimal | null
+    referralSystemEnabled: boolean | null
+    referrerRewardType: $Enums.ReferrerRewardType | null
+    referrerRewardValue: Decimal | null
+    refereeBonusPercent: Decimal | null
     updatedAt: Date | null
   }
 
@@ -40050,6 +40380,14 @@ export namespace Prisma {
     smtpPassCiphertext: number
     smtpFromAddress: number
     resendOrderButtonEnabled: number
+    firstDepositBonusEnabled: number
+    firstDepositBonusPercent: number
+    firstDepositMinAmount: number
+    firstDepositMaxBonus: number
+    referralSystemEnabled: number
+    referrerRewardType: number
+    referrerRewardValue: number
+    refereeBonusPercent: number
     updatedAt: number
     _all: number
   }
@@ -40058,11 +40396,21 @@ export namespace Prisma {
   export type SiteSettingsAvgAggregateInputType = {
     usdToBdtRate?: true
     smtpPort?: true
+    firstDepositBonusPercent?: true
+    firstDepositMinAmount?: true
+    firstDepositMaxBonus?: true
+    referrerRewardValue?: true
+    refereeBonusPercent?: true
   }
 
   export type SiteSettingsSumAggregateInputType = {
     usdToBdtRate?: true
     smtpPort?: true
+    firstDepositBonusPercent?: true
+    firstDepositMinAmount?: true
+    firstDepositMaxBonus?: true
+    referrerRewardValue?: true
+    refereeBonusPercent?: true
   }
 
   export type SiteSettingsMinAggregateInputType = {
@@ -40082,6 +40430,14 @@ export namespace Prisma {
     smtpPassCiphertext?: true
     smtpFromAddress?: true
     resendOrderButtonEnabled?: true
+    firstDepositBonusEnabled?: true
+    firstDepositBonusPercent?: true
+    firstDepositMinAmount?: true
+    firstDepositMaxBonus?: true
+    referralSystemEnabled?: true
+    referrerRewardType?: true
+    referrerRewardValue?: true
+    refereeBonusPercent?: true
     updatedAt?: true
   }
 
@@ -40102,6 +40458,14 @@ export namespace Prisma {
     smtpPassCiphertext?: true
     smtpFromAddress?: true
     resendOrderButtonEnabled?: true
+    firstDepositBonusEnabled?: true
+    firstDepositBonusPercent?: true
+    firstDepositMinAmount?: true
+    firstDepositMaxBonus?: true
+    referralSystemEnabled?: true
+    referrerRewardType?: true
+    referrerRewardValue?: true
+    refereeBonusPercent?: true
     updatedAt?: true
   }
 
@@ -40122,6 +40486,14 @@ export namespace Prisma {
     smtpPassCiphertext?: true
     smtpFromAddress?: true
     resendOrderButtonEnabled?: true
+    firstDepositBonusEnabled?: true
+    firstDepositBonusPercent?: true
+    firstDepositMinAmount?: true
+    firstDepositMaxBonus?: true
+    referralSystemEnabled?: true
+    referrerRewardType?: true
+    referrerRewardValue?: true
+    refereeBonusPercent?: true
     updatedAt?: true
     _all?: true
   }
@@ -40229,6 +40601,14 @@ export namespace Prisma {
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
     resendOrderButtonEnabled: boolean
+    firstDepositBonusEnabled: boolean
+    firstDepositBonusPercent: Decimal
+    firstDepositMinAmount: Decimal
+    firstDepositMaxBonus: Decimal
+    referralSystemEnabled: boolean
+    referrerRewardType: $Enums.ReferrerRewardType
+    referrerRewardValue: Decimal
+    refereeBonusPercent: Decimal
     updatedAt: Date
     _count: SiteSettingsCountAggregateOutputType | null
     _avg: SiteSettingsAvgAggregateOutputType | null
@@ -40268,6 +40648,14 @@ export namespace Prisma {
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
     resendOrderButtonEnabled?: boolean
+    firstDepositBonusEnabled?: boolean
+    firstDepositBonusPercent?: boolean
+    firstDepositMinAmount?: boolean
+    firstDepositMaxBonus?: boolean
+    referralSystemEnabled?: boolean
+    referrerRewardType?: boolean
+    referrerRewardValue?: boolean
+    refereeBonusPercent?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSettings"]>
 
@@ -40288,6 +40676,14 @@ export namespace Prisma {
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
     resendOrderButtonEnabled?: boolean
+    firstDepositBonusEnabled?: boolean
+    firstDepositBonusPercent?: boolean
+    firstDepositMinAmount?: boolean
+    firstDepositMaxBonus?: boolean
+    referralSystemEnabled?: boolean
+    referrerRewardType?: boolean
+    referrerRewardValue?: boolean
+    refereeBonusPercent?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSettings"]>
 
@@ -40308,6 +40704,14 @@ export namespace Prisma {
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
     resendOrderButtonEnabled?: boolean
+    firstDepositBonusEnabled?: boolean
+    firstDepositBonusPercent?: boolean
+    firstDepositMinAmount?: boolean
+    firstDepositMaxBonus?: boolean
+    referralSystemEnabled?: boolean
+    referrerRewardType?: boolean
+    referrerRewardValue?: boolean
+    refereeBonusPercent?: boolean
     updatedAt?: boolean
   }
 
@@ -40332,6 +40736,14 @@ export namespace Prisma {
       smtpPassCiphertext: string | null
       smtpFromAddress: string | null
       resendOrderButtonEnabled: boolean
+      firstDepositBonusEnabled: boolean
+      firstDepositBonusPercent: Prisma.Decimal
+      firstDepositMinAmount: Prisma.Decimal
+      firstDepositMaxBonus: Prisma.Decimal
+      referralSystemEnabled: boolean
+      referrerRewardType: $Enums.ReferrerRewardType
+      referrerRewardValue: Prisma.Decimal
+      refereeBonusPercent: Prisma.Decimal
       updatedAt: Date
     }, ExtArgs["result"]["siteSettings"]>
     composites: {}
@@ -40742,6 +41154,14 @@ export namespace Prisma {
     readonly smtpPassCiphertext: FieldRef<"SiteSettings", 'String'>
     readonly smtpFromAddress: FieldRef<"SiteSettings", 'String'>
     readonly resendOrderButtonEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly firstDepositBonusEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly firstDepositBonusPercent: FieldRef<"SiteSettings", 'Decimal'>
+    readonly firstDepositMinAmount: FieldRef<"SiteSettings", 'Decimal'>
+    readonly firstDepositMaxBonus: FieldRef<"SiteSettings", 'Decimal'>
+    readonly referralSystemEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly referrerRewardType: FieldRef<"SiteSettings", 'ReferrerRewardType'>
+    readonly referrerRewardValue: FieldRef<"SiteSettings", 'Decimal'>
+    readonly refereeBonusPercent: FieldRef<"SiteSettings", 'Decimal'>
     readonly updatedAt: FieldRef<"SiteSettings", 'DateTime'>
   }
     
@@ -41028,6 +41448,1023 @@ export namespace Prisma {
      * Select specific fields to fetch from the SiteSettings
      */
     select?: SiteSettingsSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ReferralLog
+   */
+
+  export type AggregateReferralLog = {
+    _count: ReferralLogCountAggregateOutputType | null
+    _avg: ReferralLogAvgAggregateOutputType | null
+    _sum: ReferralLogSumAggregateOutputType | null
+    _min: ReferralLogMinAggregateOutputType | null
+    _max: ReferralLogMaxAggregateOutputType | null
+  }
+
+  export type ReferralLogAvgAggregateOutputType = {
+    rewardAmount: Decimal | null
+    refereeBonusAmount: Decimal | null
+    refereeDepositAmount: Decimal | null
+  }
+
+  export type ReferralLogSumAggregateOutputType = {
+    rewardAmount: Decimal | null
+    refereeBonusAmount: Decimal | null
+    refereeDepositAmount: Decimal | null
+  }
+
+  export type ReferralLogMinAggregateOutputType = {
+    id: string | null
+    referrerId: string | null
+    refereeId: string | null
+    rewardAmount: Decimal | null
+    refereeBonusAmount: Decimal | null
+    refereeDepositAmount: Decimal | null
+    status: $Enums.ReferralStatus | null
+    createdAt: Date | null
+  }
+
+  export type ReferralLogMaxAggregateOutputType = {
+    id: string | null
+    referrerId: string | null
+    refereeId: string | null
+    rewardAmount: Decimal | null
+    refereeBonusAmount: Decimal | null
+    refereeDepositAmount: Decimal | null
+    status: $Enums.ReferralStatus | null
+    createdAt: Date | null
+  }
+
+  export type ReferralLogCountAggregateOutputType = {
+    id: number
+    referrerId: number
+    refereeId: number
+    rewardAmount: number
+    refereeBonusAmount: number
+    refereeDepositAmount: number
+    status: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ReferralLogAvgAggregateInputType = {
+    rewardAmount?: true
+    refereeBonusAmount?: true
+    refereeDepositAmount?: true
+  }
+
+  export type ReferralLogSumAggregateInputType = {
+    rewardAmount?: true
+    refereeBonusAmount?: true
+    refereeDepositAmount?: true
+  }
+
+  export type ReferralLogMinAggregateInputType = {
+    id?: true
+    referrerId?: true
+    refereeId?: true
+    rewardAmount?: true
+    refereeBonusAmount?: true
+    refereeDepositAmount?: true
+    status?: true
+    createdAt?: true
+  }
+
+  export type ReferralLogMaxAggregateInputType = {
+    id?: true
+    referrerId?: true
+    refereeId?: true
+    rewardAmount?: true
+    refereeBonusAmount?: true
+    refereeDepositAmount?: true
+    status?: true
+    createdAt?: true
+  }
+
+  export type ReferralLogCountAggregateInputType = {
+    id?: true
+    referrerId?: true
+    refereeId?: true
+    rewardAmount?: true
+    refereeBonusAmount?: true
+    refereeDepositAmount?: true
+    status?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ReferralLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReferralLog to aggregate.
+     */
+    where?: ReferralLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReferralLogs to fetch.
+     */
+    orderBy?: ReferralLogOrderByWithRelationInput | ReferralLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReferralLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReferralLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReferralLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ReferralLogs
+    **/
+    _count?: true | ReferralLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ReferralLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReferralLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReferralLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReferralLogMaxAggregateInputType
+  }
+
+  export type GetReferralLogAggregateType<T extends ReferralLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateReferralLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReferralLog[P]>
+      : GetScalarType<T[P], AggregateReferralLog[P]>
+  }
+
+
+
+
+  export type ReferralLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferralLogWhereInput
+    orderBy?: ReferralLogOrderByWithAggregationInput | ReferralLogOrderByWithAggregationInput[]
+    by: ReferralLogScalarFieldEnum[] | ReferralLogScalarFieldEnum
+    having?: ReferralLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReferralLogCountAggregateInputType | true
+    _avg?: ReferralLogAvgAggregateInputType
+    _sum?: ReferralLogSumAggregateInputType
+    _min?: ReferralLogMinAggregateInputType
+    _max?: ReferralLogMaxAggregateInputType
+  }
+
+  export type ReferralLogGroupByOutputType = {
+    id: string
+    referrerId: string
+    refereeId: string
+    rewardAmount: Decimal
+    refereeBonusAmount: Decimal
+    refereeDepositAmount: Decimal
+    status: $Enums.ReferralStatus
+    createdAt: Date
+    _count: ReferralLogCountAggregateOutputType | null
+    _avg: ReferralLogAvgAggregateOutputType | null
+    _sum: ReferralLogSumAggregateOutputType | null
+    _min: ReferralLogMinAggregateOutputType | null
+    _max: ReferralLogMaxAggregateOutputType | null
+  }
+
+  type GetReferralLogGroupByPayload<T extends ReferralLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReferralLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReferralLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReferralLogGroupByOutputType[P]>
+            : GetScalarType<T[P], ReferralLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReferralLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    referrerId?: boolean
+    refereeId?: boolean
+    rewardAmount?: boolean
+    refereeBonusAmount?: boolean
+    refereeDepositAmount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referralLog"]>
+
+  export type ReferralLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    referrerId?: boolean
+    refereeId?: boolean
+    rewardAmount?: boolean
+    refereeBonusAmount?: boolean
+    refereeDepositAmount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referralLog"]>
+
+  export type ReferralLogSelectScalar = {
+    id?: boolean
+    referrerId?: boolean
+    refereeId?: boolean
+    rewardAmount?: boolean
+    refereeBonusAmount?: boolean
+    refereeDepositAmount?: boolean
+    status?: boolean
+    createdAt?: boolean
+  }
+
+  export type ReferralLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReferralLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ReferralLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ReferralLog"
+    objects: {
+      referrer: Prisma.$UserPayload<ExtArgs>
+      referee: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      referrerId: string
+      refereeId: string
+      rewardAmount: Prisma.Decimal
+      refereeBonusAmount: Prisma.Decimal
+      refereeDepositAmount: Prisma.Decimal
+      status: $Enums.ReferralStatus
+      createdAt: Date
+    }, ExtArgs["result"]["referralLog"]>
+    composites: {}
+  }
+
+  type ReferralLogGetPayload<S extends boolean | null | undefined | ReferralLogDefaultArgs> = $Result.GetResult<Prisma.$ReferralLogPayload, S>
+
+  type ReferralLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ReferralLogFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ReferralLogCountAggregateInputType | true
+    }
+
+  export interface ReferralLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ReferralLog'], meta: { name: 'ReferralLog' } }
+    /**
+     * Find zero or one ReferralLog that matches the filter.
+     * @param {ReferralLogFindUniqueArgs} args - Arguments to find a ReferralLog
+     * @example
+     * // Get one ReferralLog
+     * const referralLog = await prisma.referralLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReferralLogFindUniqueArgs>(args: SelectSubset<T, ReferralLogFindUniqueArgs<ExtArgs>>): Prisma__ReferralLogClient<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ReferralLog that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ReferralLogFindUniqueOrThrowArgs} args - Arguments to find a ReferralLog
+     * @example
+     * // Get one ReferralLog
+     * const referralLog = await prisma.referralLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReferralLogFindUniqueOrThrowArgs>(args: SelectSubset<T, ReferralLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReferralLogClient<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ReferralLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralLogFindFirstArgs} args - Arguments to find a ReferralLog
+     * @example
+     * // Get one ReferralLog
+     * const referralLog = await prisma.referralLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReferralLogFindFirstArgs>(args?: SelectSubset<T, ReferralLogFindFirstArgs<ExtArgs>>): Prisma__ReferralLogClient<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ReferralLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralLogFindFirstOrThrowArgs} args - Arguments to find a ReferralLog
+     * @example
+     * // Get one ReferralLog
+     * const referralLog = await prisma.referralLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReferralLogFindFirstOrThrowArgs>(args?: SelectSubset<T, ReferralLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReferralLogClient<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ReferralLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ReferralLogs
+     * const referralLogs = await prisma.referralLog.findMany()
+     * 
+     * // Get first 10 ReferralLogs
+     * const referralLogs = await prisma.referralLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const referralLogWithIdOnly = await prisma.referralLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReferralLogFindManyArgs>(args?: SelectSubset<T, ReferralLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ReferralLog.
+     * @param {ReferralLogCreateArgs} args - Arguments to create a ReferralLog.
+     * @example
+     * // Create one ReferralLog
+     * const ReferralLog = await prisma.referralLog.create({
+     *   data: {
+     *     // ... data to create a ReferralLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReferralLogCreateArgs>(args: SelectSubset<T, ReferralLogCreateArgs<ExtArgs>>): Prisma__ReferralLogClient<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ReferralLogs.
+     * @param {ReferralLogCreateManyArgs} args - Arguments to create many ReferralLogs.
+     * @example
+     * // Create many ReferralLogs
+     * const referralLog = await prisma.referralLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReferralLogCreateManyArgs>(args?: SelectSubset<T, ReferralLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ReferralLogs and returns the data saved in the database.
+     * @param {ReferralLogCreateManyAndReturnArgs} args - Arguments to create many ReferralLogs.
+     * @example
+     * // Create many ReferralLogs
+     * const referralLog = await prisma.referralLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ReferralLogs and only return the `id`
+     * const referralLogWithIdOnly = await prisma.referralLog.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReferralLogCreateManyAndReturnArgs>(args?: SelectSubset<T, ReferralLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ReferralLog.
+     * @param {ReferralLogDeleteArgs} args - Arguments to delete one ReferralLog.
+     * @example
+     * // Delete one ReferralLog
+     * const ReferralLog = await prisma.referralLog.delete({
+     *   where: {
+     *     // ... filter to delete one ReferralLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReferralLogDeleteArgs>(args: SelectSubset<T, ReferralLogDeleteArgs<ExtArgs>>): Prisma__ReferralLogClient<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ReferralLog.
+     * @param {ReferralLogUpdateArgs} args - Arguments to update one ReferralLog.
+     * @example
+     * // Update one ReferralLog
+     * const referralLog = await prisma.referralLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReferralLogUpdateArgs>(args: SelectSubset<T, ReferralLogUpdateArgs<ExtArgs>>): Prisma__ReferralLogClient<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ReferralLogs.
+     * @param {ReferralLogDeleteManyArgs} args - Arguments to filter ReferralLogs to delete.
+     * @example
+     * // Delete a few ReferralLogs
+     * const { count } = await prisma.referralLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReferralLogDeleteManyArgs>(args?: SelectSubset<T, ReferralLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReferralLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ReferralLogs
+     * const referralLog = await prisma.referralLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReferralLogUpdateManyArgs>(args: SelectSubset<T, ReferralLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ReferralLog.
+     * @param {ReferralLogUpsertArgs} args - Arguments to update or create a ReferralLog.
+     * @example
+     * // Update or create a ReferralLog
+     * const referralLog = await prisma.referralLog.upsert({
+     *   create: {
+     *     // ... data to create a ReferralLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ReferralLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReferralLogUpsertArgs>(args: SelectSubset<T, ReferralLogUpsertArgs<ExtArgs>>): Prisma__ReferralLogClient<$Result.GetResult<Prisma.$ReferralLogPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ReferralLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralLogCountArgs} args - Arguments to filter ReferralLogs to count.
+     * @example
+     * // Count the number of ReferralLogs
+     * const count = await prisma.referralLog.count({
+     *   where: {
+     *     // ... the filter for the ReferralLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReferralLogCountArgs>(
+      args?: Subset<T, ReferralLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReferralLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ReferralLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReferralLogAggregateArgs>(args: Subset<T, ReferralLogAggregateArgs>): Prisma.PrismaPromise<GetReferralLogAggregateType<T>>
+
+    /**
+     * Group by ReferralLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReferralLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReferralLogGroupByArgs['orderBy'] }
+        : { orderBy?: ReferralLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReferralLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReferralLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ReferralLog model
+   */
+  readonly fields: ReferralLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ReferralLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReferralLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    referrer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    referee<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ReferralLog model
+   */ 
+  interface ReferralLogFieldRefs {
+    readonly id: FieldRef<"ReferralLog", 'String'>
+    readonly referrerId: FieldRef<"ReferralLog", 'String'>
+    readonly refereeId: FieldRef<"ReferralLog", 'String'>
+    readonly rewardAmount: FieldRef<"ReferralLog", 'Decimal'>
+    readonly refereeBonusAmount: FieldRef<"ReferralLog", 'Decimal'>
+    readonly refereeDepositAmount: FieldRef<"ReferralLog", 'Decimal'>
+    readonly status: FieldRef<"ReferralLog", 'ReferralStatus'>
+    readonly createdAt: FieldRef<"ReferralLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ReferralLog findUnique
+   */
+  export type ReferralLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferralLog to fetch.
+     */
+    where: ReferralLogWhereUniqueInput
+  }
+
+  /**
+   * ReferralLog findUniqueOrThrow
+   */
+  export type ReferralLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferralLog to fetch.
+     */
+    where: ReferralLogWhereUniqueInput
+  }
+
+  /**
+   * ReferralLog findFirst
+   */
+  export type ReferralLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferralLog to fetch.
+     */
+    where?: ReferralLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReferralLogs to fetch.
+     */
+    orderBy?: ReferralLogOrderByWithRelationInput | ReferralLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReferralLogs.
+     */
+    cursor?: ReferralLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReferralLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReferralLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReferralLogs.
+     */
+    distinct?: ReferralLogScalarFieldEnum | ReferralLogScalarFieldEnum[]
+  }
+
+  /**
+   * ReferralLog findFirstOrThrow
+   */
+  export type ReferralLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferralLog to fetch.
+     */
+    where?: ReferralLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReferralLogs to fetch.
+     */
+    orderBy?: ReferralLogOrderByWithRelationInput | ReferralLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReferralLogs.
+     */
+    cursor?: ReferralLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReferralLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReferralLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReferralLogs.
+     */
+    distinct?: ReferralLogScalarFieldEnum | ReferralLogScalarFieldEnum[]
+  }
+
+  /**
+   * ReferralLog findMany
+   */
+  export type ReferralLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ReferralLogs to fetch.
+     */
+    where?: ReferralLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReferralLogs to fetch.
+     */
+    orderBy?: ReferralLogOrderByWithRelationInput | ReferralLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ReferralLogs.
+     */
+    cursor?: ReferralLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReferralLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReferralLogs.
+     */
+    skip?: number
+    distinct?: ReferralLogScalarFieldEnum | ReferralLogScalarFieldEnum[]
+  }
+
+  /**
+   * ReferralLog create
+   */
+  export type ReferralLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ReferralLog.
+     */
+    data: XOR<ReferralLogCreateInput, ReferralLogUncheckedCreateInput>
+  }
+
+  /**
+   * ReferralLog createMany
+   */
+  export type ReferralLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ReferralLogs.
+     */
+    data: ReferralLogCreateManyInput | ReferralLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ReferralLog createManyAndReturn
+   */
+  export type ReferralLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ReferralLogs.
+     */
+    data: ReferralLogCreateManyInput | ReferralLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReferralLog update
+   */
+  export type ReferralLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ReferralLog.
+     */
+    data: XOR<ReferralLogUpdateInput, ReferralLogUncheckedUpdateInput>
+    /**
+     * Choose, which ReferralLog to update.
+     */
+    where: ReferralLogWhereUniqueInput
+  }
+
+  /**
+   * ReferralLog updateMany
+   */
+  export type ReferralLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ReferralLogs.
+     */
+    data: XOR<ReferralLogUpdateManyMutationInput, ReferralLogUncheckedUpdateManyInput>
+    /**
+     * Filter which ReferralLogs to update
+     */
+    where?: ReferralLogWhereInput
+  }
+
+  /**
+   * ReferralLog upsert
+   */
+  export type ReferralLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ReferralLog to update in case it exists.
+     */
+    where: ReferralLogWhereUniqueInput
+    /**
+     * In case the ReferralLog found by the `where` argument doesn't exist, create a new ReferralLog with this data.
+     */
+    create: XOR<ReferralLogCreateInput, ReferralLogUncheckedCreateInput>
+    /**
+     * In case the ReferralLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReferralLogUpdateInput, ReferralLogUncheckedUpdateInput>
+  }
+
+  /**
+   * ReferralLog delete
+   */
+  export type ReferralLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
+    /**
+     * Filter which ReferralLog to delete.
+     */
+    where: ReferralLogWhereUniqueInput
+  }
+
+  /**
+   * ReferralLog deleteMany
+   */
+  export type ReferralLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReferralLogs to delete
+     */
+    where?: ReferralLogWhereInput
+  }
+
+  /**
+   * ReferralLog without action
+   */
+  export type ReferralLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReferralLog
+     */
+    select?: ReferralLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralLogInclude<ExtArgs> | null
   }
 
 
@@ -46720,6 +48157,10 @@ export namespace Prisma {
     apiKeyCreatedAt: 'apiKeyCreatedAt',
     isVip: 'isVip',
     isReseller: 'isReseller',
+    hasDeposited: 'hasDeposited',
+    referralCode: 'referralCode',
+    referredById: 'referredById',
+    totalReferralEarnings: 'totalReferralEarnings',
     phone: 'phone',
     notifyEmail: 'notifyEmail',
     notifyOrderUpdates: 'notifyOrderUpdates',
@@ -47143,10 +48584,32 @@ export namespace Prisma {
     smtpPassCiphertext: 'smtpPassCiphertext',
     smtpFromAddress: 'smtpFromAddress',
     resendOrderButtonEnabled: 'resendOrderButtonEnabled',
+    firstDepositBonusEnabled: 'firstDepositBonusEnabled',
+    firstDepositBonusPercent: 'firstDepositBonusPercent',
+    firstDepositMinAmount: 'firstDepositMinAmount',
+    firstDepositMaxBonus: 'firstDepositMaxBonus',
+    referralSystemEnabled: 'referralSystemEnabled',
+    referrerRewardType: 'referrerRewardType',
+    referrerRewardValue: 'referrerRewardValue',
+    refereeBonusPercent: 'refereeBonusPercent',
     updatedAt: 'updatedAt'
   };
 
   export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
+
+
+  export const ReferralLogScalarFieldEnum: {
+    id: 'id',
+    referrerId: 'referrerId',
+    refereeId: 'refereeId',
+    rewardAmount: 'rewardAmount',
+    refereeBonusAmount: 'refereeBonusAmount',
+    refereeDepositAmount: 'refereeDepositAmount',
+    status: 'status',
+    createdAt: 'createdAt'
+  };
+
+  export type ReferralLogScalarFieldEnum = (typeof ReferralLogScalarFieldEnum)[keyof typeof ReferralLogScalarFieldEnum]
 
 
   export const SupportChannelScalarFieldEnum: {
@@ -47714,6 +49177,34 @@ export namespace Prisma {
    * Reference to a field of type 'DisplayCurrency[]'
    */
   export type ListEnumDisplayCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DisplayCurrency[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReferrerRewardType'
+   */
+  export type EnumReferrerRewardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReferrerRewardType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReferrerRewardType[]'
+   */
+  export type ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReferrerRewardType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReferralStatus'
+   */
+  export type EnumReferralStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReferralStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReferralStatus[]'
+   */
+  export type ListEnumReferralStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReferralStatus[]'>
     
 
 
@@ -48375,12 +49866,18 @@ export namespace Prisma {
     apiKeyCreatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     isVip?: BoolFilter<"User"> | boolean
     isReseller?: BoolFilter<"User"> | boolean
+    hasDeposited?: BoolFilter<"User"> | boolean
+    referralCode?: StringFilter<"User"> | string
+    referredById?: StringNullableFilter<"User"> | string | null
+    totalReferralEarnings?: DecimalFilter<"User"> | Decimal | DecimalJsLike | number | string
     phone?: StringNullableFilter<"User"> | string | null
     notifyEmail?: BoolFilter<"User"> | boolean
     notifyOrderUpdates?: BoolFilter<"User"> | boolean
     notifyPromotions?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    referredBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    referrals?: UserListRelationFilter
     wallet?: XOR<WalletNullableRelationFilter, WalletWhereInput> | null
     refreshTokens?: RefreshTokenListRelationFilter
     orders?: OrderListRelationFilter
@@ -48394,6 +49891,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     orderIntents?: OrderIntentListRelationFilter
+    referralsMade?: ReferralLogListRelationFilter
+    referralReceived?: XOR<ReferralLogNullableRelationFilter, ReferralLogWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -48412,12 +49911,18 @@ export namespace Prisma {
     apiKeyCreatedAt?: SortOrderInput | SortOrder
     isVip?: SortOrder
     isReseller?: SortOrder
+    hasDeposited?: SortOrder
+    referralCode?: SortOrder
+    referredById?: SortOrderInput | SortOrder
+    totalReferralEarnings?: SortOrder
     phone?: SortOrderInput | SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
     notifyPromotions?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    referredBy?: UserOrderByWithRelationInput
+    referrals?: UserOrderByRelationAggregateInput
     wallet?: WalletOrderByWithRelationInput
     refreshTokens?: RefreshTokenOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
@@ -48431,6 +49936,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionOrderByRelationAggregateInput
     passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
     orderIntents?: OrderIntentOrderByRelationAggregateInput
+    referralsMade?: ReferralLogOrderByRelationAggregateInput
+    referralReceived?: ReferralLogOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -48439,6 +49946,7 @@ export namespace Prisma {
     email?: string
     googleId?: string
     apiKeyHash?: string
+    referralCode?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -48452,12 +49960,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     isVip?: BoolFilter<"User"> | boolean
     isReseller?: BoolFilter<"User"> | boolean
+    hasDeposited?: BoolFilter<"User"> | boolean
+    referredById?: StringNullableFilter<"User"> | string | null
+    totalReferralEarnings?: DecimalFilter<"User"> | Decimal | DecimalJsLike | number | string
     phone?: StringNullableFilter<"User"> | string | null
     notifyEmail?: BoolFilter<"User"> | boolean
     notifyOrderUpdates?: BoolFilter<"User"> | boolean
     notifyPromotions?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    referredBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    referrals?: UserListRelationFilter
     wallet?: XOR<WalletNullableRelationFilter, WalletWhereInput> | null
     refreshTokens?: RefreshTokenListRelationFilter
     orders?: OrderListRelationFilter
@@ -48471,7 +49984,9 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     orderIntents?: OrderIntentListRelationFilter
-  }, "id" | "username" | "email" | "googleId" | "apiKeyHash">
+    referralsMade?: ReferralLogListRelationFilter
+    referralReceived?: XOR<ReferralLogNullableRelationFilter, ReferralLogWhereInput> | null
+  }, "id" | "username" | "email" | "googleId" | "apiKeyHash" | "referralCode">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -48489,6 +50004,10 @@ export namespace Prisma {
     apiKeyCreatedAt?: SortOrderInput | SortOrder
     isVip?: SortOrder
     isReseller?: SortOrder
+    hasDeposited?: SortOrder
+    referralCode?: SortOrder
+    referredById?: SortOrderInput | SortOrder
+    totalReferralEarnings?: SortOrder
     phone?: SortOrderInput | SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -48496,8 +50015,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -48519,6 +50040,10 @@ export namespace Prisma {
     apiKeyCreatedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     isVip?: BoolWithAggregatesFilter<"User"> | boolean
     isReseller?: BoolWithAggregatesFilter<"User"> | boolean
+    hasDeposited?: BoolWithAggregatesFilter<"User"> | boolean
+    referralCode?: StringWithAggregatesFilter<"User"> | string
+    referredById?: StringNullableWithAggregatesFilter<"User"> | string | null
+    totalReferralEarnings?: DecimalWithAggregatesFilter<"User"> | Decimal | DecimalJsLike | number | string
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     notifyEmail?: BoolWithAggregatesFilter<"User"> | boolean
     notifyOrderUpdates?: BoolWithAggregatesFilter<"User"> | boolean
@@ -50642,6 +52167,14 @@ export namespace Prisma {
     smtpPassCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableFilter<"SiteSettings"> | string | null
     resendOrderButtonEnabled?: BoolFilter<"SiteSettings"> | boolean
+    firstDepositBonusEnabled?: BoolFilter<"SiteSettings"> | boolean
+    firstDepositBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: BoolFilter<"SiteSettings"> | boolean
+    referrerRewardType?: EnumReferrerRewardTypeFilter<"SiteSettings"> | $Enums.ReferrerRewardType
+    referrerRewardValue?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFilter<"SiteSettings"> | Date | string
   }
 
@@ -50662,6 +52195,14 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrderInput | SortOrder
     smtpFromAddress?: SortOrderInput | SortOrder
     resendOrderButtonEnabled?: SortOrder
+    firstDepositBonusEnabled?: SortOrder
+    firstDepositBonusPercent?: SortOrder
+    firstDepositMinAmount?: SortOrder
+    firstDepositMaxBonus?: SortOrder
+    referralSystemEnabled?: SortOrder
+    referrerRewardType?: SortOrder
+    referrerRewardValue?: SortOrder
+    refereeBonusPercent?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -50685,6 +52226,14 @@ export namespace Prisma {
     smtpPassCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableFilter<"SiteSettings"> | string | null
     resendOrderButtonEnabled?: BoolFilter<"SiteSettings"> | boolean
+    firstDepositBonusEnabled?: BoolFilter<"SiteSettings"> | boolean
+    firstDepositBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: BoolFilter<"SiteSettings"> | boolean
+    referrerRewardType?: EnumReferrerRewardTypeFilter<"SiteSettings"> | $Enums.ReferrerRewardType
+    referrerRewardValue?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFilter<"SiteSettings"> | Date | string
   }, "id">
 
@@ -50705,6 +52254,14 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrderInput | SortOrder
     smtpFromAddress?: SortOrderInput | SortOrder
     resendOrderButtonEnabled?: SortOrder
+    firstDepositBonusEnabled?: SortOrder
+    firstDepositBonusPercent?: SortOrder
+    firstDepositMinAmount?: SortOrder
+    firstDepositMaxBonus?: SortOrder
+    referralSystemEnabled?: SortOrder
+    referrerRewardType?: SortOrder
+    referrerRewardValue?: SortOrder
+    refereeBonusPercent?: SortOrder
     updatedAt?: SortOrder
     _count?: SiteSettingsCountOrderByAggregateInput
     _avg?: SiteSettingsAvgOrderByAggregateInput
@@ -50733,7 +52290,90 @@ export namespace Prisma {
     smtpPassCiphertext?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     resendOrderButtonEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    firstDepositBonusEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    firstDepositBonusPercent?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    referrerRewardType?: EnumReferrerRewardTypeWithAggregatesFilter<"SiteSettings"> | $Enums.ReferrerRewardType
+    referrerRewardValue?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSettings"> | Date | string
+  }
+
+  export type ReferralLogWhereInput = {
+    AND?: ReferralLogWhereInput | ReferralLogWhereInput[]
+    OR?: ReferralLogWhereInput[]
+    NOT?: ReferralLogWhereInput | ReferralLogWhereInput[]
+    id?: StringFilter<"ReferralLog"> | string
+    referrerId?: StringFilter<"ReferralLog"> | string
+    refereeId?: StringFilter<"ReferralLog"> | string
+    rewardAmount?: DecimalFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFilter<"ReferralLog"> | $Enums.ReferralStatus
+    createdAt?: DateTimeFilter<"ReferralLog"> | Date | string
+    referrer?: XOR<UserRelationFilter, UserWhereInput>
+    referee?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type ReferralLogOrderByWithRelationInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    rewardAmount?: SortOrder
+    refereeBonusAmount?: SortOrder
+    refereeDepositAmount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    referrer?: UserOrderByWithRelationInput
+    referee?: UserOrderByWithRelationInput
+  }
+
+  export type ReferralLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    refereeId?: string
+    AND?: ReferralLogWhereInput | ReferralLogWhereInput[]
+    OR?: ReferralLogWhereInput[]
+    NOT?: ReferralLogWhereInput | ReferralLogWhereInput[]
+    referrerId?: StringFilter<"ReferralLog"> | string
+    rewardAmount?: DecimalFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFilter<"ReferralLog"> | $Enums.ReferralStatus
+    createdAt?: DateTimeFilter<"ReferralLog"> | Date | string
+    referrer?: XOR<UserRelationFilter, UserWhereInput>
+    referee?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "refereeId">
+
+  export type ReferralLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    rewardAmount?: SortOrder
+    refereeBonusAmount?: SortOrder
+    refereeDepositAmount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    _count?: ReferralLogCountOrderByAggregateInput
+    _avg?: ReferralLogAvgOrderByAggregateInput
+    _max?: ReferralLogMaxOrderByAggregateInput
+    _min?: ReferralLogMinOrderByAggregateInput
+    _sum?: ReferralLogSumOrderByAggregateInput
+  }
+
+  export type ReferralLogScalarWhereWithAggregatesInput = {
+    AND?: ReferralLogScalarWhereWithAggregatesInput | ReferralLogScalarWhereWithAggregatesInput[]
+    OR?: ReferralLogScalarWhereWithAggregatesInput[]
+    NOT?: ReferralLogScalarWhereWithAggregatesInput | ReferralLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ReferralLog"> | string
+    referrerId?: StringWithAggregatesFilter<"ReferralLog"> | string
+    refereeId?: StringWithAggregatesFilter<"ReferralLog"> | string
+    rewardAmount?: DecimalWithAggregatesFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalWithAggregatesFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalWithAggregatesFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusWithAggregatesFilter<"ReferralLog"> | $Enums.ReferralStatus
+    createdAt?: DateTimeWithAggregatesFilter<"ReferralLog"> | Date | string
   }
 
   export type SupportChannelWhereInput = {
@@ -51802,12 +53442,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -51821,6 +53466,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -51839,12 +53486,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -51858,6 +53510,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUpdateInput = {
@@ -51876,12 +53530,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -51895,6 +53554,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -51913,12 +53574,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -51932,6 +53598,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -51950,6 +53618,10 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
@@ -51974,6 +53646,9 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -51998,6 +53673,10 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
@@ -54292,6 +55971,14 @@ export namespace Prisma {
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
     resendOrderButtonEnabled?: boolean
+    firstDepositBonusEnabled?: boolean
+    firstDepositBonusPercent?: Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: boolean
+    referrerRewardType?: $Enums.ReferrerRewardType
+    referrerRewardValue?: Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
   }
 
@@ -54312,6 +55999,14 @@ export namespace Prisma {
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
     resendOrderButtonEnabled?: boolean
+    firstDepositBonusEnabled?: boolean
+    firstDepositBonusPercent?: Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: boolean
+    referrerRewardType?: $Enums.ReferrerRewardType
+    referrerRewardValue?: Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
   }
 
@@ -54332,6 +56027,14 @@ export namespace Prisma {
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
+    firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
+    firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: BoolFieldUpdateOperationsInput | boolean
+    referrerRewardType?: EnumReferrerRewardTypeFieldUpdateOperationsInput | $Enums.ReferrerRewardType
+    referrerRewardValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -54352,6 +56055,14 @@ export namespace Prisma {
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
+    firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
+    firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: BoolFieldUpdateOperationsInput | boolean
+    referrerRewardType?: EnumReferrerRewardTypeFieldUpdateOperationsInput | $Enums.ReferrerRewardType
+    referrerRewardValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -54372,6 +56083,14 @@ export namespace Prisma {
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
     resendOrderButtonEnabled?: boolean
+    firstDepositBonusEnabled?: boolean
+    firstDepositBonusPercent?: Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: boolean
+    referrerRewardType?: $Enums.ReferrerRewardType
+    referrerRewardValue?: Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
   }
 
@@ -54392,6 +56111,14 @@ export namespace Prisma {
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
+    firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
+    firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: BoolFieldUpdateOperationsInput | boolean
+    referrerRewardType?: EnumReferrerRewardTypeFieldUpdateOperationsInput | $Enums.ReferrerRewardType
+    referrerRewardValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -54412,7 +56139,90 @@ export namespace Prisma {
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
+    firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
+    firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    firstDepositMinAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    firstDepositMaxBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referralSystemEnabled?: BoolFieldUpdateOperationsInput | boolean
+    referrerRewardType?: EnumReferrerRewardTypeFieldUpdateOperationsInput | $Enums.ReferrerRewardType
+    referrerRewardValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReferralLogCreateInput = {
+    id?: string
+    rewardAmount: Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: Decimal | DecimalJsLike | number | string
+    refereeDepositAmount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ReferralStatus
+    createdAt?: Date | string
+    referrer: UserCreateNestedOneWithoutReferralsMadeInput
+    referee: UserCreateNestedOneWithoutReferralReceivedInput
+  }
+
+  export type ReferralLogUncheckedCreateInput = {
+    id?: string
+    referrerId: string
+    refereeId: string
+    rewardAmount: Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: Decimal | DecimalJsLike | number | string
+    refereeDepositAmount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ReferralStatus
+    createdAt?: Date | string
+  }
+
+  export type ReferralLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFieldUpdateOperationsInput | $Enums.ReferralStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrer?: UserUpdateOneRequiredWithoutReferralsMadeNestedInput
+    referee?: UserUpdateOneRequiredWithoutReferralReceivedNestedInput
+  }
+
+  export type ReferralLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referrerId?: StringFieldUpdateOperationsInput | string
+    refereeId?: StringFieldUpdateOperationsInput | string
+    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFieldUpdateOperationsInput | $Enums.ReferralStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReferralLogCreateManyInput = {
+    id?: string
+    referrerId: string
+    refereeId: string
+    rewardAmount: Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: Decimal | DecimalJsLike | number | string
+    refereeDepositAmount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ReferralStatus
+    createdAt?: Date | string
+  }
+
+  export type ReferralLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFieldUpdateOperationsInput | $Enums.ReferralStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReferralLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referrerId?: StringFieldUpdateOperationsInput | string
+    refereeId?: StringFieldUpdateOperationsInput | string
+    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFieldUpdateOperationsInput | $Enums.ReferralStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SupportChannelCreateInput = {
@@ -55626,6 +57436,17 @@ export namespace Prisma {
     not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
   }
 
+  export type UserNullableRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
   export type WalletNullableRelationFilter = {
     is?: WalletWhereInput | null
     isNot?: WalletWhereInput | null
@@ -55683,6 +57504,21 @@ export namespace Prisma {
     none?: PasswordResetTokenWhereInput
   }
 
+  export type ReferralLogListRelationFilter = {
+    every?: ReferralLogWhereInput
+    some?: ReferralLogWhereInput
+    none?: ReferralLogWhereInput
+  }
+
+  export type ReferralLogNullableRelationFilter = {
+    is?: ReferralLogWhereInput | null
+    isNot?: ReferralLogWhereInput | null
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type RefreshTokenOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -55711,6 +57547,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ReferralLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     username?: SortOrder
@@ -55727,12 +57567,20 @@ export namespace Prisma {
     apiKeyCreatedAt?: SortOrder
     isVip?: SortOrder
     isReseller?: SortOrder
+    hasDeposited?: SortOrder
+    referralCode?: SortOrder
+    referredById?: SortOrder
+    totalReferralEarnings?: SortOrder
     phone?: SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
     notifyPromotions?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    totalReferralEarnings?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -55751,6 +57599,10 @@ export namespace Prisma {
     apiKeyCreatedAt?: SortOrder
     isVip?: SortOrder
     isReseller?: SortOrder
+    hasDeposited?: SortOrder
+    referralCode?: SortOrder
+    referredById?: SortOrder
+    totalReferralEarnings?: SortOrder
     phone?: SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
@@ -55775,12 +57627,20 @@ export namespace Prisma {
     apiKeyCreatedAt?: SortOrder
     isVip?: SortOrder
     isReseller?: SortOrder
+    hasDeposited?: SortOrder
+    referralCode?: SortOrder
+    referredById?: SortOrder
+    totalReferralEarnings?: SortOrder
     phone?: SortOrder
     notifyEmail?: SortOrder
     notifyOrderUpdates?: SortOrder
     notifyPromotions?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    totalReferralEarnings?: SortOrder
   }
 
   export type EnumRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -56922,11 +58782,6 @@ export namespace Prisma {
     isNot?: TicketWhereInput
   }
 
-  export type UserNullableRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
-  }
-
   export type TicketMessageCountOrderByAggregateInput = {
     id?: SortOrder
     ticketId?: SortOrder
@@ -57438,6 +59293,13 @@ export namespace Prisma {
     not?: NestedEnumDisplayCurrencyFilter<$PrismaModel> | $Enums.DisplayCurrency
   }
 
+  export type EnumReferrerRewardTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReferrerRewardType | EnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumReferrerRewardTypeFilter<$PrismaModel> | $Enums.ReferrerRewardType
+  }
+
   export type SiteSettingsCountOrderByAggregateInput = {
     id?: SortOrder
     siteName?: SortOrder
@@ -57455,12 +59317,25 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
     resendOrderButtonEnabled?: SortOrder
+    firstDepositBonusEnabled?: SortOrder
+    firstDepositBonusPercent?: SortOrder
+    firstDepositMinAmount?: SortOrder
+    firstDepositMaxBonus?: SortOrder
+    referralSystemEnabled?: SortOrder
+    referrerRewardType?: SortOrder
+    referrerRewardValue?: SortOrder
+    refereeBonusPercent?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SiteSettingsAvgOrderByAggregateInput = {
     usdToBdtRate?: SortOrder
     smtpPort?: SortOrder
+    firstDepositBonusPercent?: SortOrder
+    firstDepositMinAmount?: SortOrder
+    firstDepositMaxBonus?: SortOrder
+    referrerRewardValue?: SortOrder
+    refereeBonusPercent?: SortOrder
   }
 
   export type SiteSettingsMaxOrderByAggregateInput = {
@@ -57480,6 +59355,14 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
     resendOrderButtonEnabled?: SortOrder
+    firstDepositBonusEnabled?: SortOrder
+    firstDepositBonusPercent?: SortOrder
+    firstDepositMinAmount?: SortOrder
+    firstDepositMaxBonus?: SortOrder
+    referralSystemEnabled?: SortOrder
+    referrerRewardType?: SortOrder
+    referrerRewardValue?: SortOrder
+    refereeBonusPercent?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -57500,12 +59383,25 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
     resendOrderButtonEnabled?: SortOrder
+    firstDepositBonusEnabled?: SortOrder
+    firstDepositBonusPercent?: SortOrder
+    firstDepositMinAmount?: SortOrder
+    firstDepositMaxBonus?: SortOrder
+    referralSystemEnabled?: SortOrder
+    referrerRewardType?: SortOrder
+    referrerRewardValue?: SortOrder
+    refereeBonusPercent?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SiteSettingsSumOrderByAggregateInput = {
     usdToBdtRate?: SortOrder
     smtpPort?: SortOrder
+    firstDepositBonusPercent?: SortOrder
+    firstDepositMinAmount?: SortOrder
+    firstDepositMaxBonus?: SortOrder
+    referrerRewardValue?: SortOrder
+    refereeBonusPercent?: SortOrder
   }
 
   export type EnumLiveChatProviderWithAggregatesFilter<$PrismaModel = never> = {
@@ -57526,6 +59422,78 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
     _max?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
+  }
+
+  export type EnumReferrerRewardTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReferrerRewardType | EnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumReferrerRewardTypeWithAggregatesFilter<$PrismaModel> | $Enums.ReferrerRewardType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReferrerRewardTypeFilter<$PrismaModel>
+    _max?: NestedEnumReferrerRewardTypeFilter<$PrismaModel>
+  }
+
+  export type EnumReferralStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReferralStatus | EnumReferralStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ReferralStatus[] | ListEnumReferralStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReferralStatus[] | ListEnumReferralStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumReferralStatusFilter<$PrismaModel> | $Enums.ReferralStatus
+  }
+
+  export type ReferralLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    rewardAmount?: SortOrder
+    refereeBonusAmount?: SortOrder
+    refereeDepositAmount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ReferralLogAvgOrderByAggregateInput = {
+    rewardAmount?: SortOrder
+    refereeBonusAmount?: SortOrder
+    refereeDepositAmount?: SortOrder
+  }
+
+  export type ReferralLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    rewardAmount?: SortOrder
+    refereeBonusAmount?: SortOrder
+    refereeDepositAmount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ReferralLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    rewardAmount?: SortOrder
+    refereeBonusAmount?: SortOrder
+    refereeDepositAmount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ReferralLogSumOrderByAggregateInput = {
+    rewardAmount?: SortOrder
+    refereeBonusAmount?: SortOrder
+    refereeDepositAmount?: SortOrder
+  }
+
+  export type EnumReferralStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReferralStatus | EnumReferralStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ReferralStatus[] | ListEnumReferralStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReferralStatus[] | ListEnumReferralStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumReferralStatusWithAggregatesFilter<$PrismaModel> | $Enums.ReferralStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReferralStatusFilter<$PrismaModel>
+    _max?: NestedEnumReferralStatusFilter<$PrismaModel>
   }
 
   export type EnumSupportChannelTypeFilter<$PrismaModel = never> = {
@@ -58278,6 +60246,19 @@ export namespace Prisma {
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutStockCodeInput, OrderUpdateWithoutStockCodeInput>, OrderUncheckedUpdateWithoutStockCodeInput>
   }
 
+  export type UserCreateNestedOneWithoutReferralsInput = {
+    create?: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutReferredByInput = {
+    create?: XOR<UserCreateWithoutReferredByInput, UserUncheckedCreateWithoutReferredByInput> | UserCreateWithoutReferredByInput[] | UserUncheckedCreateWithoutReferredByInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferredByInput | UserCreateOrConnectWithoutReferredByInput[]
+    createMany?: UserCreateManyReferredByInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
   export type WalletCreateNestedOneWithoutUserInput = {
     create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
     connectOrCreate?: WalletCreateOrConnectWithoutUserInput
@@ -58364,6 +60345,26 @@ export namespace Prisma {
     connectOrCreate?: OrderIntentCreateOrConnectWithoutUserInput | OrderIntentCreateOrConnectWithoutUserInput[]
     createMany?: OrderIntentCreateManyUserInputEnvelope
     connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
+  }
+
+  export type ReferralLogCreateNestedManyWithoutReferrerInput = {
+    create?: XOR<ReferralLogCreateWithoutReferrerInput, ReferralLogUncheckedCreateWithoutReferrerInput> | ReferralLogCreateWithoutReferrerInput[] | ReferralLogUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: ReferralLogCreateOrConnectWithoutReferrerInput | ReferralLogCreateOrConnectWithoutReferrerInput[]
+    createMany?: ReferralLogCreateManyReferrerInputEnvelope
+    connect?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+  }
+
+  export type ReferralLogCreateNestedOneWithoutRefereeInput = {
+    create?: XOR<ReferralLogCreateWithoutRefereeInput, ReferralLogUncheckedCreateWithoutRefereeInput>
+    connectOrCreate?: ReferralLogCreateOrConnectWithoutRefereeInput
+    connect?: ReferralLogWhereUniqueInput
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutReferredByInput = {
+    create?: XOR<UserCreateWithoutReferredByInput, UserUncheckedCreateWithoutReferredByInput> | UserCreateWithoutReferredByInput[] | UserUncheckedCreateWithoutReferredByInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferredByInput | UserCreateOrConnectWithoutReferredByInput[]
+    createMany?: UserCreateManyReferredByInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
   export type WalletUncheckedCreateNestedOneWithoutUserInput = {
@@ -58454,12 +60455,49 @@ export namespace Prisma {
     connect?: OrderIntentWhereUniqueInput | OrderIntentWhereUniqueInput[]
   }
 
+  export type ReferralLogUncheckedCreateNestedManyWithoutReferrerInput = {
+    create?: XOR<ReferralLogCreateWithoutReferrerInput, ReferralLogUncheckedCreateWithoutReferrerInput> | ReferralLogCreateWithoutReferrerInput[] | ReferralLogUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: ReferralLogCreateOrConnectWithoutReferrerInput | ReferralLogCreateOrConnectWithoutReferrerInput[]
+    createMany?: ReferralLogCreateManyReferrerInputEnvelope
+    connect?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+  }
+
+  export type ReferralLogUncheckedCreateNestedOneWithoutRefereeInput = {
+    create?: XOR<ReferralLogCreateWithoutRefereeInput, ReferralLogUncheckedCreateWithoutRefereeInput>
+    connectOrCreate?: ReferralLogCreateOrConnectWithoutRefereeInput
+    connect?: ReferralLogWhereUniqueInput
+  }
+
   export type EnumRoleFieldUpdateOperationsInput = {
     set?: $Enums.Role
   }
 
   export type EnumUserStatusFieldUpdateOperationsInput = {
     set?: $Enums.UserStatus
+  }
+
+  export type UserUpdateOneWithoutReferralsNestedInput = {
+    create?: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralsInput
+    upsert?: UserUpsertWithoutReferralsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferralsInput, UserUpdateWithoutReferralsInput>, UserUncheckedUpdateWithoutReferralsInput>
+  }
+
+  export type UserUpdateManyWithoutReferredByNestedInput = {
+    create?: XOR<UserCreateWithoutReferredByInput, UserUncheckedCreateWithoutReferredByInput> | UserCreateWithoutReferredByInput[] | UserUncheckedCreateWithoutReferredByInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferredByInput | UserCreateOrConnectWithoutReferredByInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutReferredByInput | UserUpsertWithWhereUniqueWithoutReferredByInput[]
+    createMany?: UserCreateManyReferredByInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutReferredByInput | UserUpdateWithWhereUniqueWithoutReferredByInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutReferredByInput | UserUpdateManyWithWhereWithoutReferredByInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type WalletUpdateOneWithoutUserNestedInput = {
@@ -58632,6 +60670,44 @@ export namespace Prisma {
     deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
   }
 
+  export type ReferralLogUpdateManyWithoutReferrerNestedInput = {
+    create?: XOR<ReferralLogCreateWithoutReferrerInput, ReferralLogUncheckedCreateWithoutReferrerInput> | ReferralLogCreateWithoutReferrerInput[] | ReferralLogUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: ReferralLogCreateOrConnectWithoutReferrerInput | ReferralLogCreateOrConnectWithoutReferrerInput[]
+    upsert?: ReferralLogUpsertWithWhereUniqueWithoutReferrerInput | ReferralLogUpsertWithWhereUniqueWithoutReferrerInput[]
+    createMany?: ReferralLogCreateManyReferrerInputEnvelope
+    set?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+    disconnect?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+    delete?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+    connect?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+    update?: ReferralLogUpdateWithWhereUniqueWithoutReferrerInput | ReferralLogUpdateWithWhereUniqueWithoutReferrerInput[]
+    updateMany?: ReferralLogUpdateManyWithWhereWithoutReferrerInput | ReferralLogUpdateManyWithWhereWithoutReferrerInput[]
+    deleteMany?: ReferralLogScalarWhereInput | ReferralLogScalarWhereInput[]
+  }
+
+  export type ReferralLogUpdateOneWithoutRefereeNestedInput = {
+    create?: XOR<ReferralLogCreateWithoutRefereeInput, ReferralLogUncheckedCreateWithoutRefereeInput>
+    connectOrCreate?: ReferralLogCreateOrConnectWithoutRefereeInput
+    upsert?: ReferralLogUpsertWithoutRefereeInput
+    disconnect?: ReferralLogWhereInput | boolean
+    delete?: ReferralLogWhereInput | boolean
+    connect?: ReferralLogWhereUniqueInput
+    update?: XOR<XOR<ReferralLogUpdateToOneWithWhereWithoutRefereeInput, ReferralLogUpdateWithoutRefereeInput>, ReferralLogUncheckedUpdateWithoutRefereeInput>
+  }
+
+  export type UserUncheckedUpdateManyWithoutReferredByNestedInput = {
+    create?: XOR<UserCreateWithoutReferredByInput, UserUncheckedCreateWithoutReferredByInput> | UserCreateWithoutReferredByInput[] | UserUncheckedCreateWithoutReferredByInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferredByInput | UserCreateOrConnectWithoutReferredByInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutReferredByInput | UserUpsertWithWhereUniqueWithoutReferredByInput[]
+    createMany?: UserCreateManyReferredByInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutReferredByInput | UserUpdateWithWhereUniqueWithoutReferredByInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutReferredByInput | UserUpdateManyWithWhereWithoutReferredByInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
   export type WalletUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
     connectOrCreate?: WalletCreateOrConnectWithoutUserInput
@@ -58800,6 +60876,30 @@ export namespace Prisma {
     update?: OrderIntentUpdateWithWhereUniqueWithoutUserInput | OrderIntentUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: OrderIntentUpdateManyWithWhereWithoutUserInput | OrderIntentUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: OrderIntentScalarWhereInput | OrderIntentScalarWhereInput[]
+  }
+
+  export type ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput = {
+    create?: XOR<ReferralLogCreateWithoutReferrerInput, ReferralLogUncheckedCreateWithoutReferrerInput> | ReferralLogCreateWithoutReferrerInput[] | ReferralLogUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: ReferralLogCreateOrConnectWithoutReferrerInput | ReferralLogCreateOrConnectWithoutReferrerInput[]
+    upsert?: ReferralLogUpsertWithWhereUniqueWithoutReferrerInput | ReferralLogUpsertWithWhereUniqueWithoutReferrerInput[]
+    createMany?: ReferralLogCreateManyReferrerInputEnvelope
+    set?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+    disconnect?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+    delete?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+    connect?: ReferralLogWhereUniqueInput | ReferralLogWhereUniqueInput[]
+    update?: ReferralLogUpdateWithWhereUniqueWithoutReferrerInput | ReferralLogUpdateWithWhereUniqueWithoutReferrerInput[]
+    updateMany?: ReferralLogUpdateManyWithWhereWithoutReferrerInput | ReferralLogUpdateManyWithWhereWithoutReferrerInput[]
+    deleteMany?: ReferralLogScalarWhereInput | ReferralLogScalarWhereInput[]
+  }
+
+  export type ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput = {
+    create?: XOR<ReferralLogCreateWithoutRefereeInput, ReferralLogUncheckedCreateWithoutRefereeInput>
+    connectOrCreate?: ReferralLogCreateOrConnectWithoutRefereeInput
+    upsert?: ReferralLogUpsertWithoutRefereeInput
+    disconnect?: ReferralLogWhereInput | boolean
+    delete?: ReferralLogWhereInput | boolean
+    connect?: ReferralLogWhereUniqueInput
+    update?: XOR<XOR<ReferralLogUpdateToOneWithWhereWithoutRefereeInput, ReferralLogUpdateWithoutRefereeInput>, ReferralLogUncheckedUpdateWithoutRefereeInput>
   }
 
   export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
@@ -60269,6 +62369,42 @@ export namespace Prisma {
     set?: $Enums.DisplayCurrency
   }
 
+  export type EnumReferrerRewardTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ReferrerRewardType
+  }
+
+  export type UserCreateNestedOneWithoutReferralsMadeInput = {
+    create?: XOR<UserCreateWithoutReferralsMadeInput, UserUncheckedCreateWithoutReferralsMadeInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralsMadeInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutReferralReceivedInput = {
+    create?: XOR<UserCreateWithoutReferralReceivedInput, UserUncheckedCreateWithoutReferralReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralReceivedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumReferralStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ReferralStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutReferralsMadeNestedInput = {
+    create?: XOR<UserCreateWithoutReferralsMadeInput, UserUncheckedCreateWithoutReferralsMadeInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralsMadeInput
+    upsert?: UserUpsertWithoutReferralsMadeInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferralsMadeInput, UserUpdateWithoutReferralsMadeInput>, UserUncheckedUpdateWithoutReferralsMadeInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutReferralReceivedNestedInput = {
+    create?: XOR<UserCreateWithoutReferralReceivedInput, UserUncheckedCreateWithoutReferralReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralReceivedInput
+    upsert?: UserUpsertWithoutReferralReceivedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferralReceivedInput, UserUpdateWithoutReferralReceivedInput>, UserUncheckedUpdateWithoutReferralReceivedInput>
+  }
+
   export type EnumSupportChannelTypeFieldUpdateOperationsInput = {
     set?: $Enums.SupportChannelType
   }
@@ -60996,6 +63132,13 @@ export namespace Prisma {
     not?: NestedEnumDisplayCurrencyFilter<$PrismaModel> | $Enums.DisplayCurrency
   }
 
+  export type NestedEnumReferrerRewardTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReferrerRewardType | EnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumReferrerRewardTypeFilter<$PrismaModel> | $Enums.ReferrerRewardType
+  }
+
   export type NestedEnumLiveChatProviderWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.LiveChatProvider | EnumLiveChatProviderFieldRefInput<$PrismaModel>
     in?: $Enums.LiveChatProvider[] | ListEnumLiveChatProviderFieldRefInput<$PrismaModel>
@@ -61014,6 +63157,33 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
     _max?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
+  }
+
+  export type NestedEnumReferrerRewardTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReferrerRewardType | EnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumReferrerRewardTypeWithAggregatesFilter<$PrismaModel> | $Enums.ReferrerRewardType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReferrerRewardTypeFilter<$PrismaModel>
+    _max?: NestedEnumReferrerRewardTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumReferralStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReferralStatus | EnumReferralStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ReferralStatus[] | ListEnumReferralStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReferralStatus[] | ListEnumReferralStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumReferralStatusFilter<$PrismaModel> | $Enums.ReferralStatus
+  }
+
+  export type NestedEnumReferralStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReferralStatus | EnumReferralStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ReferralStatus[] | ListEnumReferralStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ReferralStatus[] | ListEnumReferralStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumReferralStatusWithAggregatesFilter<$PrismaModel> | $Enums.ReferralStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumReferralStatusFilter<$PrismaModel>
+    _max?: NestedEnumReferralStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumSupportChannelTypeFilter<$PrismaModel = never> = {
@@ -62279,6 +64449,193 @@ export namespace Prisma {
     ticketOrderActions?: TicketOrderActionUncheckedUpdateManyWithoutOrderNestedInput
   }
 
+  export type UserCreateWithoutReferralsInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    tickets?: TicketCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageCreateNestedManyWithoutSenderInput
+    deposits?: DepositCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
+  }
+
+  export type UserUncheckedCreateWithoutReferralsInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageUncheckedCreateNestedManyWithoutSenderInput
+    deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
+  }
+
+  export type UserCreateOrConnectWithoutReferralsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+  }
+
+  export type UserCreateWithoutReferredByInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referrals?: UserCreateNestedManyWithoutReferredByInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    tickets?: TicketCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageCreateNestedManyWithoutSenderInput
+    deposits?: DepositCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
+  }
+
+  export type UserUncheckedCreateWithoutReferredByInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageUncheckedCreateNestedManyWithoutSenderInput
+    deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
+  }
+
+  export type UserCreateOrConnectWithoutReferredByInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferredByInput, UserUncheckedCreateWithoutReferredByInput>
+  }
+
+  export type UserCreateManyReferredByInputEnvelope = {
+    data: UserCreateManyReferredByInput | UserCreateManyReferredByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WalletCreateWithoutUserInput = {
     id?: string
     balance?: Decimal | DecimalJsLike | number | string
@@ -62738,6 +65095,205 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ReferralLogCreateWithoutReferrerInput = {
+    id?: string
+    rewardAmount: Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: Decimal | DecimalJsLike | number | string
+    refereeDepositAmount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ReferralStatus
+    createdAt?: Date | string
+    referee: UserCreateNestedOneWithoutReferralReceivedInput
+  }
+
+  export type ReferralLogUncheckedCreateWithoutReferrerInput = {
+    id?: string
+    refereeId: string
+    rewardAmount: Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: Decimal | DecimalJsLike | number | string
+    refereeDepositAmount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ReferralStatus
+    createdAt?: Date | string
+  }
+
+  export type ReferralLogCreateOrConnectWithoutReferrerInput = {
+    where: ReferralLogWhereUniqueInput
+    create: XOR<ReferralLogCreateWithoutReferrerInput, ReferralLogUncheckedCreateWithoutReferrerInput>
+  }
+
+  export type ReferralLogCreateManyReferrerInputEnvelope = {
+    data: ReferralLogCreateManyReferrerInput | ReferralLogCreateManyReferrerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReferralLogCreateWithoutRefereeInput = {
+    id?: string
+    rewardAmount: Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: Decimal | DecimalJsLike | number | string
+    refereeDepositAmount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ReferralStatus
+    createdAt?: Date | string
+    referrer: UserCreateNestedOneWithoutReferralsMadeInput
+  }
+
+  export type ReferralLogUncheckedCreateWithoutRefereeInput = {
+    id?: string
+    referrerId: string
+    rewardAmount: Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: Decimal | DecimalJsLike | number | string
+    refereeDepositAmount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ReferralStatus
+    createdAt?: Date | string
+  }
+
+  export type ReferralLogCreateOrConnectWithoutRefereeInput = {
+    where: ReferralLogWhereUniqueInput
+    create: XOR<ReferralLogCreateWithoutRefereeInput, ReferralLogUncheckedCreateWithoutRefereeInput>
+  }
+
+  export type UserUpsertWithoutReferralsInput = {
+    update: XOR<UserUpdateWithoutReferralsInput, UserUncheckedUpdateWithoutReferralsInput>
+    create: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReferralsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReferralsInput, UserUncheckedUpdateWithoutReferralsInput>
+  }
+
+  export type UserUpdateWithoutReferralsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    tickets?: TicketUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferralsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUncheckedUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutReferredByInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutReferredByInput, UserUncheckedUpdateWithoutReferredByInput>
+    create: XOR<UserCreateWithoutReferredByInput, UserUncheckedCreateWithoutReferredByInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutReferredByInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutReferredByInput, UserUncheckedUpdateWithoutReferredByInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutReferredByInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutReferredByInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    username?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
+    passwordHash?: StringNullableFilter<"User"> | string | null
+    role?: EnumRoleFilter<"User"> | $Enums.Role
+    status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
+    googleId?: StringNullableFilter<"User"> | string | null
+    avatarUrl?: StringNullableFilter<"User"> | string | null
+    twoFactorSecret?: StringNullableFilter<"User"> | string | null
+    twoFactorEnabled?: BoolFilter<"User"> | boolean
+    apiKeyHash?: StringNullableFilter<"User"> | string | null
+    apiKeyPrefix?: StringNullableFilter<"User"> | string | null
+    apiKeyCreatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    isVip?: BoolFilter<"User"> | boolean
+    isReseller?: BoolFilter<"User"> | boolean
+    hasDeposited?: BoolFilter<"User"> | boolean
+    referralCode?: StringFilter<"User"> | string
+    referredById?: StringNullableFilter<"User"> | string | null
+    totalReferralEarnings?: DecimalFilter<"User"> | Decimal | DecimalJsLike | number | string
+    phone?: StringNullableFilter<"User"> | string | null
+    notifyEmail?: BoolFilter<"User"> | boolean
+    notifyOrderUpdates?: BoolFilter<"User"> | boolean
+    notifyPromotions?: BoolFilter<"User"> | boolean
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+  }
+
   export type WalletUpsertWithoutUserInput = {
     update: XOR<WalletUpdateWithoutUserInput, WalletUncheckedUpdateWithoutUserInput>
     create: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
@@ -63093,6 +65649,67 @@ export namespace Prisma {
     data: XOR<OrderIntentUpdateManyMutationInput, OrderIntentUncheckedUpdateManyWithoutUserInput>
   }
 
+  export type ReferralLogUpsertWithWhereUniqueWithoutReferrerInput = {
+    where: ReferralLogWhereUniqueInput
+    update: XOR<ReferralLogUpdateWithoutReferrerInput, ReferralLogUncheckedUpdateWithoutReferrerInput>
+    create: XOR<ReferralLogCreateWithoutReferrerInput, ReferralLogUncheckedCreateWithoutReferrerInput>
+  }
+
+  export type ReferralLogUpdateWithWhereUniqueWithoutReferrerInput = {
+    where: ReferralLogWhereUniqueInput
+    data: XOR<ReferralLogUpdateWithoutReferrerInput, ReferralLogUncheckedUpdateWithoutReferrerInput>
+  }
+
+  export type ReferralLogUpdateManyWithWhereWithoutReferrerInput = {
+    where: ReferralLogScalarWhereInput
+    data: XOR<ReferralLogUpdateManyMutationInput, ReferralLogUncheckedUpdateManyWithoutReferrerInput>
+  }
+
+  export type ReferralLogScalarWhereInput = {
+    AND?: ReferralLogScalarWhereInput | ReferralLogScalarWhereInput[]
+    OR?: ReferralLogScalarWhereInput[]
+    NOT?: ReferralLogScalarWhereInput | ReferralLogScalarWhereInput[]
+    id?: StringFilter<"ReferralLog"> | string
+    referrerId?: StringFilter<"ReferralLog"> | string
+    refereeId?: StringFilter<"ReferralLog"> | string
+    rewardAmount?: DecimalFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFilter<"ReferralLog"> | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFilter<"ReferralLog"> | $Enums.ReferralStatus
+    createdAt?: DateTimeFilter<"ReferralLog"> | Date | string
+  }
+
+  export type ReferralLogUpsertWithoutRefereeInput = {
+    update: XOR<ReferralLogUpdateWithoutRefereeInput, ReferralLogUncheckedUpdateWithoutRefereeInput>
+    create: XOR<ReferralLogCreateWithoutRefereeInput, ReferralLogUncheckedCreateWithoutRefereeInput>
+    where?: ReferralLogWhereInput
+  }
+
+  export type ReferralLogUpdateToOneWithWhereWithoutRefereeInput = {
+    where?: ReferralLogWhereInput
+    data: XOR<ReferralLogUpdateWithoutRefereeInput, ReferralLogUncheckedUpdateWithoutRefereeInput>
+  }
+
+  export type ReferralLogUpdateWithoutRefereeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFieldUpdateOperationsInput | $Enums.ReferralStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrer?: UserUpdateOneRequiredWithoutReferralsMadeNestedInput
+  }
+
+  export type ReferralLogUncheckedUpdateWithoutRefereeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referrerId?: StringFieldUpdateOperationsInput | string
+    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFieldUpdateOperationsInput | $Enums.ReferralStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutPasswordResetTokensInput = {
     id?: string
     username: string
@@ -63109,12 +65726,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -63127,6 +65749,8 @@ export namespace Prisma {
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -63145,12 +65769,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -63163,6 +65792,8 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -63197,12 +65828,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -63215,6 +65851,8 @@ export namespace Prisma {
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -63233,12 +65871,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -63251,6 +65894,8 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserCreateWithoutRefreshTokensInput = {
@@ -63269,12 +65914,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     tickets?: TicketCreateNestedManyWithoutUserInput
@@ -63287,6 +65937,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutRefreshTokensInput = {
@@ -63305,12 +65957,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     tickets?: TicketUncheckedCreateNestedManyWithoutUserInput
@@ -63323,6 +65980,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -63357,12 +66016,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     tickets?: TicketUpdateManyWithoutUserNestedInput
@@ -63375,6 +66039,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefreshTokensInput = {
@@ -63393,12 +66059,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     tickets?: TicketUncheckedUpdateManyWithoutUserNestedInput
@@ -63411,6 +66082,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserCreateWithoutWalletInput = {
@@ -63429,12 +66102,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     tickets?: TicketCreateNestedManyWithoutUserInput
@@ -63447,6 +66125,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutWalletInput = {
@@ -63465,12 +66145,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     tickets?: TicketUncheckedCreateNestedManyWithoutUserInput
@@ -63483,6 +66168,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutWalletInput = {
@@ -63549,12 +66236,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     tickets?: TicketUpdateManyWithoutUserNestedInput
@@ -63567,6 +66259,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWalletInput = {
@@ -63585,12 +66279,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     tickets?: TicketUncheckedUpdateManyWithoutUserNestedInput
@@ -63603,6 +66302,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type WalletTransactionUpsertWithWhereUniqueWithoutWalletInput = {
@@ -64645,12 +67346,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     tickets?: TicketCreateNestedManyWithoutUserInput
@@ -64663,6 +67369,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -64681,12 +67389,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     tickets?: TicketUncheckedCreateNestedManyWithoutUserInput
@@ -64699,6 +67412,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -64910,12 +67625,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     tickets?: TicketUpdateManyWithoutUserNestedInput
@@ -64928,6 +67648,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -64946,12 +67668,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     tickets?: TicketUncheckedUpdateManyWithoutUserNestedInput
@@ -64964,6 +67691,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type ServiceUpsertWithoutOrdersInput = {
@@ -65179,12 +67908,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -65197,6 +67931,8 @@ export namespace Prisma {
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutOrderIntentsInput = {
@@ -65215,12 +67951,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -65233,6 +67974,8 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutOrderIntentsInput = {
@@ -65419,12 +68162,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -65437,6 +68185,8 @@ export namespace Prisma {
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrderIntentsInput = {
@@ -65455,12 +68205,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -65473,6 +68228,8 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type ServiceUpsertWithoutOrderIntentsInput = {
@@ -65945,12 +68702,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -65963,6 +68725,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutTicketsInput = {
@@ -65981,12 +68745,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -65999,6 +68768,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutTicketsInput = {
@@ -66133,12 +68904,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -66151,6 +68927,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTicketsInput = {
@@ -66169,12 +68947,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -66187,6 +68970,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type TicketCategoryUpsertWithoutTicketsInput = {
@@ -66326,12 +69111,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -66344,6 +69134,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutTicketMessagesInput = {
@@ -66362,12 +69154,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -66380,6 +69177,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutTicketMessagesInput = {
@@ -66451,12 +69250,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -66469,6 +69273,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTicketMessagesInput = {
@@ -66487,12 +69293,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -66505,6 +69316,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type TicketCreateWithoutOrderActionsInput = {
@@ -66707,12 +69520,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -66725,6 +69543,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutDepositsInput = {
@@ -66743,12 +69563,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -66761,6 +69586,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutDepositsInput = {
@@ -66784,12 +69611,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -66802,6 +69634,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutReviewedDepositsInput = {
@@ -66820,12 +69654,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -66838,6 +69677,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutReviewedDepositsInput = {
@@ -66981,12 +69822,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -66999,6 +69845,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDepositsInput = {
@@ -67017,12 +69865,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -67035,6 +69888,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUpsertWithoutReviewedDepositsInput = {
@@ -67064,12 +69919,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -67082,6 +69942,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewedDepositsInput = {
@@ -67100,12 +69962,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -67118,6 +69985,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type PaymentMethodUpsertWithoutDepositsInput = {
@@ -67263,12 +70132,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -67281,6 +70155,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutAdminAuditLogsInput = {
@@ -67299,12 +70175,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -67317,6 +70198,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutAdminAuditLogsInput = {
@@ -67351,12 +70234,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -67369,6 +70257,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAdminAuditLogsInput = {
@@ -67387,12 +70277,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -67405,6 +70300,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type ServiceCreateWithoutDripFeedsInput = {
@@ -67539,12 +70436,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -67557,6 +70459,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateInput = {
@@ -67575,12 +70479,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -67593,6 +70502,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateInput = {
@@ -67627,12 +70538,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -67645,6 +70561,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateInput = {
@@ -67663,12 +70581,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -67681,6 +70604,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserCreateWithoutChildPanelInput = {
@@ -67699,12 +70624,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -67717,6 +70647,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutChildPanelInput = {
@@ -67735,12 +70667,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -67753,6 +70690,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutChildPanelInput = {
@@ -67787,12 +70726,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -67805,6 +70749,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChildPanelInput = {
@@ -67823,12 +70769,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -67841,6 +70792,8 @@ export namespace Prisma {
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
   }
 
   export type CouponRedemptionCreateWithoutCouponInput = {
@@ -68000,12 +70953,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
     wallet?: WalletCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -68018,6 +70976,8 @@ export namespace Prisma {
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
   }
 
   export type UserUncheckedCreateWithoutCouponRedemptionsInput = {
@@ -68036,12 +70996,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: Date | string | null
     isVip?: boolean
     isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
     phone?: string | null
     notifyEmail?: boolean
     notifyOrderUpdates?: boolean
     notifyPromotions?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
     wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -68054,6 +71019,8 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
   }
 
   export type UserCreateOrConnectWithoutCouponRedemptionsInput = {
@@ -68125,12 +71092,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -68143,6 +71115,8 @@ export namespace Prisma {
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCouponRedemptionsInput = {
@@ -68161,12 +71135,17 @@ export namespace Prisma {
     apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isVip?: BoolFieldUpdateOperationsInput | boolean
     isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     notifyEmail?: BoolFieldUpdateOperationsInput | boolean
     notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
     notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
     wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -68179,6 +71158,384 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
+  }
+
+  export type UserCreateWithoutReferralsMadeInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    tickets?: TicketCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageCreateNestedManyWithoutSenderInput
+    deposits?: DepositCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
+  }
+
+  export type UserUncheckedCreateWithoutReferralsMadeInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageUncheckedCreateNestedManyWithoutSenderInput
+    deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
+  }
+
+  export type UserCreateOrConnectWithoutReferralsMadeInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferralsMadeInput, UserUncheckedCreateWithoutReferralsMadeInput>
+  }
+
+  export type UserCreateWithoutReferralReceivedInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    tickets?: TicketCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageCreateNestedManyWithoutSenderInput
+    deposits?: DepositCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+  }
+
+  export type UserUncheckedCreateWithoutReferralReceivedInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageUncheckedCreateNestedManyWithoutSenderInput
+    deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+  }
+
+  export type UserCreateOrConnectWithoutReferralReceivedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferralReceivedInput, UserUncheckedCreateWithoutReferralReceivedInput>
+  }
+
+  export type UserUpsertWithoutReferralsMadeInput = {
+    update: XOR<UserUpdateWithoutReferralsMadeInput, UserUncheckedUpdateWithoutReferralsMadeInput>
+    create: XOR<UserCreateWithoutReferralsMadeInput, UserUncheckedCreateWithoutReferralsMadeInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReferralsMadeInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReferralsMadeInput, UserUncheckedUpdateWithoutReferralsMadeInput>
+  }
+
+  export type UserUpdateWithoutReferralsMadeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    tickets?: TicketUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferralsMadeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUncheckedUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
+  }
+
+  export type UserUpsertWithoutReferralReceivedInput = {
+    update: XOR<UserUpdateWithoutReferralReceivedInput, UserUncheckedUpdateWithoutReferralReceivedInput>
+    create: XOR<UserCreateWithoutReferralReceivedInput, UserUncheckedCreateWithoutReferralReceivedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReferralReceivedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReferralReceivedInput, UserUncheckedUpdateWithoutReferralReceivedInput>
+  }
+
+  export type UserUpdateWithoutReferralReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    tickets?: TicketUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferralReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUncheckedUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
   }
 
   export type ProductCreateManyBrandInput = {
@@ -68637,6 +71994,33 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserCreateManyReferredByInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type RefreshTokenCreateManyUserInput = {
     id?: string
     tokenHash: string
@@ -68773,6 +72157,129 @@ export namespace Prisma {
     failureReason?: string | null
     createdAt?: Date | string
     expiresAt: Date | string
+  }
+
+  export type ReferralLogCreateManyReferrerInput = {
+    id?: string
+    refereeId: string
+    rewardAmount: Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: Decimal | DecimalJsLike | number | string
+    refereeDepositAmount: Decimal | DecimalJsLike | number | string
+    status?: $Enums.ReferralStatus
+    createdAt?: Date | string
+  }
+
+  export type UserUpdateWithoutReferredByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    tickets?: TicketUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferredByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUncheckedUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutReferredByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RefreshTokenUpdateWithoutUserInput = {
@@ -69199,6 +72706,36 @@ export namespace Prisma {
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReferralLogUpdateWithoutReferrerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFieldUpdateOperationsInput | $Enums.ReferralStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referee?: UserUpdateOneRequiredWithoutReferralReceivedNestedInput
+  }
+
+  export type ReferralLogUncheckedUpdateWithoutReferrerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refereeId?: StringFieldUpdateOperationsInput | string
+    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFieldUpdateOperationsInput | $Enums.ReferralStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReferralLogUncheckedUpdateManyWithoutReferrerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    refereeId?: StringFieldUpdateOperationsInput | string
+    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeBonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refereeDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumReferralStatusFieldUpdateOperationsInput | $Enums.ReferralStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WalletTransactionCreateManyWalletInput = {
@@ -70678,6 +74215,10 @@ export namespace Prisma {
      * @deprecated Use SiteSettingsDefaultArgs instead
      */
     export type SiteSettingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SiteSettingsDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ReferralLogDefaultArgs instead
+     */
+    export type ReferralLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ReferralLogDefaultArgs<ExtArgs>
     /**
      * @deprecated Use SupportChannelDefaultArgs instead
      */

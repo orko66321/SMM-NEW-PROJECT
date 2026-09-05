@@ -128,6 +128,9 @@ export const registerSchema = z.object({
     username: usernameSchema,
     email: z.string().trim().toLowerCase().email().max(255),
     password: passwordSchema,
+    // Referral code from ?ref= or the manual field on the register form. A
+    // code that doesn't resolve to a user is silently ignored server-side.
+    referralCode: z.string().trim().max(32).optional(),
 });
 export const loginSchema = z.object({
     identifier: z.string().trim().min(3).max(255), // username or email
@@ -151,6 +154,10 @@ export const authUserSchema = z.object({
     // Store Access Type gating — see Product.accessType / User.isVip.
     isVip: z.boolean(),
     isReseller: z.boolean(),
+    // First-deposit-bonus / referral gating and the "First Deposit Offer"
+    // banner; `referralCode` powers the Refer & Earn page's share link.
+    hasDeposited: z.boolean(),
+    referralCode: z.string(),
 });
 // ── Wallet ───────────────────────────────────────────────────────────────
 // Phase 3: replaces the old free-text `method` deposit form — the user now
@@ -416,6 +423,8 @@ export const paymentMethodInputSchema = paymentMethodObjectSchema
 // ── Phase 4: settings, notices, coupons, password reset, profile, api keys ─
 export const LiveChatProviderValues = ["NONE", "TAWKTO", "CRISP"];
 export const DisplayCurrencyValues = ["USD", "BDT"];
+export const ReferrerRewardTypeValues = ["PERCENTAGE", "FIXED"];
+export const ReferralStatusValues = ["COMPLETED", "FAILED"];
 export const NoticeLevelValues = ["INFO", "WARNING", "SUCCESS", "ERROR"];
 // Admin-facing settings update — SMTP password is optional-on-update (same
 // reasoning as updateProviderSchema.apiKey: omit to keep the existing
@@ -444,6 +453,17 @@ export const updateSettingsSchema = z.object({
     // Admin Orders "Resend to provider" kill-switch. Optional so an older
     // admin client still validates; settings.service leaves it untouched when omitted.
     resendOrderButtonEnabled: z.boolean().optional(),
+    // One-time first-deposit bonus (all amounts USD). Each optional so an
+    // older admin client still validates; settings.service skips undefined.
+    firstDepositBonusEnabled: z.boolean().optional(),
+    firstDepositBonusPercent: z.coerce.number().min(0).max(100).optional(),
+    firstDepositMinAmount: z.coerce.number().min(0).max(1_000_000).optional(),
+    firstDepositMaxBonus: z.coerce.number().min(0).max(1_000_000).optional(),
+    // Referral program (all amounts USD).
+    referralSystemEnabled: z.boolean().optional(),
+    referrerRewardType: z.enum(ReferrerRewardTypeValues).optional(),
+    referrerRewardValue: z.coerce.number().min(0).max(1_000_000).optional(),
+    refereeBonusPercent: z.coerce.number().min(0).max(100).optional(),
 });
 // Admin-only "Send test email" action (Settings -> SMTP card) — lets the
 // operator confirm their saved SMTP config actually works without triggering
@@ -463,6 +483,17 @@ export const publicSettingsSchema = z.object({
     // in SiteSettings — lets the frontend hide the Google button entirely
     // rather than show one that always fails. See env.ts's googleAuthEnabled.
     googleAuthEnabled: z.boolean(),
+    // First-deposit bonus + referral program — non-secret knobs the Add Funds
+    // banner and Refer & Earn page need. Decimals arrive as strings (like
+    // usdToBdtRate) and are Number()'d client-side.
+    firstDepositBonusEnabled: z.boolean(),
+    firstDepositBonusPercent: z.string(),
+    firstDepositMinAmount: z.string(),
+    firstDepositMaxBonus: z.string(),
+    referralSystemEnabled: z.boolean(),
+    referrerRewardType: z.enum(ReferrerRewardTypeValues),
+    referrerRewardValue: z.string(),
+    refereeBonusPercent: z.string(),
 });
 // Bilingual "Important Notice" box on the New Order sidebar — singleton
 // (see SiteNotice model). All content fields optional/nullable: an admin
