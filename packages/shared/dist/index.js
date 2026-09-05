@@ -75,6 +75,13 @@ export const serviceListQuerySchema = paginationQuerySchema.extend({
     categoryId: z.string().optional(),
     search: searchQueryField,
 });
+// Paginated history behind the "Recently Completed" badge — its own schema
+// (smaller default page, tighter cap) rather than the shared 20/200 one, and
+// fetched on demand, never with the main services list.
+export const serviceCompletedOrdersQuerySchema = z.object({
+    page: z.coerce.number().int().min(1).default(1),
+    pageSize: z.coerce.number().int().min(1).max(50).default(10),
+});
 export const orderListQuerySchema = paginationQuerySchema.extend({
     status: z.enum(OrderStatusValues).optional(),
 });
@@ -464,6 +471,10 @@ export const updateSettingsSchema = z.object({
     referrerRewardType: z.enum(ReferrerRewardTypeValues).optional(),
     referrerRewardValue: z.coerce.number().min(0).max(1_000_000).optional(),
     refereeBonusPercent: z.coerce.number().min(0).max(100).optional(),
+    // Service "Average Time" tuning. Optional so an older admin client still
+    // validates; settings.service skips undefined.
+    avgCompletionSampleSize: z.coerce.number().int().min(1).max(100).optional(),
+    recentlyCompletedWindowHours: z.coerce.number().int().min(1).max(720).optional(),
 });
 // Admin-only "Send test email" action (Settings -> SMTP card) — lets the
 // operator confirm their saved SMTP config actually works without triggering
@@ -494,6 +505,9 @@ export const publicSettingsSchema = z.object({
     referrerRewardType: z.enum(ReferrerRewardTypeValues),
     referrerRewardValue: z.string(),
     refereeBonusPercent: z.string(),
+    // The frontend needs the window to decide whether a service's
+    // "Recently Completed" badge shows (compared against Service.lastCompletedAt).
+    recentlyCompletedWindowHours: z.number(),
 });
 // Bilingual "Important Notice" box on the New Order sidebar — singleton
 // (see SiteNotice model). All content fields optional/nullable: an admin

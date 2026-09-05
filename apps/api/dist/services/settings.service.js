@@ -39,6 +39,8 @@ export async function getAdminSettings() {
         referrerRewardType: s.referrerRewardType,
         referrerRewardValue: s.referrerRewardValue.toString(),
         refereeBonusPercent: s.refereeBonusPercent.toString(),
+        avgCompletionSampleSize: s.avgCompletionSampleSize,
+        recentlyCompletedWindowHours: s.recentlyCompletedWindowHours,
     };
 }
 /** Kill-switch for the admin Orders "Resend to provider" button + endpoint. */
@@ -80,6 +82,10 @@ export async function updateSettings(input) {
             ...(input.referrerRewardType === undefined ? {} : { referrerRewardType: input.referrerRewardType }),
             ...(input.referrerRewardValue === undefined ? {} : { referrerRewardValue: input.referrerRewardValue }),
             ...(input.refereeBonusPercent === undefined ? {} : { refereeBonusPercent: input.refereeBonusPercent }),
+            ...(input.avgCompletionSampleSize === undefined ? {} : { avgCompletionSampleSize: input.avgCompletionSampleSize }),
+            ...(input.recentlyCompletedWindowHours === undefined
+                ? {}
+                : { recentlyCompletedWindowHours: input.recentlyCompletedWindowHours }),
         },
     });
 }
@@ -102,6 +108,7 @@ export async function getPublicSettings() {
         referrerRewardType: s.referrerRewardType,
         referrerRewardValue: s.referrerRewardValue.toString(),
         refereeBonusPercent: s.refereeBonusPercent.toString(),
+        recentlyCompletedWindowHours: s.recentlyCompletedWindowHours,
     };
 }
 /** Internal only — the raw Decimal, for money math (services/payments/currency.ts), never string-formatted. */

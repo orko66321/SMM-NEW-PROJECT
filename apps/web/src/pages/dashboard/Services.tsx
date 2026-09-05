@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { getPublicCategories, getPublicServices } from "../../api/resources.js";
+import { getPublicCategories, getPublicServices, getPublicSettings } from "../../api/resources.js";
 import ServiceDetailsModal from "../../components/ui/ServiceDetailsModal.js";
+import RecentlyCompleted from "../../components/services/RecentlyCompleted.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import { Badge, EmptyState, Icon, ServiceTag, Skeleton } from "../../components/ds/index.js";
@@ -19,9 +20,11 @@ interface ServiceRow {
   refillEnabled: boolean;
   cancelEnabled: boolean;
   providerServiceId: string | null;
+  avgCompletionSeconds: number | null;
+  lastCompletedAt: string | null;
 }
 
-function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void }) {
+function ServiceCard({ s, onDetails, windowHours }: { s: ServiceRow; onDetails: () => void; windowHours: number | null }) {
   const { t, lang } = useLanguage();
   return (
     <div className="card-interactive rounded-card border border-outline-variant bg-surface-card p-4">
@@ -48,8 +51,15 @@ function ServiceCard({ s, onDetails }: { s: ServiceRow; onDetails: () => void })
         </p>
       )}
 
-      <div className="mt-3 border-t border-outline-variant pt-3 text-xs text-on-surface-variant">
-        {t("servicesPage.minMaxLabel", { min: s.minQuantity, max: s.maxQuantity })}
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-outline-variant pt-3 text-xs text-on-surface-variant">
+        <span>{t("servicesPage.minMaxLabel", { min: s.minQuantity, max: s.maxQuantity })}</span>
+        <RecentlyCompleted
+          serviceId={s.id}
+          avgCompletionSeconds={s.avgCompletionSeconds}
+          lastCompletedAt={s.lastCompletedAt}
+          windowHours={windowHours}
+          variant="cell"
+        />
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
@@ -72,6 +82,8 @@ export default function Services() {
   // Public (unauthenticated) catalog — this whole page is guest-browsable
   // per the site's "browse = public" model (see GuestGate.tsx / App.tsx).
   const { data: categories } = useQuery({ queryKey: ["public-categories"], queryFn: getPublicCategories });
+  const { data: settings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
+  const windowHours: number | null = settings?.recentlyCompletedWindowHours ?? null;
   const { data, isLoading } = useQuery({
     queryKey: ["public-services-catalog", categoryId, search],
     queryFn: () => getPublicServices({ page: 1, pageSize: 100, categoryId: categoryId || undefined, search: search || undefined }),
@@ -120,7 +132,7 @@ export default function Services() {
           </div>
         )}
         {items.map((s) => (
-          <ServiceCard key={s.id} s={s} onDetails={() => setDetailsService(s)} />
+          <ServiceCard key={s.id} s={s} onDetails={() => setDetailsService(s)} windowHours={windowHours} />
         ))}
       </div>
 
@@ -133,15 +145,16 @@ export default function Services() {
               <th className="px-4 py-3">{t("servicesPage.tableService")}</th>
               <th className="px-4 py-3">{t("servicesPage.tableMinMax")}</th>
               <th className="px-4 py-3">{t("servicesPage.tablePrice")}</th>
+              <th className="px-4 py-3">{t("servicesPage.tableAvgTime")}</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
             {isLoading && (
-              <tr><td colSpan={5} className="px-4 py-6 text-center text-on-surface-variant">{t("common.loading")}</td></tr>
+              <tr><td colSpan={6} className="px-4 py-6 text-center text-on-surface-variant">{t("common.loading")}</td></tr>
             )}
             {!isLoading && items.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-6 text-center text-on-surface-variant">{t("servicesPage.noMatch")}</td></tr>
+              <tr><td colSpan={6} className="px-4 py-6 text-center text-on-surface-variant">{t("servicesPage.noMatch")}</td></tr>
             )}
             {items.map((s) => (
               <tr key={s.id} className="row-hover">
@@ -166,6 +179,15 @@ export default function Services() {
                 </td>
                 <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">{s.minQuantity} / {s.maxQuantity}</td>
                 <td className="px-4 py-3 font-mono text-success">${s.sellPricePer1000}</td>
+                <td className="px-4 py-3">
+                  <RecentlyCompleted
+                    serviceId={s.id}
+                    avgCompletionSeconds={s.avgCompletionSeconds}
+                    lastCompletedAt={s.lastCompletedAt}
+                    windowHours={windowHours}
+                    variant="cell"
+                  />
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex justify-end gap-2">
                     <button type="button" onClick={() => setDetailsService(s)} className="btn-ghost !min-h-0 !px-3 !py-1.5 text-xs">

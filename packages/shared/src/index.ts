@@ -101,6 +101,25 @@ export const serviceListQuerySchema = paginationQuerySchema.extend({
 });
 export type ServiceListQuery = z.infer<typeof serviceListQuerySchema>;
 
+// Paginated history behind the "Recently Completed" badge — its own schema
+// (smaller default page, tighter cap) rather than the shared 20/200 one, and
+// fetched on demand, never with the main services list.
+export const serviceCompletedOrdersQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(50).default(10),
+});
+export type ServiceCompletedOrdersQuery = z.infer<typeof serviceCompletedOrdersQuerySchema>;
+
+// One row in that history modal. `completionSeconds` is null only for a
+// legacy order whose duration could not be backfilled.
+export interface ServiceCompletedOrderRow {
+  id: string;
+  completedAt: string;
+  completionSeconds: number | null;
+  quantity: number;
+  status: "COMPLETED" | "PARTIAL";
+}
+
 export const orderListQuerySchema = paginationQuerySchema.extend({
   status: z.enum(OrderStatusValues).optional(),
 });
@@ -592,6 +611,10 @@ export const updateSettingsSchema = z.object({
   referrerRewardType: z.enum(ReferrerRewardTypeValues).optional(),
   referrerRewardValue: z.coerce.number().min(0).max(1_000_000).optional(),
   refereeBonusPercent: z.coerce.number().min(0).max(100).optional(),
+  // Service "Average Time" tuning. Optional so an older admin client still
+  // validates; settings.service skips undefined.
+  avgCompletionSampleSize: z.coerce.number().int().min(1).max(100).optional(),
+  recentlyCompletedWindowHours: z.coerce.number().int().min(1).max(720).optional(),
 });
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;
 
@@ -626,6 +649,9 @@ export const publicSettingsSchema = z.object({
   referrerRewardType: z.enum(ReferrerRewardTypeValues),
   referrerRewardValue: z.string(),
   refereeBonusPercent: z.string(),
+  // The frontend needs the window to decide whether a service's
+  // "Recently Completed" badge shows (compared against Service.lastCompletedAt).
+  recentlyCompletedWindowHours: z.number(),
 });
 export type PublicSettings = z.infer<typeof publicSettingsSchema>;
 

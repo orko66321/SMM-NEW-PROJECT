@@ -755,6 +755,18 @@ model Service {
   // stays on the Phase 1 manual fulfillment path.
   autoSubmit Boolean @default(false)
 
+  // Precomputed completion-time stats (SMMGen-style "Average Time" +
+  // "Recently Completed" badge). Rolled up by
+  // catalog.service.ts#recomputeServiceCompletionStats every time one of
+  // this service's orders transitions into COMPLETED/PARTIAL — never
+  // computed live on a page view. avgCompletionSeconds is the mean of the
+  // last N (SiteSettings.avgCompletionSampleSize) completed orders'
+  // Order.completionSeconds; lastCompletedAt is that newest order's
+  // completedAt, used to decide whether to show the "Recently Completed"
+  // badge (within SiteSettings.recentlyCompletedWindowHours).
+  avgCompletionSeconds Int?
+  lastCompletedAt      DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -809,6 +821,14 @@ model Order {
   mode            OrderMode   @default(MANUAL)
   providerOrderId String?
 
+  // Stamped the first time this order's status enters COMPLETED/PARTIAL
+  // (see order.service.ts#updateOrderStatus). completionSeconds freezes
+  // `completedAt - createdAt` at that moment so a later status re-poll or
+  // edit never disturbs the historical duration. Both feed the per-service
+  // rolling average and the /public/services/:id/completed-orders history.
+  completedAt       DateTime?
+  completionSeconds Int?
+
   // Raw error text from the last failed third-party provider submission
   // (e.g. "Insufficient balance", "Out of stock"). ADMIN-ONLY — deliberately
   // stripped from listOrdersForUser so a customer only ever sees the order
@@ -843,6 +863,10 @@ model Order {
   @@index([createdAt])
   @@index([status, createdAt])
   @@index([packageId])
+  // Backs both the per-service rolling-average recompute and the paginated
+  // /public/services/:id/completed-orders history endpoint — both filter by
+  // serviceId + status and order by completedAt desc.
+  @@index([serviceId, status, completedAt])
 }
 
 enum OrderIntentStatus {
@@ -1224,6 +1248,14 @@ model SiteSettings {
   referrerRewardType    ReferrerRewardType @default(PERCENTAGE)
   referrerRewardValue   Decimal            @default(0) @db.Decimal(18, 4)
   refereeBonusPercent   Decimal            @default(0) @db.Decimal(5, 2)
+
+  // Service "Average Time" feature. avgCompletionSampleSize = how many of a
+  // service's most recent completed orders the rolling average is taken
+  // over. recentlyCompletedWindowHours = how fresh the newest completion
+  // must be for the "Recently Completed" badge to show. See
+  // catalog.service.ts#recomputeServiceCompletionStats.
+  avgCompletionSampleSize      Int @default(15)
+  recentlyCompletedWindowHours Int @default(24)
 
   updatedAt DateTime @updatedAt
 }

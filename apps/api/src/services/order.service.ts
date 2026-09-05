@@ -13,6 +13,7 @@ import {
   submitProviderRefill,
 } from "./providerClient.service.js";
 import { isResendOrderButtonEnabled } from "./settings.service.js";
+import { recomputeServiceCompletionStats } from "./catalog.service.js";
 
 /** Provider error text can be long/HTML — keep the DB column and admin UI sane. */
 const MAX_API_ERROR_LEN = 4000;
@@ -392,11 +393,27 @@ export async function updateOrderStatus(orderId: string, input: UpdateOrderStatu
     // been resolved by hand.
     const clearsApiError = ["PROCESSING", "IN_PROGRESS", "COMPLETED"].includes(input.status);
 
+    // First transition into a delivered state (COMPLETED/PARTIAL): freeze
+    // this order's completion duration, then roll up the service's cached
+    // "Average Time". A re-poll of an already-completed order (cron runs
+    // every 5 min) sees `nowCompleted` false and skips both.
+    const nowCompleted =
+      (input.status === "COMPLETED" || input.status === "PARTIAL") &&
+      order.status !== "COMPLETED" &&
+      order.status !== "PARTIAL";
+    const completedAt = new Date();
+    const completionSeconds = Math.max(
+      0,
+      Math.round((completedAt.getTime() - order.createdAt.getTime()) / 1000),
+    );
+    const stampsCompletion = nowCompleted && order.serviceId !== null;
+
     const updated = await tx.order.update({
       where: { id: orderId },
       data: {
         status: input.status,
         ...(clearsApiError ? { apiErrorResponse: null } : {}),
+        ...(stampsCompletion ? { completedAt, completionSeconds } : {}),
         ...(input.startCount !== undefined ? { startCount: input.startCount } : {}),
         ...(input.remains !== undefined ? { remains: input.remains } : {}),
         // Optional customer-facing note carried alongside the status change
@@ -404,6 +421,10 @@ export async function updateOrderStatus(orderId: string, input: UpdateOrderStatu
         ...adminCommentPatch(input),
       },
     });
+
+    if (stampsCompletion) {
+      await recomputeServiceCompletionStats(tx, order.serviceId!);
+    }
 
     if (isNewlyTerminatedWithoutRefund) {
       await adjustWalletBalance(tx, {

@@ -23336,6 +23336,7 @@ export namespace Prisma {
     providerCostPer1000: Decimal | null
     minQuantity: number | null
     maxQuantity: number | null
+    avgCompletionSeconds: number | null
   }
 
   export type ServiceSumAggregateOutputType = {
@@ -23343,6 +23344,7 @@ export namespace Prisma {
     providerCostPer1000: Decimal | null
     minQuantity: number | null
     maxQuantity: number | null
+    avgCompletionSeconds: number | null
   }
 
   export type ServiceMinAggregateOutputType = {
@@ -23363,6 +23365,8 @@ export namespace Prisma {
     cancelEnabled: boolean | null
     status: $Enums.ServiceStatus | null
     autoSubmit: boolean | null
+    avgCompletionSeconds: number | null
+    lastCompletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -23385,6 +23389,8 @@ export namespace Prisma {
     cancelEnabled: boolean | null
     status: $Enums.ServiceStatus | null
     autoSubmit: boolean | null
+    avgCompletionSeconds: number | null
+    lastCompletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -23407,6 +23413,8 @@ export namespace Prisma {
     cancelEnabled: number
     status: number
     autoSubmit: number
+    avgCompletionSeconds: number
+    lastCompletedAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -23418,6 +23426,7 @@ export namespace Prisma {
     providerCostPer1000?: true
     minQuantity?: true
     maxQuantity?: true
+    avgCompletionSeconds?: true
   }
 
   export type ServiceSumAggregateInputType = {
@@ -23425,6 +23434,7 @@ export namespace Prisma {
     providerCostPer1000?: true
     minQuantity?: true
     maxQuantity?: true
+    avgCompletionSeconds?: true
   }
 
   export type ServiceMinAggregateInputType = {
@@ -23445,6 +23455,8 @@ export namespace Prisma {
     cancelEnabled?: true
     status?: true
     autoSubmit?: true
+    avgCompletionSeconds?: true
+    lastCompletedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -23467,6 +23479,8 @@ export namespace Prisma {
     cancelEnabled?: true
     status?: true
     autoSubmit?: true
+    avgCompletionSeconds?: true
+    lastCompletedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -23489,6 +23503,8 @@ export namespace Prisma {
     cancelEnabled?: true
     status?: true
     autoSubmit?: true
+    avgCompletionSeconds?: true
+    lastCompletedAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -23598,6 +23614,8 @@ export namespace Prisma {
     cancelEnabled: boolean
     status: $Enums.ServiceStatus
     autoSubmit: boolean
+    avgCompletionSeconds: number | null
+    lastCompletedAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: ServiceCountAggregateOutputType | null
@@ -23639,6 +23657,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: boolean
     autoSubmit?: boolean
+    avgCompletionSeconds?: boolean
+    lastCompletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
@@ -23669,6 +23689,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: boolean
     autoSubmit?: boolean
+    avgCompletionSeconds?: boolean
+    lastCompletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
@@ -23694,6 +23716,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: boolean
     autoSubmit?: boolean
+    avgCompletionSeconds?: boolean
+    lastCompletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -23743,6 +23767,8 @@ export namespace Prisma {
       cancelEnabled: boolean
       status: $Enums.ServiceStatus
       autoSubmit: boolean
+      avgCompletionSeconds: number | null
+      lastCompletedAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["service"]>
@@ -24162,6 +24188,8 @@ export namespace Prisma {
     readonly cancelEnabled: FieldRef<"Service", 'Boolean'>
     readonly status: FieldRef<"Service", 'ServiceStatus'>
     readonly autoSubmit: FieldRef<"Service", 'Boolean'>
+    readonly avgCompletionSeconds: FieldRef<"Service", 'Int'>
+    readonly lastCompletedAt: FieldRef<"Service", 'DateTime'>
     readonly createdAt: FieldRef<"Service", 'DateTime'>
     readonly updatedAt: FieldRef<"Service", 'DateTime'>
   }
@@ -24624,6 +24652,7 @@ export namespace Prisma {
     providerCost: Decimal | null
     startCount: number | null
     remains: number | null
+    completionSeconds: number | null
   }
 
   export type OrderSumAggregateOutputType = {
@@ -24632,6 +24661,7 @@ export namespace Prisma {
     providerCost: Decimal | null
     startCount: number | null
     remains: number | null
+    completionSeconds: number | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -24648,6 +24678,8 @@ export namespace Prisma {
     status: $Enums.OrderStatus | null
     mode: $Enums.OrderMode | null
     providerOrderId: string | null
+    completedAt: Date | null
+    completionSeconds: number | null
     apiErrorResponse: string | null
     adminComment: string | null
     adminCommentLink: string | null
@@ -24671,6 +24703,8 @@ export namespace Prisma {
     status: $Enums.OrderStatus | null
     mode: $Enums.OrderMode | null
     providerOrderId: string | null
+    completedAt: Date | null
+    completionSeconds: number | null
     apiErrorResponse: string | null
     adminComment: string | null
     adminCommentLink: string | null
@@ -24694,6 +24728,8 @@ export namespace Prisma {
     status: number
     mode: number
     providerOrderId: number
+    completedAt: number
+    completionSeconds: number
     apiErrorResponse: number
     adminComment: number
     adminCommentLink: number
@@ -24711,6 +24747,7 @@ export namespace Prisma {
     providerCost?: true
     startCount?: true
     remains?: true
+    completionSeconds?: true
   }
 
   export type OrderSumAggregateInputType = {
@@ -24719,6 +24756,7 @@ export namespace Prisma {
     providerCost?: true
     startCount?: true
     remains?: true
+    completionSeconds?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -24735,6 +24773,8 @@ export namespace Prisma {
     status?: true
     mode?: true
     providerOrderId?: true
+    completedAt?: true
+    completionSeconds?: true
     apiErrorResponse?: true
     adminComment?: true
     adminCommentLink?: true
@@ -24758,6 +24798,8 @@ export namespace Prisma {
     status?: true
     mode?: true
     providerOrderId?: true
+    completedAt?: true
+    completionSeconds?: true
     apiErrorResponse?: true
     adminComment?: true
     adminCommentLink?: true
@@ -24781,6 +24823,8 @@ export namespace Prisma {
     status?: true
     mode?: true
     providerOrderId?: true
+    completedAt?: true
+    completionSeconds?: true
     apiErrorResponse?: true
     adminComment?: true
     adminCommentLink?: true
@@ -24891,6 +24935,8 @@ export namespace Prisma {
     status: $Enums.OrderStatus
     mode: $Enums.OrderMode
     providerOrderId: string | null
+    completedAt: Date | null
+    completionSeconds: number | null
     apiErrorResponse: string | null
     adminComment: string | null
     adminCommentLink: string | null
@@ -24933,6 +24979,8 @@ export namespace Prisma {
     status?: boolean
     mode?: boolean
     providerOrderId?: boolean
+    completedAt?: boolean
+    completionSeconds?: boolean
     apiErrorResponse?: boolean
     adminComment?: boolean
     adminCommentLink?: boolean
@@ -24963,6 +25011,8 @@ export namespace Prisma {
     status?: boolean
     mode?: boolean
     providerOrderId?: boolean
+    completedAt?: boolean
+    completionSeconds?: boolean
     apiErrorResponse?: boolean
     adminComment?: boolean
     adminCommentLink?: boolean
@@ -24989,6 +25039,8 @@ export namespace Prisma {
     status?: boolean
     mode?: boolean
     providerOrderId?: boolean
+    completedAt?: boolean
+    completionSeconds?: boolean
     apiErrorResponse?: boolean
     adminComment?: boolean
     adminCommentLink?: boolean
@@ -25037,6 +25089,8 @@ export namespace Prisma {
       status: $Enums.OrderStatus
       mode: $Enums.OrderMode
       providerOrderId: string | null
+      completedAt: Date | null
+      completionSeconds: number | null
       apiErrorResponse: string | null
       adminComment: string | null
       adminCommentLink: string | null
@@ -25456,6 +25510,8 @@ export namespace Prisma {
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly mode: FieldRef<"Order", 'OrderMode'>
     readonly providerOrderId: FieldRef<"Order", 'String'>
+    readonly completedAt: FieldRef<"Order", 'DateTime'>
+    readonly completionSeconds: FieldRef<"Order", 'Int'>
     readonly apiErrorResponse: FieldRef<"Order", 'String'>
     readonly adminComment: FieldRef<"Order", 'String'>
     readonly adminCommentLink: FieldRef<"Order", 'String'>
@@ -40295,6 +40351,8 @@ export namespace Prisma {
     firstDepositMaxBonus: Decimal | null
     referrerRewardValue: Decimal | null
     refereeBonusPercent: Decimal | null
+    avgCompletionSampleSize: number | null
+    recentlyCompletedWindowHours: number | null
   }
 
   export type SiteSettingsSumAggregateOutputType = {
@@ -40305,6 +40363,8 @@ export namespace Prisma {
     firstDepositMaxBonus: Decimal | null
     referrerRewardValue: Decimal | null
     refereeBonusPercent: Decimal | null
+    avgCompletionSampleSize: number | null
+    recentlyCompletedWindowHours: number | null
   }
 
   export type SiteSettingsMinAggregateOutputType = {
@@ -40332,6 +40392,8 @@ export namespace Prisma {
     referrerRewardType: $Enums.ReferrerRewardType | null
     referrerRewardValue: Decimal | null
     refereeBonusPercent: Decimal | null
+    avgCompletionSampleSize: number | null
+    recentlyCompletedWindowHours: number | null
     updatedAt: Date | null
   }
 
@@ -40360,6 +40422,8 @@ export namespace Prisma {
     referrerRewardType: $Enums.ReferrerRewardType | null
     referrerRewardValue: Decimal | null
     refereeBonusPercent: Decimal | null
+    avgCompletionSampleSize: number | null
+    recentlyCompletedWindowHours: number | null
     updatedAt: Date | null
   }
 
@@ -40388,6 +40452,8 @@ export namespace Prisma {
     referrerRewardType: number
     referrerRewardValue: number
     refereeBonusPercent: number
+    avgCompletionSampleSize: number
+    recentlyCompletedWindowHours: number
     updatedAt: number
     _all: number
   }
@@ -40401,6 +40467,8 @@ export namespace Prisma {
     firstDepositMaxBonus?: true
     referrerRewardValue?: true
     refereeBonusPercent?: true
+    avgCompletionSampleSize?: true
+    recentlyCompletedWindowHours?: true
   }
 
   export type SiteSettingsSumAggregateInputType = {
@@ -40411,6 +40479,8 @@ export namespace Prisma {
     firstDepositMaxBonus?: true
     referrerRewardValue?: true
     refereeBonusPercent?: true
+    avgCompletionSampleSize?: true
+    recentlyCompletedWindowHours?: true
   }
 
   export type SiteSettingsMinAggregateInputType = {
@@ -40438,6 +40508,8 @@ export namespace Prisma {
     referrerRewardType?: true
     referrerRewardValue?: true
     refereeBonusPercent?: true
+    avgCompletionSampleSize?: true
+    recentlyCompletedWindowHours?: true
     updatedAt?: true
   }
 
@@ -40466,6 +40538,8 @@ export namespace Prisma {
     referrerRewardType?: true
     referrerRewardValue?: true
     refereeBonusPercent?: true
+    avgCompletionSampleSize?: true
+    recentlyCompletedWindowHours?: true
     updatedAt?: true
   }
 
@@ -40494,6 +40568,8 @@ export namespace Prisma {
     referrerRewardType?: true
     referrerRewardValue?: true
     refereeBonusPercent?: true
+    avgCompletionSampleSize?: true
+    recentlyCompletedWindowHours?: true
     updatedAt?: true
     _all?: true
   }
@@ -40609,6 +40685,8 @@ export namespace Prisma {
     referrerRewardType: $Enums.ReferrerRewardType
     referrerRewardValue: Decimal
     refereeBonusPercent: Decimal
+    avgCompletionSampleSize: number
+    recentlyCompletedWindowHours: number
     updatedAt: Date
     _count: SiteSettingsCountAggregateOutputType | null
     _avg: SiteSettingsAvgAggregateOutputType | null
@@ -40656,6 +40734,8 @@ export namespace Prisma {
     referrerRewardType?: boolean
     referrerRewardValue?: boolean
     refereeBonusPercent?: boolean
+    avgCompletionSampleSize?: boolean
+    recentlyCompletedWindowHours?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSettings"]>
 
@@ -40684,6 +40764,8 @@ export namespace Prisma {
     referrerRewardType?: boolean
     referrerRewardValue?: boolean
     refereeBonusPercent?: boolean
+    avgCompletionSampleSize?: boolean
+    recentlyCompletedWindowHours?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSettings"]>
 
@@ -40712,6 +40794,8 @@ export namespace Prisma {
     referrerRewardType?: boolean
     referrerRewardValue?: boolean
     refereeBonusPercent?: boolean
+    avgCompletionSampleSize?: boolean
+    recentlyCompletedWindowHours?: boolean
     updatedAt?: boolean
   }
 
@@ -40744,6 +40828,8 @@ export namespace Prisma {
       referrerRewardType: $Enums.ReferrerRewardType
       referrerRewardValue: Prisma.Decimal
       refereeBonusPercent: Prisma.Decimal
+      avgCompletionSampleSize: number
+      recentlyCompletedWindowHours: number
       updatedAt: Date
     }, ExtArgs["result"]["siteSettings"]>
     composites: {}
@@ -41162,6 +41248,8 @@ export namespace Prisma {
     readonly referrerRewardType: FieldRef<"SiteSettings", 'ReferrerRewardType'>
     readonly referrerRewardValue: FieldRef<"SiteSettings", 'Decimal'>
     readonly refereeBonusPercent: FieldRef<"SiteSettings", 'Decimal'>
+    readonly avgCompletionSampleSize: FieldRef<"SiteSettings", 'Int'>
+    readonly recentlyCompletedWindowHours: FieldRef<"SiteSettings", 'Int'>
     readonly updatedAt: FieldRef<"SiteSettings", 'DateTime'>
   }
     
@@ -48327,6 +48415,8 @@ export namespace Prisma {
     cancelEnabled: 'cancelEnabled',
     status: 'status',
     autoSubmit: 'autoSubmit',
+    avgCompletionSeconds: 'avgCompletionSeconds',
+    lastCompletedAt: 'lastCompletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -48348,6 +48438,8 @@ export namespace Prisma {
     status: 'status',
     mode: 'mode',
     providerOrderId: 'providerOrderId',
+    completedAt: 'completedAt',
+    completionSeconds: 'completionSeconds',
     apiErrorResponse: 'apiErrorResponse',
     adminComment: 'adminComment',
     adminCommentLink: 'adminCommentLink',
@@ -48592,6 +48684,8 @@ export namespace Prisma {
     referrerRewardType: 'referrerRewardType',
     referrerRewardValue: 'referrerRewardValue',
     refereeBonusPercent: 'refereeBonusPercent',
+    avgCompletionSampleSize: 'avgCompletionSampleSize',
+    recentlyCompletedWindowHours: 'recentlyCompletedWindowHours',
     updatedAt: 'updatedAt'
   };
 
@@ -50772,6 +50866,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFilter<"Service"> | boolean
     status?: EnumServiceStatusFilter<"Service"> | $Enums.ServiceStatus
     autoSubmit?: BoolFilter<"Service"> | boolean
+    avgCompletionSeconds?: IntNullableFilter<"Service"> | number | null
+    lastCompletedAt?: DateTimeNullableFilter<"Service"> | Date | string | null
     createdAt?: DateTimeFilter<"Service"> | Date | string
     updatedAt?: DateTimeFilter<"Service"> | Date | string
     category?: XOR<ServiceCategoryRelationFilter, ServiceCategoryWhereInput>
@@ -50801,6 +50897,8 @@ export namespace Prisma {
     cancelEnabled?: SortOrder
     status?: SortOrder
     autoSubmit?: SortOrder
+    avgCompletionSeconds?: SortOrderInput | SortOrder
+    lastCompletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     category?: ServiceCategoryOrderByWithRelationInput
@@ -50834,6 +50932,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFilter<"Service"> | boolean
     status?: EnumServiceStatusFilter<"Service"> | $Enums.ServiceStatus
     autoSubmit?: BoolFilter<"Service"> | boolean
+    avgCompletionSeconds?: IntNullableFilter<"Service"> | number | null
+    lastCompletedAt?: DateTimeNullableFilter<"Service"> | Date | string | null
     createdAt?: DateTimeFilter<"Service"> | Date | string
     updatedAt?: DateTimeFilter<"Service"> | Date | string
     category?: XOR<ServiceCategoryRelationFilter, ServiceCategoryWhereInput>
@@ -50863,6 +50963,8 @@ export namespace Prisma {
     cancelEnabled?: SortOrder
     status?: SortOrder
     autoSubmit?: SortOrder
+    avgCompletionSeconds?: SortOrderInput | SortOrder
+    lastCompletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ServiceCountOrderByAggregateInput
@@ -50893,6 +50995,8 @@ export namespace Prisma {
     cancelEnabled?: BoolWithAggregatesFilter<"Service"> | boolean
     status?: EnumServiceStatusWithAggregatesFilter<"Service"> | $Enums.ServiceStatus
     autoSubmit?: BoolWithAggregatesFilter<"Service"> | boolean
+    avgCompletionSeconds?: IntNullableWithAggregatesFilter<"Service"> | number | null
+    lastCompletedAt?: DateTimeNullableWithAggregatesFilter<"Service"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Service"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Service"> | Date | string
   }
@@ -50914,6 +51018,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableFilter<"Order"> | string | null
+    completedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    completionSeconds?: IntNullableFilter<"Order"> | number | null
     apiErrorResponse?: StringNullableFilter<"Order"> | string | null
     adminComment?: StringNullableFilter<"Order"> | string | null
     adminCommentLink?: StringNullableFilter<"Order"> | string | null
@@ -50943,6 +51049,8 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    completionSeconds?: SortOrderInput | SortOrder
     apiErrorResponse?: SortOrderInput | SortOrder
     adminComment?: SortOrderInput | SortOrder
     adminCommentLink?: SortOrderInput | SortOrder
@@ -50975,6 +51083,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableFilter<"Order"> | string | null
+    completedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    completionSeconds?: IntNullableFilter<"Order"> | number | null
     apiErrorResponse?: StringNullableFilter<"Order"> | string | null
     adminComment?: StringNullableFilter<"Order"> | string | null
     adminCommentLink?: StringNullableFilter<"Order"> | string | null
@@ -51004,6 +51114,8 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    completionSeconds?: SortOrderInput | SortOrder
     apiErrorResponse?: SortOrderInput | SortOrder
     adminComment?: SortOrderInput | SortOrder
     adminCommentLink?: SortOrderInput | SortOrder
@@ -51035,6 +51147,8 @@ export namespace Prisma {
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     mode?: EnumOrderModeWithAggregatesFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    completionSeconds?: IntNullableWithAggregatesFilter<"Order"> | number | null
     apiErrorResponse?: StringNullableWithAggregatesFilter<"Order"> | string | null
     adminComment?: StringNullableWithAggregatesFilter<"Order"> | string | null
     adminCommentLink?: StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -52175,6 +52289,8 @@ export namespace Prisma {
     referrerRewardType?: EnumReferrerRewardTypeFilter<"SiteSettings"> | $Enums.ReferrerRewardType
     referrerRewardValue?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: IntFilter<"SiteSettings"> | number
+    recentlyCompletedWindowHours?: IntFilter<"SiteSettings"> | number
     updatedAt?: DateTimeFilter<"SiteSettings"> | Date | string
   }
 
@@ -52203,6 +52319,8 @@ export namespace Prisma {
     referrerRewardType?: SortOrder
     referrerRewardValue?: SortOrder
     refereeBonusPercent?: SortOrder
+    avgCompletionSampleSize?: SortOrder
+    recentlyCompletedWindowHours?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -52234,6 +52352,8 @@ export namespace Prisma {
     referrerRewardType?: EnumReferrerRewardTypeFilter<"SiteSettings"> | $Enums.ReferrerRewardType
     referrerRewardValue?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: IntFilter<"SiteSettings"> | number
+    recentlyCompletedWindowHours?: IntFilter<"SiteSettings"> | number
     updatedAt?: DateTimeFilter<"SiteSettings"> | Date | string
   }, "id">
 
@@ -52262,6 +52382,8 @@ export namespace Prisma {
     referrerRewardType?: SortOrder
     referrerRewardValue?: SortOrder
     refereeBonusPercent?: SortOrder
+    avgCompletionSampleSize?: SortOrder
+    recentlyCompletedWindowHours?: SortOrder
     updatedAt?: SortOrder
     _count?: SiteSettingsCountOrderByAggregateInput
     _avg?: SiteSettingsAvgOrderByAggregateInput
@@ -52298,6 +52420,8 @@ export namespace Prisma {
     referrerRewardType?: EnumReferrerRewardTypeWithAggregatesFilter<"SiteSettings"> | $Enums.ReferrerRewardType
     referrerRewardValue?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: IntWithAggregatesFilter<"SiteSettings"> | number
+    recentlyCompletedWindowHours?: IntWithAggregatesFilter<"SiteSettings"> | number
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSettings"> | Date | string
   }
 
@@ -54468,6 +54592,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category: ServiceCategoryCreateNestedOneWithoutServicesInput
@@ -54497,6 +54623,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
@@ -54520,6 +54648,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: ServiceCategoryUpdateOneRequiredWithoutServicesNestedInput
@@ -54549,6 +54679,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
@@ -54575,6 +54707,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -54594,6 +54728,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -54616,6 +54752,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -54631,6 +54769,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -54660,6 +54800,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -54683,6 +54825,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54712,6 +54856,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54738,6 +54884,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -54758,6 +54906,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54781,6 +54931,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55979,6 +56131,8 @@ export namespace Prisma {
     referrerRewardType?: $Enums.ReferrerRewardType
     referrerRewardValue?: Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: number
+    recentlyCompletedWindowHours?: number
     updatedAt?: Date | string
   }
 
@@ -56007,6 +56161,8 @@ export namespace Prisma {
     referrerRewardType?: $Enums.ReferrerRewardType
     referrerRewardValue?: Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: number
+    recentlyCompletedWindowHours?: number
     updatedAt?: Date | string
   }
 
@@ -56035,6 +56191,8 @@ export namespace Prisma {
     referrerRewardType?: EnumReferrerRewardTypeFieldUpdateOperationsInput | $Enums.ReferrerRewardType
     referrerRewardValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: IntFieldUpdateOperationsInput | number
+    recentlyCompletedWindowHours?: IntFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -56063,6 +56221,8 @@ export namespace Prisma {
     referrerRewardType?: EnumReferrerRewardTypeFieldUpdateOperationsInput | $Enums.ReferrerRewardType
     referrerRewardValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: IntFieldUpdateOperationsInput | number
+    recentlyCompletedWindowHours?: IntFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -56091,6 +56251,8 @@ export namespace Prisma {
     referrerRewardType?: $Enums.ReferrerRewardType
     referrerRewardValue?: Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: number
+    recentlyCompletedWindowHours?: number
     updatedAt?: Date | string
   }
 
@@ -56119,6 +56281,8 @@ export namespace Prisma {
     referrerRewardType?: EnumReferrerRewardTypeFieldUpdateOperationsInput | $Enums.ReferrerRewardType
     referrerRewardValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: IntFieldUpdateOperationsInput | number
+    recentlyCompletedWindowHours?: IntFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -56147,6 +56311,8 @@ export namespace Prisma {
     referrerRewardType?: EnumReferrerRewardTypeFieldUpdateOperationsInput | $Enums.ReferrerRewardType
     referrerRewardValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     refereeBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    avgCompletionSampleSize?: IntFieldUpdateOperationsInput | number
+    recentlyCompletedWindowHours?: IntFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -58234,6 +58400,8 @@ export namespace Prisma {
     cancelEnabled?: SortOrder
     status?: SortOrder
     autoSubmit?: SortOrder
+    avgCompletionSeconds?: SortOrder
+    lastCompletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58243,6 +58411,7 @@ export namespace Prisma {
     providerCostPer1000?: SortOrder
     minQuantity?: SortOrder
     maxQuantity?: SortOrder
+    avgCompletionSeconds?: SortOrder
   }
 
   export type ServiceMaxOrderByAggregateInput = {
@@ -58263,6 +58432,8 @@ export namespace Prisma {
     cancelEnabled?: SortOrder
     status?: SortOrder
     autoSubmit?: SortOrder
+    avgCompletionSeconds?: SortOrder
+    lastCompletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58285,6 +58456,8 @@ export namespace Prisma {
     cancelEnabled?: SortOrder
     status?: SortOrder
     autoSubmit?: SortOrder
+    avgCompletionSeconds?: SortOrder
+    lastCompletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58294,6 +58467,7 @@ export namespace Prisma {
     providerCostPer1000?: SortOrder
     minQuantity?: SortOrder
     maxQuantity?: SortOrder
+    avgCompletionSeconds?: SortOrder
   }
 
   export type EnumServiceStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -58364,6 +58538,8 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrder
+    completedAt?: SortOrder
+    completionSeconds?: SortOrder
     apiErrorResponse?: SortOrder
     adminComment?: SortOrder
     adminCommentLink?: SortOrder
@@ -58379,6 +58555,7 @@ export namespace Prisma {
     providerCost?: SortOrder
     startCount?: SortOrder
     remains?: SortOrder
+    completionSeconds?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -58395,6 +58572,8 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrder
+    completedAt?: SortOrder
+    completionSeconds?: SortOrder
     apiErrorResponse?: SortOrder
     adminComment?: SortOrder
     adminCommentLink?: SortOrder
@@ -58418,6 +58597,8 @@ export namespace Prisma {
     status?: SortOrder
     mode?: SortOrder
     providerOrderId?: SortOrder
+    completedAt?: SortOrder
+    completionSeconds?: SortOrder
     apiErrorResponse?: SortOrder
     adminComment?: SortOrder
     adminCommentLink?: SortOrder
@@ -58433,6 +58614,7 @@ export namespace Prisma {
     providerCost?: SortOrder
     startCount?: SortOrder
     remains?: SortOrder
+    completionSeconds?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -59325,6 +59507,8 @@ export namespace Prisma {
     referrerRewardType?: SortOrder
     referrerRewardValue?: SortOrder
     refereeBonusPercent?: SortOrder
+    avgCompletionSampleSize?: SortOrder
+    recentlyCompletedWindowHours?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -59336,6 +59520,8 @@ export namespace Prisma {
     firstDepositMaxBonus?: SortOrder
     referrerRewardValue?: SortOrder
     refereeBonusPercent?: SortOrder
+    avgCompletionSampleSize?: SortOrder
+    recentlyCompletedWindowHours?: SortOrder
   }
 
   export type SiteSettingsMaxOrderByAggregateInput = {
@@ -59363,6 +59549,8 @@ export namespace Prisma {
     referrerRewardType?: SortOrder
     referrerRewardValue?: SortOrder
     refereeBonusPercent?: SortOrder
+    avgCompletionSampleSize?: SortOrder
+    recentlyCompletedWindowHours?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -59391,6 +59579,8 @@ export namespace Prisma {
     referrerRewardType?: SortOrder
     referrerRewardValue?: SortOrder
     refereeBonusPercent?: SortOrder
+    avgCompletionSampleSize?: SortOrder
+    recentlyCompletedWindowHours?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -59402,6 +59592,8 @@ export namespace Prisma {
     firstDepositMaxBonus?: SortOrder
     referrerRewardValue?: SortOrder
     refereeBonusPercent?: SortOrder
+    avgCompletionSampleSize?: SortOrder
+    recentlyCompletedWindowHours?: SortOrder
   }
 
   export type EnumLiveChatProviderWithAggregatesFilter<$PrismaModel = never> = {
@@ -63439,6 +63631,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category: ServiceCategoryCreateNestedOneWithoutServicesInput
@@ -63467,6 +63661,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
@@ -63586,6 +63782,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: ServiceCategoryUpdateOneRequiredWithoutServicesNestedInput
@@ -63614,6 +63812,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
@@ -63769,6 +63969,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -63796,6 +63998,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -64007,6 +64211,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     mode?: EnumOrderModeFilter<"Order"> | $Enums.OrderMode
     providerOrderId?: StringNullableFilter<"Order"> | string | null
+    completedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    completionSeconds?: IntNullableFilter<"Order"> | number | null
     apiErrorResponse?: StringNullableFilter<"Order"> | string | null
     adminComment?: StringNullableFilter<"Order"> | string | null
     adminCommentLink?: StringNullableFilter<"Order"> | string | null
@@ -64317,6 +64523,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -64345,6 +64553,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -64410,6 +64620,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64438,6 +64650,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64700,6 +64914,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -64727,6 +64943,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -66400,6 +66618,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category: ServiceCategoryCreateNestedOneWithoutServicesInput
@@ -66427,6 +66647,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
@@ -66460,6 +66682,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category: ServiceCategoryCreateNestedOneWithoutServicesInput
@@ -66487,6 +66711,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
@@ -66568,6 +66794,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFilter<"Service"> | boolean
     status?: EnumServiceStatusFilter<"Service"> | $Enums.ServiceStatus
     autoSubmit?: BoolFilter<"Service"> | boolean
+    avgCompletionSeconds?: IntNullableFilter<"Service"> | number | null
+    lastCompletedAt?: DateTimeNullableFilter<"Service"> | Date | string | null
     createdAt?: DateTimeFilter<"Service"> | Date | string
     updatedAt?: DateTimeFilter<"Service"> | Date | string
   }
@@ -66773,6 +67001,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     provider?: ProviderCreateNestedOneWithoutServicesInput
@@ -66800,6 +67030,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
@@ -66932,6 +67164,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -66959,6 +67193,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -67436,6 +67672,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category: ServiceCategoryCreateNestedOneWithoutServicesInput
@@ -67464,6 +67702,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     dripFeeds?: DripFeedUncheckedCreateNestedManyWithoutServiceInput
@@ -67721,6 +67961,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: ServiceCategoryUpdateOneRequiredWithoutServicesNestedInput
@@ -67749,6 +67991,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dripFeeds?: DripFeedUncheckedUpdateManyWithoutServiceNestedInput
@@ -67998,6 +68242,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category: ServiceCategoryCreateNestedOneWithoutServicesInput
@@ -68026,6 +68272,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
@@ -68258,6 +68506,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: ServiceCategoryUpdateOneRequiredWithoutServicesNestedInput
@@ -68286,6 +68536,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
@@ -68369,6 +68621,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -68397,6 +68651,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -68435,6 +68691,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68463,6 +68721,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69362,6 +69622,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -69390,6 +69652,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -69465,6 +69729,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69493,6 +69759,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70319,6 +70587,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category: ServiceCategoryCreateNestedOneWithoutServicesInput
@@ -70347,6 +70617,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutServiceInput
@@ -70385,6 +70657,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: ServiceCategoryUpdateOneRequiredWithoutServicesNestedInput
@@ -70413,6 +70687,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
@@ -71776,6 +72052,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -71827,6 +72105,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71854,6 +72134,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71879,6 +72161,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72045,6 +72329,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -72326,6 +72612,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72353,6 +72641,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72378,6 +72668,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72799,6 +73091,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -72820,6 +73114,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -72847,6 +73143,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: ServiceCategoryUpdateOneRequiredWithoutServicesNestedInput
@@ -72874,6 +73172,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
@@ -72899,6 +73199,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -72918,6 +73220,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: ServiceCategoryUpdateOneRequiredWithoutServicesNestedInput
@@ -72945,6 +73249,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
@@ -72970,6 +73276,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -73103,6 +73411,8 @@ export namespace Prisma {
     cancelEnabled?: boolean
     status?: $Enums.ServiceStatus
     autoSubmit?: boolean
+    avgCompletionSeconds?: number | null
+    lastCompletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -73122,6 +73432,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     provider?: ProviderUpdateOneWithoutServicesNestedInput
@@ -73149,6 +73461,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutServiceNestedInput
@@ -73174,6 +73488,8 @@ export namespace Prisma {
     cancelEnabled?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     autoSubmit?: BoolFieldUpdateOperationsInput | boolean
+    avgCompletionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    lastCompletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -73191,6 +73507,8 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     mode?: $Enums.OrderMode
     providerOrderId?: string | null
+    completedAt?: Date | string | null
+    completionSeconds?: number | null
     apiErrorResponse?: string | null
     adminComment?: string | null
     adminCommentLink?: string | null
@@ -73276,6 +73594,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73303,6 +73623,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73328,6 +73650,8 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     mode?: EnumOrderModeFieldUpdateOperationsInput | $Enums.OrderMode
     providerOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     apiErrorResponse?: NullableStringFieldUpdateOperationsInput | string | null
     adminComment?: NullableStringFieldUpdateOperationsInput | string | null
     adminCommentLink?: NullableStringFieldUpdateOperationsInput | string | null

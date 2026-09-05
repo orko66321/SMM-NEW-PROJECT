@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { publicPostListQuerySchema, serviceListQuerySchema } from "@smm/shared";
+import { publicPostListQuerySchema, serviceCompletedOrdersQuerySchema, serviceListQuerySchema, } from "@smm/shared";
 import { validate } from "../middleware/validate.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { listCategories, listServices } from "../services/catalog.service.js";
+import { listCategories, listServiceCompletedOrders, listServices } from "../services/catalog.service.js";
 import { getPublicSettings } from "../services/settings.service.js";
 import { listActiveNotices } from "../services/notice.service.js";
 import { getPublicSiteNotice } from "../services/siteNotice.service.js";
@@ -52,5 +52,22 @@ publicRouter.get("/services", validate(serviceListQuerySchema, "query"), asyncHa
     res.json({
         ...result,
         items: result.items.map((s) => ({ ...s, sellPricePer1000: s.sellPricePer1000.toString(), providerCostPer1000: undefined })),
+    });
+}));
+// On-demand history behind a service's "Recently Completed" badge — its own
+// paginated endpoint, never bundled with GET /services. Public: the rows
+// carry no user/link/charge data (see listServiceCompletedOrders).
+publicRouter.get("/services/:id/completed-orders", validate(serviceCompletedOrdersQuerySchema, "query"), asyncHandler(async (req, res) => {
+    const { page, pageSize } = req.query;
+    const result = await listServiceCompletedOrders(req.params.id, page, pageSize);
+    res.json({
+        ...result,
+        items: result.items.map((o) => ({
+            id: o.id,
+            completedAt: o.completedAt,
+            completionSeconds: o.completionSeconds,
+            quantity: o.quantity,
+            status: o.status,
+        })),
     });
 }));
