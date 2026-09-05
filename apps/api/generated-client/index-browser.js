@@ -364,6 +364,8 @@ exports.Prisma.ServiceScalarFieldEnum = {
   cancelEnabled: 'cancelEnabled',
   status: 'status',
   autoSubmit: 'autoSubmit',
+  avgCompletionSeconds: 'avgCompletionSeconds',
+  lastCompletedAt: 'lastCompletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -382,6 +384,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   status: 'status',
   mode: 'mode',
   providerOrderId: 'providerOrderId',
+  completedAt: 'completedAt',
+  completionSeconds: 'completionSeconds',
   apiErrorResponse: 'apiErrorResponse',
   adminComment: 'adminComment',
   adminCommentLink: 'adminCommentLink',
@@ -581,6 +585,8 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   referrerRewardType: 'referrerRewardType',
   referrerRewardValue: 'referrerRewardValue',
   refereeBonusPercent: 'refereeBonusPercent',
+  avgCompletionSampleSize: 'avgCompletionSampleSize',
+  recentlyCompletedWindowHours: 'recentlyCompletedWindowHours',
   updatedAt: 'updatedAt'
 };
 

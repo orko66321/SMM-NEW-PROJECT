@@ -30,6 +30,8 @@ interface AdminSettings {
   referrerRewardType: ReferrerRewardType;
   referrerRewardValue: string;
   refereeBonusPercent: string;
+  avgCompletionSampleSize: number;
+  recentlyCompletedWindowHours: number;
 }
 
 export default function AdminSettingsPage() {
@@ -60,6 +62,8 @@ export default function AdminSettingsPage() {
     referrerRewardType: "PERCENTAGE" as ReferrerRewardType,
     referrerRewardValue: "0",
     refereeBonusPercent: "0",
+    avgCompletionSampleSize: "15",
+    recentlyCompletedWindowHours: "24",
   });
   const [submitting, setSubmitting] = useState(false);
   const [testEmailTo, setTestEmailTo] = useState("");
@@ -94,6 +98,8 @@ export default function AdminSettingsPage() {
       referrerRewardType: s.referrerRewardType ?? "PERCENTAGE",
       referrerRewardValue: s.referrerRewardValue ?? "0",
       refereeBonusPercent: s.refereeBonusPercent ?? "0",
+      avgCompletionSampleSize: String(s.avgCompletionSampleSize ?? 15),
+      recentlyCompletedWindowHours: String(s.recentlyCompletedWindowHours ?? 24),
     });
   }, [settings]);
 
@@ -123,6 +129,8 @@ export default function AdminSettingsPage() {
         referrerRewardType: form.referrerRewardType,
         referrerRewardValue: Number(form.referrerRewardValue) || 0,
         refereeBonusPercent: Number(form.refereeBonusPercent) || 0,
+        avgCompletionSampleSize: Number(form.avgCompletionSampleSize) || 15,
+        recentlyCompletedWindowHours: Number(form.recentlyCompletedWindowHours) || 24,
       });
       toast.push("Settings saved.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin-settings"] });
@@ -294,6 +302,25 @@ export default function AdminSettingsPage() {
           Both are paid once, on the referred user&rsquo;s first deposit: the referrer gets the reward credited to
           their wallet, the new user gets the referee bonus on top of their deposit. See{" "}
           <Link to="/admin/referrals" className="text-primary hover:underline">Referral Analytics</Link>.
+        </p>
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold">Service Average Time</h2>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label className="label" htmlFor="avgSample">Rolling average sample size</label>
+            <input id="avgSample" type="number" step="1" min="1" max="100" className="input-field" value={form.avgCompletionSampleSize} onChange={(e) => setForm((f) => ({ ...f, avgCompletionSampleSize: e.target.value }))} />
+          </div>
+          <div>
+            <label className="label" htmlFor="recentWindow">&ldquo;Recently Completed&rdquo; window (hours)</label>
+            <input id="recentWindow" type="number" step="1" min="1" max="720" className="input-field" value={form.recentlyCompletedWindowHours} onChange={(e) => setForm((f) => ({ ...f, recentlyCompletedWindowHours: e.target.value }))} />
+          </div>
+        </div>
+        <p className="text-xs text-on-surface-variant">
+          Each service&rsquo;s &ldquo;Average Time&rdquo; is the mean completion time of its last N completed orders,
+          recomputed automatically whenever an order for it completes. The &ldquo;Recently Completed&rdquo; badge shows
+          only if that service&rsquo;s most recent completion is within the window above.
         </p>
       </div>
 

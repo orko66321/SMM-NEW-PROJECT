@@ -172,6 +172,17 @@ export const getPublicStats = () => apiClient.get("/public/stats").then((r) => r
 export const getPublicCategories = () => apiClient.get("/public/categories").then((r) => r.data.items);
 export const getPublicServices = (params: { page?: number; pageSize?: number; categoryId?: string; search?: string }) =>
   apiClient.get("/public/services", { params }).then((r) => r.data);
+// On-demand history behind a service's "Recently Completed" badge — its own
+// paginated endpoint, never bundled with getPublicServices.
+export const getServiceCompletedOrders = (
+  serviceId: string,
+  params: { page?: number; pageSize?: number },
+): Promise<{
+  items: import("@smm/shared").ServiceCompletedOrderRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}> => apiClient.get(`/public/services/${serviceId}/completed-orders`, { params }).then((r) => r.data);
 export const getPublicSiteNotice = () => apiClient.get("/public/notice").then((r) => r.data);
 
 // ── Support channels (floating "Need Help?" widget) ─────────────────────

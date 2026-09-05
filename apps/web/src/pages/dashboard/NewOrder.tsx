@@ -6,6 +6,7 @@ import {
   getEnabledGateways,
   getPublicCategories,
   getPublicServices,
+  getPublicSettings,
   getPublicSiteNotice,
   initiateGatewayDeposit,
   placeOrder,
@@ -18,6 +19,7 @@ import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import { AuthPromptModal } from "../../components/auth/GuestGate.js";
 import HowToOrderLink from "../../components/HowToOrderLink.js";
+import RecentlyCompleted from "../../components/services/RecentlyCompleted.js";
 import { BilingualNote, Card, Icon, ServiceTag } from "../../components/ds/index.js";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
@@ -42,6 +44,8 @@ interface ServiceItem {
   maxQuantity: number;
   refillEnabled: boolean;
   cancelEnabled: boolean;
+  avgCompletionSeconds: number | null;
+  lastCompletedAt: string | null;
 }
 
 // A guest who fills this form out and only then hits "Place Order" gets
@@ -109,6 +113,7 @@ export default function NewOrder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { data: siteNotice } = useQuery({ queryKey: ["public-site-notice"], queryFn: getPublicSiteNotice, staleTime: 60_000 });
+  const { data: publicSettings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
 
   // Public (unauthenticated) catalog endpoints — same underlying data as
   // the authed /services ones, so browsing/pricing this form works
@@ -290,6 +295,17 @@ export default function NewOrder() {
             <p className="mt-2 whitespace-pre-line rounded-md bg-surface-container-high px-3 py-2 text-xs text-on-surface-variant">
               {pickLang(lang, selectedService.descriptionBn, selectedService.description)}
             </p>
+          )}
+          {selectedService && (
+            <div className="mt-2">
+              <RecentlyCompleted
+                serviceId={selectedService.id}
+                avgCompletionSeconds={selectedService.avgCompletionSeconds}
+                lastCompletedAt={selectedService.lastCompletedAt}
+                windowHours={publicSettings?.recentlyCompletedWindowHours ?? null}
+                variant="field"
+              />
+            </div>
           )}
         </div>
 

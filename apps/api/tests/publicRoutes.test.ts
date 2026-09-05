@@ -48,6 +48,7 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
       referrerRewardType: "PERCENTAGE",
       referrerRewardValue: "0",
       refereeBonusPercent: "0",
+      recentlyCompletedWindowHours: 24,
     });
     expect(JSON.stringify(res.body)).not.toContain("super-secret-password");
     expect(JSON.stringify(res.body)).not.toContain("smtp");

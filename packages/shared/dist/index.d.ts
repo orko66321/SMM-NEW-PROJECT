@@ -50,6 +50,24 @@ export declare const serviceListQuerySchema: z.ZodObject<{
     search?: string | undefined;
 }>;
 export type ServiceListQuery = z.infer<typeof serviceListQuerySchema>;
+export declare const serviceCompletedOrdersQuerySchema: z.ZodObject<{
+    page: z.ZodDefault<z.ZodNumber>;
+    pageSize: z.ZodDefault<z.ZodNumber>;
+}, "strip", z.ZodTypeAny, {
+    page: number;
+    pageSize: number;
+}, {
+    page?: number | undefined;
+    pageSize?: number | undefined;
+}>;
+export type ServiceCompletedOrdersQuery = z.infer<typeof serviceCompletedOrdersQuerySchema>;
+export interface ServiceCompletedOrderRow {
+    id: string;
+    completedAt: string;
+    completionSeconds: number | null;
+    quantity: number;
+    status: "COMPLETED" | "PARTIAL";
+}
 export declare const orderListQuerySchema: z.ZodObject<{
     page: z.ZodDefault<z.ZodNumber>;
     pageSize: z.ZodDefault<z.ZodNumber>;
@@ -949,6 +967,8 @@ export declare const updateSettingsSchema: z.ZodObject<{
     referrerRewardType: z.ZodOptional<z.ZodEnum<["PERCENTAGE", "FIXED"]>>;
     referrerRewardValue: z.ZodOptional<z.ZodNumber>;
     refereeBonusPercent: z.ZodOptional<z.ZodNumber>;
+    avgCompletionSampleSize: z.ZodOptional<z.ZodNumber>;
+    recentlyCompletedWindowHours: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
     siteName: string;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
@@ -973,6 +993,8 @@ export declare const updateSettingsSchema: z.ZodObject<{
     referrerRewardType?: "PERCENTAGE" | "FIXED" | undefined;
     referrerRewardValue?: number | undefined;
     refereeBonusPercent?: number | undefined;
+    avgCompletionSampleSize?: number | undefined;
+    recentlyCompletedWindowHours?: number | undefined;
 }, {
     siteName: string;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
@@ -997,6 +1019,8 @@ export declare const updateSettingsSchema: z.ZodObject<{
     referrerRewardType?: "PERCENTAGE" | "FIXED" | undefined;
     referrerRewardValue?: number | undefined;
     refereeBonusPercent?: number | undefined;
+    avgCompletionSampleSize?: number | undefined;
+    recentlyCompletedWindowHours?: number | undefined;
 }>;
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;
 export declare const sendTestEmailSchema: z.ZodObject<{
@@ -1023,6 +1047,7 @@ export declare const publicSettingsSchema: z.ZodObject<{
     referrerRewardType: z.ZodEnum<["PERCENTAGE", "FIXED"]>;
     referrerRewardValue: z.ZodString;
     refereeBonusPercent: z.ZodString;
+    recentlyCompletedWindowHours: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
     siteName: string;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
@@ -1038,6 +1063,7 @@ export declare const publicSettingsSchema: z.ZodObject<{
     referrerRewardType: "PERCENTAGE" | "FIXED";
     referrerRewardValue: string;
     refereeBonusPercent: string;
+    recentlyCompletedWindowHours: number;
     googleAuthEnabled: boolean;
 }, {
     siteName: string;
@@ -1054,6 +1080,7 @@ export declare const publicSettingsSchema: z.ZodObject<{
     referrerRewardType: "PERCENTAGE" | "FIXED";
     referrerRewardValue: string;
     refereeBonusPercent: string;
+    recentlyCompletedWindowHours: number;
     googleAuthEnabled: boolean;
 }>;
 export type PublicSettings = z.infer<typeof publicSettingsSchema>;

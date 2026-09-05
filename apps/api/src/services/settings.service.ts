@@ -43,6 +43,8 @@ export async function getAdminSettings() {
     referrerRewardType: s.referrerRewardType,
     referrerRewardValue: s.referrerRewardValue.toString(),
     refereeBonusPercent: s.refereeBonusPercent.toString(),
+    avgCompletionSampleSize: s.avgCompletionSampleSize,
+    recentlyCompletedWindowHours: s.recentlyCompletedWindowHours,
   };
 }
 
@@ -87,6 +89,10 @@ export async function updateSettings(input: UpdateSettingsInput) {
       ...(input.referrerRewardType === undefined ? {} : { referrerRewardType: input.referrerRewardType }),
       ...(input.referrerRewardValue === undefined ? {} : { referrerRewardValue: input.referrerRewardValue }),
       ...(input.refereeBonusPercent === undefined ? {} : { refereeBonusPercent: input.refereeBonusPercent }),
+      ...(input.avgCompletionSampleSize === undefined ? {} : { avgCompletionSampleSize: input.avgCompletionSampleSize }),
+      ...(input.recentlyCompletedWindowHours === undefined
+        ? {}
+        : { recentlyCompletedWindowHours: input.recentlyCompletedWindowHours }),
     },
   });
 }
@@ -110,6 +116,7 @@ export async function getPublicSettings(): Promise<PublicSettings> {
     referrerRewardType: s.referrerRewardType,
     referrerRewardValue: s.referrerRewardValue.toString(),
     refereeBonusPercent: s.refereeBonusPercent.toString(),
+    recentlyCompletedWindowHours: s.recentlyCompletedWindowHours,
   };
 }
 
