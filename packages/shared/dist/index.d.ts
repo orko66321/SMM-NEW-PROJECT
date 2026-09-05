@@ -168,14 +168,17 @@ export declare const registerSchema: z.ZodObject<{
     username: z.ZodString;
     email: z.ZodString;
     password: z.ZodString;
+    referralCode: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     username: string;
     email: string;
     password: string;
+    referralCode?: string | undefined;
 }, {
     username: string;
     email: string;
     password: string;
+    referralCode?: string | undefined;
 }>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export declare const loginSchema: z.ZodObject<{
@@ -207,26 +210,32 @@ export declare const authUserSchema: z.ZodObject<{
     createdAt: z.ZodString;
     isVip: z.ZodBoolean;
     isReseller: z.ZodBoolean;
+    hasDeposited: z.ZodBoolean;
+    referralCode: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     status: "ACTIVE" | "SUSPENDED";
     username: string;
     email: string;
+    referralCode: string;
     id: string;
     role: "USER" | "MODERATOR" | "ADMIN";
     avatarUrl: string | null;
     createdAt: string;
     isVip: boolean;
     isReseller: boolean;
+    hasDeposited: boolean;
 }, {
     status: "ACTIVE" | "SUSPENDED";
     username: string;
     email: string;
+    referralCode: string;
     id: string;
     role: "USER" | "MODERATOR" | "ADMIN";
     avatarUrl: string | null;
     createdAt: string;
     isVip: boolean;
     isReseller: boolean;
+    hasDeposited: boolean;
 }>;
 export type AuthUser = z.infer<typeof authUserSchema>;
 export declare const createManualDepositSchema: z.ZodObject<{
@@ -909,6 +918,10 @@ export type PaymentMethodInput = z.infer<typeof paymentMethodInputSchema>;
 export declare const LiveChatProviderValues: readonly ["NONE", "TAWKTO", "CRISP"];
 export type LiveChatProvider = (typeof LiveChatProviderValues)[number];
 export declare const DisplayCurrencyValues: readonly ["USD", "BDT"];
+export declare const ReferrerRewardTypeValues: readonly ["PERCENTAGE", "FIXED"];
+export type ReferrerRewardType = (typeof ReferrerRewardTypeValues)[number];
+export declare const ReferralStatusValues: readonly ["COMPLETED", "FAILED"];
+export type ReferralStatus = (typeof ReferralStatusValues)[number];
 export type DisplayCurrency = (typeof DisplayCurrencyValues)[number];
 export declare const NoticeLevelValues: readonly ["INFO", "WARNING", "SUCCESS", "ERROR"];
 export type NoticeLevel = (typeof NoticeLevelValues)[number];
@@ -928,6 +941,14 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpPassword: z.ZodOptional<z.ZodString>;
     smtpFromAddress: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     resendOrderButtonEnabled: z.ZodOptional<z.ZodBoolean>;
+    firstDepositBonusEnabled: z.ZodOptional<z.ZodBoolean>;
+    firstDepositBonusPercent: z.ZodOptional<z.ZodNumber>;
+    firstDepositMinAmount: z.ZodOptional<z.ZodNumber>;
+    firstDepositMaxBonus: z.ZodOptional<z.ZodNumber>;
+    referralSystemEnabled: z.ZodOptional<z.ZodBoolean>;
+    referrerRewardType: z.ZodOptional<z.ZodEnum<["PERCENTAGE", "FIXED"]>>;
+    referrerRewardValue: z.ZodOptional<z.ZodNumber>;
+    refereeBonusPercent: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
     siteName: string;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
@@ -944,6 +965,14 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpPassword?: string | undefined;
     smtpFromAddress?: string | null | undefined;
     resendOrderButtonEnabled?: boolean | undefined;
+    firstDepositBonusEnabled?: boolean | undefined;
+    firstDepositBonusPercent?: number | undefined;
+    firstDepositMinAmount?: number | undefined;
+    firstDepositMaxBonus?: number | undefined;
+    referralSystemEnabled?: boolean | undefined;
+    referrerRewardType?: "PERCENTAGE" | "FIXED" | undefined;
+    referrerRewardValue?: number | undefined;
+    refereeBonusPercent?: number | undefined;
 }, {
     siteName: string;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
@@ -960,6 +989,14 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpPassword?: string | undefined;
     smtpFromAddress?: string | null | undefined;
     resendOrderButtonEnabled?: boolean | undefined;
+    firstDepositBonusEnabled?: boolean | undefined;
+    firstDepositBonusPercent?: number | undefined;
+    firstDepositMinAmount?: number | undefined;
+    firstDepositMaxBonus?: number | undefined;
+    referralSystemEnabled?: boolean | undefined;
+    referrerRewardType?: "PERCENTAGE" | "FIXED" | undefined;
+    referrerRewardValue?: number | undefined;
+    refereeBonusPercent?: number | undefined;
 }>;
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;
 export declare const sendTestEmailSchema: z.ZodObject<{
@@ -978,6 +1015,14 @@ export declare const publicSettingsSchema: z.ZodObject<{
     usdToBdtRate: z.ZodString;
     defaultCurrency: z.ZodEnum<["USD", "BDT"]>;
     googleAuthEnabled: z.ZodBoolean;
+    firstDepositBonusEnabled: z.ZodBoolean;
+    firstDepositBonusPercent: z.ZodString;
+    firstDepositMinAmount: z.ZodString;
+    firstDepositMaxBonus: z.ZodString;
+    referralSystemEnabled: z.ZodBoolean;
+    referrerRewardType: z.ZodEnum<["PERCENTAGE", "FIXED"]>;
+    referrerRewardValue: z.ZodString;
+    refereeBonusPercent: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     siteName: string;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
@@ -985,6 +1030,14 @@ export declare const publicSettingsSchema: z.ZodObject<{
     howToOrderVideoUrl: string | null;
     usdToBdtRate: string;
     defaultCurrency: "USD" | "BDT";
+    firstDepositBonusEnabled: boolean;
+    firstDepositBonusPercent: string;
+    firstDepositMinAmount: string;
+    firstDepositMaxBonus: string;
+    referralSystemEnabled: boolean;
+    referrerRewardType: "PERCENTAGE" | "FIXED";
+    referrerRewardValue: string;
+    refereeBonusPercent: string;
     googleAuthEnabled: boolean;
 }, {
     siteName: string;
@@ -993,6 +1046,14 @@ export declare const publicSettingsSchema: z.ZodObject<{
     howToOrderVideoUrl: string | null;
     usdToBdtRate: string;
     defaultCurrency: "USD" | "BDT";
+    firstDepositBonusEnabled: boolean;
+    firstDepositBonusPercent: string;
+    firstDepositMinAmount: string;
+    firstDepositMaxBonus: string;
+    referralSystemEnabled: boolean;
+    referrerRewardType: "PERCENTAGE" | "FIXED";
+    referrerRewardValue: string;
+    refereeBonusPercent: string;
     googleAuthEnabled: boolean;
 }>;
 export type PublicSettings = z.infer<typeof publicSettingsSchema>;
@@ -1194,14 +1255,14 @@ export declare const couponInputSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     value: number;
     code: string;
-    type: "PERCENT" | "FIXED";
+    type: "FIXED" | "PERCENT";
     active: boolean;
     maxUses?: number | null | undefined;
     expiresAt?: Date | null | undefined;
 }, {
     value: number;
     code: string;
-    type: "PERCENT" | "FIXED";
+    type: "FIXED" | "PERCENT";
     active?: boolean | undefined;
     maxUses?: number | null | undefined;
     expiresAt?: Date | null | undefined;

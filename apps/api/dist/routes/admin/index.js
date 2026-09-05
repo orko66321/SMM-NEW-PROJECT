@@ -22,6 +22,7 @@ import { adminProductsRouter } from "./products.routes.js";
 import { adminPackagesRouter } from "./packages.routes.js";
 import { adminStockPoolsRouter } from "./stockPools.routes.js";
 import { adminCommentTemplatesRouter } from "./commentTemplates.routes.js";
+import { adminReferralRouter } from "./referral.routes.js";
 export const adminRouter = Router();
 // Every route under /api/admin/* is authenticated and role-gated here —
 // `requireRole` checks the DB-verified role on `req.user` set by
@@ -56,6 +57,7 @@ adminRouter.use("/banners", adminOnly, adminBannersRouter);
 adminRouter.use("/posts", adminOnly, adminPostsRouter);
 adminRouter.use("/coupons", adminOnly, adminCouponsRouter);
 adminRouter.use("/comment-templates", adminOnly, adminCommentTemplatesRouter);
+adminRouter.use("/referral", adminOnly, adminReferralRouter);
 adminRouter.use("/brands", adminOnly, adminBrandsRouter);
 adminRouter.use("/products", adminOnly, adminProductsRouter);
 adminRouter.use("/packages", adminOnly, adminPackagesRouter);

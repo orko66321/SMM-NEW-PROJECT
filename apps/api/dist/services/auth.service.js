@@ -14,6 +14,34 @@ export const ARGON2_OPTIONS = {
     timeCost: 2,
     parallelism: 1,
 };
+// Human-readable base — no 0/O/1/I/L, so a code can be read out loud or
+// off a screenshot without ambiguity.
+const REFERRAL_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+function randomReferralCode(length = 8) {
+    const bytes = crypto.randomBytes(length);
+    let out = "";
+    for (let i = 0; i < length; i += 1)
+        out += REFERRAL_ALPHABET[bytes[i] % REFERRAL_ALPHABET.length];
+    return out;
+}
+/** A referralCode not already taken. The @unique column is the real guard; this just avoids the retry in practice. */
+async function uniqueReferralCode() {
+    for (let attempt = 0; attempt < 6; attempt += 1) {
+        const code = randomReferralCode();
+        const taken = await prisma.user.findUnique({ where: { referralCode: code }, select: { id: true } });
+        if (!taken)
+            return code;
+    }
+    return randomReferralCode(12);
+}
+/** Resolve a user-supplied referral code (any case) to the referrer's id, or undefined if it doesn't match anyone. */
+async function resolveReferrerId(code) {
+    const trimmed = code?.trim().toUpperCase();
+    if (!trimmed)
+        return undefined;
+    const referrer = await prisma.user.findUnique({ where: { referralCode: trimmed }, select: { id: true } });
+    return referrer?.id;
+}
 function publicUser(user) {
     return {
         id: user.id,
@@ -29,6 +57,8 @@ function publicUser(user) {
         isVip: user.isVip ?? false,
         // Admin-granted reseller flag OR a self-generated reseller API key.
         isReseller: (user.isReseller ?? false) || !!user.apiKeyHash,
+        hasDeposited: user.hasDeposited ?? false,
+        referralCode: user.referralCode ?? "",
     };
 }
 export async function registerUser(input) {
@@ -42,9 +72,11 @@ export async function registerUser(input) {
         throw AppError.conflict("An account with this email or username already exists");
     }
     const passwordHash = await argon2.hash(input.password, ARGON2_OPTIONS);
+    const referralCode = await uniqueReferralCode();
+    const referredById = await resolveReferrerId(input.referralCode);
     const user = await prisma.$transaction(async (tx) => {
         const created = await tx.user.create({
-            data: { username: input.username, email: input.email, passwordHash },
+            data: { username: input.username, email: input.email, passwordHash, referralCode, referredById },
         });
         await tx.wallet.create({ data: { userId: created.id, balance: 0 } });
         return created;
@@ -231,6 +263,7 @@ export async function googleAuth(idToken, meta) {
                     break;
                 username = `${base}${crypto.randomInt(1000, 9999)}`;
             }
+            const referralCode = await uniqueReferralCode();
             user = await prisma.$transaction(async (tx) => {
                 const created = await tx.user.create({
                     data: {
@@ -239,6 +272,7 @@ export async function googleAuth(idToken, meta) {
                         googleId: identity.googleId,
                         avatarUrl: identity.picture,
                         passwordHash: null,
+                        referralCode,
                     },
                 });
                 await tx.wallet.create({ data: { userId: created.id, balance: 0 } });

@@ -35,6 +35,14 @@ export async function getAdminSettings() {
     smtpFromAddress: s.smtpFromAddress,
     smtpConfigured: !!s.smtpPassCiphertext,
     resendOrderButtonEnabled: s.resendOrderButtonEnabled,
+    firstDepositBonusEnabled: s.firstDepositBonusEnabled,
+    firstDepositBonusPercent: s.firstDepositBonusPercent.toString(),
+    firstDepositMinAmount: s.firstDepositMinAmount.toString(),
+    firstDepositMaxBonus: s.firstDepositMaxBonus.toString(),
+    referralSystemEnabled: s.referralSystemEnabled,
+    referrerRewardType: s.referrerRewardType,
+    referrerRewardValue: s.referrerRewardValue.toString(),
+    refereeBonusPercent: s.refereeBonusPercent.toString(),
   };
 }
 
@@ -71,6 +79,14 @@ export async function updateSettings(input: UpdateSettingsInput) {
       ...(input.resendOrderButtonEnabled === undefined
         ? {}
         : { resendOrderButtonEnabled: input.resendOrderButtonEnabled }),
+      ...(input.firstDepositBonusEnabled === undefined ? {} : { firstDepositBonusEnabled: input.firstDepositBonusEnabled }),
+      ...(input.firstDepositBonusPercent === undefined ? {} : { firstDepositBonusPercent: input.firstDepositBonusPercent }),
+      ...(input.firstDepositMinAmount === undefined ? {} : { firstDepositMinAmount: input.firstDepositMinAmount }),
+      ...(input.firstDepositMaxBonus === undefined ? {} : { firstDepositMaxBonus: input.firstDepositMaxBonus }),
+      ...(input.referralSystemEnabled === undefined ? {} : { referralSystemEnabled: input.referralSystemEnabled }),
+      ...(input.referrerRewardType === undefined ? {} : { referrerRewardType: input.referrerRewardType }),
+      ...(input.referrerRewardValue === undefined ? {} : { referrerRewardValue: input.referrerRewardValue }),
+      ...(input.refereeBonusPercent === undefined ? {} : { refereeBonusPercent: input.refereeBonusPercent }),
     },
   });
 }
@@ -86,6 +102,14 @@ export async function getPublicSettings(): Promise<PublicSettings> {
     usdToBdtRate: s.usdToBdtRate.toString(),
     defaultCurrency: s.defaultCurrency,
     googleAuthEnabled: env.googleAuthEnabled,
+    firstDepositBonusEnabled: s.firstDepositBonusEnabled,
+    firstDepositBonusPercent: s.firstDepositBonusPercent.toString(),
+    firstDepositMinAmount: s.firstDepositMinAmount.toString(),
+    firstDepositMaxBonus: s.firstDepositMaxBonus.toString(),
+    referralSystemEnabled: s.referralSystemEnabled,
+    referrerRewardType: s.referrerRewardType,
+    referrerRewardValue: s.referrerRewardValue.toString(),
+    refereeBonusPercent: s.refereeBonusPercent.toString(),
   };
 }
 

@@ -31,6 +31,14 @@ export async function getAdminSettings() {
         smtpFromAddress: s.smtpFromAddress,
         smtpConfigured: !!s.smtpPassCiphertext,
         resendOrderButtonEnabled: s.resendOrderButtonEnabled,
+        firstDepositBonusEnabled: s.firstDepositBonusEnabled,
+        firstDepositBonusPercent: s.firstDepositBonusPercent.toString(),
+        firstDepositMinAmount: s.firstDepositMinAmount.toString(),
+        firstDepositMaxBonus: s.firstDepositMaxBonus.toString(),
+        referralSystemEnabled: s.referralSystemEnabled,
+        referrerRewardType: s.referrerRewardType,
+        referrerRewardValue: s.referrerRewardValue.toString(),
+        refereeBonusPercent: s.refereeBonusPercent.toString(),
     };
 }
 /** Kill-switch for the admin Orders "Resend to provider" button + endpoint. */
@@ -64,6 +72,14 @@ export async function updateSettings(input) {
             ...(input.resendOrderButtonEnabled === undefined
                 ? {}
                 : { resendOrderButtonEnabled: input.resendOrderButtonEnabled }),
+            ...(input.firstDepositBonusEnabled === undefined ? {} : { firstDepositBonusEnabled: input.firstDepositBonusEnabled }),
+            ...(input.firstDepositBonusPercent === undefined ? {} : { firstDepositBonusPercent: input.firstDepositBonusPercent }),
+            ...(input.firstDepositMinAmount === undefined ? {} : { firstDepositMinAmount: input.firstDepositMinAmount }),
+            ...(input.firstDepositMaxBonus === undefined ? {} : { firstDepositMaxBonus: input.firstDepositMaxBonus }),
+            ...(input.referralSystemEnabled === undefined ? {} : { referralSystemEnabled: input.referralSystemEnabled }),
+            ...(input.referrerRewardType === undefined ? {} : { referrerRewardType: input.referrerRewardType }),
+            ...(input.referrerRewardValue === undefined ? {} : { referrerRewardValue: input.referrerRewardValue }),
+            ...(input.refereeBonusPercent === undefined ? {} : { refereeBonusPercent: input.refereeBonusPercent }),
         },
     });
 }
@@ -78,6 +94,14 @@ export async function getPublicSettings() {
         usdToBdtRate: s.usdToBdtRate.toString(),
         defaultCurrency: s.defaultCurrency,
         googleAuthEnabled: env.googleAuthEnabled,
+        firstDepositBonusEnabled: s.firstDepositBonusEnabled,
+        firstDepositBonusPercent: s.firstDepositBonusPercent.toString(),
+        firstDepositMinAmount: s.firstDepositMinAmount.toString(),
+        firstDepositMaxBonus: s.firstDepositMaxBonus.toString(),
+        referralSystemEnabled: s.referralSystemEnabled,
+        referrerRewardType: s.referrerRewardType,
+        referrerRewardValue: s.referrerRewardValue.toString(),
+        refereeBonusPercent: s.refereeBonusPercent.toString(),
     };
 }
 /** Internal only — the raw Decimal, for money math (services/payments/currency.ts), never string-formatted. */

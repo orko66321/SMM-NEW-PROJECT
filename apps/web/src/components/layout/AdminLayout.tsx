@@ -33,6 +33,7 @@ const navRows: NavRow[] = [
   { to: "/admin/support-channels", label: "Support Channels", icon: "support", adminOnly: true },
   { to: "/admin/coupons", label: "Coupons", icon: "coupon", adminOnly: true },
   { to: "/admin/comments", label: "Comment", icon: "bell", adminOnly: true },
+  { to: "/admin/referrals", label: "Referrals", icon: "users", adminOnly: true },
   { to: "/admin/notice-settings", label: "Notice Settings", icon: "campaign", adminOnly: true },
   { to: "/admin/banner", label: "Banner Slider", icon: "image", adminOnly: true },
   { to: "/admin/posts", label: "Documentation", icon: "docs", adminOnly: true },

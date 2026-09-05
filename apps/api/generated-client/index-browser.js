@@ -227,6 +227,10 @@ exports.Prisma.UserScalarFieldEnum = {
   apiKeyCreatedAt: 'apiKeyCreatedAt',
   isVip: 'isVip',
   isReseller: 'isReseller',
+  hasDeposited: 'hasDeposited',
+  referralCode: 'referralCode',
+  referredById: 'referredById',
+  totalReferralEarnings: 'totalReferralEarnings',
   phone: 'phone',
   notifyEmail: 'notifyEmail',
   notifyOrderUpdates: 'notifyOrderUpdates',
@@ -569,7 +573,26 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   smtpPassCiphertext: 'smtpPassCiphertext',
   smtpFromAddress: 'smtpFromAddress',
   resendOrderButtonEnabled: 'resendOrderButtonEnabled',
+  firstDepositBonusEnabled: 'firstDepositBonusEnabled',
+  firstDepositBonusPercent: 'firstDepositBonusPercent',
+  firstDepositMinAmount: 'firstDepositMinAmount',
+  firstDepositMaxBonus: 'firstDepositMaxBonus',
+  referralSystemEnabled: 'referralSystemEnabled',
+  referrerRewardType: 'referrerRewardType',
+  referrerRewardValue: 'referrerRewardValue',
+  refereeBonusPercent: 'refereeBonusPercent',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReferralLogScalarFieldEnum = {
+  id: 'id',
+  referrerId: 'referrerId',
+  refereeId: 'refereeId',
+  rewardAmount: 'rewardAmount',
+  refereeBonusAmount: 'refereeBonusAmount',
+  refereeDepositAmount: 'refereeDepositAmount',
+  status: 'status',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SupportChannelScalarFieldEnum = {
@@ -700,7 +723,8 @@ exports.WalletTxType = exports.$Enums.WalletTxType = {
   ORDER_REFUND: 'ORDER_REFUND',
   ADMIN_ADJUSTMENT: 'ADMIN_ADJUSTMENT',
   AFFILIATE_PAYOUT: 'AFFILIATE_PAYOUT',
-  CHILD_PANEL_FEE: 'CHILD_PANEL_FEE'
+  CHILD_PANEL_FEE: 'CHILD_PANEL_FEE',
+  REFERRAL_REWARD: 'REFERRAL_REWARD'
 };
 
 exports.ProviderStatus = exports.$Enums.ProviderStatus = {
@@ -831,6 +855,16 @@ exports.DisplayCurrency = exports.$Enums.DisplayCurrency = {
   BDT: 'BDT'
 };
 
+exports.ReferrerRewardType = exports.$Enums.ReferrerRewardType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED'
+};
+
+exports.ReferralStatus = exports.$Enums.ReferralStatus = {
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
 exports.SupportChannelType = exports.$Enums.SupportChannelType = {
   WHATSAPP: 'WHATSAPP',
   TELEGRAM: 'TELEGRAM',
@@ -892,6 +926,7 @@ exports.Prisma.ModelName = {
   Coupon: 'Coupon',
   CouponRedemption: 'CouponRedemption',
   SiteSettings: 'SiteSettings',
+  ReferralLog: 'ReferralLog',
   SupportChannel: 'SupportChannel',
   Notice: 'Notice',
   SiteNotice: 'SiteNotice',

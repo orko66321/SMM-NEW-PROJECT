@@ -40,6 +40,14 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
       usdToBdtRate: "120",
       defaultCurrency: "USD",
       googleAuthEnabled: expect.any(Boolean),
+      firstDepositBonusEnabled: false,
+      firstDepositBonusPercent: "0",
+      firstDepositMinAmount: "0",
+      firstDepositMaxBonus: "0",
+      referralSystemEnabled: false,
+      referrerRewardType: "PERCENTAGE",
+      referrerRewardValue: "0",
+      refereeBonusPercent: "0",
     });
     expect(JSON.stringify(res.body)).not.toContain("super-secret-password");
     expect(JSON.stringify(res.body)).not.toContain("smtp");
