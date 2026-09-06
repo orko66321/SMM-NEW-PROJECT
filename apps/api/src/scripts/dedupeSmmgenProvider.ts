@@ -1,67 +1,43 @@
 // One-off ops fix: remove the duplicate disabled "smmgen" Provider row that
 // points at the same upstream API (https://my.smmgen.com/api/v2) as the
-// active "my.smmgen" provider.
+// active "my.smmgen" provider. The whole catalogue was imported twice —
+// once under each provider row — so there are thousands of exact-duplicate
+// Service rows mapped to the dead provider.
 //
-// The disabled provider can't be deleted from the admin UI because Service
-// rows still reference it, and the Services page has no delete action for a
-// service. This script reconciles those Service rows against the surviving
-// provider and then deletes the dead Provider row.
+// The disabled provider can't be deleted from the admin UI because those
+// Service rows reference it, and the Services page has no bulk delete.
 //
-// For each Service mapped (as primary OR backup) to the dead provider:
+// For every Service mapped (primary OR backup) to the dead provider:
 //   - if the surviving provider already has a Service with the SAME
-//     providerServiceId (product code) → that's a genuine duplicate: move
-//     every Order / OrderIntent / Product / DripFeed reference onto the
-//     surviving twin, then delete the duplicate row.
-//   - otherwise → just repoint the Service's providerId (and/or clear its
+//     providerServiceId (product code) -> genuine duplicate: move every
+//     Order / OrderIntent / Product / DripFeed reference onto the surviving
+//     twin, then delete the duplicate row.
+//   - otherwise -> repoint the Service's providerId (and clear a dead
 //     backupProviderId) onto the surviving provider.
 // Then, once nothing references the dead provider, delete it.
 //
-// SAFE BY DEFAULT: runs as a dry run and only prints the plan. Pass
-// --commit to actually apply it (everything runs in a single transaction).
+// Set-based: a handful of bulk UPDATE/DELETE statements in ONE transaction,
+// not row-by-row — this has to handle ~7.8k rows.
 //
-//   # dry run
-//   DATABASE_URL=... npx tsx apps/api/src/scripts/dedupeSmmgenProvider.ts
-//   # apply
-//   DATABASE_URL=... npx tsx apps/api/src/scripts/dedupeSmmgenProvider.ts --commit
+// SAFE BY DEFAULT: dry run unless --commit is passed.
 //
-// or, from a build, `node dist/scripts/dedupeSmmgenProvider.js [--commit]`.
+//   node apps/api/dist/scripts/dedupeSmmgenProvider.js            # dry run
+//   node apps/api/dist/scripts/dedupeSmmgenProvider.js --commit   # apply
+//
+// (or `npx tsx apps/api/src/scripts/dedupeSmmgenProvider.ts [--commit]`)
 
-import { Prisma, PrismaClient } from "#prisma/client";
+import { PrismaClient } from "#prisma/client";
 
 const DEAD_PROVIDER_ID = "cmt9ouiva000fu7gulj4r4076";
 const LIVE_API_URL = "https://my.smmgen.com/api/v2";
 
 const COMMIT = process.argv.includes("--commit");
 
-// A standalone client so the script doesn't drag in src/env.ts's full
-// runtime-config validation — it only needs DATABASE_URL.
 const prisma = new PrismaClient({ log: ["error", "warn"] });
 
-type Tx = Prisma.TransactionClient;
-
-async function reassignServiceRefs(tx: Tx, fromServiceId: string, toServiceId: string) {
-  const [orders, orderIntents, products, dripFeeds] = await Promise.all([
-    tx.order.updateMany({ where: { serviceId: fromServiceId }, data: { serviceId: toServiceId } }),
-    tx.orderIntent.updateMany({ where: { serviceId: fromServiceId }, data: { serviceId: toServiceId } }),
-    tx.product.updateMany({ where: { serviceId: fromServiceId }, data: { serviceId: toServiceId } }),
-    tx.dripFeed.updateMany({ where: { serviceId: fromServiceId }, data: { serviceId: toServiceId } }),
-  ]);
-  return {
-    orders: orders.count,
-    orderIntents: orderIntents.count,
-    products: products.count,
-    dripFeeds: dripFeeds.count,
-  };
-}
-
-async function countServiceRefs(tx: Tx, serviceId: string) {
-  const [orders, orderIntents, products, dripFeeds] = await Promise.all([
-    tx.order.count({ where: { serviceId } }),
-    tx.orderIntent.count({ where: { serviceId } }),
-    tx.product.count({ where: { serviceId } }),
-    tx.dripFeed.count({ where: { serviceId } }),
-  ]);
-  return { orders, orderIntents, products, dripFeeds };
+async function scalar(rows: Array<Record<string, unknown>>): Promise<number> {
+  const v = rows[0] ? Object.values(rows[0])[0] : 0;
+  return Number(v ?? 0);
 }
 
 async function main() {
@@ -83,102 +59,123 @@ async function main() {
         `(other than the dead one), found ${liveCandidates.length}:`,
     );
     for (const p of liveCandidates) console.error(`  - ${p.id}  "${p.name}"  [${p.status}]`);
-    console.error(`\nResolve by hand (or hard-code the surviving id in this script) and re-run.`);
     process.exitCode = 1;
     return;
   }
-  const live = liveCandidates[0]!;
-  console.log(`Live provider:  ${live.id}  "${live.name}"  ${live.apiUrl}  [${live.status}]\n`);
+  const LIVE = liveCandidates[0]!.id;
+  console.log(`Live provider:  ${LIVE}  "${liveCandidates[0]!.name}"  ${liveCandidates[0]!.apiUrl}  [${liveCandidates[0]!.status}]\n`);
 
-  // Every Service touching the dead provider, as primary or as backup.
-  const deadServices = await prisma.service.findMany({
-    where: { OR: [{ providerId: DEAD_PROVIDER_ID }, { backupProviderId: DEAD_PROVIDER_ID }] },
-    orderBy: { providerServiceId: "asc" },
-  });
-  console.log(`${deadServices.length} Service row(s) reference the dead provider.\n`);
+  // ── Plan (counts only) ────────────────────────────────────────────────
+  const deadPrimary = await scalar(
+    await prisma.$queryRaw`SELECT count(*)::int n FROM "Service" WHERE "providerId" = ${DEAD_PROVIDER_ID}`,
+  );
+  const deadBackup = await scalar(
+    await prisma.$queryRaw`SELECT count(*)::int n FROM "Service" WHERE "backupProviderId" = ${DEAD_PROVIDER_ID}`,
+  );
+  const twinned = await scalar(
+    await prisma.$queryRaw`
+      SELECT count(*)::int n FROM "Service" dead
+      WHERE dead."providerId" = ${DEAD_PROVIDER_ID}
+        AND EXISTS (
+          SELECT 1 FROM "Service" live
+          WHERE live."providerId" = ${LIVE}
+            AND live."providerServiceId" = dead."providerServiceId"
+        )`,
+  );
+  const repoint = deadPrimary - twinned;
 
-  let toMerge = 0;
-  let toRepoint = 0;
-  let toClearBackup = 0;
-
-  await prisma.$transaction(async (tx) => {
-    for (const svc of deadServices) {
-      const isPrimary = svc.providerId === DEAD_PROVIDER_ID;
-      const isBackup = svc.backupProviderId === DEAD_PROVIDER_ID;
-      const label = `[${svc.providerServiceId ?? "no-code"}] "${svc.name}" (cost ${svc.providerCostPer1000}/1000, ${svc.status})`;
-
-      // Does the surviving provider already carry this product code?
-      const twin = svc.providerServiceId
-        ? await tx.service.findFirst({
-            where: { providerId: live.id, providerServiceId: svc.providerServiceId, id: { not: svc.id } },
-          })
-        : null;
-
-      if (isPrimary && twin) {
-        const refs = await countServiceRefs(tx, svc.id);
-        console.log(
-          `MERGE  ${label}\n` +
-            `       → into surviving ${svc.id === twin.id ? "self?!" : twin.id} ` +
-            `(cost ${twin.providerCostPer1000}/1000, ${twin.status})\n` +
-            `       moving refs: ${refs.orders} order(s), ${refs.orderIntents} intent(s), ` +
-            `${refs.products} product(s), ${refs.dripFeeds} drip feed(s), then DELETE this row`,
-        );
-        toMerge++;
-        if (COMMIT) {
-          await reassignServiceRefs(tx, svc.id, twin.id);
-          await tx.service.delete({ where: { id: svc.id } });
-        }
-        continue;
-      }
-
-      // No twin (or the dead link is only a backup): repoint onto the live provider.
-      const data: { providerId?: string; backupProviderId?: string | null } = {};
-      if (isPrimary) {
-        data.providerId = live.id;
-        toRepoint++;
-        console.log(`REPOINT ${label}\n       primary providerId → ${live.id}`);
-      }
-      if (isBackup) {
-        // Don't leave backup == primary; if primary is (now) the live
-        // provider, a backup pointing at the same provider is meaningless.
-        const primaryAfter = isPrimary ? live.id : svc.providerId;
-        data.backupProviderId = primaryAfter === live.id ? null : live.id;
-        toClearBackup++;
-        console.log(
-          `${isPrimary ? "        " : "REPOINT "}${isPrimary ? "" : label + "\n       "}` +
-            `backupProviderId → ${data.backupProviderId ?? "null"}`,
-        );
-      }
-      if (COMMIT) await tx.service.update({ where: { id: svc.id }, data });
-    }
-
-    // Nothing should reference the dead provider now.
-    const [stillPrimary, stillBackup] = await Promise.all([
-      tx.service.count({ where: { providerId: DEAD_PROVIDER_ID } }),
-      tx.service.count({ where: { backupProviderId: DEAD_PROVIDER_ID } }),
-    ]);
-
-    console.log(
-      `\nAfter reconcile: ${stillPrimary} primary + ${stillBackup} backup Service refs to the dead provider ` +
-        `${COMMIT ? "(live count)" : "(dry run — would be 0)"}.`,
+  const refCount = async (table: string) =>
+    scalar(
+      await prisma.$queryRawUnsafe(
+        `SELECT count(*)::int n FROM "${table}" x
+         JOIN "Service" dead ON dead.id = x."serviceId"
+         WHERE dead."providerId" = $1`,
+        DEAD_PROVIDER_ID,
+      ),
     );
+  const [ordRefs, intentRefs, prodRefs, dripRefs] = await Promise.all([
+    refCount("Order"),
+    refCount("OrderIntent"),
+    refCount("Product"),
+    refCount("DripFeed"),
+  ]);
 
-    if (COMMIT) {
+  console.log(`Dead provider is referenced by:`);
+  console.log(`  ${deadPrimary} Service row(s) as PRIMARY  (${twinned} are duplicates -> delete, ${repoint} have no twin -> repoint)`);
+  console.log(`  ${deadBackup} Service row(s) as BACKUP     (-> backupProviderId cleared)`);
+  console.log(`  ${ordRefs} Order, ${intentRefs} OrderIntent, ${prodRefs} Product, ${dripRefs} DripFeed row(s) on those services (reference reassigned before delete)\n`);
+
+  if (!COMMIT) {
+    console.log(`DRY RUN — nothing changed. Re-run with --commit to apply.\n`);
+    return;
+  }
+
+  // ── Apply (one transaction) ──────────────────────────────────────────
+  await prisma.$transaction(
+    async (tx) => {
+      // 1-4. Reassign every dependent reference from a duplicate dead-provider
+      //      service onto its surviving twin.
+      const moveRefs = (table: string) => tx.$executeRawUnsafe(
+        `UPDATE "${table}" x SET "serviceId" = live.id
+         FROM "Service" dead
+         JOIN "Service" live
+           ON live."providerServiceId" = dead."providerServiceId"
+          AND live."providerId" = $1
+         WHERE x."serviceId" = dead.id
+           AND dead."providerId" = $2`,
+        LIVE,
+        DEAD_PROVIDER_ID,
+      );
+      console.log(`moved Order refs:      ${await moveRefs("Order")}`);
+      console.log(`moved OrderIntent refs:${await moveRefs("OrderIntent")}`);
+      console.log(`moved Product refs:    ${await moveRefs("Product")}`);
+      console.log(`moved DripFeed refs:   ${await moveRefs("DripFeed")}`);
+
+      // 5. Delete the duplicate dead-provider services (those that have a twin).
+      const deleted = await tx.$executeRawUnsafe(
+        `DELETE FROM "Service" AS dead USING "Service" live
+         WHERE dead."providerId" = $1
+           AND live."providerServiceId" = dead."providerServiceId"
+           AND live."providerId" = $2`,
+        DEAD_PROVIDER_ID,
+        LIVE,
+      );
+      console.log(`deleted duplicate services: ${deleted}`);
+
+      // 6. Repoint whatever dead-provider services are left (no twin existed).
+      const repointed = await tx.$executeRawUnsafe(
+        `UPDATE "Service" SET "providerId" = $1 WHERE "providerId" = $2`,
+        LIVE,
+        DEAD_PROVIDER_ID,
+      );
+      console.log(`repointed services:         ${repointed}`);
+
+      // 7. Clear any backup links to the dead provider.
+      const backupCleared = await tx.$executeRawUnsafe(
+        `UPDATE "Service" SET "backupProviderId" = NULL WHERE "backupProviderId" = $1`,
+        DEAD_PROVIDER_ID,
+      );
+      console.log(`cleared backup links:       ${backupCleared}`);
+
+      // 8. Nothing may reference the dead provider now.
+      const stillPrimary = await scalar(
+        await tx.$queryRawUnsafe(`SELECT count(*)::int n FROM "Service" WHERE "providerId" = $1`, DEAD_PROVIDER_ID),
+      );
+      const stillBackup = await scalar(
+        await tx.$queryRawUnsafe(`SELECT count(*)::int n FROM "Service" WHERE "backupProviderId" = $1`, DEAD_PROVIDER_ID),
+      );
       if (stillPrimary > 0 || stillBackup > 0) {
-        throw new Error("Dead provider still referenced after reconcile — rolling back, investigate.");
+        throw new Error(`Dead provider still referenced (${stillPrimary} primary, ${stillBackup} backup) — rolling back.`);
       }
+
       await tx.providerSyncLog.deleteMany({ where: { providerId: DEAD_PROVIDER_ID } });
       await tx.provider.delete({ where: { id: DEAD_PROVIDER_ID } });
-      console.log(`DELETED dead provider ${DEAD_PROVIDER_ID}.`);
-    }
-  }, { timeout: 120_000, maxWait: 15_000 });
-
-  console.log(
-    `\nSummary: ${toMerge} duplicate service(s) merged + deleted, ${toRepoint} repointed, ` +
-      `${toClearBackup} backup link(s) updated.`,
+      console.log(`\nDELETED dead provider ${DEAD_PROVIDER_ID}.`);
+    },
+    { timeout: 600_000, maxWait: 20_000 },
   );
-  if (!COMMIT) console.log(`\nDRY RUN — nothing was changed. Re-run with --commit to apply.\n`);
-  else console.log(`\nDone.\n`);
+
+  console.log(`\nDone.\n`);
 }
 
 main()
