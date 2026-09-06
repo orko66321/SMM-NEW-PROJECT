@@ -89,7 +89,7 @@ adminServicesRouter.delete(
     await deleteService(req.params.id!);
     await writeAuditLog({
       actorId: req.user!.id,
-      action: "service.disable",
+      action: "service.delete",
       targetType: "Service",
       targetId: req.params.id!,
       ip: req.ip,
