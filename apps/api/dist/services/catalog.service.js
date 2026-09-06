@@ -39,9 +39,10 @@ export async function listServices(page, pageSize, categoryId, search) {
     ]);
     return { items, total, page, pageSize };
 }
-export async function listServicesForAdmin(page, pageSize, categoryId, search) {
+export async function listServicesForAdmin(page, pageSize, categoryId, search, autoSubmit) {
     const where = {
         ...(categoryId ? { categoryId } : {}),
+        ...(autoSubmit === undefined ? {} : { autoSubmit }),
         ...serviceSearchFilter(search),
     };
     const [items, total] = await Promise.all([

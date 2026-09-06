@@ -14,7 +14,9 @@ adminServicesRouter.get("/", validate(serviceListQuerySchema, "query"), asyncHan
     const { page, pageSize } = req.query;
     const categoryId = typeof req.query.categoryId === "string" ? req.query.categoryId : undefined;
     const search = typeof req.query.search === "string" ? req.query.search : undefined;
-    const result = await listServicesForAdmin(page, pageSize, categoryId, search);
+    const mode = req.query.mode === "auto" || req.query.mode === "manual" ? req.query.mode : undefined;
+    const autoSubmit = mode === undefined ? undefined : mode === "auto";
+    const result = await listServicesForAdmin(page, pageSize, categoryId, search, autoSubmit);
     res.json({
         ...result,
         items: result.items.map((s) => ({
