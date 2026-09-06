@@ -38,16 +38,19 @@ export declare const serviceListQuerySchema: z.ZodObject<{
 } & {
     categoryId: z.ZodOptional<z.ZodString>;
     search: z.ZodOptional<z.ZodString>;
+    mode: z.ZodOptional<z.ZodEnum<["auto", "manual"]>>;
 }, "strip", z.ZodTypeAny, {
     page: number;
     pageSize: number;
     categoryId?: string | undefined;
     search?: string | undefined;
+    mode?: "auto" | "manual" | undefined;
 }, {
     page?: number | undefined;
     pageSize?: number | undefined;
     categoryId?: string | undefined;
     search?: string | undefined;
+    mode?: "auto" | "manual" | undefined;
 }>;
 export type ServiceListQuery = z.infer<typeof serviceListQuerySchema>;
 export declare const serviceCompletedOrdersQuerySchema: z.ZodObject<{

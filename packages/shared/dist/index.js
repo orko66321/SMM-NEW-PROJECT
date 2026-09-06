@@ -74,6 +74,10 @@ const searchQueryField = z.string().trim().max(200).optional();
 export const serviceListQuerySchema = paginationQuerySchema.extend({
     categoryId: z.string().optional(),
     search: searchQueryField,
+    // Fulfillment-mode filter for the admin Services list: "auto" = only
+    // services with autoSubmit on, "manual" = only services with it off.
+    // Combines with categoryId/search via AND.
+    mode: z.enum(["auto", "manual"]).optional(),
 });
 // Paginated history behind the "Recently Completed" badge — its own schema
 // (smaller default page, tighter cap) rather than the shared 20/200 one, and

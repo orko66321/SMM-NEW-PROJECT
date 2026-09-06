@@ -1,4 +1,5 @@
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createAdminCategory,
@@ -36,14 +37,48 @@ export default function AdminServices() {
   const { data: categories } = useQuery({ queryKey: ["admin-categories"], queryFn: getAdminCategories });
   const { data: providers } = useQuery({ queryKey: ["admin-providers"], queryFn: getAdminProviders });
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  // Fulfillment-mode filter is URL-backed (?mode=auto | ?mode=manual) so a
+  // filtered view survives a refresh and can be shared. Anything else is
+  // treated as "all modes".
+  const mode = searchParams.get("mode") === "auto" ? "auto" : searchParams.get("mode") === "manual" ? "manual" : "";
+
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const pageSize = 50;
   const { data: services } = useQuery({
-    queryKey: ["admin-services", page, search, categoryFilter],
-    queryFn: () => getAdminServices({ page, pageSize, categoryId: categoryFilter || undefined, search: search || undefined }),
+    queryKey: ["admin-services", page, search, categoryFilter, mode],
+    queryFn: () =>
+      getAdminServices({
+        page,
+        pageSize,
+        categoryId: categoryFilter || undefined,
+        search: search || undefined,
+        mode: mode || undefined,
+      }),
   });
+
+  function setMode(next: "" | "auto" | "manual") {
+    const params = new URLSearchParams(searchParams);
+    if (next) params.set("mode", next);
+    else params.delete("mode");
+    setSearchParams(params);
+    setPage(1);
+  }
+
+  // Follow-up flag (not a fix): the catalog can contain more than one
+  // service sharing a provider product code (e.g. code 18884 twice with
+  // different cost). Surface it on the current page so it's visible while
+  // someone is looking at the list.
+  const duplicateCodes = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const s of (services?.items ?? []) as { providerServiceId: string | null }[]) {
+      if (!s.providerServiceId) continue;
+      counts.set(s.providerServiceId, (counts.get(s.providerServiceId) ?? 0) + 1);
+    }
+    return new Set([...counts.entries()].filter(([, n]) => n > 1).map(([code]) => code));
+  }, [services]);
 
   const [form, setForm] = useState(emptyForm);
   const [newCategory, setNewCategory] = useState({ name: "", platform: "" });
@@ -174,7 +209,24 @@ export default function AdminServices() {
           <option value="">সব ক্যাটাগরি</option>
           {categories?.map((c: { id: string; name: string }) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
+        <select
+          className="input-field w-full sm:max-w-xs"
+          value={mode}
+          onChange={(e) => setMode(e.target.value as "" | "auto" | "manual")}
+        >
+          <option value="">All modes</option>
+          <option value="auto">Auto only</option>
+          <option value="manual">Manual only</option>
+        </select>
       </div>
+
+      {duplicateCodes.size > 0 && (
+        <div className="card border border-warning/40 bg-warning/10 p-3 text-sm text-on-surface">
+          ⚠️ Duplicate product code{duplicateCodes.size > 1 ? "s" : ""} on this page:{" "}
+          <span className="font-mono">{[...duplicateCodes].join(", ")}</span>. Multiple services share the same
+          provider code — verify their cost/pricing.
+        </div>
+      )}
 
       <div className="card overflow-x-auto p-0">
         <table className="w-full min-w-[820px] text-sm">
@@ -196,7 +248,14 @@ export default function AdminServices() {
               <tr key={s.id}>
                 <td className="px-4 py-3">
                   {s.providerServiceId ? (
-                    <span className="badge bg-surface-container-high font-mono text-on-surface-variant">{s.providerServiceId}</span>
+                    <span className="inline-flex items-center gap-1">
+                      <span className="badge bg-surface-container-high font-mono text-on-surface-variant">{s.providerServiceId}</span>
+                      {duplicateCodes.has(s.providerServiceId) && (
+                        <span className="badge bg-warning/15 text-warning" title="Another service on this page shares this product code">
+                          ⚠ dup
+                        </span>
+                      )}
+                    </span>
                   ) : (
                     <span className="text-xs text-on-surface-variant">—</span>
                   )}
