@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createAdminCategory,
   createAdminService,
+  deleteAdminService,
   getAdminCategories,
   getAdminProviders,
   getAdminServices,
@@ -170,6 +171,21 @@ export default function AdminServices() {
     }
   }
 
+  // Hard-delete, mirroring the Providers page. The API blocks it when the
+  // service has orders / store products / drip feeds / order intents
+  // referencing it (disable it instead) — so this only ever removes a
+  // genuinely unused row, e.g. a duplicate from a bad import.
+  async function onDeleteService(s: { id: string; name: string }) {
+    if (!window.confirm(`"${s.name}" সার্ভিসটি স্থায়ীভাবে মুছে ফেলবেন? (কোনো অর্ডার এতে যুক্ত থাকলে মুছবে না)`)) return;
+    try {
+      await deleteAdminService(s.id);
+      toast.push("Service deleted.", "success");
+      refresh();
+    } catch (err) {
+      toast.push(apiErrorMessage(err, "Failed to delete service — it may have orders referencing it; disable it instead"), "error");
+    }
+  }
+
   async function toggleAutoSubmit(id: string, autoSubmit: boolean) {
     try {
       await updateAdminService(id, { autoSubmit: !autoSubmit });
@@ -302,6 +318,9 @@ export default function AdminServices() {
                     </button>
                     <button className="btn-ghost !px-3 !py-1.5 text-xs" onClick={() => toggleServiceStatus(s.id, s.status)}>
                       {s.status === "ACTIVE" ? "Disable" : "Enable"}
+                    </button>
+                    <button className="btn-ghost !px-3 !py-1.5 text-xs text-error" onClick={() => onDeleteService(s)}>
+                      Delete
                     </button>
                   </div>
                 </td>

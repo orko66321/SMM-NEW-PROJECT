@@ -69,11 +69,28 @@ export async function updateService(id, input) {
         throw AppError.notFound("Service not found");
     return prisma.service.update({ where: { id }, data: input });
 }
+/**
+ * Hard-deletes a service, but only when nothing depends on it — same
+ * "disable/reassign instead" guard as providers.service.ts's deleteProvider
+ * and paymentMethod/coupon deletion. A service with orders (or store
+ * products, drip feeds, or pending order intents) carries financial history
+ * we never want silently orphaned — the FK on Order.serviceId is
+ * ON DELETE SET NULL, so the DB *would* allow it and quietly detach the
+ * history; this check is what actually protects it. When a service is in
+ * use, disable it instead (updateService with status: "DISABLED").
+ */
 export async function deleteService(id) {
-    const existing = await prisma.service.findUnique({ where: { id } });
+    const existing = await prisma.service.findUnique({
+        where: { id },
+        include: { _count: { select: { orders: true, orderIntents: true, dripFeeds: true, products: true } } },
+    });
     if (!existing)
         throw AppError.notFound("Service not found");
-    await prisma.service.update({ where: { id }, data: { status: "DISABLED" } });
+    const { orders, orderIntents, dripFeeds, products } = existing._count;
+    if (orders > 0 || orderIntents > 0 || dripFeeds > 0 || products > 0) {
+        throw AppError.conflict("This service has orders or other records referencing it — disable it instead of deleting");
+    }
+    await prisma.service.delete({ where: { id } });
 }
 // ── Completion-time stats (SMMGen-style "Average Time") ──────────────────
 /**
