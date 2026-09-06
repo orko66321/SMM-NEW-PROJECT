@@ -6,7 +6,7 @@ import { setOnSessionExpired } from "../api/client.js";
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
-  login: (input: LoginInput) => Promise<void>;
+  login: (input: LoginInput) => Promise<AuthUser>;
   loginWithGoogle: (idToken: string) => Promise<void>;
   register: (input: RegisterInput) => Promise<void>;
   logout: () => Promise<void>;
@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (input: LoginInput) => {
     const loggedInUser = await authApi.login(input);
     setUser(loggedInUser);
+    return loggedInUser;
   }, []);
 
   const loginWithGoogle = useCallback(async (idToken: string) => {
