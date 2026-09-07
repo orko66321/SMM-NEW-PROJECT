@@ -24,8 +24,18 @@ adminSettingsRouter.put(
       action: "settings.update",
       targetType: "SiteSettings",
       targetId: "default",
-      // Never write the SMTP password (even that it changed) into the audit trail.
-      after: { ...req.body, smtpPassword: req.body.smtpPassword ? "[REDACTED]" : undefined },
+      // Never write the SMTP password (even that it changed) into the audit
+      // trail; collapse the base64 image blobs to a marker so the log stays
+      // small and readable.
+      after: {
+        ...req.body,
+        smtpPassword: req.body.smtpPassword ? "[REDACTED]" : undefined,
+        ...Object.fromEntries(
+          (["mainLogo", "walletLogo", "autoPayLogo", "icon512", "icon192", "icon512Alt"] as const)
+            .filter((k) => req.body[k] !== undefined)
+            .map((k) => [k, req.body[k] ? "[image]" : null]),
+        ),
+      },
       ip: req.ip,
     });
     res.status(204).end();

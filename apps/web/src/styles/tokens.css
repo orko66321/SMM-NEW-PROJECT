@@ -10,13 +10,23 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Brand violet — identical in every theme (violet is violet) */
+  /* Brand primary — identical in every theme, but overridable at runtime by
+     the admin "Site Color" setting: components/BrandAssets.tsx rewrites these
+     two channel triples from SiteSettings.siteColor. Space-separated RGB
+     channels so Tailwind's `/opacity` modifier keeps working. */
+  --brand-primary: 109 40 217; /* #6D28D9 — primary: logo, buttons */
+  --brand-primary-light: 139 92 246; /* #8B5CF6 — hover / focus / gradient top */
+
   --violet-900: #4c1d95;
-  --violet-700: #6d28d9; /* Primary — logo, buttons */
-  --violet-500: #8b5cf6; /* hover / focus / gradient top */
+  --violet-700: rgb(var(--brand-primary));
+  --violet-500: rgb(var(--brand-primary-light));
   --violet-300: #a78bfa; /* accent on dark grounds */
   --violet-100: #e1e0ff;
-  --brand-gradient: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  --brand-gradient: linear-gradient(
+    135deg,
+    rgb(var(--brand-primary-light)) 0%,
+    rgb(var(--brand-primary)) 100%
+  );
 
   /* Payment-gateway brand colours — payment tiles only */
   --bkash: #e2136e;

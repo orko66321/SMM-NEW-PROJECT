@@ -42,13 +42,14 @@ export default {
         line: channel("--line-1"),
         "line-strong": channel("--line-strong-1"),
 
-        // Brand violet — same in every theme
-        primary: "#6D28D9",
-        "primary-hover": "#8B5CF6",
-        "primary-container": "#8B5CF6",
+        // Brand primary — resolves through --brand-primary / --brand-primary-light
+        // (tokens.css), which the admin "Site Color" setting overrides at runtime.
+        primary: channel("--brand-primary"),
+        "primary-hover": channel("--brand-primary-light"),
+        "primary-container": channel("--brand-primary-light"),
         "on-primary": "#ffffff",
-        accent: "#6D28D9",
-        "accent-hover": "#8B5CF6",
+        accent: channel("--brand-primary"),
+        "accent-hover": channel("--brand-primary-light"),
         "accent-on-dark": channel("--accent-on-dark"),
 
         // Semantic status
