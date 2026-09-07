@@ -1214,6 +1214,29 @@ model SiteSettings {
   metaKeywords    String?
   ogImageUrl      String?
 
+  // Logo & Icon settings — admin-editable from the Site Settings page
+  // ("Logo & Icon Settings" section), consumed by components/Logo.tsx and
+  // components/BrandAssets.tsx. Each image is a base64 data URI stored
+  // directly in the row (same no-persistent-filesystem convention as
+  // Banner.image / Brand.logo — the cPanel host has no writable disk), NOT a
+  // file path. Null ⇒ the frontend falls back to its built-in SVG monogram /
+  // default favicon. siteColor is a #rrggbb hex string that overrides the
+  // brand-primary CSS custom properties at runtime (null ⇒ design-system
+  // violet #6D28D9).
+  //   mainLogo    — full lockup in every navbar/footer/auth screen (≈300×65)
+  //   walletLogo  — reserved for a wallet-page mark (≈300×105), not yet wired
+  //   autoPayLogo — reserved for a payment-page mark (≈300×105), not yet wired
+  //   icon512     — primary app icon / high-res favicon (512×512)
+  //   icon192     — PWA manifest icon (192×192)
+  //   icon512Alt  — apple-touch-icon (512×512, separate slot from icon512)
+  mainLogo    String?
+  walletLogo  String?
+  autoPayLogo String?
+  icon512     String?
+  icon192     String?
+  icon512Alt  String?
+  siteColor   String?
+
   whatsappEnabled Boolean @default(false)
   whatsappNumber  String?
 

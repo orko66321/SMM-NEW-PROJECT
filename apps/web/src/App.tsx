@@ -7,6 +7,7 @@ import PublicLayout from "./components/layout/PublicLayout.js";
 import HelpWidget from "./components/support/HelpWidget.js";
 import LiveChatLoader from "./components/support/LiveChatLoader.js";
 import SeoHead from "./components/SeoHead.js";
+import BrandAssets from "./components/BrandAssets.js";
 
 import Landing from "./pages/public/Landing.js";
 import PublicServices from "./pages/public/PublicServices.js";
@@ -60,6 +61,7 @@ export default function App() {
   return (
     <ToastProvider>
       <SeoHead />
+      <BrandAssets />
       <LiveChatLoader />
       <HelpWidget />
       <Routes>
