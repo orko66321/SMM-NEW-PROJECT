@@ -40374,6 +40374,13 @@ export namespace Prisma {
     metaDescription: string | null
     metaKeywords: string | null
     ogImageUrl: string | null
+    mainLogo: string | null
+    walletLogo: string | null
+    autoPayLogo: string | null
+    icon512: string | null
+    icon192: string | null
+    icon512Alt: string | null
+    siteColor: string | null
     whatsappEnabled: boolean | null
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider | null
@@ -40408,6 +40415,13 @@ export namespace Prisma {
     metaDescription: string | null
     metaKeywords: string | null
     ogImageUrl: string | null
+    mainLogo: string | null
+    walletLogo: string | null
+    autoPayLogo: string | null
+    icon512: string | null
+    icon192: string | null
+    icon512Alt: string | null
+    siteColor: string | null
     whatsappEnabled: boolean | null
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider | null
@@ -40442,6 +40456,13 @@ export namespace Prisma {
     metaDescription: number
     metaKeywords: number
     ogImageUrl: number
+    mainLogo: number
+    walletLogo: number
+    autoPayLogo: number
+    icon512: number
+    icon192: number
+    icon512Alt: number
+    siteColor: number
     whatsappEnabled: number
     whatsappNumber: number
     liveChatProvider: number
@@ -40502,6 +40523,13 @@ export namespace Prisma {
     metaDescription?: true
     metaKeywords?: true
     ogImageUrl?: true
+    mainLogo?: true
+    walletLogo?: true
+    autoPayLogo?: true
+    icon512?: true
+    icon192?: true
+    icon512Alt?: true
+    siteColor?: true
     whatsappEnabled?: true
     whatsappNumber?: true
     liveChatProvider?: true
@@ -40536,6 +40564,13 @@ export namespace Prisma {
     metaDescription?: true
     metaKeywords?: true
     ogImageUrl?: true
+    mainLogo?: true
+    walletLogo?: true
+    autoPayLogo?: true
+    icon512?: true
+    icon192?: true
+    icon512Alt?: true
+    siteColor?: true
     whatsappEnabled?: true
     whatsappNumber?: true
     liveChatProvider?: true
@@ -40570,6 +40605,13 @@ export namespace Prisma {
     metaDescription?: true
     metaKeywords?: true
     ogImageUrl?: true
+    mainLogo?: true
+    walletLogo?: true
+    autoPayLogo?: true
+    icon512?: true
+    icon192?: true
+    icon512Alt?: true
+    siteColor?: true
     whatsappEnabled?: true
     whatsappNumber?: true
     liveChatProvider?: true
@@ -40691,6 +40733,13 @@ export namespace Prisma {
     metaDescription: string | null
     metaKeywords: string | null
     ogImageUrl: string | null
+    mainLogo: string | null
+    walletLogo: string | null
+    autoPayLogo: string | null
+    icon512: string | null
+    icon192: string | null
+    icon512Alt: string | null
+    siteColor: string | null
     whatsappEnabled: boolean
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider
@@ -40744,6 +40793,13 @@ export namespace Prisma {
     metaDescription?: boolean
     metaKeywords?: boolean
     ogImageUrl?: boolean
+    mainLogo?: boolean
+    walletLogo?: boolean
+    autoPayLogo?: boolean
+    icon512?: boolean
+    icon192?: boolean
+    icon512Alt?: boolean
+    siteColor?: boolean
     whatsappEnabled?: boolean
     whatsappNumber?: boolean
     liveChatProvider?: boolean
@@ -40778,6 +40834,13 @@ export namespace Prisma {
     metaDescription?: boolean
     metaKeywords?: boolean
     ogImageUrl?: boolean
+    mainLogo?: boolean
+    walletLogo?: boolean
+    autoPayLogo?: boolean
+    icon512?: boolean
+    icon192?: boolean
+    icon512Alt?: boolean
+    siteColor?: boolean
     whatsappEnabled?: boolean
     whatsappNumber?: boolean
     liveChatProvider?: boolean
@@ -40812,6 +40875,13 @@ export namespace Prisma {
     metaDescription?: boolean
     metaKeywords?: boolean
     ogImageUrl?: boolean
+    mainLogo?: boolean
+    walletLogo?: boolean
+    autoPayLogo?: boolean
+    icon512?: boolean
+    icon192?: boolean
+    icon512Alt?: boolean
+    siteColor?: boolean
     whatsappEnabled?: boolean
     whatsappNumber?: boolean
     liveChatProvider?: boolean
@@ -40850,6 +40920,13 @@ export namespace Prisma {
       metaDescription: string | null
       metaKeywords: string | null
       ogImageUrl: string | null
+      mainLogo: string | null
+      walletLogo: string | null
+      autoPayLogo: string | null
+      icon512: string | null
+      icon192: string | null
+      icon512Alt: string | null
+      siteColor: string | null
       whatsappEnabled: boolean
       whatsappNumber: string | null
       liveChatProvider: $Enums.LiveChatProvider
@@ -41274,6 +41351,13 @@ export namespace Prisma {
     readonly metaDescription: FieldRef<"SiteSettings", 'String'>
     readonly metaKeywords: FieldRef<"SiteSettings", 'String'>
     readonly ogImageUrl: FieldRef<"SiteSettings", 'String'>
+    readonly mainLogo: FieldRef<"SiteSettings", 'String'>
+    readonly walletLogo: FieldRef<"SiteSettings", 'String'>
+    readonly autoPayLogo: FieldRef<"SiteSettings", 'String'>
+    readonly icon512: FieldRef<"SiteSettings", 'String'>
+    readonly icon192: FieldRef<"SiteSettings", 'String'>
+    readonly icon512Alt: FieldRef<"SiteSettings", 'String'>
+    readonly siteColor: FieldRef<"SiteSettings", 'String'>
     readonly whatsappEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly whatsappNumber: FieldRef<"SiteSettings", 'String'>
     readonly liveChatProvider: FieldRef<"SiteSettings", 'LiveChatProvider'>
@@ -48714,6 +48798,13 @@ export namespace Prisma {
     metaDescription: 'metaDescription',
     metaKeywords: 'metaKeywords',
     ogImageUrl: 'ogImageUrl',
+    mainLogo: 'mainLogo',
+    walletLogo: 'walletLogo',
+    autoPayLogo: 'autoPayLogo',
+    icon512: 'icon512',
+    icon192: 'icon192',
+    icon512Alt: 'icon512Alt',
+    siteColor: 'siteColor',
     whatsappEnabled: 'whatsappEnabled',
     whatsappNumber: 'whatsappNumber',
     liveChatProvider: 'liveChatProvider',
@@ -52323,6 +52414,13 @@ export namespace Prisma {
     metaDescription?: StringNullableFilter<"SiteSettings"> | string | null
     metaKeywords?: StringNullableFilter<"SiteSettings"> | string | null
     ogImageUrl?: StringNullableFilter<"SiteSettings"> | string | null
+    mainLogo?: StringNullableFilter<"SiteSettings"> | string | null
+    walletLogo?: StringNullableFilter<"SiteSettings"> | string | null
+    autoPayLogo?: StringNullableFilter<"SiteSettings"> | string | null
+    icon512?: StringNullableFilter<"SiteSettings"> | string | null
+    icon192?: StringNullableFilter<"SiteSettings"> | string | null
+    icon512Alt?: StringNullableFilter<"SiteSettings"> | string | null
+    siteColor?: StringNullableFilter<"SiteSettings"> | string | null
     whatsappEnabled?: BoolFilter<"SiteSettings"> | boolean
     whatsappNumber?: StringNullableFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderFilter<"SiteSettings"> | $Enums.LiveChatProvider
@@ -52357,6 +52455,13 @@ export namespace Prisma {
     metaDescription?: SortOrderInput | SortOrder
     metaKeywords?: SortOrderInput | SortOrder
     ogImageUrl?: SortOrderInput | SortOrder
+    mainLogo?: SortOrderInput | SortOrder
+    walletLogo?: SortOrderInput | SortOrder
+    autoPayLogo?: SortOrderInput | SortOrder
+    icon512?: SortOrderInput | SortOrder
+    icon192?: SortOrderInput | SortOrder
+    icon512Alt?: SortOrderInput | SortOrder
+    siteColor?: SortOrderInput | SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     liveChatProvider?: SortOrder
@@ -52394,6 +52499,13 @@ export namespace Prisma {
     metaDescription?: StringNullableFilter<"SiteSettings"> | string | null
     metaKeywords?: StringNullableFilter<"SiteSettings"> | string | null
     ogImageUrl?: StringNullableFilter<"SiteSettings"> | string | null
+    mainLogo?: StringNullableFilter<"SiteSettings"> | string | null
+    walletLogo?: StringNullableFilter<"SiteSettings"> | string | null
+    autoPayLogo?: StringNullableFilter<"SiteSettings"> | string | null
+    icon512?: StringNullableFilter<"SiteSettings"> | string | null
+    icon192?: StringNullableFilter<"SiteSettings"> | string | null
+    icon512Alt?: StringNullableFilter<"SiteSettings"> | string | null
+    siteColor?: StringNullableFilter<"SiteSettings"> | string | null
     whatsappEnabled?: BoolFilter<"SiteSettings"> | boolean
     whatsappNumber?: StringNullableFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderFilter<"SiteSettings"> | $Enums.LiveChatProvider
@@ -52428,6 +52540,13 @@ export namespace Prisma {
     metaDescription?: SortOrderInput | SortOrder
     metaKeywords?: SortOrderInput | SortOrder
     ogImageUrl?: SortOrderInput | SortOrder
+    mainLogo?: SortOrderInput | SortOrder
+    walletLogo?: SortOrderInput | SortOrder
+    autoPayLogo?: SortOrderInput | SortOrder
+    icon512?: SortOrderInput | SortOrder
+    icon192?: SortOrderInput | SortOrder
+    icon512Alt?: SortOrderInput | SortOrder
+    siteColor?: SortOrderInput | SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     liveChatProvider?: SortOrder
@@ -52470,6 +52589,13 @@ export namespace Prisma {
     metaDescription?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     metaKeywords?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     ogImageUrl?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    mainLogo?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    walletLogo?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    autoPayLogo?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    icon512?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    icon192?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    icon512Alt?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    siteColor?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     whatsappEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     whatsappNumber?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderWithAggregatesFilter<"SiteSettings"> | $Enums.LiveChatProvider
@@ -56185,6 +56311,13 @@ export namespace Prisma {
     metaDescription?: string | null
     metaKeywords?: string | null
     ogImageUrl?: string | null
+    mainLogo?: string | null
+    walletLogo?: string | null
+    autoPayLogo?: string | null
+    icon512?: string | null
+    icon192?: string | null
+    icon512Alt?: string | null
+    siteColor?: string | null
     whatsappEnabled?: boolean
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
@@ -56219,6 +56352,13 @@ export namespace Prisma {
     metaDescription?: string | null
     metaKeywords?: string | null
     ogImageUrl?: string | null
+    mainLogo?: string | null
+    walletLogo?: string | null
+    autoPayLogo?: string | null
+    icon512?: string | null
+    icon192?: string | null
+    icon512Alt?: string | null
+    siteColor?: string | null
     whatsappEnabled?: boolean
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
@@ -56253,6 +56393,13 @@ export namespace Prisma {
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mainLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    walletLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    autoPayLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    icon512?: NullableStringFieldUpdateOperationsInput | string | null
+    icon192?: NullableStringFieldUpdateOperationsInput | string | null
+    icon512Alt?: NullableStringFieldUpdateOperationsInput | string | null
+    siteColor?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -56287,6 +56434,13 @@ export namespace Prisma {
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mainLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    walletLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    autoPayLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    icon512?: NullableStringFieldUpdateOperationsInput | string | null
+    icon192?: NullableStringFieldUpdateOperationsInput | string | null
+    icon512Alt?: NullableStringFieldUpdateOperationsInput | string | null
+    siteColor?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -56321,6 +56475,13 @@ export namespace Prisma {
     metaDescription?: string | null
     metaKeywords?: string | null
     ogImageUrl?: string | null
+    mainLogo?: string | null
+    walletLogo?: string | null
+    autoPayLogo?: string | null
+    icon512?: string | null
+    icon192?: string | null
+    icon512Alt?: string | null
+    siteColor?: string | null
     whatsappEnabled?: boolean
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
@@ -56355,6 +56516,13 @@ export namespace Prisma {
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mainLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    walletLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    autoPayLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    icon512?: NullableStringFieldUpdateOperationsInput | string | null
+    icon192?: NullableStringFieldUpdateOperationsInput | string | null
+    icon512Alt?: NullableStringFieldUpdateOperationsInput | string | null
+    siteColor?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -56389,6 +56557,13 @@ export namespace Prisma {
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
     metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
     ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    mainLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    walletLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    autoPayLogo?: NullableStringFieldUpdateOperationsInput | string | null
+    icon512?: NullableStringFieldUpdateOperationsInput | string | null
+    icon192?: NullableStringFieldUpdateOperationsInput | string | null
+    icon512Alt?: NullableStringFieldUpdateOperationsInput | string | null
+    siteColor?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -59589,6 +59764,13 @@ export namespace Prisma {
     metaDescription?: SortOrder
     metaKeywords?: SortOrder
     ogImageUrl?: SortOrder
+    mainLogo?: SortOrder
+    walletLogo?: SortOrder
+    autoPayLogo?: SortOrder
+    icon512?: SortOrder
+    icon192?: SortOrder
+    icon512Alt?: SortOrder
+    siteColor?: SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
@@ -59635,6 +59817,13 @@ export namespace Prisma {
     metaDescription?: SortOrder
     metaKeywords?: SortOrder
     ogImageUrl?: SortOrder
+    mainLogo?: SortOrder
+    walletLogo?: SortOrder
+    autoPayLogo?: SortOrder
+    icon512?: SortOrder
+    icon192?: SortOrder
+    icon512Alt?: SortOrder
+    siteColor?: SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
@@ -59669,6 +59858,13 @@ export namespace Prisma {
     metaDescription?: SortOrder
     metaKeywords?: SortOrder
     ogImageUrl?: SortOrder
+    mainLogo?: SortOrder
+    walletLogo?: SortOrder
+    autoPayLogo?: SortOrder
+    icon512?: SortOrder
+    icon192?: SortOrder
+    icon512Alt?: SortOrder
+    siteColor?: SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
