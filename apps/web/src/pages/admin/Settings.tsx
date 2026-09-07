@@ -10,6 +10,10 @@ import { useAuth } from "../../context/AuthContext.js";
 
 interface AdminSettings {
   siteName: string;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  metaKeywords: string | null;
+  ogImageUrl: string | null;
   liveChatProvider: LiveChatProvider;
   liveChatWidgetId: string | null;
   howToOrderVideoUrl: string | null;
@@ -42,6 +46,10 @@ export default function AdminSettingsPage() {
 
   const [form, setForm] = useState({
     siteName: "All In One Service",
+    metaTitle: "",
+    metaDescription: "",
+    metaKeywords: "",
+    ogImageUrl: "",
     liveChatProvider: "NONE" as LiveChatProvider,
     liveChatWidgetId: "",
     howToOrderVideoUrl: "",
@@ -78,6 +86,10 @@ export default function AdminSettingsPage() {
     const s = settings as AdminSettings;
     setForm({
       siteName: s.siteName,
+      metaTitle: s.metaTitle ?? "",
+      metaDescription: s.metaDescription ?? "",
+      metaKeywords: s.metaKeywords ?? "",
+      ogImageUrl: s.ogImageUrl ?? "",
       liveChatProvider: s.liveChatProvider,
       liveChatWidgetId: s.liveChatWidgetId ?? "",
       howToOrderVideoUrl: s.howToOrderVideoUrl ?? "",
@@ -109,6 +121,10 @@ export default function AdminSettingsPage() {
     try {
       await updateAdminSettings({
         siteName: form.siteName,
+        metaTitle: form.metaTitle.trim() || null,
+        metaDescription: form.metaDescription.trim() || null,
+        metaKeywords: form.metaKeywords.trim() || null,
+        ogImageUrl: form.ogImageUrl.trim() || null,
         liveChatProvider: form.liveChatProvider,
         liveChatWidgetId: form.liveChatWidgetId || null,
         howToOrderVideoUrl: form.howToOrderVideoUrl.trim() || null,
@@ -181,6 +197,65 @@ export default function AdminSettingsPage() {
           </div>
         </div>
         <p className="text-xs text-on-surface-variant">Display-only — every wallet balance and price stays USD-denominated in the database.</p>
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold">SEO / Meta Tags</h2>
+        <p className="text-xs text-on-surface-variant">
+          Used for the browser tab title, Google search snippet and social share previews on every public page.
+          Leave a field empty to fall back to the built-in default.
+        </p>
+        <div>
+          <label className="label" htmlFor="metaTitle">Meta Title</label>
+          <input
+            id="metaTitle"
+            className="input-field"
+            maxLength={70}
+            value={form.metaTitle}
+            onChange={(e) => setForm((f) => ({ ...f, metaTitle: e.target.value }))}
+          />
+          <p className="mt-1 text-xs text-on-surface-variant">
+            Keep it under ~60 characters. <span className="font-mono">{form.metaTitle.length}/70</span>
+          </p>
+        </div>
+        <div>
+          <label className="label" htmlFor="metaDescription">Meta Description</label>
+          <textarea
+            id="metaDescription"
+            className="input-field min-h-20"
+            maxLength={160}
+            value={form.metaDescription}
+            onChange={(e) => setForm((f) => ({ ...f, metaDescription: e.target.value }))}
+          />
+          <p className="mt-1 text-xs text-on-surface-variant">
+            Keep it under ~160 characters. <span className="font-mono">{form.metaDescription.length}/160</span>
+          </p>
+        </div>
+        <div>
+          <label className="label" htmlFor="metaKeywords">Meta Keywords</label>
+          <input
+            id="metaKeywords"
+            className="input-field"
+            placeholder="smm panel, buy instagram followers, cheap smm"
+            value={form.metaKeywords}
+            onChange={(e) => setForm((f) => ({ ...f, metaKeywords: e.target.value }))}
+          />
+          <p className="mt-1 text-xs text-on-surface-variant">Comma-separated. Optional — most search engines ignore this tag.</p>
+        </div>
+        <div>
+          <label className="label" htmlFor="ogImageUrl">Social Share Image (OG Image) URL</label>
+          <input
+            id="ogImageUrl"
+            type="url"
+            className="input-field"
+            placeholder="https://…/og-image.png"
+            value={form.ogImageUrl}
+            onChange={(e) => setForm((f) => ({ ...f, ogImageUrl: e.target.value }))}
+          />
+          <p className="mt-1 text-xs text-on-surface-variant">
+            Absolute URL to a hosted image (recommended 1200×630). Optional.
+          </p>
+        </div>
       </div>
 
       <div className="card space-y-2">

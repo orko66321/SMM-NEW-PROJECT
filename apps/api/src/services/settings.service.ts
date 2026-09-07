@@ -23,6 +23,10 @@ export async function getAdminSettings() {
   const s = await ensureSettings();
   return {
     siteName: s.siteName,
+    metaTitle: s.metaTitle,
+    metaDescription: s.metaDescription,
+    metaKeywords: s.metaKeywords,
+    ogImageUrl: s.ogImageUrl,
     liveChatProvider: s.liveChatProvider,
     liveChatWidgetId: s.liveChatWidgetId,
     howToOrderVideoUrl: s.howToOrderVideoUrl,
@@ -60,6 +64,13 @@ export async function updateSettings(input: UpdateSettingsInput) {
     where: { id: SETTINGS_ID },
     data: {
       siteName: input.siteName,
+      // Same normalise-"" ⇒ null / skip-undefined treatment as
+      // howToOrderVideoUrl below, so the admin can clear a field and the
+      // frontend's simple null check works.
+      metaTitle: input.metaTitle === undefined ? undefined : input.metaTitle || null,
+      metaDescription: input.metaDescription === undefined ? undefined : input.metaDescription || null,
+      metaKeywords: input.metaKeywords === undefined ? undefined : input.metaKeywords || null,
+      ogImageUrl: input.ogImageUrl === undefined ? undefined : input.ogImageUrl || null,
       liveChatProvider: input.liveChatProvider,
       liveChatWidgetId: input.liveChatWidgetId,
       // Normalise "" (admin cleared the field) to null so the frontend's
@@ -102,6 +113,10 @@ export async function getPublicSettings(): Promise<PublicSettings> {
   const s = await ensureSettings();
   return {
     siteName: s.siteName,
+    metaTitle: s.metaTitle,
+    metaDescription: s.metaDescription,
+    metaKeywords: s.metaKeywords,
+    ogImageUrl: s.ogImageUrl,
     liveChatProvider: s.liveChatProvider,
     liveChatWidgetId: s.liveChatWidgetId,
     howToOrderVideoUrl: s.howToOrderVideoUrl,

@@ -563,6 +563,10 @@ exports.Prisma.CouponRedemptionScalarFieldEnum = {
 exports.Prisma.SiteSettingsScalarFieldEnum = {
   id: 'id',
   siteName: 'siteName',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription',
+  metaKeywords: 'metaKeywords',
+  ogImageUrl: 'ogImageUrl',
   whatsappEnabled: 'whatsappEnabled',
   whatsappNumber: 'whatsappNumber',
   liveChatProvider: 'liveChatProvider',

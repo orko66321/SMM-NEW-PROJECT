@@ -442,6 +442,14 @@ export const NoticeLevelValues = ["INFO", "WARNING", "SUCCESS", "ERROR"];
 // encrypted value, since it's never re-displayed after saving).
 export const updateSettingsSchema = z.object({
     siteName: z.string().trim().min(1).max(100),
+    // SEO / social meta tags. Each optional so an older admin client still
+    // validates; settings.service normalises "" ⇒ null (admin cleared it) and
+    // skips undefined (field omitted). The length caps are the search-engine
+    // display limits — the admin UI also shows a live character counter.
+    metaTitle: z.string().trim().max(70).or(z.literal("")).nullable().optional(),
+    metaDescription: z.string().trim().max(160).or(z.literal("")).nullable().optional(),
+    metaKeywords: z.string().trim().max(255).or(z.literal("")).nullable().optional(),
+    ogImageUrl: z.string().trim().url().max(2048).or(z.literal("")).nullable().optional(),
     // Legacy — the floating support button is now managed via SupportChannel
     // (see supportChannelUpdateSchema below). Kept optional so an older admin
     // client still validates; the API no longer reads or writes these.
@@ -489,6 +497,12 @@ export const sendTestEmailSchema = z.object({
 });
 export const publicSettingsSchema = z.object({
     siteName: z.string(),
+    // SEO / social meta tags — consumed by components/SeoHead.tsx to fill in
+    // <title> / <meta name="description"> / OG tags on every page.
+    metaTitle: z.string().nullable(),
+    metaDescription: z.string().nullable(),
+    metaKeywords: z.string().nullable(),
+    ogImageUrl: z.string().nullable(),
     liveChatProvider: z.enum(LiveChatProviderValues),
     liveChatWidgetId: z.string().nullable(),
     howToOrderVideoUrl: z.string().nullable(),

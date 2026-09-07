@@ -34,6 +34,10 @@ describe("public routes (Phase 4) — unauthenticated, never leak secrets", () =
     // the two deterministic, env-mocked cases of that field itself.
     expect(res.body).toEqual({
       siteName: "Test Panel",
+      metaTitle: null,
+      metaDescription: null,
+      metaKeywords: null,
+      ogImageUrl: null,
       liveChatProvider: "NONE",
       liveChatWidgetId: null,
       howToOrderVideoUrl: null,

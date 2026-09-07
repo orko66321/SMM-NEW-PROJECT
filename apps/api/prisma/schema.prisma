@@ -1203,6 +1203,17 @@ model SiteSettings {
 
   siteName String @default("SMM Panel")
 
+  // SEO / social meta tags — admin-editable from the Site Settings page,
+  // rendered into every page head by the frontend (components/SeoHead.tsx).
+  // Null/empty ⇒ the frontend falls back to its built-in defaults.
+  // metaKeywords is a plain comma-separated string; ogImageUrl is an
+  // absolute URL to a hosted image (a data URI is not usable by social
+  // scrapers, so this is a URL rather than an upload).
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+  ogImageUrl      String?
+
   whatsappEnabled Boolean @default(false)
   whatsappNumber  String?
 

@@ -948,6 +948,10 @@ export declare const NoticeLevelValues: readonly ["INFO", "WARNING", "SUCCESS", 
 export type NoticeLevel = (typeof NoticeLevelValues)[number];
 export declare const updateSettingsSchema: z.ZodObject<{
     siteName: z.ZodString;
+    metaTitle: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
+    metaDescription: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
+    metaKeywords: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
+    ogImageUrl: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
     whatsappEnabled: z.ZodOptional<z.ZodBoolean>;
     whatsappNumber: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     liveChatProvider: z.ZodEnum<["NONE", "TAWKTO", "CRISP"]>;
@@ -978,6 +982,10 @@ export declare const updateSettingsSchema: z.ZodObject<{
     usdToBdtRate: number;
     defaultCurrency: "USD" | "BDT";
     smtpEnabled: boolean;
+    metaTitle?: string | null | undefined;
+    metaDescription?: string | null | undefined;
+    metaKeywords?: string | null | undefined;
+    ogImageUrl?: string | null | undefined;
     whatsappEnabled?: boolean | undefined;
     whatsappNumber?: string | null | undefined;
     liveChatWidgetId?: string | null | undefined;
@@ -1004,6 +1012,10 @@ export declare const updateSettingsSchema: z.ZodObject<{
     usdToBdtRate: number;
     defaultCurrency: "USD" | "BDT";
     smtpEnabled: boolean;
+    metaTitle?: string | null | undefined;
+    metaDescription?: string | null | undefined;
+    metaKeywords?: string | null | undefined;
+    ogImageUrl?: string | null | undefined;
     whatsappEnabled?: boolean | undefined;
     whatsappNumber?: string | null | undefined;
     liveChatWidgetId?: string | null | undefined;
@@ -1036,6 +1048,10 @@ export declare const sendTestEmailSchema: z.ZodObject<{
 export type SendTestEmailInput = z.infer<typeof sendTestEmailSchema>;
 export declare const publicSettingsSchema: z.ZodObject<{
     siteName: z.ZodString;
+    metaTitle: z.ZodNullable<z.ZodString>;
+    metaDescription: z.ZodNullable<z.ZodString>;
+    metaKeywords: z.ZodNullable<z.ZodString>;
+    ogImageUrl: z.ZodNullable<z.ZodString>;
     liveChatProvider: z.ZodEnum<["NONE", "TAWKTO", "CRISP"]>;
     liveChatWidgetId: z.ZodNullable<z.ZodString>;
     howToOrderVideoUrl: z.ZodNullable<z.ZodString>;
@@ -1053,6 +1069,10 @@ export declare const publicSettingsSchema: z.ZodObject<{
     recentlyCompletedWindowHours: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
     siteName: string;
+    metaTitle: string | null;
+    metaDescription: string | null;
+    metaKeywords: string | null;
+    ogImageUrl: string | null;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
     liveChatWidgetId: string | null;
     howToOrderVideoUrl: string | null;
@@ -1070,6 +1090,10 @@ export declare const publicSettingsSchema: z.ZodObject<{
     googleAuthEnabled: boolean;
 }, {
     siteName: string;
+    metaTitle: string | null;
+    metaDescription: string | null;
+    metaKeywords: string | null;
+    ogImageUrl: string | null;
     liveChatProvider: "NONE" | "TAWKTO" | "CRISP";
     liveChatWidgetId: string | null;
     howToOrderVideoUrl: string | null;
