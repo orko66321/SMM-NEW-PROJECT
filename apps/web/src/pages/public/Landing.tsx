@@ -1,10 +1,13 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getPublicServices, getPublicStats } from "../../api/resources.js";
+import { useAuth } from "../../context/AuthContext.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
+import { FullPageSpinner } from "../../routes/guards.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
+import AuthPanel from "../../components/auth/AuthPanel.js";
 import { Badge, Card } from "../../components/ds/index.js";
 
 interface PublicService {
@@ -14,12 +17,11 @@ interface PublicService {
   category: { name: string; platform: string };
 }
 
-// The sign-in form used to live here as a hero-column card — moved out per
-// the "browse first, login only when needed" guest-access model: a visitor
-// who hasn't decided to sign up yet shouldn't be greeted by a login form as
-// the first thing they see. Login/Sign up now live only as the small
-// top-navbar buttons PublicLayout already renders for a logged-out visitor
-// (see components/layout/PublicLayout.tsx) — not as blocking hero content.
+// The hero is a split layout: marketing copy + service search on the left,
+// a tabbed Login / Sign Up box (components/auth/AuthPanel.tsx) on the
+// right, so a guest can authenticate without leaving "/". The dedicated
+// /login and /register routes still exist (linked from the navbar) — this
+// just removes the extra hop for a visitor who's ready to sign in.
 
 function StatsBar({ startingPrice }: { startingPrice: string | null }) {
   const { t } = useLanguage();
@@ -50,12 +52,15 @@ function StatsBar({ startingPrice }: { startingPrice: string | null }) {
 }
 
 export default function Landing() {
+  const { user, loading } = useAuth();
   const [search, setSearch] = useState("");
   const { formatCurrency } = useCurrency();
   const { t } = useLanguage();
+
   const { data: servicesPage } = useQuery({
     queryKey: ["public-services", { pageSize: 100 }],
     queryFn: () => getPublicServices({ pageSize: 100 }),
+    enabled: !user, // a logged-in visitor is about to be redirected away
   });
 
   const services: PublicService[] = useMemo(() => servicesPage?.items ?? [], [servicesPage]);
@@ -73,6 +78,17 @@ export default function Landing() {
 
   const platforms = useMemo(() => Array.from(new Set(services.map((s) => s.category.platform))).slice(0, 6), [services]);
 
+  // ── Session check & auto-redirect (requirement 3) ──────────────────────
+  // On first load AuthContext silently exchanges the refresh cookie for a
+  // session; while that's in flight we show the app spinner rather than
+  // flashing the guest hero. An already-authenticated visitor never sees
+  // the landing forms — straight to their dashboard.
+  if (loading) return <FullPageSpinner />;
+  if (user) {
+    const home = user.role === "ADMIN" || user.role === "MODERATOR" ? "/admin" : "/dashboard";
+    return <Navigate to={home} replace />;
+  }
+
   return (
     <div>
       <div className="mx-auto max-w-container px-4 pt-4 sm:px-6 sm:pt-6">
@@ -85,44 +101,52 @@ export default function Landing() {
           style={{ background: "radial-gradient(circle, #6D28D9 0%, transparent 65%)" }}
           aria-hidden
         />
-        <div className="relative mx-auto max-w-container px-4 py-16 text-center sm:px-6 lg:py-24">
-          <Badge tone="success" className="mb-4">
-            <span className="h-1.5 w-1.5 rounded-full bg-success" /> {t("landing.badge")}
-          </Badge>
-          <h1 className="mx-auto font-display text-3xl font-bold leading-tight text-on-surface sm:text-4xl md:text-5xl lg:text-6xl">
-            {t("landing.heroTitle")}
-          </h1>
-          <p className="mx-auto mt-4 max-w-lg text-base text-on-surface-variant">
-            {t("landing.heroSubtitle")}
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
-            <Link to="/services" className="btn-primary w-full sm:w-auto">{t("landing.viewServices")}</Link>
-            <Link to="/api-docs" className="btn-ghost w-full border border-outline-variant sm:w-auto">{t("landing.apiDocumentation")}</Link>
+        <div className="relative mx-auto grid max-w-container gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-12 lg:py-20">
+          {/* Left — marketing / info */}
+          <div className="text-center lg:text-left">
+            <Badge tone="success" className="mb-4">
+              <span className="h-1.5 w-1.5 rounded-full bg-success" /> {t("landing.badge")}
+            </Badge>
+            <h1 className="font-display text-3xl font-bold leading-tight text-on-surface sm:text-4xl md:text-5xl">
+              {t("landing.heroTitle")}
+            </h1>
+            <p className="mx-auto mt-4 max-w-lg text-base text-on-surface-variant lg:mx-0">
+              {t("landing.heroSubtitle")}
+            </p>
+            <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
+              <Link to="/services" className="btn-primary w-full sm:w-auto">{t("landing.viewServices")}</Link>
+              <Link to="/api-docs" className="btn-ghost w-full border border-outline-variant sm:w-auto">{t("landing.apiDocumentation")}</Link>
+            </div>
+
+            <div className="relative mx-auto mt-8 max-w-md text-left lg:mx-0">
+              <input
+                className="input-field"
+                placeholder={t("landing.searchPlaceholder")}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              {filtered.length > 0 && (
+                <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-control border border-outline-variant bg-surface-card shadow-overlay">
+                  {filtered.map((s) => (
+                    <Link
+                      key={s.id}
+                      to="/services"
+                      className="flex items-center justify-between px-3 py-2 text-sm hover:bg-surface-container-high"
+                    >
+                      <span>
+                        {s.name} <span className="text-xs text-on-surface-variant">· {s.category.platform}</span>
+                      </span>
+                      <span className="font-mono text-xs text-primary">{formatCurrency(s.sellPricePer1000)}/1K</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="relative mx-auto mt-10 max-w-md text-left">
-            <input
-              className="input-field"
-              placeholder={t("landing.searchPlaceholder")}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            {filtered.length > 0 && (
-              <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-control border border-outline-variant bg-surface-card shadow-overlay">
-                {filtered.map((s) => (
-                  <Link
-                    key={s.id}
-                    to="/services"
-                    className="flex items-center justify-between px-3 py-2 text-sm hover:bg-surface-container-high"
-                  >
-                    <span>
-                      {s.name} <span className="text-xs text-on-surface-variant">· {s.category.platform}</span>
-                    </span>
-                    <span className="font-mono text-xs text-primary">{formatCurrency(s.sellPricePer1000)}/1K</span>
-                  </Link>
-                ))}
-              </div>
-            )}
+          {/* Right — embedded auth (stacks below the copy on mobile) */}
+          <div className="mx-auto w-full max-w-md lg:mx-0 lg:ml-auto">
+            <AuthPanel />
           </div>
         </div>
       </section>

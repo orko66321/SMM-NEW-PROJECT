@@ -198,6 +198,23 @@ const en = {
       createdToast: "Account created — please sign in.",
       failedFallback: "Registration failed",
     },
+    // Strings for the tabbed Login/Sign Up box embedded on the landing page
+    // (components/auth/AuthPanel.tsx). Field labels/placeholders are reused
+    // from auth.login.* / auth.register.*; only the tab chrome and the
+    // client-side inline-validation messages live here.
+    panel: {
+      heading: "Get started",
+      loginTab: "Log In",
+      signupTab: "Sign Up",
+      loginSubtitle: "Sign in to manage your orders and wallet.",
+      signupSubtitle: "Create a free account — start ordering in minutes.",
+      invalidIdentifier: "Enter your username or email.",
+      passwordRequired: "Enter your password.",
+      invalidUsername: "3–32 characters — letters, numbers and underscores only.",
+      invalidEmail: "Enter a valid email address.",
+      invalidPassword: "At least 10 characters, with an uppercase letter, a lowercase letter and a number.",
+      signedUpNeedsLogin: "Account created — please sign in below.",
+    },
     forgotPassword: {
       title: "Reset your password",
       subtitle: "We'll email you a link to set a new password.",
@@ -810,6 +827,19 @@ const bn: Translations = {
       haveAccount: "আগে থেকেই অ্যাকাউন্ট আছে?",
       createdToast: "অ্যাকাউন্ট তৈরি হয়েছে — এখন সাইন ইন করুন।",
       failedFallback: "রেজিস্ট্রেশন ব্যর্থ হয়েছে",
+    },
+    panel: {
+      heading: "শুরু করুন",
+      loginTab: "লগ ইন",
+      signupTab: "সাইন আপ",
+      loginSubtitle: "অর্ডার ও ওয়ালেট ম্যানেজ করতে সাইন ইন করুন।",
+      signupSubtitle: "একটা ফ্রি অ্যাকাউন্ট খুলুন — মিনিটেই অর্ডার শুরু করুন।",
+      invalidIdentifier: "আপনার ইউজারনেম বা ইমেইল লিখুন।",
+      passwordRequired: "আপনার পাসওয়ার্ড লিখুন।",
+      invalidUsername: "৩–৩২ ক্যারেক্টার — শুধু অক্ষর, সংখ্যা ও আন্ডারস্কোর।",
+      invalidEmail: "সঠিক একটা ইমেইল ঠিকানা লিখুন।",
+      invalidPassword: "কমপক্ষে ১০ ক্যারেক্টার, সাথে বড় হাতের, ছোট হাতের অক্ষর ও একটা সংখ্যা।",
+      signedUpNeedsLogin: "অ্যাকাউন্ট তৈরি হয়েছে — নিচে সাইন ইন করুন।",
     },
     forgotPassword: {
       title: "পাসওয়ার্ড রিসেট করুন",
