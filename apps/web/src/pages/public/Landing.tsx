@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getPublicServices, getPublicStats } from "../../api/resources.js";
 import { useAuth } from "../../context/AuthContext.js";
@@ -7,8 +7,16 @@ import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { FullPageSpinner } from "../../routes/guards.js";
 import BannerSlider from "../../components/ui/BannerSlider.js";
-import AuthPanel from "../../components/auth/AuthPanel.js";
-import { Badge, Card } from "../../components/ds/index.js";
+import Reveal from "../../components/landing/Reveal.js";
+import HeroSection, { type HeroSearchResult } from "../../components/landing/HeroSection.js";
+import LiveDashboardCard from "../../components/landing/LiveDashboardCard.js";
+import TrustBar from "../../components/landing/TrustBar.js";
+import WhyChoose from "../../components/landing/WhyChoose.js";
+import PlatformsGrid from "../../components/landing/PlatformsGrid.js";
+import HowItWorks from "../../components/landing/HowItWorks.js";
+import Testimonials from "../../components/landing/Testimonials.js";
+import PaymentMethods from "../../components/landing/PaymentMethods.js";
+import "../../styles/landing.css";
 
 interface PublicService {
   id: string;
@@ -17,45 +25,19 @@ interface PublicService {
   category: { name: string; platform: string };
 }
 
-// The hero is a split layout: marketing copy + service search on the left,
-// a tabbed Login / Sign Up box (components/auth/AuthPanel.tsx) on the
-// right, so a guest can authenticate without leaving "/". The dedicated
-// /login and /register routes still exist (linked from the navbar) — this
-// just removes the extra hop for a visitor who's ready to sign in.
-
-function StatsBar({ startingPrice }: { startingPrice: string | null }) {
-  const { t } = useLanguage();
-  const { data: stats } = useQuery({ queryKey: ["public-stats"], queryFn: getPublicStats });
-
-  // Every number here is a real DB aggregate (getPublicStats) or the actual
-  // cheapest active service price — never a fabricated "15M+ orders" style
-  // claim, per the project's existing "never fake trust numbers" rule.
-  const cards = [
-    { label: t("landing.stats.registeredUsers"), value: stats ? stats.totalUsers.toLocaleString() : "—" },
-    { label: t("landing.stats.ordersCompleted"), value: stats ? stats.totalOrdersCompleted.toLocaleString() : "—" },
-    { label: t("landing.stats.startingPrice"), value: startingPrice ?? "—" },
-    { label: t("landing.stats.support"), value: "24/7" },
-  ];
-
-  return (
-    <div className="border-y border-outline-variant/60 bg-surface-container/30">
-      <div className="mx-auto grid max-w-container grid-cols-2 gap-6 px-4 py-8 sm:grid-cols-4 sm:px-6">
-        {cards.map((c) => (
-          <div key={c.label} className="text-center">
-            <p className="font-mono text-2xl font-bold text-accent-on-dark sm:text-3xl">{c.value}</p>
-            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">{c.label}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
+// Public homepage — redesigned to the "stitch_all_in_one_smm_redesign" spec
+// (dark "command center" glassmorphism, violet + cyan). All data is real:
+// getPublicStats aggregates + the live service catalogue drive the hero
+// search, the dashboard-preview metrics and the platforms grid. The tabbed
+// Login / Sign Up box (AuthPanel) stays embedded in the hero so a guest can
+// authenticate without leaving "/".
 export default function Landing() {
   const { user, loading } = useAuth();
   const [search, setSearch] = useState("");
   const { formatCurrency } = useCurrency();
   const { t } = useLanguage();
+
+  const { data: stats } = useQuery({ queryKey: ["public-stats"], queryFn: getPublicStats, enabled: !user });
 
   const { data: servicesPage } = useQuery({
     queryKey: ["public-services", { pageSize: 100 }],
@@ -64,25 +46,33 @@ export default function Landing() {
   });
 
   const services: PublicService[] = useMemo(() => servicesPage?.items ?? [], [servicesPage]);
+
   const startingPrice = useMemo(() => {
     if (services.length === 0) return null;
     const min = Math.min(...services.map((s) => Number(s.sellPricePer1000)));
     return formatCurrency(min);
   }, [services, formatCurrency]);
 
-  const filtered = useMemo(() => {
+  const searchResults: HeroSearchResult[] = useMemo(() => {
     if (!search.trim()) return [];
     const q = search.toLowerCase();
-    return services.filter((s) => s.name.toLowerCase().includes(q) || s.category.platform.toLowerCase().includes(q)).slice(0, 8);
-  }, [services, search]);
+    return services
+      .filter((s) => s.name.toLowerCase().includes(q) || s.category.platform.toLowerCase().includes(q))
+      .slice(0, 6)
+      .map((s) => ({
+        id: s.id,
+        name: s.name,
+        platform: s.category.platform,
+        priceText: formatCurrency(s.sellPricePer1000),
+      }));
+  }, [services, search, formatCurrency]);
 
-  const platforms = useMemo(() => Array.from(new Set(services.map((s) => s.category.platform))).slice(0, 6), [services]);
+  const platforms = useMemo(
+    () => Array.from(new Set(services.map((s) => s.category.platform))).filter(Boolean),
+    [services],
+  );
 
-  // ── Session check & auto-redirect (requirement 3) ──────────────────────
-  // On first load AuthContext silently exchanges the refresh cookie for a
-  // session; while that's in flight we show the app spinner rather than
-  // flashing the guest hero. An already-authenticated visitor never sees
-  // the landing forms — straight to their dashboard.
+  // ── Session check & auto-redirect ─────────────────────────────────────
   if (loading) return <FullPageSpinner />;
   if (user) {
     const home = user.role === "ADMIN" || user.role === "MODERATOR" ? "/admin" : "/dashboard";
@@ -90,93 +80,35 @@ export default function Landing() {
   }
 
   return (
-    <div>
-      <div className="mx-auto max-w-container px-4 pt-4 sm:px-6 sm:pt-6">
+    <div className="overflow-x-clip bg-l-bg font-body text-l-body">
+      <div className="mx-auto max-w-6xl px-4 pt-5 sm:px-6">
         <BannerSlider />
       </div>
 
-      <section className="relative overflow-hidden">
-        <div
-          className="pointer-events-none absolute -top-1/3 left-1/4 h-[50rem] w-[50rem] rounded-full opacity-20 blur-3xl"
-          style={{ background: "radial-gradient(circle, #6D28D9 0%, transparent 65%)" }}
-          aria-hidden
-        />
-        <div className="relative mx-auto grid max-w-container gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-12 lg:py-20">
-          {/* Left — marketing / info */}
+      <HeroSection search={search} onSearchChange={setSearch} results={searchResults} />
+
+      {/* Live dashboard preview — real metrics + product snapshot */}
+      <section className="px-4 pb-4 sm:px-6 lg:px-10">
+        <Reveal className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-2">
           <div className="text-center lg:text-left">
-            <Badge tone="success" className="mb-4">
-              <span className="h-1.5 w-1.5 rounded-full bg-success" /> {t("landing.badge")}
-            </Badge>
-            <h1 className="font-display text-3xl font-bold leading-tight text-on-surface sm:text-4xl md:text-5xl">
-              {t("landing.heroTitle")}
-            </h1>
-            <p className="mx-auto mt-4 max-w-lg text-base text-on-surface-variant lg:mx-0">
-              {t("landing.heroSubtitle")}
-            </p>
-            <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
-              <Link to="/services" className="btn-primary w-full sm:w-auto">{t("landing.viewServices")}</Link>
-              <Link to="/api-docs" className="btn-ghost w-full border border-outline-variant sm:w-auto">{t("landing.apiDocumentation")}</Link>
-            </div>
-
-            <div className="relative mx-auto mt-8 max-w-md text-left lg:mx-0">
-              <input
-                className="input-field"
-                placeholder={t("landing.searchPlaceholder")}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              {filtered.length > 0 && (
-                <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-control border border-outline-variant bg-surface-card shadow-overlay">
-                  {filtered.map((s) => (
-                    <Link
-                      key={s.id}
-                      to="/services"
-                      className="flex items-center justify-between px-3 py-2 text-sm hover:bg-surface-container-high"
-                    >
-                      <span>
-                        {s.name} <span className="text-xs text-on-surface-variant">· {s.category.platform}</span>
-                      </span>
-                      <span className="font-mono text-xs text-primary">{formatCurrency(s.sellPricePer1000)}/1K</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-l-primary-bright">
+              {t("landing.preview.eyebrow")}
+            </span>
+            <h2 className="mt-3 font-headline text-3xl font-bold tracking-tight text-l-heading sm:text-4xl">
+              {t("landing.preview.title")}
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-l-body">{t("landing.preview.subtitle")}</p>
           </div>
-
-          {/* Right — embedded auth (stacks below the copy on mobile) */}
-          <div className="mx-auto w-full max-w-md lg:mx-0 lg:ml-auto">
-            <AuthPanel />
-          </div>
-        </div>
+          <LiveDashboardCard stats={stats} startingPrice={startingPrice} />
+        </Reveal>
       </section>
 
-      <StatsBar startingPrice={startingPrice} />
-
-      <section className="mx-auto max-w-container px-4 py-16 sm:px-6">
-        <h2 className="text-center font-display text-2xl font-bold text-on-surface sm:text-3xl">{t("landing.whyHeading")}</h2>
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {(["delivery", "pricing", "api", "support"] as const).map((key) => (
-            <Card key={key} interactive>
-              <p className="font-semibold text-on-surface">{t(`landing.features.${key}.title`)}</p>
-              <p className="mt-1 text-sm text-on-surface-variant">{t(`landing.features.${key}.body`)}</p>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {platforms.length > 0 && (
-        <section className="border-t border-outline-variant/60 bg-surface-container/20 py-10">
-          <div className="mx-auto max-w-container px-4 text-center sm:px-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">{t("landing.platformsHeading")}</p>
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
-              {platforms.map((p) => (
-                <span key={p} className="inline-flex items-center rounded-full border border-outline-variant px-3.5 py-1.5 text-sm font-medium text-on-surface-variant">{p}</span>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      <TrustBar />
+      <WhyChoose />
+      <PlatformsGrid platforms={platforms} />
+      <HowItWorks />
+      <Testimonials />
+      <PaymentMethods />
     </div>
   );
 }

@@ -124,7 +124,11 @@ export default function PublicLayout() {
         </div>
       </header>
 
-      <main className="flex-1">
+      {/* min-w-0: a flex child won't shrink below its content's intrinsic
+          width by default, so a wide element anywhere in a page (e.g. the
+          landing dashboard-preview card) would force horizontal scroll on
+          mobile. Same fix as DashboardLayout / AdminLayout. */}
+      <main className="min-w-0 flex-1">
         <Outlet />
       </main>
 

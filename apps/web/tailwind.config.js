@@ -62,10 +62,27 @@ export default {
         nagad: "#F7941D",
         rocket: "#8C3494",
         upay: "#00A651",
+
+        // ── Landing-page marketing palette ──────────────────────────────
+        // Scoped to the public homepage redesign (pages/public/Landing.tsx
+        // + components/landing/*), spec: stitch_all_in_one_smm_redesign.
+        // A darker, higher-contrast "command center" look than the navy
+        // customer panel — do not use these outside the landing page.
+        "l-bg": "#0A0A14",
+        "l-surface": "#12121F",
+        "l-surface-2": "#1A1A2B",
+        "l-border": "#24243A",
+        "l-primary": "#7C3AED",
+        "l-primary-bright": "#8B5CF6",
+        "l-accent": "#22D3EE",
+        "l-heading": "#F8FAFC",
+        "l-body": "#A1A1B5",
+        "l-muted": "#6B6B85",
       },
       fontFamily: {
         brand: ["Jost", "Helvetica Neue", "Arial", "sans-serif"],
         display: ["Hanken Grotesk", "system-ui", "sans-serif"],
+        headline: ["Space Grotesk", "Hanken Grotesk", "system-ui", "sans-serif"],
         body: ["Inter", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "monospace"],
         bengali: ["Noto Sans Bengali", "Inter", "system-ui", "sans-serif"],
