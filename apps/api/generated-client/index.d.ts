@@ -40370,6 +40370,10 @@ export namespace Prisma {
   export type SiteSettingsMinAggregateOutputType = {
     id: string | null
     siteName: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    metaKeywords: string | null
+    ogImageUrl: string | null
     whatsappEnabled: boolean | null
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider | null
@@ -40400,6 +40404,10 @@ export namespace Prisma {
   export type SiteSettingsMaxAggregateOutputType = {
     id: string | null
     siteName: string | null
+    metaTitle: string | null
+    metaDescription: string | null
+    metaKeywords: string | null
+    ogImageUrl: string | null
     whatsappEnabled: boolean | null
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider | null
@@ -40430,6 +40438,10 @@ export namespace Prisma {
   export type SiteSettingsCountAggregateOutputType = {
     id: number
     siteName: number
+    metaTitle: number
+    metaDescription: number
+    metaKeywords: number
+    ogImageUrl: number
     whatsappEnabled: number
     whatsappNumber: number
     liveChatProvider: number
@@ -40486,6 +40498,10 @@ export namespace Prisma {
   export type SiteSettingsMinAggregateInputType = {
     id?: true
     siteName?: true
+    metaTitle?: true
+    metaDescription?: true
+    metaKeywords?: true
+    ogImageUrl?: true
     whatsappEnabled?: true
     whatsappNumber?: true
     liveChatProvider?: true
@@ -40516,6 +40532,10 @@ export namespace Prisma {
   export type SiteSettingsMaxAggregateInputType = {
     id?: true
     siteName?: true
+    metaTitle?: true
+    metaDescription?: true
+    metaKeywords?: true
+    ogImageUrl?: true
     whatsappEnabled?: true
     whatsappNumber?: true
     liveChatProvider?: true
@@ -40546,6 +40566,10 @@ export namespace Prisma {
   export type SiteSettingsCountAggregateInputType = {
     id?: true
     siteName?: true
+    metaTitle?: true
+    metaDescription?: true
+    metaKeywords?: true
+    ogImageUrl?: true
     whatsappEnabled?: true
     whatsappNumber?: true
     liveChatProvider?: true
@@ -40663,6 +40687,10 @@ export namespace Prisma {
   export type SiteSettingsGroupByOutputType = {
     id: string
     siteName: string
+    metaTitle: string | null
+    metaDescription: string | null
+    metaKeywords: string | null
+    ogImageUrl: string | null
     whatsappEnabled: boolean
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider
@@ -40712,6 +40740,10 @@ export namespace Prisma {
   export type SiteSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     siteName?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
+    ogImageUrl?: boolean
     whatsappEnabled?: boolean
     whatsappNumber?: boolean
     liveChatProvider?: boolean
@@ -40742,6 +40774,10 @@ export namespace Prisma {
   export type SiteSettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     siteName?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
+    ogImageUrl?: boolean
     whatsappEnabled?: boolean
     whatsappNumber?: boolean
     liveChatProvider?: boolean
@@ -40772,6 +40808,10 @@ export namespace Prisma {
   export type SiteSettingsSelectScalar = {
     id?: boolean
     siteName?: boolean
+    metaTitle?: boolean
+    metaDescription?: boolean
+    metaKeywords?: boolean
+    ogImageUrl?: boolean
     whatsappEnabled?: boolean
     whatsappNumber?: boolean
     liveChatProvider?: boolean
@@ -40806,6 +40846,10 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       siteName: string
+      metaTitle: string | null
+      metaDescription: string | null
+      metaKeywords: string | null
+      ogImageUrl: string | null
       whatsappEnabled: boolean
       whatsappNumber: string | null
       liveChatProvider: $Enums.LiveChatProvider
@@ -41226,6 +41270,10 @@ export namespace Prisma {
   interface SiteSettingsFieldRefs {
     readonly id: FieldRef<"SiteSettings", 'String'>
     readonly siteName: FieldRef<"SiteSettings", 'String'>
+    readonly metaTitle: FieldRef<"SiteSettings", 'String'>
+    readonly metaDescription: FieldRef<"SiteSettings", 'String'>
+    readonly metaKeywords: FieldRef<"SiteSettings", 'String'>
+    readonly ogImageUrl: FieldRef<"SiteSettings", 'String'>
     readonly whatsappEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly whatsappNumber: FieldRef<"SiteSettings", 'String'>
     readonly liveChatProvider: FieldRef<"SiteSettings", 'LiveChatProvider'>
@@ -48662,6 +48710,10 @@ export namespace Prisma {
   export const SiteSettingsScalarFieldEnum: {
     id: 'id',
     siteName: 'siteName',
+    metaTitle: 'metaTitle',
+    metaDescription: 'metaDescription',
+    metaKeywords: 'metaKeywords',
+    ogImageUrl: 'ogImageUrl',
     whatsappEnabled: 'whatsappEnabled',
     whatsappNumber: 'whatsappNumber',
     liveChatProvider: 'liveChatProvider',
@@ -52267,6 +52319,10 @@ export namespace Prisma {
     NOT?: SiteSettingsWhereInput | SiteSettingsWhereInput[]
     id?: StringFilter<"SiteSettings"> | string
     siteName?: StringFilter<"SiteSettings"> | string
+    metaTitle?: StringNullableFilter<"SiteSettings"> | string | null
+    metaDescription?: StringNullableFilter<"SiteSettings"> | string | null
+    metaKeywords?: StringNullableFilter<"SiteSettings"> | string | null
+    ogImageUrl?: StringNullableFilter<"SiteSettings"> | string | null
     whatsappEnabled?: BoolFilter<"SiteSettings"> | boolean
     whatsappNumber?: StringNullableFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderFilter<"SiteSettings"> | $Enums.LiveChatProvider
@@ -52297,6 +52353,10 @@ export namespace Prisma {
   export type SiteSettingsOrderByWithRelationInput = {
     id?: SortOrder
     siteName?: SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    metaKeywords?: SortOrderInput | SortOrder
+    ogImageUrl?: SortOrderInput | SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     liveChatProvider?: SortOrder
@@ -52330,6 +52390,10 @@ export namespace Prisma {
     OR?: SiteSettingsWhereInput[]
     NOT?: SiteSettingsWhereInput | SiteSettingsWhereInput[]
     siteName?: StringFilter<"SiteSettings"> | string
+    metaTitle?: StringNullableFilter<"SiteSettings"> | string | null
+    metaDescription?: StringNullableFilter<"SiteSettings"> | string | null
+    metaKeywords?: StringNullableFilter<"SiteSettings"> | string | null
+    ogImageUrl?: StringNullableFilter<"SiteSettings"> | string | null
     whatsappEnabled?: BoolFilter<"SiteSettings"> | boolean
     whatsappNumber?: StringNullableFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderFilter<"SiteSettings"> | $Enums.LiveChatProvider
@@ -52360,6 +52424,10 @@ export namespace Prisma {
   export type SiteSettingsOrderByWithAggregationInput = {
     id?: SortOrder
     siteName?: SortOrder
+    metaTitle?: SortOrderInput | SortOrder
+    metaDescription?: SortOrderInput | SortOrder
+    metaKeywords?: SortOrderInput | SortOrder
+    ogImageUrl?: SortOrderInput | SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     liveChatProvider?: SortOrder
@@ -52398,6 +52466,10 @@ export namespace Prisma {
     NOT?: SiteSettingsScalarWhereWithAggregatesInput | SiteSettingsScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"SiteSettings"> | string
     siteName?: StringWithAggregatesFilter<"SiteSettings"> | string
+    metaTitle?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    metaDescription?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    metaKeywords?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    ogImageUrl?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     whatsappEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     whatsappNumber?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderWithAggregatesFilter<"SiteSettings"> | $Enums.LiveChatProvider
@@ -56109,6 +56181,10 @@ export namespace Prisma {
   export type SiteSettingsCreateInput = {
     id?: string
     siteName?: string
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    ogImageUrl?: string | null
     whatsappEnabled?: boolean
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
@@ -56139,6 +56215,10 @@ export namespace Prisma {
   export type SiteSettingsUncheckedCreateInput = {
     id?: string
     siteName?: string
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    ogImageUrl?: string | null
     whatsappEnabled?: boolean
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
@@ -56169,6 +56249,10 @@ export namespace Prisma {
   export type SiteSettingsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     siteName?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -56199,6 +56283,10 @@ export namespace Prisma {
   export type SiteSettingsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     siteName?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -56229,6 +56317,10 @@ export namespace Prisma {
   export type SiteSettingsCreateManyInput = {
     id?: string
     siteName?: string
+    metaTitle?: string | null
+    metaDescription?: string | null
+    metaKeywords?: string | null
+    ogImageUrl?: string | null
     whatsappEnabled?: boolean
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
@@ -56259,6 +56351,10 @@ export namespace Prisma {
   export type SiteSettingsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     siteName?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -56289,6 +56385,10 @@ export namespace Prisma {
   export type SiteSettingsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     siteName?: StringFieldUpdateOperationsInput | string
+    metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
+    metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    metaKeywords?: NullableStringFieldUpdateOperationsInput | string | null
+    ogImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -59485,6 +59585,10 @@ export namespace Prisma {
   export type SiteSettingsCountOrderByAggregateInput = {
     id?: SortOrder
     siteName?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    metaKeywords?: SortOrder
+    ogImageUrl?: SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
@@ -59527,6 +59631,10 @@ export namespace Prisma {
   export type SiteSettingsMaxOrderByAggregateInput = {
     id?: SortOrder
     siteName?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    metaKeywords?: SortOrder
+    ogImageUrl?: SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
@@ -59557,6 +59665,10 @@ export namespace Prisma {
   export type SiteSettingsMinOrderByAggregateInput = {
     id?: SortOrder
     siteName?: SortOrder
+    metaTitle?: SortOrder
+    metaDescription?: SortOrder
+    metaKeywords?: SortOrder
+    ogImageUrl?: SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder

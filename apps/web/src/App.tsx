@@ -6,6 +6,7 @@ import AdminLayout from "./components/layout/AdminLayout.js";
 import PublicLayout from "./components/layout/PublicLayout.js";
 import HelpWidget from "./components/support/HelpWidget.js";
 import LiveChatLoader from "./components/support/LiveChatLoader.js";
+import SeoHead from "./components/SeoHead.js";
 
 import Landing from "./pages/public/Landing.js";
 import PublicServices from "./pages/public/PublicServices.js";
@@ -58,6 +59,7 @@ import ReferEarn from "./pages/dashboard/ReferEarn.js";
 export default function App() {
   return (
     <ToastProvider>
+      <SeoHead />
       <LiveChatLoader />
       <HelpWidget />
       <Routes>
