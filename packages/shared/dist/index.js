@@ -450,6 +450,24 @@ export const updateSettingsSchema = z.object({
     metaDescription: z.string().trim().max(160).or(z.literal("")).nullable().optional(),
     metaKeywords: z.string().trim().max(255).or(z.literal("")).nullable().optional(),
     ogImageUrl: z.string().trim().url().max(2048).or(z.literal("")).nullable().optional(),
+    // Logo & Icon settings. Each image is a base64 data URI (same
+    // no-persistent-filesystem convention + ~3MB cap as Banner.image);
+    // settings.service normalises "" ⇒ null and skips undefined so the admin
+    // can clear a slot and older clients still validate. siteColor is a
+    // #rrggbb hex string.
+    mainLogo: z.string().trim().max(3_000_000).or(z.literal("")).nullable().optional(),
+    walletLogo: z.string().trim().max(3_000_000).or(z.literal("")).nullable().optional(),
+    autoPayLogo: z.string().trim().max(3_000_000).or(z.literal("")).nullable().optional(),
+    icon512: z.string().trim().max(3_000_000).or(z.literal("")).nullable().optional(),
+    icon192: z.string().trim().max(3_000_000).or(z.literal("")).nullable().optional(),
+    icon512Alt: z.string().trim().max(3_000_000).or(z.literal("")).nullable().optional(),
+    siteColor: z
+        .string()
+        .trim()
+        .regex(/^#[0-9a-fA-F]{6}$/, "Must be a #rrggbb hex colour")
+        .or(z.literal(""))
+        .nullable()
+        .optional(),
     // Legacy — the floating support button is now managed via SupportChannel
     // (see supportChannelUpdateSchema below). Kept optional so an older admin
     // client still validates; the API no longer reads or writes these.
@@ -503,6 +521,14 @@ export const publicSettingsSchema = z.object({
     metaDescription: z.string().nullable(),
     metaKeywords: z.string().nullable(),
     ogImageUrl: z.string().nullable(),
+    // Logo & Icon settings — consumed by components/Logo.tsx (mainLogo) and
+    // components/BrandAssets.tsx (icons, siteColor). Base64 data URIs / hex.
+    // walletLogo + autoPayLogo stay admin-only (not yet rendered anywhere).
+    mainLogo: z.string().nullable(),
+    icon512: z.string().nullable(),
+    icon192: z.string().nullable(),
+    icon512Alt: z.string().nullable(),
+    siteColor: z.string().nullable(),
     liveChatProvider: z.enum(LiveChatProviderValues),
     liveChatWidgetId: z.string().nullable(),
     howToOrderVideoUrl: z.string().nullable(),

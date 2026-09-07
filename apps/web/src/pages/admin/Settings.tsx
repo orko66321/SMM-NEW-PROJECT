@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { DisplayCurrency, LiveChatProvider, ReferrerRewardType } from "@smm/shared";
 import { getAdminSettings, sendAdminTestEmail, updateAdminSettings } from "../../api/resources.js";
@@ -8,12 +8,27 @@ import { Breadcrumbs, Button } from "../../components/ds/index.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 
+// Logo & Icon uploads follow the same store-as-base64-data-URI convention as
+// Banners / Brand logos (no writable disk on the cPanel host). Accept the
+// four web-safe image formats; cap at ~2 MB raw so a huge PNG doesn't bloat
+// the settings row / public-settings payload.
+const ACCEPTED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/svg+xml", "image/webp"];
+const MAX_IMAGE_DATA_URI = 3_000_000;
+const DEFAULT_SITE_COLOR = "#6D28D9";
+
 interface AdminSettings {
   siteName: string;
   metaTitle: string | null;
   metaDescription: string | null;
   metaKeywords: string | null;
   ogImageUrl: string | null;
+  mainLogo: string | null;
+  walletLogo: string | null;
+  autoPayLogo: string | null;
+  icon512: string | null;
+  icon192: string | null;
+  icon512Alt: string | null;
+  siteColor: string | null;
   liveChatProvider: LiveChatProvider;
   liveChatWidgetId: string | null;
   howToOrderVideoUrl: string | null;
@@ -38,6 +53,128 @@ interface AdminSettings {
   recentlyCompletedWindowHours: number;
 }
 
+/** One image slot in the "Logo & Icon Settings" grid — preview box + Change / Remove. */
+function ImageSlot({
+  label,
+  hint,
+  ratio,
+  value,
+  onChange,
+}: {
+  label: string;
+  hint?: string;
+  /** Tailwind aspect-ratio class for the preview box, e.g. "aspect-square". */
+  ratio: string;
+  value: string;
+  onChange: (dataUri: string) => void;
+}) {
+  const toast = useToast();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [justUpdated, setJustUpdated] = useState(false);
+
+  function onPick(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // let the same file be re-picked later
+    if (!file) return;
+    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      toast.push("Use a PNG, JPG, SVG or WebP image.", "error");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUri = typeof reader.result === "string" ? reader.result : "";
+      if (!dataUri) {
+        toast.push("Couldn't read that file.", "error");
+        return;
+      }
+      if (dataUri.length > MAX_IMAGE_DATA_URI) {
+        toast.push("That image is too large — keep it under ~2 MB.", "error");
+        return;
+      }
+      onChange(dataUri);
+      setJustUpdated(true);
+    };
+    reader.onerror = () => toast.push("Couldn't read that file.", "error");
+    reader.readAsDataURL(file);
+  }
+
+  return (
+    <div className="flex flex-col gap-2 rounded-card border border-outline-variant p-3">
+      <p className="text-xs font-semibold text-on-surface">{label}</p>
+      <div
+        className={`flex items-center justify-center overflow-hidden rounded-control bg-surface-container-highest ${ratio}`}
+      >
+        {value ? (
+          <img src={value} alt="" className="max-h-full max-w-full object-contain" />
+        ) : (
+          <span className="text-xs text-on-surface-variant">No image</span>
+        )}
+      </div>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <Button type="button" variant="ghost" size="sm" onClick={() => inputRef.current?.click()}>
+          🔄 Change
+        </Button>
+        {value && (
+          <button
+            type="button"
+            className="text-xs text-on-surface-variant hover:text-error"
+            onClick={() => {
+              onChange("");
+              setJustUpdated(false);
+            }}
+          >
+            Remove
+          </button>
+        )}
+        {justUpdated && <span className="text-xs font-medium text-success">✓ updated</span>}
+      </div>
+      {hint && <p className="text-[11px] leading-snug text-on-surface-variant">{hint}</p>}
+      <input
+        ref={inputRef}
+        type="file"
+        accept={ACCEPTED_IMAGE_TYPES.join(",")}
+        className="hidden"
+        onChange={onPick}
+      />
+    </div>
+  );
+}
+
+/** The "Site Color" card — swatch opens a native colour picker. */
+function ColorSlot({ value, onChange }: { value: string; onChange: (hex: string) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const current = value || DEFAULT_SITE_COLOR;
+  return (
+    <div className="flex flex-col gap-2 rounded-card border border-outline-variant p-3">
+      <p className="text-xs font-semibold text-on-surface">Site Color</p>
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        className="aspect-square w-full rounded-control border border-outline-variant"
+        style={{ backgroundColor: current }}
+        aria-label="Pick site colour"
+      />
+      <p className="text-xs text-on-surface-variant">
+        Selected:{" "}
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="font-mono text-primary hover:underline"
+        >
+          {current.toUpperCase()}
+        </button>
+      </p>
+      <input
+        ref={inputRef}
+        type="color"
+        value={current}
+        className="sr-only"
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  );
+}
+
 export default function AdminSettingsPage() {
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -50,6 +187,13 @@ export default function AdminSettingsPage() {
     metaDescription: "",
     metaKeywords: "",
     ogImageUrl: "",
+    mainLogo: "",
+    walletLogo: "",
+    autoPayLogo: "",
+    icon512: "",
+    icon192: "",
+    icon512Alt: "",
+    siteColor: "",
     liveChatProvider: "NONE" as LiveChatProvider,
     liveChatWidgetId: "",
     howToOrderVideoUrl: "",
@@ -90,6 +234,13 @@ export default function AdminSettingsPage() {
       metaDescription: s.metaDescription ?? "",
       metaKeywords: s.metaKeywords ?? "",
       ogImageUrl: s.ogImageUrl ?? "",
+      mainLogo: s.mainLogo ?? "",
+      walletLogo: s.walletLogo ?? "",
+      autoPayLogo: s.autoPayLogo ?? "",
+      icon512: s.icon512 ?? "",
+      icon192: s.icon192 ?? "",
+      icon512Alt: s.icon512Alt ?? "",
+      siteColor: s.siteColor ?? "",
       liveChatProvider: s.liveChatProvider,
       liveChatWidgetId: s.liveChatWidgetId ?? "",
       howToOrderVideoUrl: s.howToOrderVideoUrl ?? "",
@@ -125,6 +276,13 @@ export default function AdminSettingsPage() {
         metaDescription: form.metaDescription.trim() || null,
         metaKeywords: form.metaKeywords.trim() || null,
         ogImageUrl: form.ogImageUrl.trim() || null,
+        mainLogo: form.mainLogo || null,
+        walletLogo: form.walletLogo || null,
+        autoPayLogo: form.autoPayLogo || null,
+        icon512: form.icon512 || null,
+        icon192: form.icon192 || null,
+        icon512Alt: form.icon512Alt || null,
+        siteColor: form.siteColor || null,
         liveChatProvider: form.liveChatProvider,
         liveChatWidgetId: form.liveChatWidgetId || null,
         howToOrderVideoUrl: form.howToOrderVideoUrl.trim() || null,
@@ -255,6 +413,63 @@ export default function AdminSettingsPage() {
           <p className="mt-1 text-xs text-on-surface-variant">
             Absolute URL to a hosted image (recommended 1200×630). Optional.
           </p>
+        </div>
+      </div>
+
+      <div className="card space-y-4">
+        <h2 className="text-sm font-semibold">🖼️ Logo &amp; Icon Settings</h2>
+        <div className="flex items-start gap-2 rounded-control border border-info/30 bg-info/10 p-3 text-xs leading-snug text-on-surface-variant">
+          <span aria-hidden>💡</span>
+          <span>
+            <span className="font-semibold text-on-surface">Note:</span> If you change the logo, an icon or the
+            site colour, click <span className="font-semibold text-on-surface">Save settings</span> at the bottom
+            of this page — that applies them across the whole site and the installable app.
+          </span>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ImageSlot
+            label="Main Logo (300px × 65px)"
+            ratio="aspect-[300/65]"
+            hint="Shown in every navbar, footer and sign-in screen. Transparent PNG or SVG recommended."
+            value={form.mainLogo}
+            onChange={(v) => setForm((f) => ({ ...f, mainLogo: v }))}
+          />
+          <ImageSlot
+            label="Wallet Logo (300px × 105px)"
+            ratio="aspect-[300/105]"
+            hint="Stored for an upcoming wallet-page mark — not rendered anywhere yet."
+            value={form.walletLogo}
+            onChange={(v) => setForm((f) => ({ ...f, walletLogo: v }))}
+          />
+          <ImageSlot
+            label="Auto Pay Logo (300px × 105px)"
+            ratio="aspect-[300/105]"
+            hint="Stored for an upcoming payment-page mark — not rendered anywhere yet."
+            value={form.autoPayLogo}
+            onChange={(v) => setForm((f) => ({ ...f, autoPayLogo: v }))}
+          />
+          <ImageSlot
+            label="Icon (512px × 512px)"
+            ratio="aspect-square"
+            hint="Primary app icon / high-res favicon."
+            value={form.icon512}
+            onChange={(v) => setForm((f) => ({ ...f, icon512: v }))}
+          />
+          <ImageSlot
+            label="Icon 192×192"
+            ratio="aspect-square"
+            hint="Installable-app (PWA) manifest icon."
+            value={form.icon192}
+            onChange={(v) => setForm((f) => ({ ...f, icon192: v }))}
+          />
+          <ImageSlot
+            label="Icon 512×512"
+            ratio="aspect-square"
+            hint="Apple touch icon (iOS home-screen). Separate slot from the primary icon above."
+            value={form.icon512Alt}
+            onChange={(v) => setForm((f) => ({ ...f, icon512Alt: v }))}
+          />
+          <ColorSlot value={form.siteColor} onChange={(hex) => setForm((f) => ({ ...f, siteColor: hex }))} />
         </div>
       </div>
 

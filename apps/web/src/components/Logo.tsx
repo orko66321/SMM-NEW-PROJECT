@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { getPublicSettings } from "../api/resources.js";
+
 // AIO monogram — A (grow), I (connect), O (network ring) — one stroke
 // weight throughout. See brand mockup: violet #6D28D9 -> #8B5CF6 gradient
 // on dark, single-color (currentColor) elsewhere.
@@ -8,8 +11,9 @@ function AioMark({ className, gradient = false }: { className?: string; gradient
       {gradient && (
         <defs>
           <linearGradient id="logo-gradient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#8B5CF6" />
-            <stop offset="100%" stopColor="#6D28D9" />
+            {/* Tracks the admin "Site Color" setting via the brand-primary vars. */}
+            <stop offset="0%" style={{ stopColor: "rgb(var(--brand-primary-light))" }} />
+            <stop offset="100%" style={{ stopColor: "rgb(var(--brand-primary))" }} />
           </linearGradient>
         </defs>
       )}
@@ -68,6 +72,23 @@ export function Logo({
   className?: string;
 }) {
   const s = sizeMap[size];
+
+  // Admin-uploaded "Main Logo" (Site Settings → Logo & Icon Settings) wins
+  // over the built-in monogram lockup, everywhere <Logo> is used (every
+  // navbar / footer / auth screen). Falls back silently while the query is
+  // in flight or when no logo has been set.
+  const { data } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
+  const mainLogo = (data as { mainLogo?: string | null } | undefined)?.mainLogo?.trim();
+  const siteName = (data as { siteName?: string } | undefined)?.siteName ?? "All In One Service";
+
+  if (mainLogo) {
+    return (
+      <span className={`inline-flex items-center ${className}`}>
+        <img src={mainLogo} alt={siteName} className={`${s.mark} shrink-0 object-contain`} />
+      </span>
+    );
+  }
+
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <AioMark gradient className={`${s.mark} shrink-0 text-primary`} />
