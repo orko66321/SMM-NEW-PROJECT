@@ -1,0 +1,132 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Landing-page redesign animations & effects.
+   Scoped to pages/public/Landing.tsx + components/landing/* (all class names
+   are `ll-` prefixed). Spec: stitch_all_in_one_smm_redesign.
+
+   Every animation is transform/opacity only — no width/height/top/left — so
+   nothing triggers layout or paints outside its own layer. Everything is
+   disabled under prefers-reduced-motion.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Ambient hero glow blobs — slow, GPU-composited drift. */
+@keyframes ll-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-22px) scale(1.06);
+  }
+}
+
+.ll-float-slow {
+  animation: ll-float 9s ease-in-out infinite;
+  will-change: transform;
+}
+.ll-float-delayed {
+  animation: ll-float 12s ease-in-out 2.5s infinite;
+  will-change: transform;
+}
+
+/* Scroll-reveal: components/landing/Reveal.tsx toggles `.is-visible` when the
+   element enters the viewport (IntersectionObserver, one-shot). */
+.ll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--ll-reveal-delay, 0ms);
+}
+.ll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero entrance — runs once on mount, staggered by inline --ll-delay. */
+@keyframes ll-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.ll-rise {
+  opacity: 0;
+  animation: ll-rise-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--ll-delay, 0ms);
+}
+
+/* Glass card hover-lift — used by feature / step / testimonial cards. */
+.ll-card {
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ll-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -16px rgba(124, 58, 237, 0.28);
+  border-color: rgba(124, 58, 237, 0.5);
+}
+
+/* Live status dot — soft radar ping. */
+@keyframes ll-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  75%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.ll-ping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: ll-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Marquee for the live order ticker (desktop hero mock keeps it static). */
+@keyframes ll-marquee {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+.ll-marquee {
+  animation: ll-marquee 14s linear infinite;
+}
+.ll-marquee-wrap:hover .ll-marquee {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-float-slow,
+  .ll-float-delayed,
+  .ll-rise,
+  .ll-ping::after,
+  .ll-marquee {
+    animation: none !important;
+  }
+  .ll-rise {
+    opacity: 1;
+  }
+  .ll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .ll-card:hover {
+    transform: none;
+  }
+}

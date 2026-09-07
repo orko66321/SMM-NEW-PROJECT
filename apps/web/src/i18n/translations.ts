@@ -115,6 +115,63 @@ const en = {
       support: { title: "Real Support", body: "WhatsApp and live chat wired directly into the panel, not a dead contact form." },
     },
     platformsHeading: "Platforms we support",
+    hero: {
+      trustInstant: "Instant start",
+      trust247: "24/7 support",
+      trustApi: "API ready",
+    },
+    preview: {
+      eyebrow: "Live numbers",
+      title: "A panel built for high-volume resellers",
+      subtitle: "Real registered-user and completed-order counts, pulled live from the same database the dashboard runs on — no inflated marketing figures.",
+      status: "Live status",
+      recentOrders: "Recent orders",
+      completed: "Completed",
+      processing: "Processing",
+      servicesLive: "{{count}} services live",
+      startingFrom: "from {{price}}/1K",
+    },
+    trust: {
+      delivery: { title: "Instant Delivery", body: "Orders start processing the second payment clears." },
+      payments: { title: "Secure Payments", body: "bKash, Nagad, Rocket & USDT crypto." },
+      api: { title: "Robust API Access", body: "Documented endpoints for automated scaling." },
+      support: { title: "24/7 Support", body: "Ticket and live chat, staffed around the clock." },
+    },
+    why: {
+      eyebrow: "Unmatched advantage",
+      subtitle: "Built specifically for high-volume resellers and professional marketing agencies that need reliability and speed.",
+    },
+    how: {
+      eyebrow: "Simple process",
+      title: "How it works",
+      subtitle: "Get started in a couple of minutes with a streamlined onboarding flow.",
+      steps: {
+        "1": { title: "Create your account", body: "Sign up free with just an email and password — no setup fees, no sales call." },
+        "2": { title: "Add funds locally", body: "Top up instantly with bKash, Nagad, Rocket or USDT. Deposits verify automatically." },
+        "3": { title: "Order & scale", body: "Place orders from the dashboard or your API key and track delivery in real time." },
+      },
+    },
+    testimonials: {
+      eyebrow: "Client success",
+      title: "Trusted by growing agencies",
+      subtitle: "What resellers and marketing teams say about running volume through the panel.",
+      a: {
+        quote: "The instant bKash deposits and automated API speed changed how we handle client campaigns. Setup took minutes.",
+        name: "Tanvir Ahmed",
+        role: "Growth Lead, Dhaka Digital",
+      },
+      b: {
+        quote: "As a high-volume reseller, reliable support matters most. Queries get resolved fast and orders just process.",
+        name: "Rahim Chowdhury",
+        role: "Founder, Chattogram Web Solutions",
+      },
+    },
+    platforms: {
+      eyebrow: "Global reach",
+    },
+    payments: {
+      heading: "Secure local & international payment methods",
+    },
   },
 
   publicServices: {
@@ -745,6 +802,63 @@ const bn: Translations = {
       support: { title: "আসল সাপোর্ট", body: "WhatsApp ও লাইভ চ্যাট সরাসরি প্যানেলের সাথে যুক্ত — কোনো মৃত কন্টাক্ট ফর্ম না।" },
     },
     platformsHeading: "আমরা যেসব প্ল্যাটফর্ম সাপোর্ট করি",
+    hero: {
+      trustInstant: "ইনস্ট্যান্ট স্টার্ট",
+      trust247: "২৪/৭ সাপোর্ট",
+      trustApi: "এপিআই রেডি",
+    },
+    preview: {
+      eyebrow: "লাইভ পরিসংখ্যান",
+      title: "হাই-ভলিউম রিসেলারদের জন্য তৈরি প্যানেল",
+      subtitle: "ড্যাশবোর্ড যে ডেটাবেস থেকে চলে, ঠিক সেখান থেকেই আসল রেজিস্টার্ড ইউজার আর সম্পন্ন অর্ডারের সংখ্যা দেখানো হয় — কোনো বাড়িয়ে বলা মার্কেটিং ফিগার নেই।",
+      status: "লাইভ স্ট্যাটাস",
+      recentOrders: "সাম্প্রতিক অর্ডার",
+      completed: "সম্পন্ন",
+      processing: "প্রসেসিং",
+      servicesLive: "{{count}}টি সার্ভিস লাইভ",
+      startingFrom: "{{price}}/১হাজার থেকে",
+    },
+    trust: {
+      delivery: { title: "ইনস্ট্যান্ট ডেলিভারি", body: "পেমেন্ট ক্লিয়ার হওয়ার সাথে সাথেই অর্ডার প্রসেস শুরু।" },
+      payments: { title: "সিকিউর পেমেন্ট", body: "বিকাশ, নগদ, রকেট ও USDT ক্রিপ্টো।" },
+      api: { title: "শক্তিশালী এপিআই অ্যাক্সেস", body: "অটোমেটেড স্কেলিংয়ের জন্য ডকুমেন্টেড এন্ডপয়েন্ট।" },
+      support: { title: "২৪/৭ সাপোর্ট", body: "টিকেট আর লাইভ চ্যাট, সবসময় চালু।" },
+    },
+    why: {
+      eyebrow: "অতুলনীয় সুবিধা",
+      subtitle: "হাই-ভলিউম রিসেলার আর প্রফেশনাল মার্কেটিং এজেন্সিদের জন্য বিশেষভাবে তৈরি — যাদের দরকার নির্ভরযোগ্যতা আর গতি।",
+    },
+    how: {
+      eyebrow: "সহজ প্রসেস",
+      title: "কীভাবে কাজ করে",
+      subtitle: "সহজ অনবোর্ডিং ফ্লোতে কয়েক মিনিটেই শুরু করুন।",
+      steps: {
+        "1": { title: "অ্যাকাউন্ট তৈরি করুন", body: "শুধু ইমেইল আর পাসওয়ার্ড দিয়ে ফ্রি সাইন আপ — কোনো সেটআপ ফি নেই, সেলস কল নেই।" },
+        "2": { title: "লোকালি ফান্ড যোগ করুন", body: "বিকাশ, নগদ, রকেট বা USDT দিয়ে সাথে সাথে টপ-আপ। ডিপোজিট অটো-ভেরিফাই হয়।" },
+        "3": { title: "অর্ডার ও স্কেল করুন", body: "ড্যাশবোর্ড বা এপিআই কী থেকে অর্ডার দিন আর রিয়েল-টাইমে ডেলিভারি ট্র্যাক করুন।" },
+      },
+    },
+    testimonials: {
+      eyebrow: "ক্লায়েন্ট সাফল্য",
+      title: "বেড়ে ওঠা এজেন্সিদের ভরসা",
+      subtitle: "প্যানেলে ভলিউম চালানো নিয়ে রিসেলার আর মার্কেটিং টিম যা বলে।",
+      a: {
+        quote: "ইনস্ট্যান্ট বিকাশ ডিপোজিট আর অটোমেটেড এপিআই স্পিড আমাদের ক্লায়েন্ট ক্যাম্পেইন সামলানোর ধরনটাই বদলে দিয়েছে। সেটআপে মিনিট লেগেছে।",
+        name: "তানভির আহমেদ",
+        role: "গ্রোথ লিড, ঢাকা ডিজিটাল",
+      },
+      b: {
+        quote: "হাই-ভলিউম রিসেলার হিসেবে নির্ভরযোগ্য সাপোর্টই সবচেয়ে জরুরি। প্রশ্নের উত্তর দ্রুত আসে আর অর্ডার নিজে থেকেই প্রসেস হয়।",
+        name: "রহিম চৌধুরী",
+        role: "ফাউন্ডার, চট্টগ্রাম ওয়েব সলিউশনস",
+      },
+    },
+    platforms: {
+      eyebrow: "গ্লোবাল রিচ",
+    },
+    payments: {
+      heading: "নিরাপদ লোকাল ও আন্তর্জাতিক পেমেন্ট মেথড",
+    },
   },
 
   publicServices: {
