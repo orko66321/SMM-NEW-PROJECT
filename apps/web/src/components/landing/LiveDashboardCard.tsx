@@ -71,10 +71,10 @@ export default function LiveDashboardCard({
         {PREVIEW_ORDERS.map((o) => (
           <div
             key={o.title}
-            className="flex items-center justify-between rounded-lg border border-l-border bg-l-bg/60 p-3 transition-colors hover:bg-l-surface-2"
+            className="flex items-center gap-2 rounded-lg border border-l-border bg-l-bg/60 p-2.5 transition-colors hover:bg-l-surface-2"
           >
-            <div className="flex items-center gap-3">
-              <span className="flex size-8 items-center justify-center rounded-lg bg-l-primary/15 text-l-primary-bright">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-l-primary/15 text-l-primary-bright">
                 <Icon name={o.icon} size={16} />
               </span>
               <div className="min-w-0">
@@ -83,7 +83,7 @@ export default function LiveDashboardCard({
               </div>
             </div>
             <span
-              className={`shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-medium ${
+              className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${
                 o.status === "done"
                   ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
                   : "border-l-accent/20 bg-l-accent/10 text-l-accent"

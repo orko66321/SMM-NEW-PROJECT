@@ -31,7 +31,7 @@ export default function HeroSection({
   ];
 
   return (
-    <section className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
+    <section className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-24">
       {/* Ambient chromatic glows */}
       <div
         className="ll-float-slow pointer-events-none absolute -top-40 left-1/4 -z-10 h-96 w-96 rounded-full bg-l-primary/20 blur-[120px]"
@@ -42,7 +42,7 @@ export default function HeroSection({
         aria-hidden
       />
 
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-10">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2 lg:gap-10">
         {/* Left — marketing copy + search */}
         <div className="text-center lg:text-left">
           <span
@@ -56,29 +56,29 @@ export default function HeroSection({
           </span>
 
           <h1
-            className="ll-rise mt-6 font-headline text-4xl font-extrabold leading-[1.1] tracking-tight text-l-heading sm:text-5xl lg:text-6xl"
+            className="ll-rise mt-5 font-headline text-[27px] font-extrabold leading-[1.15] tracking-tight text-l-heading sm:text-5xl sm:leading-[1.1] lg:text-6xl"
             style={rise(80)}
           >
             {t("landing.heroTitle")}
           </h1>
 
-          <p className="ll-rise mx-auto mt-5 max-w-xl text-base leading-relaxed text-l-body sm:text-lg lg:mx-0" style={rise(160)}>
+          <p className="ll-rise mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-l-body sm:mt-5 sm:text-lg lg:mx-0" style={rise(160)}>
             {t("landing.heroSubtitle")}
           </p>
 
           <div
-            className="ll-rise mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start"
+            className="ll-rise mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start"
             style={rise(240)}
           >
             <Link
               to="/services"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-l-primary-bright to-l-primary px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-l-primary/30 transition-all hover:scale-[1.02] hover:shadow-l-primary/50 active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-l-primary-bright to-l-primary px-6 py-3 text-[15px] font-bold text-white shadow-lg shadow-l-primary/30 transition-all hover:scale-[1.02] hover:shadow-l-primary/50 active:scale-[0.98] sm:px-7 sm:py-3.5 sm:text-base"
             >
               {t("landing.viewServices")}
             </Link>
             <Link
               to="/api-docs"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-l-border bg-l-surface px-7 py-3.5 text-base font-bold text-l-heading transition-all hover:border-l-primary/40 hover:bg-l-surface-2"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-l-border bg-l-surface px-6 py-3 text-[15px] font-bold text-l-heading transition-all hover:border-l-primary/40 hover:bg-l-surface-2 sm:px-7 sm:py-3.5 sm:text-base"
             >
               <Icon name="docs" size={18} />
               {t("landing.apiDocumentation")}
@@ -86,7 +86,7 @@ export default function HeroSection({
           </div>
 
           {/* Service search + live autocomplete */}
-          <div className="ll-rise relative mx-auto mt-7 max-w-md text-left lg:mx-0" style={rise(320)}>
+          <div className="ll-rise relative mx-auto mt-6 max-w-md text-left sm:mt-7 lg:mx-0" style={rise(320)}>
             <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-l-muted">
               <Icon name="search" size={18} />
             </span>

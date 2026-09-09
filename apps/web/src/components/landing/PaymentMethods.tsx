@@ -13,18 +13,18 @@ const METHODS: { label: string; icon: IconName; color: string }[] = [
 export default function PaymentMethods() {
   const { t } = useLanguage();
   return (
-    <section className="border-t border-l-border bg-l-bg px-4 py-14 sm:px-6 lg:px-10">
+    <section className="border-t border-l-border bg-l-bg px-4 py-12 sm:px-6 sm:py-14 lg:px-10">
       <Reveal className="mx-auto max-w-6xl text-center">
-        <p className="mb-7 text-xs font-semibold uppercase tracking-[0.2em] text-l-body">
+        <p className="mx-auto mb-6 max-w-xs text-[11px] font-semibold uppercase tracking-[0.14em] text-l-body sm:mb-7 sm:max-w-none sm:text-xs sm:tracking-[0.2em]">
           {t("landing.payments.heading")}
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 sm:gap-x-10 sm:gap-y-5">
           {METHODS.map((m) => (
             <span
               key={m.label}
-              className={`flex items-center gap-2 font-headline text-lg font-bold transition-transform hover:scale-110 ${m.color}`}
+              className={`flex items-center gap-1.5 font-headline text-base font-bold transition-transform hover:scale-110 sm:gap-2 sm:text-lg ${m.color}`}
             >
-              <Icon name={m.icon} size={20} />
+              <Icon name={m.icon} size={18} />
               {m.label}
             </span>
           ))}
