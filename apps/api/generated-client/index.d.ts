@@ -40381,6 +40381,11 @@ export namespace Prisma {
     icon192: string | null
     icon512Alt: string | null
     siteColor: string | null
+    modalEnabled: boolean | null
+    modalBannerImage: string | null
+    modalText: string | null
+    modalButtonText: string | null
+    modalButtonLink: string | null
     whatsappEnabled: boolean | null
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider | null
@@ -40422,6 +40427,11 @@ export namespace Prisma {
     icon192: string | null
     icon512Alt: string | null
     siteColor: string | null
+    modalEnabled: boolean | null
+    modalBannerImage: string | null
+    modalText: string | null
+    modalButtonText: string | null
+    modalButtonLink: string | null
     whatsappEnabled: boolean | null
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider | null
@@ -40463,6 +40473,11 @@ export namespace Prisma {
     icon192: number
     icon512Alt: number
     siteColor: number
+    modalEnabled: number
+    modalBannerImage: number
+    modalText: number
+    modalButtonText: number
+    modalButtonLink: number
     whatsappEnabled: number
     whatsappNumber: number
     liveChatProvider: number
@@ -40530,6 +40545,11 @@ export namespace Prisma {
     icon192?: true
     icon512Alt?: true
     siteColor?: true
+    modalEnabled?: true
+    modalBannerImage?: true
+    modalText?: true
+    modalButtonText?: true
+    modalButtonLink?: true
     whatsappEnabled?: true
     whatsappNumber?: true
     liveChatProvider?: true
@@ -40571,6 +40591,11 @@ export namespace Prisma {
     icon192?: true
     icon512Alt?: true
     siteColor?: true
+    modalEnabled?: true
+    modalBannerImage?: true
+    modalText?: true
+    modalButtonText?: true
+    modalButtonLink?: true
     whatsappEnabled?: true
     whatsappNumber?: true
     liveChatProvider?: true
@@ -40612,6 +40637,11 @@ export namespace Prisma {
     icon192?: true
     icon512Alt?: true
     siteColor?: true
+    modalEnabled?: true
+    modalBannerImage?: true
+    modalText?: true
+    modalButtonText?: true
+    modalButtonLink?: true
     whatsappEnabled?: true
     whatsappNumber?: true
     liveChatProvider?: true
@@ -40740,6 +40770,11 @@ export namespace Prisma {
     icon192: string | null
     icon512Alt: string | null
     siteColor: string | null
+    modalEnabled: boolean
+    modalBannerImage: string | null
+    modalText: string | null
+    modalButtonText: string | null
+    modalButtonLink: string | null
     whatsappEnabled: boolean
     whatsappNumber: string | null
     liveChatProvider: $Enums.LiveChatProvider
@@ -40800,6 +40835,11 @@ export namespace Prisma {
     icon192?: boolean
     icon512Alt?: boolean
     siteColor?: boolean
+    modalEnabled?: boolean
+    modalBannerImage?: boolean
+    modalText?: boolean
+    modalButtonText?: boolean
+    modalButtonLink?: boolean
     whatsappEnabled?: boolean
     whatsappNumber?: boolean
     liveChatProvider?: boolean
@@ -40841,6 +40881,11 @@ export namespace Prisma {
     icon192?: boolean
     icon512Alt?: boolean
     siteColor?: boolean
+    modalEnabled?: boolean
+    modalBannerImage?: boolean
+    modalText?: boolean
+    modalButtonText?: boolean
+    modalButtonLink?: boolean
     whatsappEnabled?: boolean
     whatsappNumber?: boolean
     liveChatProvider?: boolean
@@ -40882,6 +40927,11 @@ export namespace Prisma {
     icon192?: boolean
     icon512Alt?: boolean
     siteColor?: boolean
+    modalEnabled?: boolean
+    modalBannerImage?: boolean
+    modalText?: boolean
+    modalButtonText?: boolean
+    modalButtonLink?: boolean
     whatsappEnabled?: boolean
     whatsappNumber?: boolean
     liveChatProvider?: boolean
@@ -40927,6 +40977,11 @@ export namespace Prisma {
       icon192: string | null
       icon512Alt: string | null
       siteColor: string | null
+      modalEnabled: boolean
+      modalBannerImage: string | null
+      modalText: string | null
+      modalButtonText: string | null
+      modalButtonLink: string | null
       whatsappEnabled: boolean
       whatsappNumber: string | null
       liveChatProvider: $Enums.LiveChatProvider
@@ -41358,6 +41413,11 @@ export namespace Prisma {
     readonly icon192: FieldRef<"SiteSettings", 'String'>
     readonly icon512Alt: FieldRef<"SiteSettings", 'String'>
     readonly siteColor: FieldRef<"SiteSettings", 'String'>
+    readonly modalEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly modalBannerImage: FieldRef<"SiteSettings", 'String'>
+    readonly modalText: FieldRef<"SiteSettings", 'String'>
+    readonly modalButtonText: FieldRef<"SiteSettings", 'String'>
+    readonly modalButtonLink: FieldRef<"SiteSettings", 'String'>
     readonly whatsappEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly whatsappNumber: FieldRef<"SiteSettings", 'String'>
     readonly liveChatProvider: FieldRef<"SiteSettings", 'LiveChatProvider'>
@@ -48805,6 +48865,11 @@ export namespace Prisma {
     icon192: 'icon192',
     icon512Alt: 'icon512Alt',
     siteColor: 'siteColor',
+    modalEnabled: 'modalEnabled',
+    modalBannerImage: 'modalBannerImage',
+    modalText: 'modalText',
+    modalButtonText: 'modalButtonText',
+    modalButtonLink: 'modalButtonLink',
     whatsappEnabled: 'whatsappEnabled',
     whatsappNumber: 'whatsappNumber',
     liveChatProvider: 'liveChatProvider',
@@ -52421,6 +52486,11 @@ export namespace Prisma {
     icon192?: StringNullableFilter<"SiteSettings"> | string | null
     icon512Alt?: StringNullableFilter<"SiteSettings"> | string | null
     siteColor?: StringNullableFilter<"SiteSettings"> | string | null
+    modalEnabled?: BoolFilter<"SiteSettings"> | boolean
+    modalBannerImage?: StringNullableFilter<"SiteSettings"> | string | null
+    modalText?: StringNullableFilter<"SiteSettings"> | string | null
+    modalButtonText?: StringNullableFilter<"SiteSettings"> | string | null
+    modalButtonLink?: StringNullableFilter<"SiteSettings"> | string | null
     whatsappEnabled?: BoolFilter<"SiteSettings"> | boolean
     whatsappNumber?: StringNullableFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderFilter<"SiteSettings"> | $Enums.LiveChatProvider
@@ -52462,6 +52532,11 @@ export namespace Prisma {
     icon192?: SortOrderInput | SortOrder
     icon512Alt?: SortOrderInput | SortOrder
     siteColor?: SortOrderInput | SortOrder
+    modalEnabled?: SortOrder
+    modalBannerImage?: SortOrderInput | SortOrder
+    modalText?: SortOrderInput | SortOrder
+    modalButtonText?: SortOrderInput | SortOrder
+    modalButtonLink?: SortOrderInput | SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     liveChatProvider?: SortOrder
@@ -52506,6 +52581,11 @@ export namespace Prisma {
     icon192?: StringNullableFilter<"SiteSettings"> | string | null
     icon512Alt?: StringNullableFilter<"SiteSettings"> | string | null
     siteColor?: StringNullableFilter<"SiteSettings"> | string | null
+    modalEnabled?: BoolFilter<"SiteSettings"> | boolean
+    modalBannerImage?: StringNullableFilter<"SiteSettings"> | string | null
+    modalText?: StringNullableFilter<"SiteSettings"> | string | null
+    modalButtonText?: StringNullableFilter<"SiteSettings"> | string | null
+    modalButtonLink?: StringNullableFilter<"SiteSettings"> | string | null
     whatsappEnabled?: BoolFilter<"SiteSettings"> | boolean
     whatsappNumber?: StringNullableFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderFilter<"SiteSettings"> | $Enums.LiveChatProvider
@@ -52547,6 +52627,11 @@ export namespace Prisma {
     icon192?: SortOrderInput | SortOrder
     icon512Alt?: SortOrderInput | SortOrder
     siteColor?: SortOrderInput | SortOrder
+    modalEnabled?: SortOrder
+    modalBannerImage?: SortOrderInput | SortOrder
+    modalText?: SortOrderInput | SortOrder
+    modalButtonText?: SortOrderInput | SortOrder
+    modalButtonLink?: SortOrderInput | SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     liveChatProvider?: SortOrder
@@ -52596,6 +52681,11 @@ export namespace Prisma {
     icon192?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     icon512Alt?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     siteColor?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    modalEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    modalBannerImage?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    modalText?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    modalButtonText?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    modalButtonLink?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     whatsappEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     whatsappNumber?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     liveChatProvider?: EnumLiveChatProviderWithAggregatesFilter<"SiteSettings"> | $Enums.LiveChatProvider
@@ -56318,6 +56408,11 @@ export namespace Prisma {
     icon192?: string | null
     icon512Alt?: string | null
     siteColor?: string | null
+    modalEnabled?: boolean
+    modalBannerImage?: string | null
+    modalText?: string | null
+    modalButtonText?: string | null
+    modalButtonLink?: string | null
     whatsappEnabled?: boolean
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
@@ -56359,6 +56454,11 @@ export namespace Prisma {
     icon192?: string | null
     icon512Alt?: string | null
     siteColor?: string | null
+    modalEnabled?: boolean
+    modalBannerImage?: string | null
+    modalText?: string | null
+    modalButtonText?: string | null
+    modalButtonLink?: string | null
     whatsappEnabled?: boolean
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
@@ -56400,6 +56500,11 @@ export namespace Prisma {
     icon192?: NullableStringFieldUpdateOperationsInput | string | null
     icon512Alt?: NullableStringFieldUpdateOperationsInput | string | null
     siteColor?: NullableStringFieldUpdateOperationsInput | string | null
+    modalEnabled?: BoolFieldUpdateOperationsInput | boolean
+    modalBannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    modalText?: NullableStringFieldUpdateOperationsInput | string | null
+    modalButtonText?: NullableStringFieldUpdateOperationsInput | string | null
+    modalButtonLink?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -56441,6 +56546,11 @@ export namespace Prisma {
     icon192?: NullableStringFieldUpdateOperationsInput | string | null
     icon512Alt?: NullableStringFieldUpdateOperationsInput | string | null
     siteColor?: NullableStringFieldUpdateOperationsInput | string | null
+    modalEnabled?: BoolFieldUpdateOperationsInput | boolean
+    modalBannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    modalText?: NullableStringFieldUpdateOperationsInput | string | null
+    modalButtonText?: NullableStringFieldUpdateOperationsInput | string | null
+    modalButtonLink?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -56482,6 +56592,11 @@ export namespace Prisma {
     icon192?: string | null
     icon512Alt?: string | null
     siteColor?: string | null
+    modalEnabled?: boolean
+    modalBannerImage?: string | null
+    modalText?: string | null
+    modalButtonText?: string | null
+    modalButtonLink?: string | null
     whatsappEnabled?: boolean
     whatsappNumber?: string | null
     liveChatProvider?: $Enums.LiveChatProvider
@@ -56523,6 +56638,11 @@ export namespace Prisma {
     icon192?: NullableStringFieldUpdateOperationsInput | string | null
     icon512Alt?: NullableStringFieldUpdateOperationsInput | string | null
     siteColor?: NullableStringFieldUpdateOperationsInput | string | null
+    modalEnabled?: BoolFieldUpdateOperationsInput | boolean
+    modalBannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    modalText?: NullableStringFieldUpdateOperationsInput | string | null
+    modalButtonText?: NullableStringFieldUpdateOperationsInput | string | null
+    modalButtonLink?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -56564,6 +56684,11 @@ export namespace Prisma {
     icon192?: NullableStringFieldUpdateOperationsInput | string | null
     icon512Alt?: NullableStringFieldUpdateOperationsInput | string | null
     siteColor?: NullableStringFieldUpdateOperationsInput | string | null
+    modalEnabled?: BoolFieldUpdateOperationsInput | boolean
+    modalBannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    modalText?: NullableStringFieldUpdateOperationsInput | string | null
+    modalButtonText?: NullableStringFieldUpdateOperationsInput | string | null
+    modalButtonLink?: NullableStringFieldUpdateOperationsInput | string | null
     whatsappEnabled?: BoolFieldUpdateOperationsInput | boolean
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     liveChatProvider?: EnumLiveChatProviderFieldUpdateOperationsInput | $Enums.LiveChatProvider
@@ -59771,6 +59896,11 @@ export namespace Prisma {
     icon192?: SortOrder
     icon512Alt?: SortOrder
     siteColor?: SortOrder
+    modalEnabled?: SortOrder
+    modalBannerImage?: SortOrder
+    modalText?: SortOrder
+    modalButtonText?: SortOrder
+    modalButtonLink?: SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
@@ -59824,6 +59954,11 @@ export namespace Prisma {
     icon192?: SortOrder
     icon512Alt?: SortOrder
     siteColor?: SortOrder
+    modalEnabled?: SortOrder
+    modalBannerImage?: SortOrder
+    modalText?: SortOrder
+    modalButtonText?: SortOrder
+    modalButtonLink?: SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder
@@ -59865,6 +60000,11 @@ export namespace Prisma {
     icon192?: SortOrder
     icon512Alt?: SortOrder
     siteColor?: SortOrder
+    modalEnabled?: SortOrder
+    modalBannerImage?: SortOrder
+    modalText?: SortOrder
+    modalButtonText?: SortOrder
+    modalButtonLink?: SortOrder
     whatsappEnabled?: SortOrder
     whatsappNumber?: SortOrder
     liveChatProvider?: SortOrder

@@ -29,6 +29,11 @@ interface AdminSettings {
   icon192: string | null;
   icon512Alt: string | null;
   siteColor: string | null;
+  modalEnabled: boolean;
+  modalBannerImage: string | null;
+  modalText: string | null;
+  modalButtonText: string | null;
+  modalButtonLink: string | null;
   liveChatProvider: LiveChatProvider;
   liveChatWidgetId: string | null;
   howToOrderVideoUrl: string | null;
@@ -194,6 +199,11 @@ export default function AdminSettingsPage() {
     icon192: "",
     icon512Alt: "",
     siteColor: "",
+    modalEnabled: false,
+    modalBannerImage: "",
+    modalText: "",
+    modalButtonText: "",
+    modalButtonLink: "",
     liveChatProvider: "NONE" as LiveChatProvider,
     liveChatWidgetId: "",
     howToOrderVideoUrl: "",
@@ -241,6 +251,11 @@ export default function AdminSettingsPage() {
       icon192: s.icon192 ?? "",
       icon512Alt: s.icon512Alt ?? "",
       siteColor: s.siteColor ?? "",
+      modalEnabled: s.modalEnabled ?? false,
+      modalBannerImage: s.modalBannerImage ?? "",
+      modalText: s.modalText ?? "",
+      modalButtonText: s.modalButtonText ?? "",
+      modalButtonLink: s.modalButtonLink ?? "",
       liveChatProvider: s.liveChatProvider,
       liveChatWidgetId: s.liveChatWidgetId ?? "",
       howToOrderVideoUrl: s.howToOrderVideoUrl ?? "",
@@ -283,6 +298,11 @@ export default function AdminSettingsPage() {
         icon192: form.icon192 || null,
         icon512Alt: form.icon512Alt || null,
         siteColor: form.siteColor || null,
+        modalEnabled: form.modalEnabled,
+        modalBannerImage: form.modalBannerImage || null,
+        modalText: form.modalText.trim() || null,
+        modalButtonText: form.modalButtonText.trim() || null,
+        modalButtonLink: form.modalButtonLink.trim() || null,
         liveChatProvider: form.liveChatProvider,
         liveChatWidgetId: form.liveChatWidgetId || null,
         howToOrderVideoUrl: form.howToOrderVideoUrl.trim() || null,
@@ -471,6 +491,73 @@ export default function AdminSettingsPage() {
           />
           <ColorSlot value={form.siteColor} onChange={(hex) => setForm((f) => ({ ...f, siteColor: hex }))} />
         </div>
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold">📣 Announcement Modal</h2>
+        <p className="text-xs text-on-surface-variant">
+          A popup shown once per visitor session when they enter the site. Save this page after editing —
+          it takes effect immediately.
+        </p>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={form.modalEnabled}
+            onChange={(e) => setForm((f) => ({ ...f, modalEnabled: e.target.checked }))}
+          />
+          Enable the announcement popup
+        </label>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <ImageSlot
+            label="Banner image"
+            ratio="aspect-[16/7]"
+            hint="Shown across the top of the modal. PNG/JPG/WebP, kept under ~2 MB. Optional."
+            value={form.modalBannerImage}
+            onChange={(v) => setForm((f) => ({ ...f, modalBannerImage: v }))}
+          />
+        </div>
+
+        <div>
+          <label className="label" htmlFor="modalText">Notice text</label>
+          <textarea
+            id="modalText"
+            className="input-field min-h-24"
+            maxLength={5000}
+            placeholder="e.g. 🎉 Eid offer — 10% extra on every deposit until Friday!"
+            value={form.modalText}
+            onChange={(e) => setForm((f) => ({ ...f, modalText: e.target.value }))}
+          />
+          <p className="mt-1 text-xs text-on-surface-variant">Plain text. Line breaks are preserved; HTML is not rendered.</p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label className="label" htmlFor="modalButtonText">Action button label</label>
+            <input
+              id="modalButtonText"
+              className="input-field"
+              maxLength={60}
+              placeholder="Add Funds"
+              value={form.modalButtonText}
+              onChange={(e) => setForm((f) => ({ ...f, modalButtonText: e.target.value }))}
+            />
+          </div>
+          <div>
+            <label className="label" htmlFor="modalButtonLink">Button link</label>
+            <input
+              id="modalButtonLink"
+              className="input-field"
+              placeholder="/dashboard/wallet  or  https://…"
+              value={form.modalButtonLink}
+              onChange={(e) => setForm((f) => ({ ...f, modalButtonLink: e.target.value }))}
+            />
+          </div>
+        </div>
+        <p className="text-xs text-on-surface-variant">
+          Leave the label &amp; link empty to show the notice with no button. A link starting with{" "}
+          <span className="font-mono">/</span> navigates inside the panel; a full URL opens that address.
+        </p>
       </div>
 
       <div className="card space-y-2">

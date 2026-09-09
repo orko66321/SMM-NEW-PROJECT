@@ -8,6 +8,7 @@ import HelpWidget from "./components/support/HelpWidget.js";
 import LiveChatLoader from "./components/support/LiveChatLoader.js";
 import SeoHead from "./components/SeoHead.js";
 import BrandAssets from "./components/BrandAssets.js";
+import AnnouncementModal from "./components/AnnouncementModal.js";
 
 import Landing from "./pages/public/Landing.js";
 import PublicServices from "./pages/public/PublicServices.js";
@@ -64,6 +65,7 @@ export default function App() {
       <BrandAssets />
       <LiveChatLoader />
       <HelpWidget />
+      <AnnouncementModal />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Landing />} />

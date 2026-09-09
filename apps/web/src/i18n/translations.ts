@@ -11,6 +11,7 @@ const en = {
   common: {
     loading: "Loading…",
     details: "Details",
+    announcement: "Announcement",
     orderNow: "Order now",
     signUp: "Sign up",
     signIn: "Sign in",
@@ -698,6 +699,7 @@ const bn: Translations = {
   common: {
     loading: "লোড হচ্ছে…",
     details: "বিস্তারিত",
+    announcement: "ঘোষণা",
     orderNow: "অর্ডার করুন",
     signUp: "সাইন আপ",
     signIn: "সাইন ইন",
