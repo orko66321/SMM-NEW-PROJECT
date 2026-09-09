@@ -90,7 +90,7 @@ export default function Landing() {
       {/* Live dashboard preview — real metrics + product snapshot */}
       <section className="px-4 py-10 sm:px-6 sm:py-12 lg:px-10 lg:py-16">
         <Reveal className="mx-auto grid max-w-6xl items-center gap-6 sm:gap-8 lg:grid-cols-2">
-          <div className="text-center lg:text-left">
+          <div className="min-w-0 text-center lg:text-left">
             <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-l-primary-bright sm:text-xs sm:tracking-[0.2em]">
               {t("landing.preview.eyebrow")}
             </span>
