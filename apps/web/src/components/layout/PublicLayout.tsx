@@ -32,7 +32,7 @@ export default function PublicLayout() {
           <Link to="/">
             <Logo />
           </Link>
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-1 lg:flex">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
@@ -49,28 +49,28 @@ export default function PublicLayout() {
             ))}
           </nav>
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden items-center gap-3 sm:flex">
+            <div className="hidden items-center gap-3 lg:flex">
               <LanguageSwitcher />
               <CurrencySwitcher />
             </div>
             {user ? (
               <Link
                 to={user.role === "ADMIN" ? "/admin" : "/dashboard"}
-                className="btn-primary hidden !px-4 !py-1.5 text-sm sm:inline-flex"
+                className="btn-primary hidden !px-4 !py-1.5 text-sm lg:inline-flex"
               >
                 {t("nav.dashboard")}
               </Link>
             ) : (
               <>
-                <Link to="/login" className="btn-ghost hidden !px-3 !py-1.5 text-sm sm:inline-flex">{t("nav.signIn")}</Link>
-                <Link to="/register" className="btn-primary hidden !px-4 !py-1.5 text-sm sm:inline-flex">{t("nav.signUp")}</Link>
+                <Link to="/login" className="btn-ghost hidden !px-3 !py-1.5 text-sm lg:inline-flex">{t("nav.signIn")}</Link>
+                <Link to="/register" className="btn-primary hidden !px-4 !py-1.5 text-sm lg:inline-flex">{t("nav.signUp")}</Link>
               </>
             )}
             <button
               type="button"
               aria-label={menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
               onClick={() => setMenuOpen((v) => !v)}
-              className="flex h-11 w-11 items-center justify-center rounded-control text-on-surface hover:bg-surface-container-high md:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-control text-on-surface hover:bg-surface-container-high lg:hidden"
             >
               <Icon name={menuOpen ? "close" : "menu"} size={menuOpen ? 20 : 22} />
             </button>
@@ -80,7 +80,7 @@ export default function PublicLayout() {
 
         {/* Mobile menu panel */}
         <div
-          className={`grid overflow-hidden border-t border-outline-variant/60 bg-surface transition-[grid-template-rows] duration-300 ease-out md:hidden ${
+          className={`grid overflow-hidden border-t border-outline-variant/60 bg-surface transition-[grid-template-rows] duration-300 ease-out lg:hidden ${
             menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
         >

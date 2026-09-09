@@ -25,21 +25,21 @@ export default function PlatformsGrid({ platforms }: { platforms: string[] }) {
   return (
     <section
       id="platforms"
-      className="border-y border-l-border bg-l-surface/30 px-4 py-20 sm:px-6 lg:px-10"
+      className="border-y border-l-border bg-l-surface/30 px-4 py-14 sm:px-6 sm:py-20 lg:px-10"
     >
       <div className="mx-auto max-w-6xl">
         <SectionHeading eyebrow={t("landing.platforms.eyebrow")} title={t("landing.platformsHeading")} />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-3 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
           {list.map((platform, i) => (
             <Reveal key={platform} delay={i * 60}>
               <Link
                 to="/services"
-                className="ll-card group flex flex-col items-center justify-center gap-3 rounded-2xl border border-l-border bg-l-surface p-6 text-center hover:border-l-accent/60"
+                className="ll-card group flex h-full flex-col items-center justify-center gap-2 rounded-xl border border-l-border bg-l-surface p-4 text-center hover:border-l-accent/60 sm:gap-3 sm:rounded-2xl sm:p-6"
               >
                 <span className="text-l-accent transition-transform duration-300 group-hover:scale-110">
-                  <Icon name={iconFor(platform)} size={28} />
+                  <Icon name={iconFor(platform)} size={24} />
                 </span>
-                <span className="font-headline text-sm font-bold text-l-heading">{platform}</span>
+                <span className="font-headline text-xs font-bold text-l-heading sm:text-sm">{platform}</span>
               </Link>
             </Reveal>
           ))}
