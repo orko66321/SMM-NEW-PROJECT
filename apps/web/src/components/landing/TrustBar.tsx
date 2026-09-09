@@ -12,19 +12,19 @@ const ITEMS: { key: string; icon: IconName; tint: string }[] = [
 export default function TrustBar() {
   const { t } = useLanguage();
   return (
-    <section className="border-y border-l-border bg-l-surface/40 px-4 py-10 sm:px-6 lg:px-10">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="border-y border-l-border bg-l-surface/40 px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         {ITEMS.map((item, i) => (
           <Reveal
             key={item.key}
             delay={i * 80}
-            className="ll-card flex items-center gap-4 rounded-xl border border-l-border bg-l-surface p-5"
+            className="ll-card flex items-center gap-3.5 rounded-xl border border-l-border bg-l-surface p-4 sm:p-5"
           >
-            <span className={`flex size-12 shrink-0 items-center justify-center rounded-lg ${item.tint}`}>
-              <Icon name={item.icon} size={22} />
+            <span className={`flex size-11 shrink-0 items-center justify-center rounded-lg sm:size-12 ${item.tint}`}>
+              <Icon name={item.icon} size={20} />
             </span>
-            <div>
-              <h3 className="font-headline text-base font-bold text-l-heading">
+            <div className="min-w-0">
+              <h3 className="font-headline text-[15px] font-bold text-l-heading sm:text-base">
                 {t(`landing.trust.${item.key}.title`)}
               </h3>
               <p className="mt-0.5 text-xs text-l-body">{t(`landing.trust.${item.key}.body`)}</p>

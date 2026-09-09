@@ -88,16 +88,18 @@ export default function Landing() {
       <HeroSection search={search} onSearchChange={setSearch} results={searchResults} />
 
       {/* Live dashboard preview — real metrics + product snapshot */}
-      <section className="px-4 pb-4 sm:px-6 lg:px-10">
-        <Reveal className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-2">
+      <section className="px-4 py-10 sm:px-6 sm:py-12 lg:px-10 lg:py-16">
+        <Reveal className="mx-auto grid max-w-6xl items-center gap-6 sm:gap-8 lg:grid-cols-2">
           <div className="text-center lg:text-left">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-l-primary-bright">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-l-primary-bright sm:text-xs sm:tracking-[0.2em]">
               {t("landing.preview.eyebrow")}
             </span>
-            <h2 className="mt-3 font-headline text-3xl font-bold tracking-tight text-l-heading sm:text-4xl">
+            <h2 className="mt-3 font-headline text-[25px] font-bold leading-tight tracking-tight text-l-heading sm:text-3xl lg:text-4xl">
               {t("landing.preview.title")}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-l-body">{t("landing.preview.subtitle")}</p>
+            <p className="mt-3 text-sm leading-relaxed text-l-body sm:mt-4 sm:text-base">
+              {t("landing.preview.subtitle")}
+            </p>
           </div>
           <LiveDashboardCard stats={stats} startingPrice={startingPrice} />
         </Reveal>

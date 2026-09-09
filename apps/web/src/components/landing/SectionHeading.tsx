@@ -12,14 +12,14 @@ export default function SectionHeading({
   subtitle?: string;
 }) {
   return (
-    <Reveal className="mx-auto mb-14 flex max-w-2xl flex-col items-center gap-4 text-center">
-      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-l-primary-bright">
+    <Reveal className="mx-auto mb-10 flex max-w-2xl flex-col items-center gap-3 text-center sm:mb-14 sm:gap-4">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-l-primary-bright sm:text-xs sm:tracking-[0.2em]">
         {eyebrow}
       </span>
-      <h2 className="font-headline text-3xl font-bold tracking-tight text-l-heading sm:text-4xl">
+      <h2 className="font-headline text-[25px] font-bold leading-tight tracking-tight text-l-heading sm:text-3xl lg:text-4xl">
         {title}
       </h2>
-      {subtitle && <p className="text-base leading-relaxed text-l-body">{subtitle}</p>}
+      {subtitle && <p className="text-sm leading-relaxed text-l-body sm:text-base">{subtitle}</p>}
     </Reveal>
   );
 }
