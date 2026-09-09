@@ -6,7 +6,11 @@ import { orderLimiter } from "../middleware/rateLimit.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 import { listBrandsPublic, getBrandPublic } from "../services/brand.service.js";
-import { getProductBySlugPublic, listProductsPublic } from "../services/product.service.js";
+import {
+  getProductBySlugPublic,
+  listProductsPublic,
+  listSubscriptionProductsPublic,
+} from "../services/product.service.js";
 import { listPackagesPublic } from "../services/package.service.js";
 import { getDeliveredCodeForOrder, purchasePackageOrRedirect } from "../services/store.service.js";
 
@@ -42,6 +46,15 @@ storeRouter.get(
     await getBrandPublic(req.params.id!);
     const products = await listProductsPublic(req.params.id!);
     res.json({ items: products.map((p) => serializeDecimals(p, ["salePrice", "buyPrice", "minAmountForPremium"])) });
+  }),
+);
+
+storeRouter.get(
+  "/subscriptions",
+  asyncHandler(async (req, res) => {
+    const limit = typeof req.query.limit === "string" ? Number(req.query.limit) : undefined;
+    const products = await listSubscriptionProductsPublic(limit);
+    res.json({ items: products.map((p) => serializeDecimals(p, ["salePrice"])) });
   }),
 );
 

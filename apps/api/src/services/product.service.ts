@@ -13,6 +13,29 @@ export async function listProductsPublic(brandId: string) {
   });
 }
 
+/**
+ * Public — active SUBSCRIPTION products across every active brand, for the
+ * cross-sell strip on the New Order page. Ordered brand-then-level so the
+ * strip mirrors the Store grid's ordering. Returns just enough for a card
+ * plus the brand id/slug needed to deep-link back into the Store.
+ */
+export async function listSubscriptionProductsPublic(limit?: number) {
+  return prisma.product.findMany({
+    where: { isActive: true, productType: "SUBSCRIPTION", brand: { isActive: true } },
+    orderBy: [{ brand: { level: "asc" } }, { level: "asc" }],
+    take: limit && limit > 0 ? limit : undefined,
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      logo: true,
+      salePrice: true,
+      accessType: true,
+      brand: { select: { id: true, name: true } },
+    },
+  });
+}
+
 export async function getProductBySlugPublic(slug: string) {
   const product = await prisma.product.findFirst({
     where: { slug, isActive: true },

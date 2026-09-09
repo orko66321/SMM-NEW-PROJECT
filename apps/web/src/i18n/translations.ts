@@ -546,6 +546,9 @@ const en = {
     note3Label: "No Cancel",
     note3: "once started, this order cannot be canceled for a refund.",
     note4: "Please double-check the link and quantity before ordering — an order placed against the wrong link cannot be refunded.",
+    subscriptionsTitle: "Subscriptions from the Store",
+    subscriptionsSubtitle: "Buy premium subscriptions with the same wallet balance.",
+    subscriptionsSeeAll: "See all",
   },
 
   ordersHistory: {
@@ -1297,6 +1300,9 @@ const bn: Translations = {
     note3Label: "ক্যানসেল নেই",
     note3: "একবার শুরু হয়ে গেলে এই অর্ডার রিফান্ডের জন্য ক্যানসেল করা যাবে না।",
     note4: "অর্ডার করার আগে লিংক ও কোয়ান্টিটি ভালোভাবে চেক করে নিন। ভুল লিংকে অর্ডার করলে রিফান্ড দেওয়া সম্ভব নয়।",
+    subscriptionsTitle: "স্টোর থেকে সাবস্ক্রিপশন",
+    subscriptionsSubtitle: "একই ওয়ালেট ব্যালেন্স থেকে প্রিমিয়াম সাবস্ক্রিপশন কিনুন।",
+    subscriptionsSeeAll: "সব দেখুন",
   },
 
   ordersHistory: {

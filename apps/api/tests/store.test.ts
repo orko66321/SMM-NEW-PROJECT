@@ -250,3 +250,37 @@ describe("Store purchase — financial integrity & fulfillment routing", () => {
     expect(wallet.balance.toString()).toBe("90");
   });
 });
+
+describe("GET /api/store/subscriptions — New Order cross-sell strip", () => {
+  it("returns only active SUBSCRIPTION products from active brands, with brand id/name and a stringified price", async () => {
+    const brand = await createBrand({ name: "Premium Apps" });
+    const inactiveBrand = await createBrand({ name: "Hidden", isActive: false });
+
+    await createProduct(brand.id, { name: "Sub One", productType: "SUBSCRIPTION" });
+    await createProduct(brand.id, { name: "Top-up One", productType: "TOPUP" });
+    await createProduct(brand.id, { name: "Inactive Sub", productType: "SUBSCRIPTION", isActive: false });
+    await createProduct(inactiveBrand.id, { name: "Sub On Hidden Brand", productType: "SUBSCRIPTION" });
+
+    const res = await request(app).get("/api/store/subscriptions");
+
+    expect(res.status).toBe(200);
+    expect(res.body.items).toHaveLength(1);
+    const [item] = res.body.items;
+    expect(item.name).toBe("Sub One");
+    expect(item.brand).toEqual({ id: brand.id, name: "Premium Apps" });
+    expect(typeof item.salePrice).toBe("string");
+    expect(item).toHaveProperty("slug");
+  });
+
+  it("respects ?limit", async () => {
+    const brand = await createBrand();
+    await createProduct(brand.id, { name: "S1", productType: "SUBSCRIPTION" });
+    await createProduct(brand.id, { name: "S2", productType: "SUBSCRIPTION" });
+    await createProduct(brand.id, { name: "S3", productType: "SUBSCRIPTION" });
+
+    const res = await request(app).get("/api/store/subscriptions?limit=2");
+
+    expect(res.status).toBe(200);
+    expect(res.body.items).toHaveLength(2);
+  });
+});

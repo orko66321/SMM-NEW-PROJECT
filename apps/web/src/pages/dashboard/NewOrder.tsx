@@ -20,6 +20,7 @@ import { pickLang } from "../../i18n/pickLang.js";
 import { AuthPromptModal } from "../../components/auth/GuestGate.js";
 import HowToOrderLink from "../../components/HowToOrderLink.js";
 import RecentlyCompleted from "../../components/services/RecentlyCompleted.js";
+import SubscriptionStrip from "../../components/store/SubscriptionStrip.js";
 import { BilingualNote, Card, Icon, ServiceTag } from "../../components/ds/index.js";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
@@ -376,6 +377,10 @@ export default function NewOrder() {
           {noticeBody && <p className="whitespace-pre-line">{noticeBody}</p>}
         </Card>
       )}
+
+      {/* Cross-sell: subscription products from the Store, same wallet
+          balance. Renders nothing when the panel sells no subscriptions. */}
+      <SubscriptionStrip />
 
       <AuthPromptModal
         open={authPromptOpen}
