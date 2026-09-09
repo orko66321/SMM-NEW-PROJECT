@@ -468,6 +468,21 @@ export const updateSettingsSchema = z.object({
         .or(z.literal(""))
         .nullable()
         .optional(),
+    // Announcement / popup modal. Same "" ⇒ null / skip-undefined treatment;
+    // modalBannerImage is a base64 data URI (same ~3MB cap as the logos),
+    // modalText is plain text (no HTML), modalButtonLink is an absolute URL or
+    // an in-app "/path".
+    modalEnabled: z.boolean().optional(),
+    modalBannerImage: z.string().trim().max(3_000_000).or(z.literal("")).nullable().optional(),
+    modalText: z.string().trim().max(5000).or(z.literal("")).nullable().optional(),
+    modalButtonText: z.string().trim().max(60).or(z.literal("")).nullable().optional(),
+    modalButtonLink: z
+        .string()
+        .trim()
+        .max(2048)
+        .refine((v) => v === "" || v.startsWith("/") || /^https?:\/\//i.test(v), "Must be a URL or an in-app path starting with /")
+        .nullable()
+        .optional(),
     // Legacy — the floating support button is now managed via SupportChannel
     // (see supportChannelUpdateSchema below). Kept optional so an older admin
     // client still validates; the API no longer reads or writes these.
@@ -529,6 +544,12 @@ export const publicSettingsSchema = z.object({
     icon192: z.string().nullable(),
     icon512Alt: z.string().nullable(),
     siteColor: z.string().nullable(),
+    // Announcement / popup modal — consumed by components/AnnouncementModal.tsx.
+    modalEnabled: z.boolean(),
+    modalBannerImage: z.string().nullable(),
+    modalText: z.string().nullable(),
+    modalButtonText: z.string().nullable(),
+    modalButtonLink: z.string().nullable(),
     liveChatProvider: z.enum(LiveChatProviderValues),
     liveChatWidgetId: z.string().nullable(),
     howToOrderVideoUrl: z.string().nullable(),

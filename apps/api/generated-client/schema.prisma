@@ -1237,6 +1237,18 @@ model SiteSettings {
   icon512Alt  String?
   siteColor   String?
 
+  // Announcement / popup modal shown once per browser session on entrance —
+  // admin-editable from the Site Settings page ("Announcement Modal"
+  // section), rendered by components/AnnouncementModal.tsx. modalBannerImage
+  // is a base64 data URI stored in-row (same convention as mainLogo);
+  // modalText is plain text (line breaks preserved, no HTML); modalButtonLink
+  // is a URL or an in-app "/path". Null/disabled ⇒ nothing renders.
+  modalEnabled     Boolean @default(false)
+  modalBannerImage String?
+  modalText        String?
+  modalButtonText  String?
+  modalButtonLink  String?
+
   whatsappEnabled Boolean @default(false)
   whatsappNumber  String?
 
