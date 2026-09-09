@@ -88,10 +88,60 @@ const en = {
     closeMenu: "Close menu",
     currency: "Currency",
     language: "Language",
+    more: "More",
+    moreFootnote: "Browse the whole panel without an account — sign in only when you're ready to order.",
+    moreGroups: {
+      panel: "Explore the panel",
+      company: "Company & help",
+    },
+    moreItems: {
+      about: "About Us",
+      blog: "Blog & Announcements",
+      faq: "FAQ",
+      terms: "Terms of Service",
+      privacy: "Privacy Policy",
+      contact: "Contact & Support",
+      status: "System Status & Updates",
+      needsAccount: "Sign in",
+    },
   },
 
   footer: {
     rights: "© {{year}} All In One Service. All rights reserved.",
+    tagline: "A social media marketing reseller panel — instant automated delivery, local payments and a full REST API.",
+    getStarted: "Get started",
+  },
+
+  pages: {
+    policyUpdated: "Last updated: {{date}}",
+    about: {
+      title: "About Us",
+      subtitle: "The SMM reseller panel built for agencies, freelancers and high-volume resellers.",
+    },
+    faq: {
+      title: "Frequently Asked Questions",
+      subtitle: "Quick answers about accounts, payments, orders and the API. Still stuck? Contact support.",
+    },
+    terms: {
+      title: "Terms of Service",
+      subtitle: "The rules for using the panel, placing orders and funding your wallet.",
+    },
+    privacy: {
+      title: "Privacy Policy",
+      subtitle: "What we collect, why we collect it, and the choices you have.",
+    },
+    contact: {
+      title: "Contact & Support",
+      subtitle: "Reach the team before or after you sign up — no account required to get in touch.",
+      channelsHeading: "Chat with us",
+      channelsEmpty: "Live chat channels aren't set up yet. Use the in-panel help button or open a ticket after signing up.",
+      ticketHeading: "Open a support ticket",
+      ticketBody: "Create a free account to open a ticket and track replies in your dashboard. Automated support can also handle common refill and cancellation requests instantly.",
+      helpWidgetHeading: "In-panel help",
+      helpWidgetBody: "The floating help button in the bottom corner of every page opens live chat and the ticket form without leaving what you're doing.",
+      beforeHeading: "Before you reach out",
+      beforeBody: "Many common questions are already answered in our",
+    },
   },
 
   landing: {
@@ -776,10 +826,60 @@ const bn: Translations = {
     closeMenu: "মেনু বন্ধ করুন",
     currency: "মুদ্রা",
     language: "ভাষা",
+    more: "আরও",
+    moreFootnote: "অ্যাকাউন্ট ছাড়াই পুরো প্যানেল ঘুরে দেখুন — অর্ডার করার সময় শুধু সাইন ইন করলেই হবে।",
+    moreGroups: {
+      panel: "প্যানেল ঘুরে দেখুন",
+      company: "কোম্পানি ও সহায়তা",
+    },
+    moreItems: {
+      about: "আমাদের সম্পর্কে",
+      blog: "ব্লগ ও ঘোষণা",
+      faq: "সাধারণ জিজ্ঞাসা",
+      terms: "সেবার শর্তাবলি",
+      privacy: "প্রাইভেসি পলিসি",
+      contact: "যোগাযোগ ও সহায়তা",
+      status: "সিস্টেম স্ট্যাটাস ও আপডেট",
+      needsAccount: "সাইন ইন",
+    },
   },
 
   footer: {
     rights: "© {{year}} All In One Service। সর্বস্বত্ব সংরক্ষিত।",
+    tagline: "একটি সোশ্যাল মিডিয়া মার্কেটিং রিসেলার প্যানেল — ইনস্ট্যান্ট অটোমেটেড ডেলিভারি, লোকাল পেমেন্ট আর পূর্ণাঙ্গ REST API।",
+    getStarted: "শুরু করুন",
+  },
+
+  pages: {
+    policyUpdated: "সর্বশেষ হালনাগাদ: {{date}}",
+    about: {
+      title: "আমাদের সম্পর্কে",
+      subtitle: "এজেন্সি, ফ্রিল্যান্সার আর হাই-ভলিউম রিসেলারদের জন্য তৈরি এসএমএম রিসেলার প্যানেল।",
+    },
+    faq: {
+      title: "সাধারণ জিজ্ঞাসা",
+      subtitle: "অ্যাকাউন্ট, পেমেন্ট, অর্ডার আর এপিআই নিয়ে দ্রুত উত্তর। উত্তর না পেলে সাপোর্টে যোগাযোগ করুন।",
+    },
+    terms: {
+      title: "সেবার শর্তাবলি",
+      subtitle: "প্যানেল ব্যবহার, অর্ডার করা আর ওয়ালেটে ফান্ড যোগ করার নিয়মাবলি।",
+    },
+    privacy: {
+      title: "প্রাইভেসি পলিসি",
+      subtitle: "আমরা কী তথ্য নিই, কেন নিই আর আপনার কী কী নিয়ন্ত্রণ আছে।",
+    },
+    contact: {
+      title: "যোগাযোগ ও সহায়তা",
+      subtitle: "সাইন আপের আগে বা পরে টিমের সাথে যোগাযোগ করুন — যোগাযোগের জন্য অ্যাকাউন্ট লাগে না।",
+      channelsHeading: "আমাদের সাথে চ্যাট করুন",
+      channelsEmpty: "লাইভ চ্যাট চ্যানেল এখনো সেট করা হয়নি। প্যানেলের হেল্প বাটন ব্যবহার করুন অথবা সাইন আপের পর টিকেট খুলুন।",
+      ticketHeading: "সাপোর্ট টিকেট খুলুন",
+      ticketBody: "টিকেট খুলে ড্যাশবোর্ডে রিপ্লাই ট্র্যাক করতে একটি ফ্রি অ্যাকাউন্ট তৈরি করুন। সাধারণ রিফিল ও ক্যানসেল অনুরোধ অটোমেটেড সাপোর্টও সাথে সাথে সামলাতে পারে।",
+      helpWidgetHeading: "প্যানেলের ভেতরে সহায়তা",
+      helpWidgetBody: "প্রতিটি পেজের কোণায় থাকা ভাসমান হেল্প বাটনে ক্লিক করলে যা করছেন তা রেখেই লাইভ চ্যাট আর টিকেট ফর্ম খোলে।",
+      beforeHeading: "যোগাযোগের আগে",
+      beforeBody: "অনেক সাধারণ প্রশ্নের উত্তর আগেই দেওয়া আছে আমাদের",
+    },
   },
 
   landing: {
