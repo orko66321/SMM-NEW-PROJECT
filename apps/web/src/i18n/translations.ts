@@ -518,6 +518,8 @@ const en = {
 
   newOrder: {
     title: "New Order",
+    subtitle: "Order social media services — filled in seconds, charged in real time.",
+    orderDetails: "Order Details",
     categoryLabel: "Category",
     allCategories: "All categories",
     platformFilter: "{{platform}} only",
@@ -1272,6 +1274,8 @@ const bn: Translations = {
 
   newOrder: {
     title: "নতুন অর্ডার",
+    subtitle: "সোশ্যাল মিডিয়া সার্ভিস অর্ডার করুন — কয়েক সেকেন্ডে, চার্জ রিয়েল-টাইমে।",
+    orderDetails: "অর্ডারের তথ্য",
     categoryLabel: "ক্যাটাগরি",
     allCategories: "সব ক্যাটাগরি",
     platformFilter: "শুধু {{platform}}",
