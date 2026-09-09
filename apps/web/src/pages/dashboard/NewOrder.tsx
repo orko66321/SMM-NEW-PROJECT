@@ -8,6 +8,7 @@ import {
   getPublicServices,
   getPublicSettings,
   getPublicSiteNotice,
+  getWallet,
   initiateGatewayDeposit,
   placeOrder,
 } from "../../api/resources.js";
@@ -15,13 +16,14 @@ import { usePlatformFilter } from "./usePlatformFilter.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
+import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import { AuthPromptModal } from "../../components/auth/GuestGate.js";
 import HowToOrderLink from "../../components/HowToOrderLink.js";
 import RecentlyCompleted from "../../components/services/RecentlyCompleted.js";
 import SubscriptionStrip from "../../components/store/SubscriptionStrip.js";
-import { BilingualNote, Card, Icon, ServiceTag } from "../../components/ds/index.js";
+import { BilingualNote, Card, Icon, ServiceTag, WalletBalance } from "../../components/ds/index.js";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
 // throws when the wallet can't cover the charge (see AppError's `details`).
@@ -104,6 +106,7 @@ export default function NewOrder() {
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const { t, lang } = useLanguage();
+  const { formatCurrency } = useCurrency();
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
   const [draft] = useState(readDraft);
   useEffect(() => {
@@ -115,6 +118,10 @@ export default function NewOrder() {
   }, []);
   const { data: siteNotice } = useQuery({ queryKey: ["public-site-notice"], queryFn: getPublicSiteNotice, staleTime: 60_000 });
   const { data: publicSettings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
+  // Wallet balance widget at the top of the form — authed users only (the
+  // guest flow never shows a balance). Same ["wallet"] key the rest of the
+  // dashboard uses, so it's usually already warm on navigation.
+  const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet, enabled: !!user });
 
   // Public (unauthenticated) catalog endpoints — same underlying data as
   // the authed /services ones, so browsing/pricing this form works
@@ -232,9 +239,33 @@ export default function NewOrder() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-      <form onSubmit={onSubmit} className="card space-y-4 lg:col-span-2">
-        <h1 className="text-lg font-bold sm:text-xl">{t("newOrder.title")}</h1>
+    <div className="space-y-6">
+      {/* Page header */}
+      <div>
+        <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-on-dark">
+          <span className="h-px w-5 bg-gradient-to-r from-accent-on-dark to-transparent" />
+          {t("newOrder.title")}
+        </p>
+        <h1 className="mt-2 font-display text-2xl font-bold text-on-surface sm:text-3xl">{t("newOrder.title")}</h1>
+        <p className="mt-1.5 text-sm text-on-surface-variant">{t("newOrder.subtitle")}</p>
+      </div>
+
+      {/* Wallet balance — authed users only */}
+      {user && (
+        <WalletBalance
+          balance={formatCurrency(wallet?.balance ?? 0)}
+          currency=""
+          onTopUp={() => navigate("/dashboard/wallet")}
+        />
+      )}
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <form onSubmit={onSubmit} className="lg:col-span-2">
+        <Card className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-outline-variant pb-3 font-display text-base font-semibold text-on-surface">
+          <Icon name="cart" size={18} className="text-accent-on-dark" />
+          {t("newOrder.orderDetails")}
+        </div>
         {error && <p className="rounded-control border border-error/30 bg-error/15 px-3 py-2 text-sm text-error break-words">{error}</p>}
 
         <BilingualNote
@@ -349,38 +380,86 @@ export default function NewOrder() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 rounded-control border border-outline-variant bg-surface-container-high px-4 py-3">
-          <span className="label mb-0">{t("newOrder.estimatedCharge")}</span>
-          <span className="font-mono text-lg font-semibold text-success">${estimatedCharge}</span>
+        {/* Total charge — the one emphasised figure on the form. Violet
+            gradient hairline frame + display-weight number. */}
+        <div className="rounded-card bg-gradient-to-r from-primary via-primary-hover to-primary p-px shadow-ambient">
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-[15px] bg-surface-card px-5 py-4">
+            <span className="label mb-0">{t("newOrder.estimatedCharge")}</span>
+            <span className="font-display text-2xl font-bold tracking-tight text-on-surface">
+              {formatCurrency(estimatedCharge)}
+            </span>
+          </div>
         </div>
 
-        <button type="submit" className="btn-primary w-full" disabled={submitting || !selectedService}>
+        <button
+          type="submit"
+          className="btn-primary min-h-[52px] w-full text-base"
+          disabled={submitting || !selectedService}
+        >
+          <Icon name="arrow-right" size={18} />
           {submitting ? t("newOrder.submitting") : t("newOrder.submit")}
         </button>
 
         {/* Optional admin-configured tutorial link — hides itself when unset. */}
         <HowToOrderLink />
+        </Card>
       </form>
 
-      {(noticeTitle || noticeBody) && (
+      <div className="space-y-6">
+        {/* Rules & guidance — always shown, from the shared newOrder copy. */}
         <Card
-          className="h-fit break-words text-sm text-on-surface-variant"
           header={
-            noticeTitle ? (
-              <>
-                <Icon name="info" size={18} className="text-accent-on-dark" />
-                {noticeTitle}
-              </>
-            ) : undefined
+            <>
+              <Icon name="info" size={18} className="text-accent-on-dark" />
+              {t("newOrder.important")}
+            </>
           }
         >
-          {noticeBody && <p className="whitespace-pre-line">{noticeBody}</p>}
+          <ul className="space-y-3 text-sm text-on-surface-variant">
+            <li className="flex gap-2.5">
+              <Icon name="warning" size={16} className="mt-0.5 shrink-0 text-warning" />
+              <span>{t("newOrder.note4")}</span>
+            </li>
+            <li className="flex gap-2.5">
+              <Icon name="info" size={16} className="mt-0.5 shrink-0 text-accent-on-dark" />
+              <span>{t("newOrder.note1")}</span>
+            </li>
+            <li className="flex gap-2.5">
+              <Icon name="refresh" size={16} className="mt-0.5 shrink-0 text-success" />
+              <span>
+                <b className="text-on-surface">{t("newOrder.note2Label")}</b> — {t("newOrder.note2")}
+              </span>
+            </li>
+            <li className="flex gap-2.5">
+              <Icon name="close" size={16} className="mt-0.5 shrink-0 text-error" />
+              <span>
+                <b className="text-on-surface">{t("newOrder.note3Label")}</b> — {t("newOrder.note3")}
+              </span>
+            </li>
+          </ul>
         </Card>
-      )}
+
+        {(noticeTitle || noticeBody) && (
+          <Card
+            className="break-words text-sm text-on-surface-variant"
+            header={
+              noticeTitle ? (
+                <>
+                  <Icon name="campaign" size={18} className="text-accent-on-dark" />
+                  {noticeTitle}
+                </>
+              ) : undefined
+            }
+          >
+            {noticeBody && <p className="whitespace-pre-line">{noticeBody}</p>}
+          </Card>
+        )}
+      </div>
 
       {/* Cross-sell: subscription products from the Store, same wallet
           balance. Renders nothing when the panel sells no subscriptions. */}
       <SubscriptionStrip />
+      </div>
 
       <AuthPromptModal
         open={authPromptOpen}
