@@ -1,0 +1,190 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   New Order page — "violet-glass" redesign.
+   Scoped to pages/dashboard/NewOrder.tsx + components/store/SubscriptionStrip.tsx
+   (every class name is `no-` prefixed).
+
+   The customer panel's default ground is deep navy; this one page opts into
+   the darker violet "command center" ground (same colour family as the
+   landing `l-*` tokens) — a deliberate, product-owner-approved exception.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Full-bleed violet ground. Painted by a viewport-fixed layer *behind* the
+   page content (its own stacking context via `isolation`, so `z-index:-1`
+   stays scoped and never sinks below the app's navy body background). No
+   negative horizontal margins — those used to nudge a few px past the
+   mobile viewport — only the top/bottom gutters are cancelled. */
+.no-page {
+  position: relative;
+  isolation: isolate;
+  margin-top: -1rem;
+  margin-bottom: -7rem;
+  padding-top: 1rem;
+  padding-bottom: 7rem;
+  min-height: calc(100vh - 4rem);
+  min-height: calc(100dvh - 4rem);
+  color: #c7c4d7;
+}
+@media (min-width: 640px) {
+  .no-page {
+    margin-top: -1.5rem;
+    padding-top: 1.5rem;
+  }
+}
+.no-page::before {
+  content: "";
+  position: fixed;
+  inset: 4rem 0 0 0; /* below the sticky 4rem header */
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(46% 40% at 12% 0%, rgba(124, 58, 237, 0.28), transparent 62%),
+    radial-gradient(40% 34% at 92% 4%, rgba(34, 211, 238, 0.13), transparent 60%),
+    radial-gradient(48% 46% at 86% 96%, rgba(192, 38, 211, 0.12), transparent 62%),
+    #12121d;
+}
+@media (min-width: 768px) {
+  /* keep the fill clear of the 16rem desktop sidebar */
+  .no-page::before {
+    left: 16rem;
+  }
+}
+
+/* Frosted surface — used on every resting card on this page. */
+.no-glass {
+  background: rgba(27, 27, 37, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Native <select> / <input> — dark fill, neon violet focus. */
+.no-page .no-field {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 8px;
+  border: 1px solid #3a3a47;
+  background-color: #292934;
+  padding: 13px 15px;
+  color: #f4f2fb;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition:
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.no-page select.no-field {
+  padding-right: 40px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235de6ff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+}
+.no-page .no-field::placeholder {
+  color: #635f70;
+}
+.no-page .no-field:hover:not(:disabled) {
+  border-color: #57566a;
+}
+.no-page .no-field:focus {
+  border-color: #8b5cf6;
+  background-color: #34343f;
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.28),
+    0 0 22px rgba(124, 58, 237, 0.2);
+}
+.no-page .no-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.no-page select.no-field option {
+  background: #1f1f29;
+  color: #f4f2fb;
+}
+/* Quantity field has its own − / + steppers — hide the native spinners. */
+.no-page input.no-field[type="number"] {
+  -moz-appearance: textfield;
+}
+.no-page input.no-field[type="number"]::-webkit-outer-spin-button,
+.no-page input.no-field[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Quantity stepper buttons. */
+.no-page .no-step {
+  width: 46px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid #3a3a47;
+  background: #292934;
+  color: #f4f2fb;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.no-page .no-step:hover:not(:disabled) {
+  border-color: #5de6ff;
+  color: #5de6ff;
+}
+.no-page .no-step:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Total-charge frame — animated violet→cyan→magenta hairline. */
+.no-total {
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(120deg, #d2bbff, #5de6ff, #c026d3, #d2bbff);
+  background-size: 300% 300%;
+  animation: no-border-flow 6s linear infinite;
+}
+@keyframes no-border-flow {
+  to {
+    background-position: 300% 0;
+  }
+}
+
+/* Primary CTA — glowing gradient pill. */
+.no-cta {
+  background: linear-gradient(120deg, #8b5cf6, #7c3aed 55%, #c026d3);
+  box-shadow:
+    0 0 24px rgba(124, 58, 237, 0.45),
+    0 12px 30px -12px rgba(192, 38, 211, 0.5);
+  transition:
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.no-cta:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.07);
+  box-shadow:
+    0 0 34px rgba(124, 58, 237, 0.7),
+    0 16px 36px -12px rgba(192, 38, 211, 0.65);
+}
+.no-cta:active:not(:disabled) {
+  transform: translateY(0) scale(0.99);
+}
+.no-cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  filter: grayscale(0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .no-total {
+    animation: none;
+  }
+  .no-cta,
+  .no-cta:hover:not(:disabled) {
+    transform: none;
+  }
+}
