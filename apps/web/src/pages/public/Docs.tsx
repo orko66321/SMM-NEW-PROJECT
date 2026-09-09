@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { PostCategoryValues, type PostCategory } from "@smm/shared";
 import { getPublicPosts } from "../../api/resources.js";
@@ -25,9 +25,27 @@ const CATEGORY_TONE: Record<PostCategory, BadgeTone> = {
   UPDATE: "success",
 };
 
+const TAB_VALUES = ["all", ...PostCategoryValues] as const;
+type Tab = (typeof TAB_VALUES)[number];
+
+const isTab = (v: string | null): v is Tab => v !== null && (TAB_VALUES as readonly string[]).includes(v);
+
 export default function Docs() {
   const { t, lang } = useLanguage();
-  const [tab, setTab] = useState<"all" | PostCategory>("all");
+  // `?tab=BLOG` / `?tab=UPDATE` deep-links (used by the navbar "More" menu:
+  // Blog & Announcements → BLOG, System Status & Updates → UPDATE).
+  const [params, setParams] = useSearchParams();
+  const [tab, setTabState] = useState<Tab>(() => (isTab(params.get("tab")) ? (params.get("tab") as Tab) : "all"));
+
+  useEffect(() => {
+    const p = params.get("tab");
+    setTabState(isTab(p) ? (p as Tab) : "all");
+  }, [params]);
+
+  const setTab = (next: Tab) => {
+    setTabState(next);
+    setParams(next === "all" ? {} : { tab: next }, { replace: true });
+  };
 
   const { data: posts, isLoading } = useQuery<PostCard[]>({
     queryKey: ["public-posts"],

@@ -15,6 +15,11 @@ import PublicServices from "./pages/public/PublicServices.js";
 import ApiDocs from "./pages/public/ApiDocs.js";
 import Docs from "./pages/public/Docs.js";
 import DocDetail from "./pages/public/DocDetail.js";
+import About from "./pages/public/About.js";
+import Faq from "./pages/public/Faq.js";
+import Terms from "./pages/public/Terms.js";
+import Privacy from "./pages/public/Privacy.js";
+import Contact from "./pages/public/Contact.js";
 
 import Login from "./pages/auth/Login.js";
 import Register from "./pages/auth/Register.js";
@@ -73,6 +78,11 @@ export default function App() {
           <Route path="/api-docs" element={<ApiDocs />} />
           <Route path="/docs" element={<Docs />} />
           <Route path="/docs/:slug" element={<DocDetail />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/contact" element={<Contact />} />
         </Route>
 
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
