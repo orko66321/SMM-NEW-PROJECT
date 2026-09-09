@@ -271,6 +271,20 @@ export const getAdminDailyStats = (days = 30) =>
 export const getStoreBrands = (limit?: number) => apiClient.get("/store/brands", { params: { limit } }).then((r) => r.data.items);
 export const getStoreBrandProducts = (brandId: string) => apiClient.get(`/store/brands/${brandId}/products`).then((r) => r.data.items);
 export const getStoreProductBySlug = (slug: string) => apiClient.get(`/store/products/${slug}`).then((r) => r.data.product);
+// Cross-sell strip on the New Order page — active SUBSCRIPTION products only.
+export interface StoreSubscriptionItem {
+  id: string;
+  name: string;
+  slug: string;
+  logo: string | null;
+  salePrice: string;
+  accessType: "ALL" | "VIP" | "RESELLER";
+  brand: { id: string; name: string };
+}
+export const getStoreSubscriptions = (limit?: number) =>
+  apiClient
+    .get("/store/subscriptions", { params: { limit } })
+    .then((r) => r.data.items as StoreSubscriptionItem[]);
 export const getStoreProductPackages = (productId: string) => apiClient.get(`/store/products/${productId}/packages`).then((r) => r.data.items);
 export const purchaseStorePackage = (input: PurchasePackageInput, idempotencyKey: string) =>
   apiClient
