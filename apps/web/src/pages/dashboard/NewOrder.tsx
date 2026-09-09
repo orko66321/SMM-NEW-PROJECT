@@ -530,7 +530,7 @@ export default function NewOrder() {
             <div className="no-glass rounded-2xl border border-[#2b2b36] p-5">
               <div className="mb-4 flex items-center gap-2 border-b border-[#2b2b36] pb-3 font-headline text-[14px] font-semibold text-[#f4f2fb]">
                 <span className="h-1.5 w-1.5 rounded-[2px] bg-[#5de6ff] shadow-[0_0_8px_#5de6ff]" />
-                {t("newOrder.important")}
+                {t("newOrder.rulesTitle")}
               </div>
               <ul className="space-y-3 text-[13px] leading-relaxed text-[#c7c4d7]">
                 <li className="flex gap-2.5">
