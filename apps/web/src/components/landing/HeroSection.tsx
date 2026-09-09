@@ -43,8 +43,10 @@ export default function HeroSection({
       />
 
       <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2 lg:gap-10">
-        {/* Left — marketing copy + search */}
-        <div className="text-center lg:text-left">
+        {/* Left — marketing copy + search. min-w-0: a grid item won't shrink
+            below its content's intrinsic width by default, which pushed this
+            column ~19px past its track (clipped, no right margin) on phones. */}
+        <div className="min-w-0 text-center lg:text-left">
           <span
             className="ll-rise inline-flex w-fit items-center gap-2 rounded-full border border-l-border bg-l-surface px-4 py-1.5"
             style={rise(0)}
@@ -129,10 +131,11 @@ export default function HeroSection({
         </div>
 
         {/* Right — embedded Login / Sign Up (existing conversion feature) */}
-        <div className="ll-rise mx-auto w-full max-w-md lg:mx-0 lg:ml-auto" style={rise(300)}>
+        <div className="ll-rise mx-auto w-full min-w-0 max-w-md lg:mx-0 lg:ml-auto" style={rise(300)}>
           <div className="relative">
+            {/* Glow inset (not -inset) so it can never add horizontal overflow. */}
             <div
-              className="pointer-events-none absolute -inset-4 -z-10 rounded-[2rem] bg-l-primary/10 blur-2xl"
+              className="pointer-events-none absolute inset-4 -z-10 rounded-full bg-l-primary/15 blur-3xl"
               aria-hidden
             />
             <AuthPanel />
