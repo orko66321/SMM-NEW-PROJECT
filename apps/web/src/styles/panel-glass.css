@@ -1,11 +1,14 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   New Order page — "violet-glass" redesign.
-   Scoped to pages/dashboard/NewOrder.tsx + components/store/SubscriptionStrip.tsx
-   (every class name is `no-` prefixed).
+   Panel "violet-glass" theme — the command-center look.
+   Opted into per page by putting `no-page` on the route's root element
+   (NewOrder, Overview). Every class here is `no-` prefixed; the `no-page`
+   scope also re-skins the DS `.card` / `.input-field` primitives so child
+   components (StatCard, PlatformShortcuts, LeaderboardSection, …) adopt the
+   theme without being touched.
 
-   The customer panel's default ground is deep navy; this one page opts into
-   the darker violet "command center" ground (same colour family as the
-   landing `l-*` tokens) — a deliberate, product-owner-approved exception.
+   The rest of the customer panel keeps its default deep-navy ground — this
+   darker violet ground (same colour family as the landing `l-*` tokens) is
+   a deliberate, product-owner-approved exception for these pages.
    ───────────────────────────────────────────────────────────────────────── */
 
 /* Full-bleed violet ground. Painted by a viewport-fixed layer *behind* the
@@ -54,6 +57,25 @@
   background: rgba(27, 27, 37, 0.72);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+}
+
+/* Re-skin the DS primitives when they render inside a glass page, so shared
+   components (StatCard, PlatformShortcuts, LeaderboardSection, EmptyState…)
+   match without edits. */
+.no-page .card {
+  background: rgba(27, 27, 37, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: #2b2b36;
+}
+.no-page .input-field {
+  background-color: #292934;
+  border-color: #3a3a47;
+  color: #f4f2fb;
+}
+.no-page .input-field:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.28);
 }
 
 /* Native <select> / <input> — dark fill, neon violet focus. */
