@@ -19,6 +19,7 @@ import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { AuthPromptModal } from "../../components/auth/GuestGate.js";
 import { EmptyState } from "../../components/ds/index.js";
+import { GlassPage, PageHeader } from "../../components/dashboard/GlassPage.js";
 
 interface BrandItem {
   id: string;
@@ -384,27 +385,25 @@ export default function Store() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center gap-2 text-sm">
-        <h1 className="text-xl font-bold">{t("store.title")}</h1>
-        {(selectedBrand || selectedProduct) && (
-          <nav className="flex flex-wrap items-center gap-1 text-xs text-on-surface-variant">
-            <button type="button" className="hover:text-primary hover:underline" onClick={reset}>{t("store.title")}</button>
-            {selectedBrand && (
-              <>
-                <span>/</span>
-                <button type="button" className="hover:text-primary hover:underline" onClick={backToBrand}>{selectedBrand.name}</button>
-              </>
-            )}
-            {selectedProduct && (
-              <>
-                <span>/</span>
-                <span className="text-on-surface">{selectedProduct.name}</span>
-              </>
-            )}
-          </nav>
-        )}
-      </div>
+    <GlassPage>
+      <PageHeader kicker={t("dashboardLayout.nav.store")} title={t("store.title")} />
+      {(selectedBrand || selectedProduct) && (
+        <nav className="-mt-3 flex flex-wrap items-center gap-1.5 text-xs text-[#8b8598]">
+          <button type="button" className="transition hover:text-[#d2bbff]" onClick={reset}>{t("store.title")}</button>
+          {selectedBrand && (
+            <>
+              <span>/</span>
+              <button type="button" className="transition hover:text-[#d2bbff]" onClick={backToBrand}>{selectedBrand.name}</button>
+            </>
+          )}
+          {selectedProduct && (
+            <>
+              <span>/</span>
+              <span className="text-[#f4f2fb]">{selectedProduct.name}</span>
+            </>
+          )}
+        </nav>
+      )}
 
       {!selectedBrand && (
         <>
@@ -476,6 +475,6 @@ export default function Store() {
           </div>
         </div>
       )}
-    </div>
+    </GlassPage>
   );
 }

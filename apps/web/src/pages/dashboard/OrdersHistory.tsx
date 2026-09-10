@@ -9,6 +9,7 @@ import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 import { Badge, EmptyState, Icon, Pagination, StatusBadge, Tabs } from "../../components/ds/index.js";
+import { GlassPage, PageHeader } from "../../components/dashboard/GlassPage.js";
 
 const statusTabs = ["ALL", ...OrderStatusValues] as const;
 
@@ -209,13 +210,20 @@ export default function OrdersHistory() {
     return tab === "ALL" ? t("ordersHistory.allTab") : t(`common.orderStatus.${tab}`);
   }
 
+  const header = <PageHeader kicker={t("dashboardLayout.nav.ordersHistory")} title={t("ordersHistory.title")} />;
+
   if (!user) {
-    return <GuestLockedCard title={t("guestGate.pageTitle")} body={t("guestGate.ordersBody")} />;
+    return (
+      <GlassPage>
+        {header}
+        <GuestLockedCard title={t("guestGate.pageTitle")} body={t("guestGate.ordersBody")} />
+      </GlassPage>
+    );
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-xl font-bold">{t("ordersHistory.title")}</h1>
+    <GlassPage>
+      {header}
 
       <Tabs
         activeId={status}
@@ -321,6 +329,6 @@ export default function OrdersHistory() {
           }}
         />
       )}
-    </div>
+    </GlassPage>
   );
 }

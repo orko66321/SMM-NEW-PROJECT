@@ -7,6 +7,7 @@ import RecentlyCompleted from "../../components/services/RecentlyCompleted.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import { Badge, EmptyState, Icon, ServiceTag, Skeleton } from "../../components/ds/index.js";
+import { GlassPage, PageHeader } from "../../components/dashboard/GlassPage.js";
 
 interface ServiceRow {
   id: string;
@@ -92,11 +93,12 @@ export default function Services() {
   const items: ServiceRow[] = data?.items ?? [];
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-xl font-bold sm:text-2xl">{t("servicesPage.title")}</h1>
-        <p className="mt-1 text-sm text-on-surface-variant">{t("servicesPage.subtitle")}</p>
-      </div>
+    <GlassPage>
+      <PageHeader
+        kicker={t("dashboardLayout.nav.services")}
+        title={t("servicesPage.title")}
+        subtitle={t("servicesPage.subtitle")}
+      />
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1 sm:max-w-xs">
@@ -235,6 +237,6 @@ export default function Services() {
           }
         />
       )}
-    </div>
+    </GlassPage>
   );
 }

@@ -9,7 +9,8 @@ import { useAuth } from "../../context/AuthContext.js";
 import { useCurrency } from "../../context/CurrencyContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
-import { BilingualNote, EmptyState, Icon, StatusBadge, WalletBalance } from "../../components/ds/index.js";
+import { BilingualNote, EmptyState, Icon, StatusBadge, Tabs, WalletBalance } from "../../components/ds/index.js";
+import { GlassPage, PageHeader } from "../../components/dashboard/GlassPage.js";
 
 // A checkout-initiated gateway deposit (Store "Buy now" / New Order) has no
 // admin-titled PaymentMethod behind it, so it falls back to storing the raw
@@ -80,6 +81,9 @@ export default function Wallet() {
   const orderIntentId = searchParams.get("orderIntentId") ?? undefined;
   const requiredAmount = searchParams.get("required");
 
+  // Add Funds form vs. Fund History — same split as the Tickets page.
+  // Arriving from an insufficient-balance redirect always lands on the form.
+  const [tab, setTab] = useState<"add" | "history">("add");
   const [selectedId, setSelectedId] = useState<string>("");
   const [amount, setAmount] = useState<number | "">(requiredAmount ? Number(requiredAmount) : "");
   const [trxId, setTrxId] = useState("");
@@ -211,26 +215,19 @@ export default function Wallet() {
     }
   }
 
+  const header = <PageHeader kicker={t("dashboardLayout.nav.addFunds")} title={t("wallet.addFunds")} />;
+
   if (!user) {
-    return <GuestLockedCard title={t("guestGate.pageTitle")} body={t("guestGate.walletBody")} />;
+    return (
+      <GlassPage>
+        {header}
+        <GuestLockedCard title={t("guestGate.pageTitle")} body={t("guestGate.walletBody")} />
+      </GlassPage>
+    );
   }
 
-  return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-      <div className="space-y-6 lg:col-span-2">
-        <WalletBalance
-          balance={formatCurrency(wallet?.balance ?? 0)}
-          currency=""
-          secondary={
-            bdtRate && wallet?.balance != null
-              ? `≈ ৳${(Number(wallet.balance) * bdtRate).toFixed(0)} · 1 USD = ${bdtRate}৳`
-              : undefined
-          }
-        />
-
-        <div>
-          <h2 className="mb-3 text-sm font-semibold">{t("wallet.fundHistory")}</h2>
-
+  const fundHistory = (
+    <div>
           {/* Mobile: stacked cards */}
           <div className="space-y-3 md:hidden">
             {deposits?.items.length === 0 && (
@@ -287,11 +284,11 @@ export default function Wallet() {
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
+    </div>
+  );
 
-      <div className="card h-fit space-y-4">
-        <h2 className="text-lg font-bold">{t("wallet.addFunds")}</h2>
+  const addFundsForm = (
+    <div className="card space-y-4">
         {user && !user.hasDeposited && settings?.firstDepositBonusEnabled && Number(settings.firstDepositBonusPercent) > 0 && (
           <div className="rounded-control border border-success/30 bg-success/10 px-3 py-2.5 text-sm">
             <p className="font-semibold text-success">🎁 {t("wallet.firstDepositOfferTitle")}</p>
@@ -441,7 +438,33 @@ export default function Wallet() {
             )}
           </>
         )}
-      </div>
     </div>
+  );
+
+  return (
+    <GlassPage>
+      {header}
+
+      <WalletBalance
+        balance={formatCurrency(wallet?.balance ?? 0)}
+        currency=""
+        secondary={
+          bdtRate && wallet?.balance != null
+            ? `≈ ৳${(Number(wallet.balance) * bdtRate).toFixed(0)} · 1 USD = ${bdtRate}৳`
+            : undefined
+        }
+      />
+
+      <Tabs
+        items={[
+          { id: "add", label: t("wallet.addFunds") },
+          { id: "history", label: t("wallet.fundHistory"), count: deposits?.total },
+        ]}
+        activeId={tab}
+        onChange={(id) => setTab(id as "add" | "history")}
+      />
+
+      {tab === "add" ? <div className="max-w-xl">{addFundsForm}</div> : fundHistory}
+    </GlassPage>
   );
 }

@@ -6,6 +6,7 @@ import { getPublicPosts } from "../../api/resources.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { pickLang } from "../../i18n/pickLang.js";
 import { Badge, type BadgeTone, EmptyState, Icon, PlatformChip, PlatformChipRow } from "../../components/ds/index.js";
+import "../../styles/panel-glass.css";
 
 interface PostCard {
   slug: string;
@@ -55,9 +56,10 @@ export default function Docs() {
   const filtered = (posts ?? []).filter((p) => tab === "all" || p.category === tab);
 
   return (
-    <div className="mx-auto max-w-container px-4 py-10 sm:px-6">
-      <h1 className="font-display text-3xl font-bold text-on-surface">{t("docs.title")}</h1>
-      <p className="mt-2 text-sm text-on-surface-variant">{t("docs.subtitle")}</p>
+    <div className="no-page-pub" lang={lang}>
+      <div className="mx-auto max-w-container px-4 py-10 sm:px-6">
+      <h1 className="font-headline text-2xl font-bold text-[#f4f2fb] sm:text-3xl">{t("docs.title")}</h1>
+      <p className="mt-2 text-sm text-[#c7c4d7]">{t("docs.subtitle")}</p>
 
       <PlatformChipRow className="mt-6 flex-wrap">
         {(["all", ...PostCategoryValues] as const).map((key) => (
@@ -104,6 +106,7 @@ export default function Docs() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
