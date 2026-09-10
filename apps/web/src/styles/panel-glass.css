@@ -11,11 +11,12 @@
    a deliberate, product-owner-approved exception for these pages.
    ───────────────────────────────────────────────────────────────────────── */
 
-/* Full-bleed violet ground. Painted by a viewport-fixed layer *behind* the
-   page content (its own stacking context via `isolation`, so `z-index:-1`
-   stays scoped and never sinks below the app's navy body background). No
-   negative horizontal margins — those used to nudge a few px past the
-   mobile viewport — only the top/bottom gutters are cancelled. */
+/* The violet ground + ambient glow. `.no-page` is the DashboardLayout
+   variant (cancels <main>'s `p-4 pb-28`, keeps the fill clear of the 16rem
+   sidebar via a viewport-fixed layer). `.no-page-pub` is the PublicLayout
+   variant (no sidebar, a real footer below — so the layer is absolute and
+   scoped to the page box, not fixed). Both stack the glow behind the
+   content via `isolation` + `z-index:-1`. */
 .no-page {
   position: relative;
   isolation: isolate;
@@ -46,10 +47,28 @@
     #12121d;
 }
 @media (min-width: 768px) {
-  /* keep the fill clear of the 16rem desktop sidebar */
   .no-page::before {
     left: 16rem;
   }
+}
+
+.no-page-pub {
+  position: relative;
+  isolation: isolate;
+  min-height: calc(100vh - 4rem);
+  min-height: calc(100dvh - 4rem);
+  color: #c7c4d7;
+}
+.no-page-pub::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(46% 30% at 12% 0%, rgba(124, 58, 237, 0.26), transparent 62%),
+    radial-gradient(40% 24% at 92% 2%, rgba(34, 211, 238, 0.12), transparent 60%),
+    #12121d;
 }
 
 /* Frosted surface — used on every resting card on this page. */
@@ -59,27 +78,55 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Re-skin the DS primitives when they render inside a glass page, so shared
-   components (StatCard, PlatformShortcuts, LeaderboardSection, EmptyState…)
-   match without edits. */
-.no-page .card {
+/* Re-skin the DS primitives when they render inside a glass page, so whole
+   pages (Store, Leaderboard, Orders History, Services, Add Funds, Tickets)
+   and shared components (StatCard, PlatformShortcuts, LeaderboardSection,
+   EmptyState, DataTable…) pick up the theme without being rewritten. */
+:is(.no-page, .no-page-pub) .card,
+:is(.no-page, .no-page-pub) .bg-surface-card {
   background: rgba(27, 27, 37, 0.72);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-color: #2b2b36;
 }
-.no-page .input-field {
+:is(.no-page, .no-page-pub) .bg-surface-container,
+:is(.no-page, .no-page-pub) .bg-surface-container-high,
+:is(.no-page, .no-page-pub) .bg-surface-container-highest {
+  background-color: #1f1f29;
+}
+:is(.no-page, .no-page-pub) .bg-surface-low,
+:is(.no-page, .no-page-pub) .bg-surface-lowest {
+  background-color: #1b1b25;
+}
+:is(.no-page, .no-page-pub) .border-outline-variant {
+  border-color: #2b2b36;
+}
+:is(.no-page, .no-page-pub) .divide-outline-variant > :not([hidden]) ~ :not([hidden]) {
+  border-color: #2b2b36;
+}
+:is(.no-page, .no-page-pub) .text-primary {
+  color: #d2bbff;
+}
+
+:is(.no-page, .no-page-pub) .input-field {
   background-color: #292934;
   border-color: #3a3a47;
   color: #f4f2fb;
 }
-.no-page .input-field:focus {
+:is(.no-page, .no-page-pub) .input-field:focus {
   border-color: #8b5cf6;
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.28);
 }
+:is(.no-page, .no-page-pub) .btn-ghost {
+  border-color: #3a3a47;
+  color: #f4f2fb;
+}
+:is(.no-page, .no-page-pub) .btn-ghost:hover {
+  background-color: rgba(139, 92, 246, 0.12);
+}
 
 /* Native <select> / <input> — dark fill, neon violet focus. */
-.no-page .no-field {
+:is(.no-page, .no-page-pub) .no-field {
   width: 100%;
   min-height: 48px;
   border-radius: 8px;
@@ -97,46 +144,46 @@
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.no-page select.no-field {
+:is(.no-page, .no-page-pub) select.no-field {
   padding-right: 40px;
   cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235de6ff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 15px center;
 }
-.no-page .no-field::placeholder {
+:is(.no-page, .no-page-pub) .no-field::placeholder {
   color: #635f70;
 }
-.no-page .no-field:hover:not(:disabled) {
+:is(.no-page, .no-page-pub) .no-field:hover:not(:disabled) {
   border-color: #57566a;
 }
-.no-page .no-field:focus {
+:is(.no-page, .no-page-pub) .no-field:focus {
   border-color: #8b5cf6;
   background-color: #34343f;
   box-shadow:
     0 0 0 3px rgba(139, 92, 246, 0.28),
     0 0 22px rgba(124, 58, 237, 0.2);
 }
-.no-page .no-field:disabled {
+:is(.no-page, .no-page-pub) .no-field:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-.no-page select.no-field option {
+:is(.no-page, .no-page-pub) select.no-field option {
   background: #1f1f29;
   color: #f4f2fb;
 }
 /* Quantity field has its own − / + steppers — hide the native spinners. */
-.no-page input.no-field[type="number"] {
+:is(.no-page, .no-page-pub) input.no-field[type="number"] {
   -moz-appearance: textfield;
 }
-.no-page input.no-field[type="number"]::-webkit-outer-spin-button,
-.no-page input.no-field[type="number"]::-webkit-inner-spin-button {
+:is(.no-page, .no-page-pub) input.no-field[type="number"]::-webkit-outer-spin-button,
+:is(.no-page, .no-page-pub) input.no-field[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 /* Quantity stepper buttons. */
-.no-page .no-step {
+:is(.no-page, .no-page-pub) .no-step {
   width: 46px;
   flex-shrink: 0;
   border-radius: 8px;
@@ -150,11 +197,11 @@
     border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.no-page .no-step:hover:not(:disabled) {
+:is(.no-page, .no-page-pub) .no-step:hover:not(:disabled) {
   border-color: #5de6ff;
   color: #5de6ff;
 }
-.no-page .no-step:disabled {
+:is(.no-page, .no-page-pub) .no-step:disabled {
   opacity: 0.35;
   cursor: not-allowed;
 }
