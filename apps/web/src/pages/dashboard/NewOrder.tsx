@@ -24,7 +24,7 @@ import HowToOrderLink from "../../components/HowToOrderLink.js";
 import RecentlyCompleted from "../../components/services/RecentlyCompleted.js";
 import SubscriptionStrip from "../../components/store/SubscriptionStrip.js";
 import { BilingualNote, Icon } from "../../components/ds/index.js";
-import "../../styles/new-order.css";
+import "../../styles/panel-glass.css";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
 // throws when the wallet can't cover the charge (see AppError's `details`).
