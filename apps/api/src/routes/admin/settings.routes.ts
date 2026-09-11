@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { sendTestEmailSchema, updateSettingsSchema } from "@smm/shared";
+import { sendTestEmailSchema, sendTestSmsSchema, updateSettingsSchema } from "@smm/shared";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
-import { getAdminSettings, sendTestEmail, updateSettings } from "../../services/settings.service.js";
+import { getAdminSettings, sendTestEmail, sendTestSms, updateSettings } from "../../services/settings.service.js";
 import { writeAuditLog } from "../../services/audit.service.js";
 
 export const adminSettingsRouter = Router();
@@ -30,6 +30,7 @@ adminSettingsRouter.put(
       after: {
         ...req.body,
         smtpPassword: req.body.smtpPassword ? "[REDACTED]" : undefined,
+        smsApiKey: req.body.smsApiKey ? "[REDACTED]" : undefined,
         ...Object.fromEntries(
           (["mainLogo", "walletLogo", "autoPayLogo", "icon512", "icon192", "icon512Alt"] as const)
             .filter((k) => req.body[k] !== undefined)
@@ -47,6 +48,15 @@ adminSettingsRouter.post(
   validate(sendTestEmailSchema),
   asyncHandler(async (req, res) => {
     await sendTestEmail(req.body.to);
+    res.status(200).json({ ok: true });
+  }),
+);
+
+adminSettingsRouter.post(
+  "/test-sms",
+  validate(sendTestSmsSchema),
+  asyncHandler(async (req, res) => {
+    await sendTestSms(req.body.to);
     res.status(200).json({ ok: true });
   }),
 );

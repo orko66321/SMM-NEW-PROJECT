@@ -139,6 +139,10 @@ export const registerSchema = z.object({
     username: usernameSchema,
     email: z.string().trim().toLowerCase().email().max(255),
     password: passwordSchema,
+    // Optional — same field/validation as updateProfileSchema below. Lets the
+    // welcome SMS (services/notifications.service.ts) fire right at sign-up;
+    // a user who skips it can still add a number later from Profile.
+    phone: z.string().trim().max(20).optional(),
     // Referral code from ?ref= or the manual field on the register form. A
     // code that doesn't resolve to a user is silently ignored server-side.
     referralCode: z.string().trim().max(32).optional(),
@@ -502,6 +506,18 @@ export const updateSettingsSchema = z.object({
     smtpUser: z.string().trim().max(255).nullable().optional(),
     smtpPassword: z.string().trim().max(500).optional(), // write-only; omit to keep existing
     smtpFromAddress: z.string().trim().max(255).nullable().optional(),
+    // SMS notifications (uronto SMS). Same write-only-secret /
+    // skip-undefined-if-omitted treatment as the SMTP block above — smsApiKey
+    // is never re-sent to the admin UI after saving, so there's nothing to
+    // prefill; omitting it on save keeps the existing encrypted key.
+    smsEnabled: z.boolean().optional(),
+    smsApiKey: z.string().trim().max(500).optional(),
+    smsWelcomeEnabled: z.boolean().optional(),
+    smsWelcomeTemplate: z.string().trim().max(500).or(z.literal("")).nullable().optional(),
+    smsAddFundEnabled: z.boolean().optional(),
+    smsAddFundTemplate: z.string().trim().max(500).or(z.literal("")).nullable().optional(),
+    smsOrderConfirmationEnabled: z.boolean().optional(),
+    smsOrderConfirmationTemplate: z.string().trim().max(500).or(z.literal("")).nullable().optional(),
     // Admin Orders "Resend to provider" kill-switch. Optional so an older
     // admin client still validates; settings.service leaves it untouched when omitted.
     resendOrderButtonEnabled: z.boolean().optional(),
@@ -527,6 +543,11 @@ export const updateSettingsSchema = z.object({
 // server-side; this just carries the destination address.
 export const sendTestEmailSchema = z.object({
     to: z.string().trim().email(),
+});
+// Admin-only "Send test SMS" action (Settings -> SMS Notifications card) —
+// same shape/purpose as sendTestEmailSchema above, for lib/sms.ts.
+export const sendTestSmsSchema = z.object({
+    to: z.string().trim().min(6).max(20),
 });
 export const publicSettingsSchema = z.object({
     siteName: z.string(),

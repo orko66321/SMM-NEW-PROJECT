@@ -189,16 +189,19 @@ export declare const registerSchema: z.ZodObject<{
     username: z.ZodString;
     email: z.ZodString;
     password: z.ZodString;
+    phone: z.ZodOptional<z.ZodString>;
     referralCode: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     username: string;
     email: string;
     password: string;
+    phone?: string | undefined;
     referralCode?: string | undefined;
 }, {
     username: string;
     email: string;
     password: string;
+    phone?: string | undefined;
     referralCode?: string | undefined;
 }>;
 export type RegisterInput = z.infer<typeof registerSchema>;
@@ -977,6 +980,14 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpUser: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     smtpPassword: z.ZodOptional<z.ZodString>;
     smtpFromAddress: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    smsEnabled: z.ZodOptional<z.ZodBoolean>;
+    smsApiKey: z.ZodOptional<z.ZodString>;
+    smsWelcomeEnabled: z.ZodOptional<z.ZodBoolean>;
+    smsWelcomeTemplate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
+    smsAddFundEnabled: z.ZodOptional<z.ZodBoolean>;
+    smsAddFundTemplate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
+    smsOrderConfirmationEnabled: z.ZodOptional<z.ZodBoolean>;
+    smsOrderConfirmationTemplate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
     resendOrderButtonEnabled: z.ZodOptional<z.ZodBoolean>;
     firstDepositBonusEnabled: z.ZodOptional<z.ZodBoolean>;
     firstDepositBonusPercent: z.ZodOptional<z.ZodNumber>;
@@ -1019,6 +1030,14 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpUser?: string | null | undefined;
     smtpPassword?: string | undefined;
     smtpFromAddress?: string | null | undefined;
+    smsEnabled?: boolean | undefined;
+    smsApiKey?: string | undefined;
+    smsWelcomeEnabled?: boolean | undefined;
+    smsWelcomeTemplate?: string | null | undefined;
+    smsAddFundEnabled?: boolean | undefined;
+    smsAddFundTemplate?: string | null | undefined;
+    smsOrderConfirmationEnabled?: boolean | undefined;
+    smsOrderConfirmationTemplate?: string | null | undefined;
     resendOrderButtonEnabled?: boolean | undefined;
     firstDepositBonusEnabled?: boolean | undefined;
     firstDepositBonusPercent?: number | undefined;
@@ -1061,6 +1080,14 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpUser?: string | null | undefined;
     smtpPassword?: string | undefined;
     smtpFromAddress?: string | null | undefined;
+    smsEnabled?: boolean | undefined;
+    smsApiKey?: string | undefined;
+    smsWelcomeEnabled?: boolean | undefined;
+    smsWelcomeTemplate?: string | null | undefined;
+    smsAddFundEnabled?: boolean | undefined;
+    smsAddFundTemplate?: string | null | undefined;
+    smsOrderConfirmationEnabled?: boolean | undefined;
+    smsOrderConfirmationTemplate?: string | null | undefined;
     resendOrderButtonEnabled?: boolean | undefined;
     firstDepositBonusEnabled?: boolean | undefined;
     firstDepositBonusPercent?: number | undefined;
@@ -1082,6 +1109,14 @@ export declare const sendTestEmailSchema: z.ZodObject<{
     to: string;
 }>;
 export type SendTestEmailInput = z.infer<typeof sendTestEmailSchema>;
+export declare const sendTestSmsSchema: z.ZodObject<{
+    to: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    to: string;
+}, {
+    to: string;
+}>;
+export type SendTestSmsInput = z.infer<typeof sendTestSmsSchema>;
 export declare const publicSettingsSchema: z.ZodObject<{
     siteName: z.ZodString;
     metaTitle: z.ZodNullable<z.ZodString>;

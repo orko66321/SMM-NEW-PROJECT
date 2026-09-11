@@ -10,6 +10,7 @@ import {
   refreshTokenExpiry,
   signAccessToken,
 } from "./token.service.js";
+import { sendWelcomeSms } from "./notifications.service.js";
 import type { RegisterInput, LoginInput } from "@smm/shared";
 
 // OWASP-recommended minimum params for argon2id (as of the 2023 cheat sheet):
@@ -106,11 +107,22 @@ export async function registerUser(input: RegisterInput) {
 
   const user = await prisma.$transaction(async (tx) => {
     const created = await tx.user.create({
-      data: { username: input.username, email: input.email, passwordHash, referralCode, referredById },
+      data: {
+        username: input.username,
+        email: input.email,
+        passwordHash,
+        referralCode,
+        referredById,
+        phone: input.phone || null,
+      },
     });
     await tx.wallet.create({ data: { userId: created.id, balance: 0 } });
     return created;
   });
+
+  // Best-effort, outside the transaction — see notifications.service.ts's
+  // header comment for why this never throws or blocks registration.
+  void sendWelcomeSms(user);
 
   return publicUser(user);
 }
