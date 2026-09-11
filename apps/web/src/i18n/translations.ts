@@ -108,8 +108,37 @@ const en = {
 
   footer: {
     rights: "© {{year}} All In One Service. All rights reserved.",
+    disclaimer: "AIO is a services reseller platform; results and delivery times depend on third-party providers.",
     tagline: "A social media marketing reseller panel — instant automated delivery, local payments and a full REST API.",
-    getStarted: "Get started",
+    supportHours: "24/7 live support",
+    weAccept: "We accept",
+    groups: {
+      quickNav: "Quick Navigation",
+      supportPolicy: "Support & Policy",
+      community: "Trust & Community",
+    },
+    nav: {
+      home: "Home",
+      services: "Services",
+      offers: "Offers",
+      about: "About Us",
+      contact: "Contact",
+      dashboard: "Dashboard",
+    },
+    policy: {
+      terms: "Terms & Conditions",
+      privacy: "Privacy Policy",
+      refund: "Refund Policy",
+      faq: "FAQ",
+      support: "Support Center",
+    },
+    social: {
+      facebook: "Facebook",
+      telegram: "Telegram",
+      whatsapp: "WhatsApp",
+      x: "X (Twitter)",
+      joinTelegram: "Join our Telegram community",
+    },
   },
 
   pages: {
@@ -846,8 +875,37 @@ const bn: Translations = {
 
   footer: {
     rights: "© {{year}} All In One Service। সর্বস্বত্ব সংরক্ষিত।",
+    disclaimer: "AIO একটি সার্ভিস রিসেলার প্ল্যাটফর্ম; ফলাফল ও ডেলিভারির সময় থার্ড-পার্টি প্রোভাইডারের উপর নির্ভরশীল।",
     tagline: "একটি সোশ্যাল মিডিয়া মার্কেটিং রিসেলার প্যানেল — ইনস্ট্যান্ট অটোমেটেড ডেলিভারি, লোকাল পেমেন্ট আর পূর্ণাঙ্গ REST API।",
-    getStarted: "শুরু করুন",
+    supportHours: "২৪/৭ লাইভ সাপোর্ট",
+    weAccept: "আমরা গ্রহণ করি",
+    groups: {
+      quickNav: "দ্রুত নেভিগেশন",
+      supportPolicy: "সাপোর্ট ও পলিসি",
+      community: "ট্রাস্ট ও কমিউনিটি",
+    },
+    nav: {
+      home: "হোম",
+      services: "সার্ভিসেস",
+      offers: "অফারস",
+      about: "আমাদের সম্পর্কে",
+      contact: "যোগাযোগ",
+      dashboard: "ড্যাশবোর্ড",
+    },
+    policy: {
+      terms: "শর্তাবলি",
+      privacy: "প্রাইভেসি পলিসি",
+      refund: "রিফান্ড পলিসি",
+      faq: "সাধারণ জিজ্ঞাসা",
+      support: "সাপোর্ট সেন্টার",
+    },
+    social: {
+      facebook: "ফেসবুক",
+      telegram: "টেলিগ্রাম",
+      whatsapp: "হোয়াটসঅ্যাপ",
+      x: "এক্স (টুইটার)",
+      joinTelegram: "আমাদের টেলিগ্রাম কমিউনিটিতে যোগ দিন",
+    },
   },
 
   pages: {
