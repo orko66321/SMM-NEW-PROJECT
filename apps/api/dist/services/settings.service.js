@@ -1,3 +1,4 @@
+import { Prisma } from "#prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { encrypt, decrypt } from "../lib/crypto.js";
 import { env } from "../env.js";
@@ -9,11 +10,24 @@ import { sendSms, isSmsConfigured } from "../lib/sms.js";
 // the app works before any admin has ever opened the Settings page.
 const SETTINGS_ID = "default";
 async function ensureSettings() {
-    return prisma.siteSettings.upsert({
-        where: { id: SETTINGS_ID },
-        update: {},
-        create: { id: SETTINGS_ID },
-    });
+    try {
+        return await prisma.siteSettings.upsert({
+            where: { id: SETTINGS_ID },
+            update: {},
+            create: { id: SETTINGS_ID },
+        });
+    }
+    catch (err) {
+        // Two callers racing the very first upsert (e.g. two of
+        // notifications.service.ts's fire-and-forget event calls landing at the
+        // same instant on a cold row) can both see "doesn't exist" and both try
+        // to create it — the loser hits the @id unique constraint instead of a
+        // clean update. The row now exists either way, so just re-read it.
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+            return prisma.siteSettings.findUniqueOrThrow({ where: { id: SETTINGS_ID } });
+        }
+        throw err;
+    }
 }
 /** Admin-facing view — never returns the SMTP password, even encrypted, same treatment as gateway credentials. */
 export async function getAdminSettings() {
@@ -55,6 +69,21 @@ export async function getAdminSettings() {
         smsAddFundTemplate: s.smsAddFundTemplate,
         smsOrderConfirmationEnabled: s.smsOrderConfirmationEnabled,
         smsOrderConfirmationTemplate: s.smsOrderConfirmationTemplate,
+        emailWelcomeEnabled: s.emailWelcomeEnabled,
+        emailWelcomeSubject: s.emailWelcomeSubject,
+        emailWelcomeTemplate: s.emailWelcomeTemplate,
+        emailAddFundSuccessEnabled: s.emailAddFundSuccessEnabled,
+        emailAddFundSuccessSubject: s.emailAddFundSuccessSubject,
+        emailAddFundSuccessTemplate: s.emailAddFundSuccessTemplate,
+        emailAddFundFailedEnabled: s.emailAddFundFailedEnabled,
+        emailAddFundFailedSubject: s.emailAddFundFailedSubject,
+        emailAddFundFailedTemplate: s.emailAddFundFailedTemplate,
+        emailOrderSuccessEnabled: s.emailOrderSuccessEnabled,
+        emailOrderSuccessSubject: s.emailOrderSuccessSubject,
+        emailOrderSuccessTemplate: s.emailOrderSuccessTemplate,
+        emailOrderFailedEnabled: s.emailOrderFailedEnabled,
+        emailOrderFailedSubject: s.emailOrderFailedSubject,
+        emailOrderFailedTemplate: s.emailOrderFailedTemplate,
         resendOrderButtonEnabled: s.resendOrderButtonEnabled,
         firstDepositBonusEnabled: s.firstDepositBonusEnabled,
         firstDepositBonusPercent: s.firstDepositBonusPercent.toString(),
@@ -130,6 +159,29 @@ export async function updateSettings(input) {
                 ? {}
                 : { smsOrderConfirmationEnabled: input.smsOrderConfirmationEnabled }),
             smsOrderConfirmationTemplate: input.smsOrderConfirmationTemplate === undefined ? undefined : input.smsOrderConfirmationTemplate || null,
+            ...(input.emailWelcomeEnabled === undefined ? {} : { emailWelcomeEnabled: input.emailWelcomeEnabled }),
+            emailWelcomeSubject: input.emailWelcomeSubject === undefined ? undefined : input.emailWelcomeSubject || null,
+            emailWelcomeTemplate: input.emailWelcomeTemplate === undefined ? undefined : input.emailWelcomeTemplate || null,
+            ...(input.emailAddFundSuccessEnabled === undefined
+                ? {}
+                : { emailAddFundSuccessEnabled: input.emailAddFundSuccessEnabled }),
+            emailAddFundSuccessSubject: input.emailAddFundSuccessSubject === undefined ? undefined : input.emailAddFundSuccessSubject || null,
+            emailAddFundSuccessTemplate: input.emailAddFundSuccessTemplate === undefined ? undefined : input.emailAddFundSuccessTemplate || null,
+            ...(input.emailAddFundFailedEnabled === undefined
+                ? {}
+                : { emailAddFundFailedEnabled: input.emailAddFundFailedEnabled }),
+            emailAddFundFailedSubject: input.emailAddFundFailedSubject === undefined ? undefined : input.emailAddFundFailedSubject || null,
+            emailAddFundFailedTemplate: input.emailAddFundFailedTemplate === undefined ? undefined : input.emailAddFundFailedTemplate || null,
+            ...(input.emailOrderSuccessEnabled === undefined
+                ? {}
+                : { emailOrderSuccessEnabled: input.emailOrderSuccessEnabled }),
+            emailOrderSuccessSubject: input.emailOrderSuccessSubject === undefined ? undefined : input.emailOrderSuccessSubject || null,
+            emailOrderSuccessTemplate: input.emailOrderSuccessTemplate === undefined ? undefined : input.emailOrderSuccessTemplate || null,
+            ...(input.emailOrderFailedEnabled === undefined
+                ? {}
+                : { emailOrderFailedEnabled: input.emailOrderFailedEnabled }),
+            emailOrderFailedSubject: input.emailOrderFailedSubject === undefined ? undefined : input.emailOrderFailedSubject || null,
+            emailOrderFailedTemplate: input.emailOrderFailedTemplate === undefined ? undefined : input.emailOrderFailedTemplate || null,
             // Omitted by an older admin client ⇒ leave the stored value alone.
             ...(input.resendOrderButtonEnabled === undefined
                 ? {}
@@ -256,6 +308,58 @@ export async function getSmsConfig() {
         orderConfirmationEnabled: s.smsOrderConfirmationEnabled,
         orderConfirmationTemplate: s.smsOrderConfirmationTemplate || DEFAULT_SMS_TEMPLATES.orderConfirmation,
         siteName: s.siteName,
+    };
+}
+// Built-in wording for the email-notification templates — same role as
+// DEFAULT_SMS_TEMPLATES above, for services/notifications.service.ts.
+export const DEFAULT_EMAIL_TEMPLATES = {
+    welcome: {
+        subject: "Welcome to {{siteName}}!",
+        body: "Hi {{username}},\n\nWelcome to {{siteName}}! Your account is ready — you can start ordering right away.\n\nThanks,\n{{siteName}} Team",
+    },
+    addFundSuccess: {
+        subject: "Deposit confirmed — {{siteName}}",
+        body: "Hi {{username}},\n\nYour deposit of {{amount}} has been credited. Your new wallet balance is {{balance}}.\n\nThanks,\n{{siteName}} Team",
+    },
+    addFundFailed: {
+        subject: "Deposit not approved — {{siteName}}",
+        body: "Hi {{username}},\n\nYour deposit of {{amount}} could not be approved. If you believe this is a mistake, please contact support.\n\n{{siteName}} Team",
+    },
+    orderSuccess: {
+        subject: "Order placed — #{{orderId}}",
+        body: "Hi {{username}},\n\nYour order #{{orderId}} for {{service}} (qty {{quantity}}) has been placed successfully.\n\nThanks,\n{{siteName}} Team",
+    },
+    orderFailed: {
+        subject: "Order failed — #{{orderId}}",
+        body: "Hi {{username}},\n\nUnfortunately your order #{{orderId}} for {{service}} could not be completed. {{refundAmount}} has been refunded to your wallet.\n\n{{siteName}} Team",
+    },
+};
+/**
+ * Internal only — used exclusively by services/notifications.service.ts to
+ * read the per-event email toggles/templates. There's no "is email
+ * configured" gate here (unlike getSmsConfig's key check) — lib/mailer.ts's
+ * sendMail already no-ops safely when nothing's set up, so callers just call
+ * it and let that happen.
+ */
+export async function getEmailNotificationConfig() {
+    const s = await ensureSettings();
+    return {
+        siteName: s.siteName,
+        welcomeEnabled: s.emailWelcomeEnabled,
+        welcomeSubject: s.emailWelcomeSubject || DEFAULT_EMAIL_TEMPLATES.welcome.subject,
+        welcomeTemplate: s.emailWelcomeTemplate || DEFAULT_EMAIL_TEMPLATES.welcome.body,
+        addFundSuccessEnabled: s.emailAddFundSuccessEnabled,
+        addFundSuccessSubject: s.emailAddFundSuccessSubject || DEFAULT_EMAIL_TEMPLATES.addFundSuccess.subject,
+        addFundSuccessTemplate: s.emailAddFundSuccessTemplate || DEFAULT_EMAIL_TEMPLATES.addFundSuccess.body,
+        addFundFailedEnabled: s.emailAddFundFailedEnabled,
+        addFundFailedSubject: s.emailAddFundFailedSubject || DEFAULT_EMAIL_TEMPLATES.addFundFailed.subject,
+        addFundFailedTemplate: s.emailAddFundFailedTemplate || DEFAULT_EMAIL_TEMPLATES.addFundFailed.body,
+        orderSuccessEnabled: s.emailOrderSuccessEnabled,
+        orderSuccessSubject: s.emailOrderSuccessSubject || DEFAULT_EMAIL_TEMPLATES.orderSuccess.subject,
+        orderSuccessTemplate: s.emailOrderSuccessTemplate || DEFAULT_EMAIL_TEMPLATES.orderSuccess.body,
+        orderFailedEnabled: s.emailOrderFailedEnabled,
+        orderFailedSubject: s.emailOrderFailedSubject || DEFAULT_EMAIL_TEMPLATES.orderFailed.subject,
+        orderFailedTemplate: s.emailOrderFailedTemplate || DEFAULT_EMAIL_TEMPLATES.orderFailed.body,
     };
 }
 /**
