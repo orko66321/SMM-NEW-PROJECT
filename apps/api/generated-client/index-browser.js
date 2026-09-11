@@ -611,7 +611,12 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   smtpPassCiphertext: 'smtpPassCiphertext',
   smtpFromAddress: 'smtpFromAddress',
   smsEnabled: 'smsEnabled',
+  smsProvider: 'smsProvider',
   smsApiKeyCiphertext: 'smsApiKeyCiphertext',
+  smsMilejetApiKeyCiphertext: 'smsMilejetApiKeyCiphertext',
+  smsMilejetSecretKeyCiphertext: 'smsMilejetSecretKeyCiphertext',
+  smsMilejetSenderId: 'smsMilejetSenderId',
+  smsMilejetApiUrl: 'smsMilejetApiUrl',
   smsWelcomeEnabled: 'smsWelcomeEnabled',
   smsWelcomeTemplate: 'smsWelcomeTemplate',
   smsAddFundEnabled: 'smsAddFundEnabled',
@@ -930,6 +935,11 @@ exports.LiveChatProvider = exports.$Enums.LiveChatProvider = {
 exports.DisplayCurrency = exports.$Enums.DisplayCurrency = {
   USD: 'USD',
   BDT: 'BDT'
+};
+
+exports.SmsProvider = exports.$Enums.SmsProvider = {
+  URONTO: 'URONTO',
+  MILEJET: 'MILEJET'
 };
 
 exports.ReferrerRewardType = exports.$Enums.ReferrerRewardType = {

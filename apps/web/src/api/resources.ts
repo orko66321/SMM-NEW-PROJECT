@@ -245,8 +245,12 @@ export const getAdminSettings = () => apiClient.get("/admin/settings").then((r) 
 export const updateAdminSettings = (input: UpdateSettingsInput) => apiClient.put("/admin/settings", input);
 export const sendAdminTestEmail = (to: string) =>
   apiClient.post("/admin/settings/test-email", { to } satisfies SendTestEmailInput);
-export const sendAdminTestSms = (to: string) =>
-  apiClient.post("/admin/settings/test-sms", { to } satisfies SendTestSmsInput);
+// Returns the raw provider response ({ok, status, body}) — the Live Tester
+// panel shows it verbatim for debugging.
+export const sendAdminTestSms = (to: string, message?: string) =>
+  apiClient
+    .post("/admin/settings/test-sms", { to, message } satisfies SendTestSmsInput)
+    .then((r) => r.data as { ok: boolean; status: number; body: unknown });
 
 // ── SMS Campaigns (admin bulk broadcast) ────────────────────────────────
 export const getAdminSmsBalance = () => apiClient.get("/admin/sms/balance").then((r) => r.data);

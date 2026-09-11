@@ -1,15 +1,24 @@
+import { computeSmsSegments } from "@smm/shared";
 import { getSmsConfig } from "../services/settings.service.js";
 import { logger } from "./logger.js";
 
 /**
- * uronto SMS (https://urontosms.hostgi.com) — a plain GET request with
- * `key` / `number` / `msg` query params, admin-configured from Settings →
- * SMS Notifications (see services/settings.service.ts's getSmsConfig).
- * There's no HTTPS-provider fallback like lib/mailer.ts's Resend/Brevo —
- * this is the one supported gateway for now.
+ * Two supported SMS gateways, dispatched on the admin-selected
+ * `SiteSettings.smsProvider` (see services/settings.service.ts's
+ * getSmsConfig) — same multi-provider shape as lib/mailer.ts's
+ * Resend/Brevo/SMTP, so everything downstream (notifications.service.ts,
+ * the admin SMS Campaigns broadcaster) just calls sendSms() and never
+ * cares which one is actually active:
+ *
+ *  - URONTO  (https://urontosms.hostgi.com) — GET with `key`/`number`/`msg`
+ *    query params.
+ *  - MILEJET (https://api.milejet.com by default, admin-overridable) — POST
+ *    JSON {api_key, secret_key, sender_id, contacts, msg, type}, where
+ *    `type` ('text' | 'unicode') is auto-detected from the message, not
+ *    admin-set — see smsTypeFor() below.
  */
 
-const SMS_API_URL = "https://urontosms.hostgi.com/api/sms";
+const URONTO_SMS_API_URL = "https://urontosms.hostgi.com/api/sms";
 // NOT confirmed against uronto SMS's actual API docs — a common convention
 // for this style of BD bulk-SMS panel, used as a best guess for the admin
 // "remaining balance" widget (routes/admin/sms.routes.ts's GET /balance).
@@ -17,10 +26,12 @@ const SMS_API_URL = "https://urontosms.hostgi.com/api/sms";
 // (wrong path, unexpected shape, timeout) rather than showing a wrong
 // number, so a bad guess here never blocks sending — only hides the widget.
 // Confirm the real path/response shape with uronto SMS and adjust if this
-// keeps coming back unavailable.
-const SMS_BALANCE_API_URL = "https://urontosms.hostgi.com/api/balance";
+// keeps coming back unavailable. MiLeJet has no balance check for now —
+// their spec (unlike uronto's) didn't include one.
+const URONTO_BALANCE_API_URL = "https://urontosms.hostgi.com/api/balance";
+const MILEJET_DEFAULT_API_URL = "https://api.milejet.com/api/v1/sms/send";
 
-/** True when the admin has enabled SMS and saved an API key. */
+/** True when the admin has enabled SMS and fully configured the active provider. */
 export async function isSmsConfigured(): Promise<boolean> {
   return (await getSmsConfig()) !== null;
 }
@@ -31,7 +42,8 @@ export async function isSmsConfigured(): Promise<boolean> {
  * Strips everything but digits and folds a leading country code back down
  * to the 0-prefixed local form; anything else is passed through as-is so an
  * unexpected format still reaches the API (and its error) rather than being
- * silently mangled further.
+ * silently mangled further. Applied for both providers — MiLeJet's spec
+ * uses the same local format.
  */
 export function normalizeBdPhone(raw: string): string {
   const digits = raw.replace(/\D/g, "");
@@ -40,47 +52,104 @@ export function normalizeBdPhone(raw: string): string {
   return digits;
 }
 
-export async function sendSms(to: string, message: string): Promise<void> {
+/**
+ * MiLeJet's `type` field — reuses computeSmsSegments' GSM-7 detection
+ * (packages/shared, already the one source of truth for the admin
+ * composer's live character/segment counter) rather than a second,
+ * narrower "is this Bangla" regex: anything that isn't plain GSM-7 text
+ * needs `unicode` billing regardless of which non-GSM-7 script it is.
+ */
+function smsTypeFor(message: string): "text" | "unicode" {
+  return computeSmsSegments(message).encoding === "GSM7" ? "text" : "unicode";
+}
+
+export interface SmsSendResult {
+  ok: boolean;
+  status: number;
+  body: unknown;
+}
+
+async function sendViaUronto(apiKey: string, number: string, message: string): Promise<SmsSendResult> {
+  const url = new URL(URONTO_SMS_API_URL);
+  url.searchParams.set("key", apiKey);
+  url.searchParams.set("number", number);
+  url.searchParams.set("msg", message);
+  const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+  const body: unknown = await res.json().catch(() => null);
+  return { ok: res.ok, status: res.status, body };
+}
+
+async function sendViaMilejet(
+  config: { apiKey: string; secretKey: string; senderId: string; apiUrl: string },
+  number: string,
+  message: string,
+): Promise<SmsSendResult> {
+  const res = await fetch(config.apiUrl, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      api_key: config.apiKey,
+      secret_key: config.secretKey,
+      sender_id: config.senderId,
+      contacts: number,
+      msg: message,
+      type: smsTypeFor(message),
+    }),
+    signal: AbortSignal.timeout(15_000),
+  });
+  const body: unknown = await res.json().catch(() => null);
+  return { ok: res.ok, status: res.status, body };
+}
+
+/**
+ * Sends via whichever provider is active and returns the raw result either
+ * way — never throws, so the admin "Live Tester" (routes/admin/settings.routes.ts's
+ * POST /test-sms) can show the exact provider response, success or failure.
+ * `sendSms()` below is the throwing wrapper every other caller uses.
+ */
+export async function sendSmsRaw(to: string, message: string): Promise<SmsSendResult | null> {
   const config = await getSmsConfig();
   if (!config) {
     logger.warn({ to, message }, "SMS not configured — logging instead of sending");
-    return;
+    return null;
   }
 
   const number = normalizeBdPhone(to);
-  const url = new URL(SMS_API_URL);
-  url.searchParams.set("key", config.apiKey);
-  url.searchParams.set("number", number);
-  url.searchParams.set("msg", message);
-
-  let res: Response;
   try {
-    res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+    const result =
+      config.provider === "MILEJET"
+        ? await sendViaMilejet(config.milejet, number, message)
+        : await sendViaUronto(config.uronto.apiKey, number, message);
+    if (result.ok) logger.info({ provider: config.provider, number, body: result.body }, "SMS sent");
+    else logger.error({ provider: config.provider, status: result.status, body: result.body, number }, "SMS API rejected the message");
+    return result;
   } catch (err) {
-    logger.error({ err, number }, "SMS API request failed");
-    throw new Error(err instanceof Error ? `SMS API request failed: ${err.message}` : "SMS API request failed");
+    logger.error({ err, provider: config.provider, number }, "SMS API request failed");
+    return { ok: false, status: 0, body: err instanceof Error ? err.message : String(err) };
   }
+}
 
-  const body: unknown = await res.json().catch(() => null);
-  if (!res.ok) {
-    logger.error({ status: res.status, body, number }, "SMS API rejected the message");
-    throw new Error(`SMS API error ${res.status}: ${JSON.stringify(body).slice(0, 300)}`);
+export async function sendSms(to: string, message: string): Promise<void> {
+  const result = await sendSmsRaw(to, message);
+  if (!result) return; // not configured — already logged
+  if (!result.ok) {
+    throw new Error(`SMS API error ${result.status}: ${JSON.stringify(result.body).slice(0, 300)}`);
   }
-  logger.info({ number, body }, "SMS sent");
 }
 
 /**
  * Best-effort remaining-credit lookup for the admin SMS Campaigns balance
- * widget — see SMS_BALANCE_API_URL's comment above for why this is
- * defensive rather than trusted. Never throws.
+ * widget — see URONTO_BALANCE_API_URL's comment above for why this is
+ * defensive rather than trusted. URONTO only; MiLeJet has none configured.
+ * Never throws.
  */
 export async function getSmsBalance(): Promise<{ available: boolean; balance?: number }> {
   const config = await getSmsConfig();
-  if (!config) return { available: false };
+  if (!config || config.provider !== "URONTO") return { available: false };
 
   try {
-    const url = new URL(SMS_BALANCE_API_URL);
-    url.searchParams.set("key", config.apiKey);
+    const url = new URL(URONTO_BALANCE_API_URL);
+    url.searchParams.set("key", config.uronto.apiKey);
     const res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
     if (!res.ok) return { available: false };
     const body: unknown = await res.json().catch(() => null);
@@ -95,3 +164,5 @@ export async function getSmsBalance(): Promise<{ available: boolean; balance?: n
     return { available: false };
   }
 }
+
+export { MILEJET_DEFAULT_API_URL };

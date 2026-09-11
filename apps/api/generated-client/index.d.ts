@@ -512,6 +512,14 @@ export const DisplayCurrency: {
 export type DisplayCurrency = (typeof DisplayCurrency)[keyof typeof DisplayCurrency]
 
 
+export const SmsProvider: {
+  URONTO: 'URONTO',
+  MILEJET: 'MILEJET'
+};
+
+export type SmsProvider = (typeof SmsProvider)[keyof typeof SmsProvider]
+
+
 export const ReferrerRewardType: {
   PERCENTAGE: 'PERCENTAGE',
   FIXED: 'FIXED'
@@ -686,6 +694,10 @@ export const LiveChatProvider: typeof $Enums.LiveChatProvider
 export type DisplayCurrency = $Enums.DisplayCurrency
 
 export const DisplayCurrency: typeof $Enums.DisplayCurrency
+
+export type SmsProvider = $Enums.SmsProvider
+
+export const SmsProvider: typeof $Enums.SmsProvider
 
 export type ReferrerRewardType = $Enums.ReferrerRewardType
 
@@ -41650,7 +41662,12 @@ export namespace Prisma {
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
     smsEnabled: boolean | null
+    smsProvider: $Enums.SmsProvider | null
     smsApiKeyCiphertext: string | null
+    smsMilejetApiKeyCiphertext: string | null
+    smsMilejetSecretKeyCiphertext: string | null
+    smsMilejetSenderId: string | null
+    smsMilejetApiUrl: string | null
     smsWelcomeEnabled: boolean | null
     smsWelcomeTemplate: string | null
     smsAddFundEnabled: boolean | null
@@ -41719,7 +41736,12 @@ export namespace Prisma {
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
     smsEnabled: boolean | null
+    smsProvider: $Enums.SmsProvider | null
     smsApiKeyCiphertext: string | null
+    smsMilejetApiKeyCiphertext: string | null
+    smsMilejetSecretKeyCiphertext: string | null
+    smsMilejetSenderId: string | null
+    smsMilejetApiUrl: string | null
     smsWelcomeEnabled: boolean | null
     smsWelcomeTemplate: string | null
     smsAddFundEnabled: boolean | null
@@ -41788,7 +41810,12 @@ export namespace Prisma {
     smtpPassCiphertext: number
     smtpFromAddress: number
     smsEnabled: number
+    smsProvider: number
     smsApiKeyCiphertext: number
+    smsMilejetApiKeyCiphertext: number
+    smsMilejetSecretKeyCiphertext: number
+    smsMilejetSenderId: number
+    smsMilejetApiUrl: number
     smsWelcomeEnabled: number
     smsWelcomeTemplate: number
     smsAddFundEnabled: number
@@ -41883,7 +41910,12 @@ export namespace Prisma {
     smtpPassCiphertext?: true
     smtpFromAddress?: true
     smsEnabled?: true
+    smsProvider?: true
     smsApiKeyCiphertext?: true
+    smsMilejetApiKeyCiphertext?: true
+    smsMilejetSecretKeyCiphertext?: true
+    smsMilejetSenderId?: true
+    smsMilejetApiUrl?: true
     smsWelcomeEnabled?: true
     smsWelcomeTemplate?: true
     smsAddFundEnabled?: true
@@ -41952,7 +41984,12 @@ export namespace Prisma {
     smtpPassCiphertext?: true
     smtpFromAddress?: true
     smsEnabled?: true
+    smsProvider?: true
     smsApiKeyCiphertext?: true
+    smsMilejetApiKeyCiphertext?: true
+    smsMilejetSecretKeyCiphertext?: true
+    smsMilejetSenderId?: true
+    smsMilejetApiUrl?: true
     smsWelcomeEnabled?: true
     smsWelcomeTemplate?: true
     smsAddFundEnabled?: true
@@ -42021,7 +42058,12 @@ export namespace Prisma {
     smtpPassCiphertext?: true
     smtpFromAddress?: true
     smsEnabled?: true
+    smsProvider?: true
     smsApiKeyCiphertext?: true
+    smsMilejetApiKeyCiphertext?: true
+    smsMilejetSecretKeyCiphertext?: true
+    smsMilejetSenderId?: true
+    smsMilejetApiUrl?: true
     smsWelcomeEnabled?: true
     smsWelcomeTemplate?: true
     smsAddFundEnabled?: true
@@ -42177,7 +42219,12 @@ export namespace Prisma {
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
     smsEnabled: boolean
+    smsProvider: $Enums.SmsProvider
     smsApiKeyCiphertext: string | null
+    smsMilejetApiKeyCiphertext: string | null
+    smsMilejetSecretKeyCiphertext: string | null
+    smsMilejetSenderId: string | null
+    smsMilejetApiUrl: string | null
     smsWelcomeEnabled: boolean
     smsWelcomeTemplate: string | null
     smsAddFundEnabled: boolean
@@ -42265,7 +42312,12 @@ export namespace Prisma {
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
     smsEnabled?: boolean
+    smsProvider?: boolean
     smsApiKeyCiphertext?: boolean
+    smsMilejetApiKeyCiphertext?: boolean
+    smsMilejetSecretKeyCiphertext?: boolean
+    smsMilejetSenderId?: boolean
+    smsMilejetApiUrl?: boolean
     smsWelcomeEnabled?: boolean
     smsWelcomeTemplate?: boolean
     smsAddFundEnabled?: boolean
@@ -42334,7 +42386,12 @@ export namespace Prisma {
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
     smsEnabled?: boolean
+    smsProvider?: boolean
     smsApiKeyCiphertext?: boolean
+    smsMilejetApiKeyCiphertext?: boolean
+    smsMilejetSecretKeyCiphertext?: boolean
+    smsMilejetSenderId?: boolean
+    smsMilejetApiUrl?: boolean
     smsWelcomeEnabled?: boolean
     smsWelcomeTemplate?: boolean
     smsAddFundEnabled?: boolean
@@ -42403,7 +42460,12 @@ export namespace Prisma {
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
     smsEnabled?: boolean
+    smsProvider?: boolean
     smsApiKeyCiphertext?: boolean
+    smsMilejetApiKeyCiphertext?: boolean
+    smsMilejetSecretKeyCiphertext?: boolean
+    smsMilejetSenderId?: boolean
+    smsMilejetApiUrl?: boolean
     smsWelcomeEnabled?: boolean
     smsWelcomeTemplate?: boolean
     smsAddFundEnabled?: boolean
@@ -42476,7 +42538,12 @@ export namespace Prisma {
       smtpPassCiphertext: string | null
       smtpFromAddress: string | null
       smsEnabled: boolean
+      smsProvider: $Enums.SmsProvider
       smsApiKeyCiphertext: string | null
+      smsMilejetApiKeyCiphertext: string | null
+      smsMilejetSecretKeyCiphertext: string | null
+      smsMilejetSenderId: string | null
+      smsMilejetApiUrl: string | null
       smsWelcomeEnabled: boolean
       smsWelcomeTemplate: string | null
       smsAddFundEnabled: boolean
@@ -42935,7 +43002,12 @@ export namespace Prisma {
     readonly smtpPassCiphertext: FieldRef<"SiteSettings", 'String'>
     readonly smtpFromAddress: FieldRef<"SiteSettings", 'String'>
     readonly smsEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly smsProvider: FieldRef<"SiteSettings", 'SmsProvider'>
     readonly smsApiKeyCiphertext: FieldRef<"SiteSettings", 'String'>
+    readonly smsMilejetApiKeyCiphertext: FieldRef<"SiteSettings", 'String'>
+    readonly smsMilejetSecretKeyCiphertext: FieldRef<"SiteSettings", 'String'>
+    readonly smsMilejetSenderId: FieldRef<"SiteSettings", 'String'>
+    readonly smsMilejetApiUrl: FieldRef<"SiteSettings", 'String'>
     readonly smsWelcomeEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly smsWelcomeTemplate: FieldRef<"SiteSettings", 'String'>
     readonly smsAddFundEnabled: FieldRef<"SiteSettings", 'Boolean'>
@@ -50431,7 +50503,12 @@ export namespace Prisma {
     smtpPassCiphertext: 'smtpPassCiphertext',
     smtpFromAddress: 'smtpFromAddress',
     smsEnabled: 'smsEnabled',
+    smsProvider: 'smsProvider',
     smsApiKeyCiphertext: 'smsApiKeyCiphertext',
+    smsMilejetApiKeyCiphertext: 'smsMilejetApiKeyCiphertext',
+    smsMilejetSecretKeyCiphertext: 'smsMilejetSecretKeyCiphertext',
+    smsMilejetSenderId: 'smsMilejetSenderId',
+    smsMilejetApiUrl: 'smsMilejetApiUrl',
     smsWelcomeEnabled: 'smsWelcomeEnabled',
     smsWelcomeTemplate: 'smsWelcomeTemplate',
     smsAddFundEnabled: 'smsAddFundEnabled',
@@ -51077,6 +51154,20 @@ export namespace Prisma {
    * Reference to a field of type 'DisplayCurrency[]'
    */
   export type ListEnumDisplayCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DisplayCurrency[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsProvider'
+   */
+  export type EnumSmsProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsProvider'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsProvider[]'
+   */
+  export type ListEnumSmsProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsProvider[]'>
     
 
 
@@ -54213,7 +54304,12 @@ export namespace Prisma {
     smtpPassCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableFilter<"SiteSettings"> | string | null
     smsEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsProvider?: EnumSmsProviderFilter<"SiteSettings"> | $Enums.SmsProvider
     smsApiKeyCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
+    smsMilejetApiKeyCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
+    smsMilejetSecretKeyCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
+    smsMilejetSenderId?: StringNullableFilter<"SiteSettings"> | string | null
+    smsMilejetApiUrl?: StringNullableFilter<"SiteSettings"> | string | null
     smsWelcomeEnabled?: BoolFilter<"SiteSettings"> | boolean
     smsWelcomeTemplate?: StringNullableFilter<"SiteSettings"> | string | null
     smsAddFundEnabled?: BoolFilter<"SiteSettings"> | boolean
@@ -54282,7 +54378,12 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrderInput | SortOrder
     smtpFromAddress?: SortOrderInput | SortOrder
     smsEnabled?: SortOrder
+    smsProvider?: SortOrder
     smsApiKeyCiphertext?: SortOrderInput | SortOrder
+    smsMilejetApiKeyCiphertext?: SortOrderInput | SortOrder
+    smsMilejetSecretKeyCiphertext?: SortOrderInput | SortOrder
+    smsMilejetSenderId?: SortOrderInput | SortOrder
+    smsMilejetApiUrl?: SortOrderInput | SortOrder
     smsWelcomeEnabled?: SortOrder
     smsWelcomeTemplate?: SortOrderInput | SortOrder
     smsAddFundEnabled?: SortOrder
@@ -54354,7 +54455,12 @@ export namespace Prisma {
     smtpPassCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableFilter<"SiteSettings"> | string | null
     smsEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsProvider?: EnumSmsProviderFilter<"SiteSettings"> | $Enums.SmsProvider
     smsApiKeyCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
+    smsMilejetApiKeyCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
+    smsMilejetSecretKeyCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
+    smsMilejetSenderId?: StringNullableFilter<"SiteSettings"> | string | null
+    smsMilejetApiUrl?: StringNullableFilter<"SiteSettings"> | string | null
     smsWelcomeEnabled?: BoolFilter<"SiteSettings"> | boolean
     smsWelcomeTemplate?: StringNullableFilter<"SiteSettings"> | string | null
     smsAddFundEnabled?: BoolFilter<"SiteSettings"> | boolean
@@ -54423,7 +54529,12 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrderInput | SortOrder
     smtpFromAddress?: SortOrderInput | SortOrder
     smsEnabled?: SortOrder
+    smsProvider?: SortOrder
     smsApiKeyCiphertext?: SortOrderInput | SortOrder
+    smsMilejetApiKeyCiphertext?: SortOrderInput | SortOrder
+    smsMilejetSecretKeyCiphertext?: SortOrderInput | SortOrder
+    smsMilejetSenderId?: SortOrderInput | SortOrder
+    smsMilejetApiUrl?: SortOrderInput | SortOrder
     smsWelcomeEnabled?: SortOrder
     smsWelcomeTemplate?: SortOrderInput | SortOrder
     smsAddFundEnabled?: SortOrder
@@ -54500,7 +54611,12 @@ export namespace Prisma {
     smtpPassCiphertext?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smsEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    smsProvider?: EnumSmsProviderWithAggregatesFilter<"SiteSettings"> | $Enums.SmsProvider
     smsApiKeyCiphertext?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    smsMilejetApiKeyCiphertext?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    smsMilejetSecretKeyCiphertext?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    smsMilejetSenderId?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    smsMilejetApiUrl?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smsWelcomeEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     smsWelcomeTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smsAddFundEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
@@ -58379,7 +58495,12 @@ export namespace Prisma {
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
     smsEnabled?: boolean
+    smsProvider?: $Enums.SmsProvider
     smsApiKeyCiphertext?: string | null
+    smsMilejetApiKeyCiphertext?: string | null
+    smsMilejetSecretKeyCiphertext?: string | null
+    smsMilejetSenderId?: string | null
+    smsMilejetApiUrl?: string | null
     smsWelcomeEnabled?: boolean
     smsWelcomeTemplate?: string | null
     smsAddFundEnabled?: boolean
@@ -58448,7 +58569,12 @@ export namespace Prisma {
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
     smsEnabled?: boolean
+    smsProvider?: $Enums.SmsProvider
     smsApiKeyCiphertext?: string | null
+    smsMilejetApiKeyCiphertext?: string | null
+    smsMilejetSecretKeyCiphertext?: string | null
+    smsMilejetSenderId?: string | null
+    smsMilejetApiUrl?: string | null
     smsWelcomeEnabled?: boolean
     smsWelcomeTemplate?: string | null
     smsAddFundEnabled?: boolean
@@ -58517,7 +58643,12 @@ export namespace Prisma {
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
     smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsProvider?: EnumSmsProviderFieldUpdateOperationsInput | $Enums.SmsProvider
     smsApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetSecretKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetSenderId?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetApiUrl?: NullableStringFieldUpdateOperationsInput | string | null
     smsWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
     smsWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     smsAddFundEnabled?: BoolFieldUpdateOperationsInput | boolean
@@ -58586,7 +58717,12 @@ export namespace Prisma {
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
     smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsProvider?: EnumSmsProviderFieldUpdateOperationsInput | $Enums.SmsProvider
     smsApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetSecretKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetSenderId?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetApiUrl?: NullableStringFieldUpdateOperationsInput | string | null
     smsWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
     smsWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     smsAddFundEnabled?: BoolFieldUpdateOperationsInput | boolean
@@ -58655,7 +58791,12 @@ export namespace Prisma {
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
     smsEnabled?: boolean
+    smsProvider?: $Enums.SmsProvider
     smsApiKeyCiphertext?: string | null
+    smsMilejetApiKeyCiphertext?: string | null
+    smsMilejetSecretKeyCiphertext?: string | null
+    smsMilejetSenderId?: string | null
+    smsMilejetApiUrl?: string | null
     smsWelcomeEnabled?: boolean
     smsWelcomeTemplate?: string | null
     smsAddFundEnabled?: boolean
@@ -58724,7 +58865,12 @@ export namespace Prisma {
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
     smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsProvider?: EnumSmsProviderFieldUpdateOperationsInput | $Enums.SmsProvider
     smsApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetSecretKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetSenderId?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetApiUrl?: NullableStringFieldUpdateOperationsInput | string | null
     smsWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
     smsWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     smsAddFundEnabled?: BoolFieldUpdateOperationsInput | boolean
@@ -58793,7 +58939,12 @@ export namespace Prisma {
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
     smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsProvider?: EnumSmsProviderFieldUpdateOperationsInput | $Enums.SmsProvider
     smsApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetSecretKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetSenderId?: NullableStringFieldUpdateOperationsInput | string | null
+    smsMilejetApiUrl?: NullableStringFieldUpdateOperationsInput | string | null
     smsWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
     smsWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     smsAddFundEnabled?: BoolFieldUpdateOperationsInput | boolean
@@ -62102,6 +62253,13 @@ export namespace Prisma {
     not?: NestedEnumDisplayCurrencyFilter<$PrismaModel> | $Enums.DisplayCurrency
   }
 
+  export type EnumSmsProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsProvider | EnumSmsProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsProvider[] | ListEnumSmsProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsProvider[] | ListEnumSmsProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsProviderFilter<$PrismaModel> | $Enums.SmsProvider
+  }
+
   export type EnumReferrerRewardTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ReferrerRewardType | EnumReferrerRewardTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
@@ -62142,7 +62300,12 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
     smsEnabled?: SortOrder
+    smsProvider?: SortOrder
     smsApiKeyCiphertext?: SortOrder
+    smsMilejetApiKeyCiphertext?: SortOrder
+    smsMilejetSecretKeyCiphertext?: SortOrder
+    smsMilejetSenderId?: SortOrder
+    smsMilejetApiUrl?: SortOrder
     smsWelcomeEnabled?: SortOrder
     smsWelcomeTemplate?: SortOrder
     smsAddFundEnabled?: SortOrder
@@ -62223,7 +62386,12 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
     smsEnabled?: SortOrder
+    smsProvider?: SortOrder
     smsApiKeyCiphertext?: SortOrder
+    smsMilejetApiKeyCiphertext?: SortOrder
+    smsMilejetSecretKeyCiphertext?: SortOrder
+    smsMilejetSenderId?: SortOrder
+    smsMilejetApiUrl?: SortOrder
     smsWelcomeEnabled?: SortOrder
     smsWelcomeTemplate?: SortOrder
     smsAddFundEnabled?: SortOrder
@@ -62292,7 +62460,12 @@ export namespace Prisma {
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
     smsEnabled?: SortOrder
+    smsProvider?: SortOrder
     smsApiKeyCiphertext?: SortOrder
+    smsMilejetApiKeyCiphertext?: SortOrder
+    smsMilejetSecretKeyCiphertext?: SortOrder
+    smsMilejetSenderId?: SortOrder
+    smsMilejetApiUrl?: SortOrder
     smsWelcomeEnabled?: SortOrder
     smsWelcomeTemplate?: SortOrder
     smsAddFundEnabled?: SortOrder
@@ -62358,6 +62531,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
     _max?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
+  }
+
+  export type EnumSmsProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsProvider | EnumSmsProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsProvider[] | ListEnumSmsProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsProvider[] | ListEnumSmsProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsProviderWithAggregatesFilter<$PrismaModel> | $Enums.SmsProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsProviderFilter<$PrismaModel>
+    _max?: NestedEnumSmsProviderFilter<$PrismaModel>
   }
 
   export type EnumReferrerRewardTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -65378,6 +65561,10 @@ export namespace Prisma {
     set?: $Enums.DisplayCurrency
   }
 
+  export type EnumSmsProviderFieldUpdateOperationsInput = {
+    set?: $Enums.SmsProvider
+  }
+
   export type EnumReferrerRewardTypeFieldUpdateOperationsInput = {
     set?: $Enums.ReferrerRewardType
   }
@@ -66175,6 +66362,13 @@ export namespace Prisma {
     not?: NestedEnumDisplayCurrencyFilter<$PrismaModel> | $Enums.DisplayCurrency
   }
 
+  export type NestedEnumSmsProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsProvider | EnumSmsProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsProvider[] | ListEnumSmsProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsProvider[] | ListEnumSmsProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsProviderFilter<$PrismaModel> | $Enums.SmsProvider
+  }
+
   export type NestedEnumReferrerRewardTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ReferrerRewardType | EnumReferrerRewardTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ReferrerRewardType[] | ListEnumReferrerRewardTypeFieldRefInput<$PrismaModel>
@@ -66200,6 +66394,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
     _max?: NestedEnumDisplayCurrencyFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSmsProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsProvider | EnumSmsProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsProvider[] | ListEnumSmsProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsProvider[] | ListEnumSmsProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsProviderWithAggregatesFilter<$PrismaModel> | $Enums.SmsProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsProviderFilter<$PrismaModel>
+    _max?: NestedEnumSmsProviderFilter<$PrismaModel>
   }
 
   export type NestedEnumReferrerRewardTypeWithAggregatesFilter<$PrismaModel = never> = {

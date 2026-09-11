@@ -1,5 +1,4 @@
-import nodemailer from "nodemailer";
-import { getSmtpConfig } from "../services/settings.service.js";
+import { getMailjetConfig } from "../services/settings.service.js";
 import { env } from "../env.js";
 import { logger } from "./logger.js";
 /**
@@ -7,22 +6,25 @@ import { logger } from "./logger.js";
  *
  *  1. Resend HTTPS API      — when RESEND_API_KEY is set
  *  2. Brevo HTTPS API       — when BREVO_API_KEY is set
- *  3. SMTP                  — admin-configured (Settings → Site Settings)
+ *  3. Mailjet HTTPS API     — admin-configured (Settings → Site Settings)
  *
- * The HTTPS providers are preferred on a cloud host (Railway): shared-hosting
- * (cPanel) SMTP servers are routinely unreachable from a datacenter IP — the
- * SMTP ports time out at a firewall — while an HTTPS call on 443 always gets
- * through. Both need MAIL_FROM = a sender address verified with that provider.
+ * All three are plain HTTPS calls, deliberately — this runs on a
+ * cPanel/shared-hosting host, and outbound SMTP (25/465/587) is routinely
+ * blocked or throttled there while 443 always gets through. This used to
+ * be SMTP-to-Mailjet (in-v3.mailjet.com:587) via nodemailer; that's exactly
+ * the failure mode that made it unreliable, so it's now their HTTP Send
+ * API v3.1 instead — same two credentials (API key / secret key), just a
+ * POST instead of an SMTP session.
  *
  * If nothing is configured, email isn't silently dropped: the content is
  * logged instead, so flows like password reset still work end-to-end in dev
  * without a mail server.
  */
-/** True when at least one transport (an HTTPS provider, or full SMTP settings) is usable. */
+/** True when at least one transport (an HTTPS provider, or Mailjet) is usable. */
 export async function isMailConfigured() {
     if (env.httpMailEnabled)
         return true;
-    return (await getSmtpConfig()) !== null;
+    return (await getMailjetConfig()) !== null;
 }
 export async function sendMail(to, subject, text) {
     if (env.RESEND_API_KEY) {
@@ -33,12 +35,12 @@ export async function sendMail(to, subject, text) {
         await sendViaBrevo(to, subject, text);
         return;
     }
-    const config = await getSmtpConfig();
+    const config = await getMailjetConfig();
     if (!config) {
         logger.warn({ to, subject, text }, "Email not configured — logging instead of sending");
         return;
     }
-    await sendViaSmtp(config, to, subject, text);
+    await sendViaMailjet(config, to, subject, text);
 }
 function requireMailFrom(keyName) {
     if (!env.MAIL_FROM) {
@@ -78,28 +80,76 @@ async function sendViaBrevo(to, subject, text) {
         throw new Error(`Brevo API error ${res.status}: ${detail.slice(0, 300)}`);
     }
 }
-async function sendViaSmtp(config, to, subject, text) {
-    const secure = config.port === 465;
-    const transporter = nodemailer.createTransport({
-        host: config.host,
-        port: config.port,
-        secure, // 465 = implicit TLS; anything else starts plain and upgrades
-        requireTLS: !secure, // for 587/25, refuse to send if STARTTLS isn't offered
-        auth: config.user ? { user: config.user, pass: config.pass } : undefined,
-        // Fail fast with a real error instead of hanging the request.
-        connectionTimeout: 15_000,
-        greetingTimeout: 10_000,
-        socketTimeout: 20_000,
-        // Shared-hosting mail servers commonly present a certificate whose
-        // hostname doesn't match `host`; strict verification then rejects the
-        // connection. The submission hop is still encrypted + authenticated.
-        tls: { rejectUnauthorized: false },
-    });
-    try {
-        await transporter.sendMail({ from: config.from, to, subject, text });
+/** Pulls whatever error text Mailjet actually sent back, however that particular failure shaped it. */
+function extractMailjetError(body) {
+    if (!body || typeof body !== "object")
+        return "";
+    const b = body;
+    // Auth/request-level failures: {"ErrorMessage": "..."} (or "Message").
+    if (typeof b.ErrorMessage === "string")
+        return b.ErrorMessage;
+    if (typeof b.Message === "string")
+        return b.Message;
+    // Per-message failures: {"Messages": [{"Status": "error", "Errors": [{"ErrorMessage": "..."}]}]}
+    const messages = Array.isArray(b.Messages) ? b.Messages : [];
+    for (const m of messages) {
+        const errors = m && typeof m === "object" && Array.isArray(m.Errors) ? m.Errors : [];
+        for (const e of errors) {
+            if (e && typeof e === "object" && typeof e.ErrorMessage === "string") {
+                return e.ErrorMessage;
+            }
+        }
     }
-    catch (err) {
-        logger.error({ err, host: config.host, port: config.port }, "SMTP send failed");
-        throw err;
+    return "";
+}
+/**
+ * Mailjet Send API v3.1 (https://dev.mailjet.com/email/reference/send-emails/)
+ * — HTTP Basic Auth (API key / secret key), one retry on a transient
+ * failure (network error or 5xx — Mailjet's own fault, worth one more try)
+ * since this sits on a few live user-facing paths (password reset, order/
+ * deposit notifications). A 4xx never retries — that's a config problem
+ * (bad key, unverified sender) a second identical request won't fix.
+ */
+async function sendViaMailjet(config, to, subject, text) {
+    const auth = Buffer.from(`${config.apiKey}:${config.secretKey}`).toString("base64");
+    const payload = {
+        Messages: [
+            {
+                From: { Email: config.from, Name: config.fromName },
+                To: [{ Email: to }],
+                Subject: subject,
+                TextPart: text,
+            },
+        ],
+    };
+    let lastErr;
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+        let res;
+        try {
+            res = await fetch("https://api.mailjet.com/v3.1/send", {
+                method: "POST",
+                headers: { "content-type": "application/json", authorization: `Basic ${auth}` },
+                body: JSON.stringify(payload),
+                signal: AbortSignal.timeout(10_000),
+            });
+        }
+        catch (err) {
+            lastErr = err;
+            logger.warn({ err, attempt }, "Mailjet API request failed — network/timeout");
+            continue; // transient — try once more
+        }
+        const body = await res.json().catch(() => null);
+        if (res.ok)
+            return;
+        const detail = extractMailjetError(body) || JSON.stringify(body).slice(0, 300);
+        if (res.status >= 400 && res.status < 500) {
+            // Config problem, not a transient failure — fail fast with the real reason.
+            logger.error({ status: res.status, detail }, "Mailjet API rejected the email");
+            throw new Error(`Mailjet API error ${res.status}: ${detail}`);
+        }
+        lastErr = new Error(`Mailjet API error ${res.status}: ${detail}`);
+        logger.warn({ status: res.status, detail, attempt }, "Mailjet API server error — retrying once");
     }
+    logger.error({ err: lastErr }, "Mailjet send failed after retry");
+    throw lastErr instanceof Error ? lastErr : new Error("Mailjet send failed after retry");
 }

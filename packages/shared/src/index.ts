@@ -575,6 +575,11 @@ export type PaymentMethodInput = z.infer<typeof paymentMethodInputSchema>;
 export const LiveChatProviderValues = ["NONE", "TAWKTO", "CRISP"] as const;
 export type LiveChatProvider = (typeof LiveChatProviderValues)[number];
 
+// Keep in sync with the Prisma SmsProvider enum. See lib/sms.ts for the
+// per-provider request shape each one actually sends.
+export const SmsProviderValues = ["URONTO", "MILEJET"] as const;
+export type SmsProvider = (typeof SmsProviderValues)[number];
+
 export const DisplayCurrencyValues = ["USD", "BDT"] as const;
 
 export const ReferrerRewardTypeValues = ["PERCENTAGE", "FIXED"] as const;
@@ -656,7 +661,15 @@ export const updateSettingsSchema = z.object({
   // is never re-sent to the admin UI after saving, so there's nothing to
   // prefill; omitting it on save keeps the existing encrypted key.
   smsEnabled: z.boolean().optional(),
-  smsApiKey: z.string().trim().max(500).optional(),
+  smsProvider: z.enum(SmsProviderValues).optional(),
+  smsApiKey: z.string().trim().max(500).optional(), // URONTO's key
+  // MiLeJet credentials — same write-only-secret treatment; senderId/apiUrl
+  // aren't secret so they round-trip normally ("" clears, like the
+  // announcement-modal fields above).
+  smsMilejetApiKey: z.string().trim().max(500).optional(),
+  smsMilejetSecretKey: z.string().trim().max(500).optional(),
+  smsMilejetSenderId: z.string().trim().max(50).or(z.literal("")).nullable().optional(),
+  smsMilejetApiUrl: z.string().trim().url().max(2048).or(z.literal("")).nullable().optional(),
   smsWelcomeEnabled: z.boolean().optional(),
   smsWelcomeTemplate: z.string().trim().max(500).or(z.literal("")).nullable().optional(),
   smsAddFundEnabled: z.boolean().optional(),
@@ -712,10 +725,15 @@ export const sendTestEmailSchema = z.object({
 });
 export type SendTestEmailInput = z.infer<typeof sendTestEmailSchema>;
 
-// Admin-only "Send test SMS" action (Settings -> SMS Notifications card) —
-// same shape/purpose as sendTestEmailSchema above, for lib/sms.ts.
+// Admin-only "Send test SMS" / Live Tester action (Settings -> SMS
+// Notifications card) — same shape/purpose as sendTestEmailSchema above,
+// for lib/sms.ts. `message` is optional so the plain "Send test SMS"
+// button (no message typed) still works with a canned default; the Live
+// Tester UI always sends one so the admin can see the exact provider
+// response for the exact text they typed.
 export const sendTestSmsSchema = z.object({
   to: z.string().trim().min(6).max(20),
+  message: z.string().trim().min(1).max(1000).optional(),
 });
 export type SendTestSmsInput = z.infer<typeof sendTestSmsSchema>;
 

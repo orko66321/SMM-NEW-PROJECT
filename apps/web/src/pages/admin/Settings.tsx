@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { DisplayCurrency, LiveChatProvider, ReferrerRewardType } from "@smm/shared";
+import { computeSmsSegments, type DisplayCurrency, type LiveChatProvider, type ReferrerRewardType, type SmsProvider } from "@smm/shared";
 import { getAdminSettings, sendAdminTestEmail, sendAdminTestSms, updateAdminSettings } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { Link } from "react-router-dom";
@@ -46,7 +46,12 @@ interface AdminSettings {
   smtpFromAddress: string | null;
   smtpConfigured: boolean;
   smsEnabled: boolean;
+  smsProvider: SmsProvider;
   smsApiKeyConfigured: boolean;
+  smsMilejetApiKeyConfigured: boolean;
+  smsMilejetSecretKeyConfigured: boolean;
+  smsMilejetSenderId: string | null;
+  smsMilejetApiUrl: string | null;
   smsWelcomeEnabled: boolean;
   smsWelcomeTemplate: string | null;
   smsAddFundEnabled: boolean;
@@ -283,7 +288,12 @@ export default function AdminSettingsPage() {
     smtpPassword: "",
     smtpFromAddress: "",
     smsEnabled: false,
+    smsProvider: "URONTO" as SmsProvider,
     smsApiKey: "",
+    smsMilejetApiKey: "",
+    smsMilejetSecretKey: "",
+    smsMilejetSenderId: "",
+    smsMilejetApiUrl: "",
     smsWelcomeEnabled: false,
     smsWelcomeTemplate: "",
     smsAddFundEnabled: false,
@@ -321,7 +331,9 @@ export default function AdminSettingsPage() {
   const [testEmailTo, setTestEmailTo] = useState("");
   const [sendingTestEmail, setSendingTestEmail] = useState(false);
   const [testSmsTo, setTestSmsTo] = useState("");
+  const [testSmsMessage, setTestSmsMessage] = useState("");
   const [sendingTestSms, setSendingTestSms] = useState(false);
+  const [testSmsResult, setTestSmsResult] = useState<{ ok: boolean; status: number; body: unknown } | null>(null);
 
   useEffect(() => {
     if (user?.email) setTestEmailTo((current) => current || user.email);
@@ -360,7 +372,12 @@ export default function AdminSettingsPage() {
       smtpPassword: "",
       smtpFromAddress: s.smtpFromAddress ?? "",
       smsEnabled: s.smsEnabled ?? false,
+      smsProvider: s.smsProvider ?? "URONTO",
       smsApiKey: "",
+      smsMilejetApiKey: "",
+      smsMilejetSecretKey: "",
+      smsMilejetSenderId: s.smsMilejetSenderId ?? "",
+      smsMilejetApiUrl: s.smsMilejetApiUrl ?? "",
       smsWelcomeEnabled: s.smsWelcomeEnabled ?? false,
       smsWelcomeTemplate: s.smsWelcomeTemplate ?? "",
       smsAddFundEnabled: s.smsAddFundEnabled ?? false,
@@ -430,7 +447,12 @@ export default function AdminSettingsPage() {
         ...(form.smtpPassword ? { smtpPassword: form.smtpPassword } : {}),
         smtpFromAddress: form.smtpFromAddress || null,
         smsEnabled: form.smsEnabled,
+        smsProvider: form.smsProvider,
         ...(form.smsApiKey ? { smsApiKey: form.smsApiKey } : {}),
+        ...(form.smsMilejetApiKey ? { smsMilejetApiKey: form.smsMilejetApiKey } : {}),
+        ...(form.smsMilejetSecretKey ? { smsMilejetSecretKey: form.smsMilejetSecretKey } : {}),
+        smsMilejetSenderId: form.smsMilejetSenderId.trim() || null,
+        smsMilejetApiUrl: form.smsMilejetApiUrl.trim() || null,
         smsWelcomeEnabled: form.smsWelcomeEnabled,
         smsWelcomeTemplate: form.smsWelcomeTemplate.trim() || null,
         smsAddFundEnabled: form.smsAddFundEnabled,
@@ -467,7 +489,7 @@ export default function AdminSettingsPage() {
       toast.push("Settings saved.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin-settings"] });
       queryClient.invalidateQueries({ queryKey: ["public-settings"] });
-      setForm((f) => ({ ...f, smtpPassword: "", smsApiKey: "" }));
+      setForm((f) => ({ ...f, smtpPassword: "", smsApiKey: "", smsMilejetApiKey: "", smsMilejetSecretKey: "" }));
     } catch (err) {
       toast.push(apiErrorMessage(err, "Failed to save settings"), "error");
     } finally {
@@ -491,9 +513,11 @@ export default function AdminSettingsPage() {
   async function onSendTestSms() {
     if (!testSmsTo.trim()) return;
     setSendingTestSms(true);
+    setTestSmsResult(null);
     try {
-      await sendAdminTestSms(testSmsTo.trim());
-      toast.push("Test SMS sent.", "success");
+      const result = await sendAdminTestSms(testSmsTo.trim(), testSmsMessage.trim() || undefined);
+      setTestSmsResult(result);
+      toast.push(result.ok ? "Test SMS sent." : "Provider rejected the message — see the response below.", result.ok ? "success" : "error");
     } catch (err) {
       toast.push(apiErrorMessage(err, "Test SMS failed"), "error");
     } finally {
@@ -853,21 +877,18 @@ export default function AdminSettingsPage() {
       </div>
 
       <div className="card space-y-3">
-        <h2 className="text-sm font-semibold">SMTP (password reset emails)</h2>
+        <h2 className="text-sm font-semibold">Mailjet (transactional email)</h2>
         <p className="text-xs text-on-surface-variant">
-          {settings ? ((settings as AdminSettings).smtpConfigured ? "A password is currently saved." : "No password saved yet.") : ""}
-          {" "}When left disabled/unconfigured, reset links are logged server-side instead of emailed.
+          {settings ? ((settings as AdminSettings).smtpConfigured ? "A secret key is currently saved." : "No secret key saved yet.") : ""}
+          {" "}Sent via Mailjet&rsquo;s HTTPS Send API (not SMTP — shared hosts routinely block outbound SMTP ports). When
+          left disabled/unconfigured, password-reset links are logged server-side instead of emailed.
         </p>
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={form.smtpEnabled} onChange={(e) => setForm((f) => ({ ...f, smtpEnabled: e.target.checked }))} /> Enable SMTP sending
+          <input type="checkbox" checked={form.smtpEnabled} onChange={(e) => setForm((f) => ({ ...f, smtpEnabled: e.target.checked }))} /> Enable email sending
         </label>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <input className="input-field" placeholder="SMTP host" value={form.smtpHost} onChange={(e) => setForm((f) => ({ ...f, smtpHost: e.target.value }))} />
-          <input className="input-field" placeholder="Port" type="number" value={form.smtpPort} onChange={(e) => setForm((f) => ({ ...f, smtpPort: e.target.value }))} />
-        </div>
-        <input className="input-field" placeholder="SMTP username" value={form.smtpUser} onChange={(e) => setForm((f) => ({ ...f, smtpUser: e.target.value }))} />
-        <input className="input-field" type="password" placeholder="SMTP password (leave blank to keep existing)" value={form.smtpPassword} onChange={(e) => setForm((f) => ({ ...f, smtpPassword: e.target.value }))} />
-        <input className="input-field" placeholder="From address, e.g. noreply@yourpanel.com" value={form.smtpFromAddress} onChange={(e) => setForm((f) => ({ ...f, smtpFromAddress: e.target.value }))} />
+        <input className="input-field" placeholder="Mailjet API Key" value={form.smtpUser} onChange={(e) => setForm((f) => ({ ...f, smtpUser: e.target.value }))} />
+        <input className="input-field" type="password" placeholder="Mailjet Secret Key (leave blank to keep existing)" value={form.smtpPassword} onChange={(e) => setForm((f) => ({ ...f, smtpPassword: e.target.value }))} />
+        <input className="input-field" placeholder="From address, e.g. noreply@yourpanel.com — must be a Mailjet-verified sender" value={form.smtpFromAddress} onChange={(e) => setForm((f) => ({ ...f, smtpFromAddress: e.target.value }))} />
 
         <div className="flex flex-col gap-2 border-t border-outline-variant pt-3 sm:flex-row sm:items-center">
           <input
@@ -890,26 +911,94 @@ export default function AdminSettingsPage() {
           </Button>
         </div>
         <p className="text-xs text-on-surface-variant">
-          Save your SMTP settings first — the test uses the saved password, not what&apos;s typed above.
+          Save your Mailjet settings first — the test uses the saved secret key, not what&apos;s typed above. A failure
+          shows Mailjet&rsquo;s actual error (invalid key, unverified sender, rate limit, …).
         </p>
       </div>
 
       <div className="card space-y-3">
-        <h2 className="text-sm font-semibold">SMS Notifications (uronto SMS)</h2>
+        <h2 className="text-sm font-semibold">SMS Notifications</h2>
         <p className="text-xs text-on-surface-variant">
-          {settings ? ((settings as AdminSettings).smsApiKeyConfigured ? "An API key is currently saved." : "No API key saved yet.") : ""}
-          {" "}Sends a text for welcome / add-fund / order-confirmation events, each toggled independently below.
+          Sends a text for welcome / add-fund / order-confirmation events, each toggled independently below.
         </p>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={form.smsEnabled} onChange={(e) => setForm((f) => ({ ...f, smsEnabled: e.target.checked }))} /> Enable SMS sending
         </label>
-        <input
-          className="input-field"
-          type="password"
-          placeholder="uronto SMS API key (leave blank to keep existing)"
-          value={form.smsApiKey}
-          onChange={(e) => setForm((f) => ({ ...f, smsApiKey: e.target.value }))}
-        />
+
+        <div>
+          <label className="label">SMS Provider</label>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {(["URONTO", "MILEJET"] as SmsProvider[]).map((p) => (
+              <label
+                key={p}
+                className={`flex min-h-[44px] cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm ${
+                  form.smsProvider === p ? "border-primary bg-primary/10 text-primary" : "border-outline-variant text-on-surface-variant"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="smsProvider"
+                  className="accent-primary"
+                  checked={form.smsProvider === p}
+                  onChange={() => setForm((f) => ({ ...f, smsProvider: p }))}
+                />
+                {p === "URONTO" ? "uronto SMS" : "MiLeJet"}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {form.smsProvider === "URONTO" ? (
+          <>
+            <p className="text-xs text-on-surface-variant">
+              {settings ? ((settings as AdminSettings).smsApiKeyConfigured ? "An API key is currently saved." : "No API key saved yet.") : ""}
+            </p>
+            <input
+              className="input-field"
+              type="password"
+              placeholder="uronto SMS API key (leave blank to keep existing)"
+              value={form.smsApiKey}
+              onChange={(e) => setForm((f) => ({ ...f, smsApiKey: e.target.value }))}
+            />
+          </>
+        ) : (
+          <>
+            <p className="text-xs text-on-surface-variant">
+              {settings
+                ? [
+                    (settings as AdminSettings).smsMilejetApiKeyConfigured ? "API key saved." : "No API key saved yet.",
+                    (settings as AdminSettings).smsMilejetSecretKeyConfigured ? "Secret key saved." : "No secret key saved yet.",
+                  ].join(" ")
+                : ""}
+            </p>
+            <input
+              className="input-field"
+              type="password"
+              placeholder="MiLeJet API Key (leave blank to keep existing)"
+              value={form.smsMilejetApiKey}
+              onChange={(e) => setForm((f) => ({ ...f, smsMilejetApiKey: e.target.value }))}
+            />
+            <input
+              className="input-field"
+              type="password"
+              placeholder="MiLeJet Secret Key (leave blank to keep existing)"
+              value={form.smsMilejetSecretKey}
+              onChange={(e) => setForm((f) => ({ ...f, smsMilejetSecretKey: e.target.value }))}
+            />
+            <input
+              className="input-field"
+              placeholder="Sender ID"
+              value={form.smsMilejetSenderId}
+              onChange={(e) => setForm((f) => ({ ...f, smsMilejetSenderId: e.target.value }))}
+            />
+            <input
+              className="input-field"
+              placeholder="API URL (optional — defaults to https://api.milejet.com/api/v1/sms/send)"
+              value={form.smsMilejetApiUrl}
+              onChange={(e) => setForm((f) => ({ ...f, smsMilejetApiUrl: e.target.value }))}
+            />
+          </>
+        )}
 
         <div className="space-y-3 border-t border-outline-variant pt-3">
           <label className="flex items-center gap-2 text-sm">
@@ -954,14 +1043,30 @@ export default function AdminSettingsPage() {
           {" "}{"{{amount}}"}, {"{{balance}}"} (Add Fund only), {"{{orderId}}"}, {"{{service}}"}, {"{{quantity}}"} (Order Confirmation only).
         </p>
 
-        <div className="flex flex-col gap-2 border-t border-outline-variant pt-3 sm:flex-row sm:items-center">
+        <div className="space-y-2 border-t border-outline-variant pt-3">
+          <p className="label">Live Tester</p>
           <input
             type="tel"
-            className="input-field sm:flex-1"
-            placeholder="Send test SMS to… e.g. 01700000000"
+            className="input-field"
+            placeholder="Test phone number, e.g. 01700000000"
             value={testSmsTo}
             onChange={(e) => setTestSmsTo(e.target.value)}
           />
+          <textarea
+            className="input-field"
+            rows={2}
+            placeholder="Custom test message (optional — a canned message is used if left blank)"
+            value={testSmsMessage}
+            onChange={(e) => setTestSmsMessage(e.target.value)}
+          />
+          {testSmsMessage.trim() && (() => {
+            const seg = computeSmsSegments(testSmsMessage);
+            return (
+              <p className="font-mono text-xs text-on-surface-variant">
+                Characters: {seg.length} · {seg.encoding === "GSM7" ? "English (160/SMS)" : "Bangla/Unicode (70/SMS)"} · SMS count: {seg.segments}
+              </p>
+            );
+          })()}
           <Button
             type="button"
             variant="ghost"
@@ -973,17 +1078,22 @@ export default function AdminSettingsPage() {
             )}
             {sendingTestSms ? "Sending…" : "Send test SMS"}
           </Button>
+          {testSmsResult && (
+            <pre className="aio-scroll max-h-48 overflow-auto rounded-control bg-surface-container-high p-3 text-[11px] text-on-surface-variant">
+              {JSON.stringify(testSmsResult, null, 2)}
+            </pre>
+          )}
         </div>
         <p className="text-xs text-on-surface-variant">
-          Save your SMS settings first — the test uses the saved API key, not what&apos;s typed above.
+          Save your SMS settings first — the test uses the saved credentials, not what&apos;s typed above.
         </p>
       </div>
 
       <div className="card space-y-3">
         <h2 className="text-sm font-semibold">Email Notifications</h2>
         <p className="text-xs text-on-surface-variant">
-          Sent via whichever email transport is already configured above (SMTP, or a hosted provider on the API
-          server) — use the &ldquo;Send test email&rdquo; button in the SMTP card to confirm that&apos;s working. Each
+          Sent via whichever email transport is already configured above (Mailjet, or a hosted provider on the API
+          server) — use the &ldquo;Send test email&rdquo; button in the Mailjet card to confirm that&apos;s working. Each
           event below is toggled independently and defaults to off.
         </p>
 
