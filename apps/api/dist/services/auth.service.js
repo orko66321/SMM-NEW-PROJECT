@@ -60,6 +60,8 @@ function publicUser(user) {
         isReseller: (user.isReseller ?? false) || !!user.apiKeyHash,
         hasDeposited: user.hasDeposited ?? false,
         referralCode: user.referralCode ?? "",
+        // Null for most Google accounts — drives the phone-onboarding modal.
+        phone: user.phone ?? null,
     };
 }
 export async function registerUser(input) {

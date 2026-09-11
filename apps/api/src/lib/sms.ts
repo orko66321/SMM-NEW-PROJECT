@@ -10,6 +10,15 @@ import { logger } from "./logger.js";
  */
 
 const SMS_API_URL = "https://urontosms.hostgi.com/api/sms";
+// NOT confirmed against uronto SMS's actual API docs — a common convention
+// for this style of BD bulk-SMS panel, used as a best guess for the admin
+// "remaining balance" widget (routes/admin/sms.routes.ts's GET /balance).
+// getSmsBalance() below degrades to `{ available: false }` on any failure
+// (wrong path, unexpected shape, timeout) rather than showing a wrong
+// number, so a bad guess here never blocks sending — only hides the widget.
+// Confirm the real path/response shape with uronto SMS and adjust if this
+// keeps coming back unavailable.
+const SMS_BALANCE_API_URL = "https://urontosms.hostgi.com/api/balance";
 
 /** True when the admin has enabled SMS and saved an API key. */
 export async function isSmsConfigured(): Promise<boolean> {
@@ -58,4 +67,31 @@ export async function sendSms(to: string, message: string): Promise<void> {
     throw new Error(`SMS API error ${res.status}: ${JSON.stringify(body).slice(0, 300)}`);
   }
   logger.info({ number, body }, "SMS sent");
+}
+
+/**
+ * Best-effort remaining-credit lookup for the admin SMS Campaigns balance
+ * widget — see SMS_BALANCE_API_URL's comment above for why this is
+ * defensive rather than trusted. Never throws.
+ */
+export async function getSmsBalance(): Promise<{ available: boolean; balance?: number }> {
+  const config = await getSmsConfig();
+  if (!config) return { available: false };
+
+  try {
+    const url = new URL(SMS_BALANCE_API_URL);
+    url.searchParams.set("key", config.apiKey);
+    const res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+    if (!res.ok) return { available: false };
+    const body: unknown = await res.json().catch(() => null);
+    if (!body || typeof body !== "object") return { available: false };
+    // Accept whichever of these keys the provider actually uses.
+    const raw = (body as Record<string, unknown>).balance ?? (body as Record<string, unknown>).credit ?? (body as Record<string, unknown>).sms_count;
+    const balance = typeof raw === "number" ? raw : typeof raw === "string" ? Number(raw) : NaN;
+    if (!Number.isFinite(balance)) return { available: false };
+    return { available: true, balance };
+  } catch (err) {
+    logger.warn({ err }, "SMS balance lookup failed — hiding the widget instead of showing a wrong number");
+    return { available: false };
+  }
 }

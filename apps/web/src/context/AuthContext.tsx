@@ -10,6 +10,11 @@ interface AuthContextValue {
   loginWithGoogle: (idToken: string) => Promise<void>;
   register: (input: RegisterInput) => Promise<void>;
   logout: () => Promise<void>;
+  // Reflects a just-saved phone number into the in-memory user object —
+  // e.g. after PhoneOnboardingModal's PATCH /users/me succeeds — without a
+  // full session refresh. Purely local state; the source of truth is
+  // already updated server-side by that point.
+  setUserPhone: (phone: string) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -53,9 +58,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const setUserPhone = useCallback((phone: string) => {
+    setUser((current) => (current ? { ...current, phone } : current));
+  }, []);
+
   const value = useMemo(
-    () => ({ user, loading, login, loginWithGoogle, register, logout }),
-    [user, loading, login, loginWithGoogle, register, logout],
+    () => ({ user, loading, login, loginWithGoogle, register, logout, setUserPhone }),
+    [user, loading, login, loginWithGoogle, register, logout, setUserPhone],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -236,10 +236,12 @@ export declare const authUserSchema: z.ZodObject<{
     isReseller: z.ZodBoolean;
     hasDeposited: z.ZodBoolean;
     referralCode: z.ZodString;
+    phone: z.ZodNullable<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     status: "ACTIVE" | "SUSPENDED";
     username: string;
     email: string;
+    phone: string | null;
     referralCode: string;
     id: string;
     role: "USER" | "MODERATOR" | "ADMIN";
@@ -252,6 +254,7 @@ export declare const authUserSchema: z.ZodObject<{
     status: "ACTIVE" | "SUSPENDED";
     username: string;
     email: string;
+    phone: string | null;
     referralCode: string;
     id: string;
     role: "USER" | "MODERATOR" | "ADMIN";
@@ -2231,3 +2234,46 @@ export declare const purchasePackageSchema: z.ZodObject<{
     buyerInput: string;
 }>;
 export type PurchasePackageInput = z.infer<typeof purchasePackageSchema>;
+export declare const SmsCampaignTargetGroupValues: readonly ["ALL", "VIP", "RESELLER", "CUSTOM"];
+export type SmsCampaignTargetGroup = (typeof SmsCampaignTargetGroupValues)[number];
+export declare const SmsCampaignStatusValues: readonly ["PENDING", "SENDING", "COMPLETED", "FAILED"];
+export type SmsCampaignStatus = (typeof SmsCampaignStatusValues)[number];
+export declare const bdPhoneRegex: RegExp;
+export declare function isGsm7Text(text: string): boolean;
+export interface SmsSegmentInfo {
+    encoding: "GSM7" | "UNICODE";
+    length: number;
+    /** Max characters in a single (non-concatenated) SMS at this encoding. */
+    singleSegmentLimit: number;
+    /** How many SMS segments this text bills as (0 for an empty message). */
+    segments: number;
+}
+/** Single source of truth for "how many SMS units does this message cost" — used by the live composer preview and the actual campaign-creation billing count, so they can never drift apart. */
+export declare function computeSmsSegments(text: string): SmsSegmentInfo;
+export declare const createSmsCampaignSchema: z.ZodEffects<z.ZodObject<{
+    title: z.ZodString;
+    message: z.ZodString;
+    targetGroup: z.ZodEnum<["ALL", "VIP", "RESELLER", "CUSTOM"]>;
+    customNumbers: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+}, "strip", z.ZodTypeAny, {
+    message: string;
+    title: string;
+    targetGroup: "CUSTOM" | "ALL" | "VIP" | "RESELLER";
+    customNumbers?: string[] | undefined;
+}, {
+    message: string;
+    title: string;
+    targetGroup: "CUSTOM" | "ALL" | "VIP" | "RESELLER";
+    customNumbers?: string[] | undefined;
+}>, {
+    message: string;
+    title: string;
+    targetGroup: "CUSTOM" | "ALL" | "VIP" | "RESELLER";
+    customNumbers?: string[] | undefined;
+}, {
+    message: string;
+    title: string;
+    targetGroup: "CUSTOM" | "ALL" | "VIP" | "RESELLER";
+    customNumbers?: string[] | undefined;
+}>;
+export type CreateSmsCampaignInput = z.infer<typeof createSmsCampaignSchema>;
