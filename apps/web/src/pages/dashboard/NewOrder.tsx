@@ -11,6 +11,7 @@ import {
   getWallet,
   initiateGatewayDeposit,
   placeOrder,
+  updateMyProfile,
 } from "../../api/resources.js";
 import { usePlatformFilter } from "./usePlatformFilter.js";
 import { apiErrorMessage } from "../../api/client.js";
@@ -24,6 +25,7 @@ import HowToOrderLink from "../../components/HowToOrderLink.js";
 import RecentlyCompleted from "../../components/services/RecentlyCompleted.js";
 import SubscriptionStrip from "../../components/store/SubscriptionStrip.js";
 import { BilingualNote, Icon } from "../../components/ds/index.js";
+import { BD_PHONE_REGEX } from "../../components/dashboard/PhoneOnboardingModal.js";
 import "../../styles/panel-glass.css";
 
 // Shape of the 402 response body order.service.ts's createOrderOrRedirect
@@ -105,10 +107,16 @@ export default function NewOrder() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { user } = useAuth();
+  const { user, setUserPhone } = useAuth();
   const { t, lang } = useLanguage();
   const { formatCurrency } = useCurrency();
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
+  // Checkout fallback for an account with no phone on file — see
+  // components/dashboard/PhoneOnboardingModal.tsx, the primary prompt;
+  // this covers whoever dismissed it and placed an order anyway.
+  const [notifyPhone, setNotifyPhone] = useState("");
+  const [notifyPhoneError, setNotifyPhoneError] = useState<string | null>(null);
+  const needsPhone = !!user && !user.phone;
   const [draft] = useState(readDraft);
   useEffect(() => {
     if (draft) clearDraft();
@@ -195,6 +203,22 @@ export default function NewOrder() {
       saveDraft({ categoryId, serviceId, link, quantity });
       setAuthPromptOpen(true);
       return;
+    }
+    if (needsPhone) {
+      const trimmed = notifyPhone.trim();
+      if (!BD_PHONE_REGEX.test(trimmed)) {
+        setNotifyPhoneError(t("phoneOnboarding.invalidFormat"));
+        return;
+      }
+      setNotifyPhoneError(null);
+      try {
+        await updateMyProfile({ phone: trimmed });
+        setUserPhone(trimmed);
+        queryClient.invalidateQueries({ queryKey: ["my-profile"] });
+      } catch (err) {
+        setError(apiErrorMessage(err, t("phoneOnboarding.saveFailedFallback")));
+        return;
+      }
     }
     setSubmitting(true);
     try {
@@ -492,6 +516,37 @@ export default function NewOrder() {
                     </button>
                   </div>
                 </div>
+
+                {/* Notification phone fallback — only when the account has none on file yet */}
+                {needsPhone && (
+                  <div>
+                    <label
+                      className="mb-2 flex flex-wrap items-baseline gap-2 text-[13px] font-semibold text-[#f4f2fb]"
+                      htmlFor="notifyPhone"
+                    >
+                      {t("phoneOnboarding.checkoutLabel")}
+                      <span className="text-[10px] font-medium uppercase tracking-wider text-[#5de6ff]">Phone</span>
+                    </label>
+                    <input
+                      id="notifyPhone"
+                      type="tel"
+                      inputMode="numeric"
+                      className="no-field"
+                      placeholder={t("phoneOnboarding.placeholder")}
+                      value={notifyPhone}
+                      onChange={(e) => {
+                        setNotifyPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 11));
+                        setNotifyPhoneError(null);
+                      }}
+                      required
+                    />
+                    {notifyPhoneError ? (
+                      <p className="mt-1.5 text-xs text-error">{notifyPhoneError}</p>
+                    ) : (
+                      <p className="mt-1.5 text-xs text-[#8b8598]">{t("phoneOnboarding.checkoutHint")}</p>
+                    )}
+                  </div>
+                )}
 
                 {/* Total charge */}
                 <div className="no-total shadow-[0_0_22px_-6px_rgba(124,58,237,0.5)]">

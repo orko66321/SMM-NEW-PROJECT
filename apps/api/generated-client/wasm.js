@@ -505,6 +505,24 @@ exports.Prisma.AdminAuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.SmsCampaignScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  message: 'message',
+  targetGroup: 'targetGroup',
+  recipients: 'recipients',
+  recipientCount: 'recipientCount',
+  smsUnitsPerRecipient: 'smsUnitsPerRecipient',
+  totalSmsUnits: 'totalSmsUnits',
+  processedCount: 'processedCount',
+  successCount: 'successCount',
+  failedCount: 'failedCount',
+  status: 'status',
+  sentById: 'sentById',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.DripFeedScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -878,6 +896,20 @@ exports.DepositStatus = exports.$Enums.DepositStatus = {
   REJECTED: 'REJECTED'
 };
 
+exports.SmsCampaignTargetGroup = exports.$Enums.SmsCampaignTargetGroup = {
+  ALL: 'ALL',
+  VIP: 'VIP',
+  RESELLER: 'RESELLER',
+  CUSTOM: 'CUSTOM'
+};
+
+exports.SmsCampaignStatus = exports.$Enums.SmsCampaignStatus = {
+  PENDING: 'PENDING',
+  SENDING: 'SENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
 exports.ChildPanelStatus = exports.$Enums.ChildPanelStatus = {
   PENDING: 'PENDING',
   ACTIVE: 'ACTIVE',
@@ -965,6 +997,7 @@ exports.Prisma.ModelName = {
   TicketOrderAction: 'TicketOrderAction',
   Deposit: 'Deposit',
   AdminAuditLog: 'AdminAuditLog',
+  SmsCampaign: 'SmsCampaign',
   DripFeed: 'DripFeed',
   Affiliate: 'Affiliate',
   ChildPanel: 'ChildPanel',

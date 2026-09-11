@@ -154,6 +154,11 @@ export type Deposit = $Result.DefaultSelection<Prisma.$DepositPayload>
  */
 export type AdminAuditLog = $Result.DefaultSelection<Prisma.$AdminAuditLogPayload>
 /**
+ * Model SmsCampaign
+ * 
+ */
+export type SmsCampaign = $Result.DefaultSelection<Prisma.$SmsCampaignPayload>
+/**
  * Model DripFeed
  * 
  */
@@ -453,6 +458,26 @@ export const DepositStatus: {
 export type DepositStatus = (typeof DepositStatus)[keyof typeof DepositStatus]
 
 
+export const SmsCampaignTargetGroup: {
+  ALL: 'ALL',
+  VIP: 'VIP',
+  RESELLER: 'RESELLER',
+  CUSTOM: 'CUSTOM'
+};
+
+export type SmsCampaignTargetGroup = (typeof SmsCampaignTargetGroup)[keyof typeof SmsCampaignTargetGroup]
+
+
+export const SmsCampaignStatus: {
+  PENDING: 'PENDING',
+  SENDING: 'SENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type SmsCampaignStatus = (typeof SmsCampaignStatus)[keyof typeof SmsCampaignStatus]
+
+
 export const ChildPanelStatus: {
   PENDING: 'PENDING',
   ACTIVE: 'ACTIVE',
@@ -637,6 +662,14 @@ export const TicketOrderActionResult: typeof $Enums.TicketOrderActionResult
 export type DepositStatus = $Enums.DepositStatus
 
 export const DepositStatus: typeof $Enums.DepositStatus
+
+export type SmsCampaignTargetGroup = $Enums.SmsCampaignTargetGroup
+
+export const SmsCampaignTargetGroup: typeof $Enums.SmsCampaignTargetGroup
+
+export type SmsCampaignStatus = $Enums.SmsCampaignStatus
+
+export const SmsCampaignStatus: typeof $Enums.SmsCampaignStatus
 
 export type ChildPanelStatus = $Enums.ChildPanelStatus
 
@@ -1080,6 +1113,16 @@ export class PrismaClient<
     * ```
     */
   get adminAuditLog(): Prisma.AdminAuditLogDelegate<ExtArgs>;
+
+  /**
+   * `prisma.smsCampaign`: Exposes CRUD operations for the **SmsCampaign** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SmsCampaigns
+    * const smsCampaigns = await prisma.smsCampaign.findMany()
+    * ```
+    */
+  get smsCampaign(): Prisma.SmsCampaignDelegate<ExtArgs>;
 
   /**
    * `prisma.dripFeed`: Exposes CRUD operations for the **DripFeed** model.
@@ -1679,6 +1722,7 @@ export namespace Prisma {
     TicketOrderAction: 'TicketOrderAction',
     Deposit: 'Deposit',
     AdminAuditLog: 'AdminAuditLog',
+    SmsCampaign: 'SmsCampaign',
     DripFeed: 'DripFeed',
     Affiliate: 'Affiliate',
     ChildPanel: 'ChildPanel',
@@ -1707,7 +1751,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "brand" | "product" | "package" | "stockPool" | "packageStockPool" | "stockCode" | "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticketCategory" | "ticketSubcategory" | "ticket" | "ticketMessage" | "ticketOrderAction" | "deposit" | "adminAuditLog" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "referralLog" | "supportChannel" | "notice" | "siteNotice" | "banner" | "post" | "commentTemplate"
+      modelProps: "brand" | "product" | "package" | "stockPool" | "packageStockPool" | "stockCode" | "user" | "passwordResetToken" | "refreshToken" | "wallet" | "walletTransaction" | "idempotencyKey" | "provider" | "providerSyncLog" | "paymentGatewayConfig" | "paymentMethod" | "serviceCategory" | "service" | "order" | "orderIntent" | "refillRequest" | "ticketCategory" | "ticketSubcategory" | "ticket" | "ticketMessage" | "ticketOrderAction" | "deposit" | "adminAuditLog" | "smsCampaign" | "dripFeed" | "affiliate" | "childPanel" | "coupon" | "couponRedemption" | "siteSettings" | "referralLog" | "supportChannel" | "notice" | "siteNotice" | "banner" | "post" | "commentTemplate"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3671,6 +3715,76 @@ export namespace Prisma {
           }
         }
       }
+      SmsCampaign: {
+        payload: Prisma.$SmsCampaignPayload<ExtArgs>
+        fields: Prisma.SmsCampaignFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SmsCampaignFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SmsCampaignFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          findFirst: {
+            args: Prisma.SmsCampaignFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SmsCampaignFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          findMany: {
+            args: Prisma.SmsCampaignFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>[]
+          }
+          create: {
+            args: Prisma.SmsCampaignCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          createMany: {
+            args: Prisma.SmsCampaignCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SmsCampaignCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>[]
+          }
+          delete: {
+            args: Prisma.SmsCampaignDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          update: {
+            args: Prisma.SmsCampaignUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          deleteMany: {
+            args: Prisma.SmsCampaignDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SmsCampaignUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SmsCampaignUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsCampaignPayload>
+          }
+          aggregate: {
+            args: Prisma.SmsCampaignAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSmsCampaign>
+          }
+          groupBy: {
+            args: Prisma.SmsCampaignGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SmsCampaignGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SmsCampaignCountArgs<ExtArgs>
+            result: $Utils.Optional<SmsCampaignCountAggregateOutputType> | number
+          }
+        }
+      }
       DripFeed: {
         payload: Prisma.$DripFeedPayload<ExtArgs>
         fields: Prisma.DripFeedFieldRefs
@@ -4901,6 +5015,7 @@ export namespace Prisma {
     deposits: number
     reviewedDeposits: number
     adminAuditLogs: number
+    smsCampaignsSent: number
     couponRedemptions: number
     passwordResetTokens: number
     orderIntents: number
@@ -4916,6 +5031,7 @@ export namespace Prisma {
     deposits?: boolean | UserCountOutputTypeCountDepositsArgs
     reviewedDeposits?: boolean | UserCountOutputTypeCountReviewedDepositsArgs
     adminAuditLogs?: boolean | UserCountOutputTypeCountAdminAuditLogsArgs
+    smsCampaignsSent?: boolean | UserCountOutputTypeCountSmsCampaignsSentArgs
     couponRedemptions?: boolean | UserCountOutputTypeCountCouponRedemptionsArgs
     passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
     orderIntents?: boolean | UserCountOutputTypeCountOrderIntentsArgs
@@ -4987,6 +5103,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAdminAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AdminAuditLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSmsCampaignsSentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SmsCampaignWhereInput
   }
 
   /**
@@ -12250,6 +12373,7 @@ export namespace Prisma {
     deposits?: boolean | User$depositsArgs<ExtArgs>
     reviewedDeposits?: boolean | User$reviewedDepositsArgs<ExtArgs>
     adminAuditLogs?: boolean | User$adminAuditLogsArgs<ExtArgs>
+    smsCampaignsSent?: boolean | User$smsCampaignsSentArgs<ExtArgs>
     childPanel?: boolean | User$childPanelArgs<ExtArgs>
     affiliate?: boolean | User$affiliateArgs<ExtArgs>
     couponRedemptions?: boolean | User$couponRedemptionsArgs<ExtArgs>
@@ -12328,6 +12452,7 @@ export namespace Prisma {
     deposits?: boolean | User$depositsArgs<ExtArgs>
     reviewedDeposits?: boolean | User$reviewedDepositsArgs<ExtArgs>
     adminAuditLogs?: boolean | User$adminAuditLogsArgs<ExtArgs>
+    smsCampaignsSent?: boolean | User$smsCampaignsSentArgs<ExtArgs>
     childPanel?: boolean | User$childPanelArgs<ExtArgs>
     affiliate?: boolean | User$affiliateArgs<ExtArgs>
     couponRedemptions?: boolean | User$couponRedemptionsArgs<ExtArgs>
@@ -12354,6 +12479,7 @@ export namespace Prisma {
       deposits: Prisma.$DepositPayload<ExtArgs>[]
       reviewedDeposits: Prisma.$DepositPayload<ExtArgs>[]
       adminAuditLogs: Prisma.$AdminAuditLogPayload<ExtArgs>[]
+      smsCampaignsSent: Prisma.$SmsCampaignPayload<ExtArgs>[]
       childPanel: Prisma.$ChildPanelPayload<ExtArgs> | null
       affiliate: Prisma.$AffiliatePayload<ExtArgs> | null
       couponRedemptions: Prisma.$CouponRedemptionPayload<ExtArgs>[]
@@ -12762,6 +12888,7 @@ export namespace Prisma {
     deposits<T extends User$depositsArgs<ExtArgs> = {}>(args?: Subset<T, User$depositsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositPayload<ExtArgs>, T, "findMany"> | Null>
     reviewedDeposits<T extends User$reviewedDepositsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewedDepositsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositPayload<ExtArgs>, T, "findMany"> | Null>
     adminAuditLogs<T extends User$adminAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$adminAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminAuditLogPayload<ExtArgs>, T, "findMany"> | Null>
+    smsCampaignsSent<T extends User$smsCampaignsSentArgs<ExtArgs> = {}>(args?: Subset<T, User$smsCampaignsSentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findMany"> | Null>
     childPanel<T extends User$childPanelArgs<ExtArgs> = {}>(args?: Subset<T, User$childPanelArgs<ExtArgs>>): Prisma__ChildPanelClient<$Result.GetResult<Prisma.$ChildPanelPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     affiliate<T extends User$affiliateArgs<ExtArgs> = {}>(args?: Subset<T, User$affiliateArgs<ExtArgs>>): Prisma__AffiliateClient<$Result.GetResult<Prisma.$AffiliatePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     couponRedemptions<T extends User$couponRedemptionsArgs<ExtArgs> = {}>(args?: Subset<T, User$couponRedemptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CouponRedemptionPayload<ExtArgs>, T, "findMany"> | Null>
@@ -13328,6 +13455,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AdminAuditLogScalarFieldEnum | AdminAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.smsCampaignsSent
+   */
+  export type User$smsCampaignsSentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    where?: SmsCampaignWhereInput
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    cursor?: SmsCampaignWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SmsCampaignScalarFieldEnum | SmsCampaignScalarFieldEnum[]
   }
 
   /**
@@ -35270,6 +35417,1109 @@ export namespace Prisma {
 
 
   /**
+   * Model SmsCampaign
+   */
+
+  export type AggregateSmsCampaign = {
+    _count: SmsCampaignCountAggregateOutputType | null
+    _avg: SmsCampaignAvgAggregateOutputType | null
+    _sum: SmsCampaignSumAggregateOutputType | null
+    _min: SmsCampaignMinAggregateOutputType | null
+    _max: SmsCampaignMaxAggregateOutputType | null
+  }
+
+  export type SmsCampaignAvgAggregateOutputType = {
+    recipientCount: number | null
+    smsUnitsPerRecipient: number | null
+    totalSmsUnits: number | null
+    processedCount: number | null
+    successCount: number | null
+    failedCount: number | null
+  }
+
+  export type SmsCampaignSumAggregateOutputType = {
+    recipientCount: number | null
+    smsUnitsPerRecipient: number | null
+    totalSmsUnits: number | null
+    processedCount: number | null
+    successCount: number | null
+    failedCount: number | null
+  }
+
+  export type SmsCampaignMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    message: string | null
+    targetGroup: $Enums.SmsCampaignTargetGroup | null
+    recipientCount: number | null
+    smsUnitsPerRecipient: number | null
+    totalSmsUnits: number | null
+    processedCount: number | null
+    successCount: number | null
+    failedCount: number | null
+    status: $Enums.SmsCampaignStatus | null
+    sentById: string | null
+    createdAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type SmsCampaignMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    message: string | null
+    targetGroup: $Enums.SmsCampaignTargetGroup | null
+    recipientCount: number | null
+    smsUnitsPerRecipient: number | null
+    totalSmsUnits: number | null
+    processedCount: number | null
+    successCount: number | null
+    failedCount: number | null
+    status: $Enums.SmsCampaignStatus | null
+    sentById: string | null
+    createdAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type SmsCampaignCountAggregateOutputType = {
+    id: number
+    title: number
+    message: number
+    targetGroup: number
+    recipients: number
+    recipientCount: number
+    smsUnitsPerRecipient: number
+    totalSmsUnits: number
+    processedCount: number
+    successCount: number
+    failedCount: number
+    status: number
+    sentById: number
+    createdAt: number
+    completedAt: number
+    _all: number
+  }
+
+
+  export type SmsCampaignAvgAggregateInputType = {
+    recipientCount?: true
+    smsUnitsPerRecipient?: true
+    totalSmsUnits?: true
+    processedCount?: true
+    successCount?: true
+    failedCount?: true
+  }
+
+  export type SmsCampaignSumAggregateInputType = {
+    recipientCount?: true
+    smsUnitsPerRecipient?: true
+    totalSmsUnits?: true
+    processedCount?: true
+    successCount?: true
+    failedCount?: true
+  }
+
+  export type SmsCampaignMinAggregateInputType = {
+    id?: true
+    title?: true
+    message?: true
+    targetGroup?: true
+    recipientCount?: true
+    smsUnitsPerRecipient?: true
+    totalSmsUnits?: true
+    processedCount?: true
+    successCount?: true
+    failedCount?: true
+    status?: true
+    sentById?: true
+    createdAt?: true
+    completedAt?: true
+  }
+
+  export type SmsCampaignMaxAggregateInputType = {
+    id?: true
+    title?: true
+    message?: true
+    targetGroup?: true
+    recipientCount?: true
+    smsUnitsPerRecipient?: true
+    totalSmsUnits?: true
+    processedCount?: true
+    successCount?: true
+    failedCount?: true
+    status?: true
+    sentById?: true
+    createdAt?: true
+    completedAt?: true
+  }
+
+  export type SmsCampaignCountAggregateInputType = {
+    id?: true
+    title?: true
+    message?: true
+    targetGroup?: true
+    recipients?: true
+    recipientCount?: true
+    smsUnitsPerRecipient?: true
+    totalSmsUnits?: true
+    processedCount?: true
+    successCount?: true
+    failedCount?: true
+    status?: true
+    sentById?: true
+    createdAt?: true
+    completedAt?: true
+    _all?: true
+  }
+
+  export type SmsCampaignAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SmsCampaign to aggregate.
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsCampaigns to fetch.
+     */
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SmsCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SmsCampaigns
+    **/
+    _count?: true | SmsCampaignCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SmsCampaignAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SmsCampaignSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SmsCampaignMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SmsCampaignMaxAggregateInputType
+  }
+
+  export type GetSmsCampaignAggregateType<T extends SmsCampaignAggregateArgs> = {
+        [P in keyof T & keyof AggregateSmsCampaign]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSmsCampaign[P]>
+      : GetScalarType<T[P], AggregateSmsCampaign[P]>
+  }
+
+
+
+
+  export type SmsCampaignGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SmsCampaignWhereInput
+    orderBy?: SmsCampaignOrderByWithAggregationInput | SmsCampaignOrderByWithAggregationInput[]
+    by: SmsCampaignScalarFieldEnum[] | SmsCampaignScalarFieldEnum
+    having?: SmsCampaignScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SmsCampaignCountAggregateInputType | true
+    _avg?: SmsCampaignAvgAggregateInputType
+    _sum?: SmsCampaignSumAggregateInputType
+    _min?: SmsCampaignMinAggregateInputType
+    _max?: SmsCampaignMaxAggregateInputType
+  }
+
+  export type SmsCampaignGroupByOutputType = {
+    id: string
+    title: string
+    message: string
+    targetGroup: $Enums.SmsCampaignTargetGroup
+    recipients: string[]
+    recipientCount: number
+    smsUnitsPerRecipient: number
+    totalSmsUnits: number
+    processedCount: number
+    successCount: number
+    failedCount: number
+    status: $Enums.SmsCampaignStatus
+    sentById: string
+    createdAt: Date
+    completedAt: Date | null
+    _count: SmsCampaignCountAggregateOutputType | null
+    _avg: SmsCampaignAvgAggregateOutputType | null
+    _sum: SmsCampaignSumAggregateOutputType | null
+    _min: SmsCampaignMinAggregateOutputType | null
+    _max: SmsCampaignMaxAggregateOutputType | null
+  }
+
+  type GetSmsCampaignGroupByPayload<T extends SmsCampaignGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SmsCampaignGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SmsCampaignGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SmsCampaignGroupByOutputType[P]>
+            : GetScalarType<T[P], SmsCampaignGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SmsCampaignSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    message?: boolean
+    targetGroup?: boolean
+    recipients?: boolean
+    recipientCount?: boolean
+    smsUnitsPerRecipient?: boolean
+    totalSmsUnits?: boolean
+    processedCount?: boolean
+    successCount?: boolean
+    failedCount?: boolean
+    status?: boolean
+    sentById?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+    sentBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["smsCampaign"]>
+
+  export type SmsCampaignSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    message?: boolean
+    targetGroup?: boolean
+    recipients?: boolean
+    recipientCount?: boolean
+    smsUnitsPerRecipient?: boolean
+    totalSmsUnits?: boolean
+    processedCount?: boolean
+    successCount?: boolean
+    failedCount?: boolean
+    status?: boolean
+    sentById?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+    sentBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["smsCampaign"]>
+
+  export type SmsCampaignSelectScalar = {
+    id?: boolean
+    title?: boolean
+    message?: boolean
+    targetGroup?: boolean
+    recipients?: boolean
+    recipientCount?: boolean
+    smsUnitsPerRecipient?: boolean
+    totalSmsUnits?: boolean
+    processedCount?: boolean
+    successCount?: boolean
+    failedCount?: boolean
+    status?: boolean
+    sentById?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+  }
+
+  export type SmsCampaignInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sentBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SmsCampaignIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sentBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SmsCampaignPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SmsCampaign"
+    objects: {
+      sentBy: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      message: string
+      targetGroup: $Enums.SmsCampaignTargetGroup
+      recipients: string[]
+      recipientCount: number
+      smsUnitsPerRecipient: number
+      totalSmsUnits: number
+      processedCount: number
+      successCount: number
+      failedCount: number
+      status: $Enums.SmsCampaignStatus
+      sentById: string
+      createdAt: Date
+      completedAt: Date | null
+    }, ExtArgs["result"]["smsCampaign"]>
+    composites: {}
+  }
+
+  type SmsCampaignGetPayload<S extends boolean | null | undefined | SmsCampaignDefaultArgs> = $Result.GetResult<Prisma.$SmsCampaignPayload, S>
+
+  type SmsCampaignCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SmsCampaignFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SmsCampaignCountAggregateInputType | true
+    }
+
+  export interface SmsCampaignDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SmsCampaign'], meta: { name: 'SmsCampaign' } }
+    /**
+     * Find zero or one SmsCampaign that matches the filter.
+     * @param {SmsCampaignFindUniqueArgs} args - Arguments to find a SmsCampaign
+     * @example
+     * // Get one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SmsCampaignFindUniqueArgs>(args: SelectSubset<T, SmsCampaignFindUniqueArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SmsCampaign that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SmsCampaignFindUniqueOrThrowArgs} args - Arguments to find a SmsCampaign
+     * @example
+     * // Get one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SmsCampaignFindUniqueOrThrowArgs>(args: SelectSubset<T, SmsCampaignFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SmsCampaign that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignFindFirstArgs} args - Arguments to find a SmsCampaign
+     * @example
+     * // Get one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SmsCampaignFindFirstArgs>(args?: SelectSubset<T, SmsCampaignFindFirstArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SmsCampaign that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignFindFirstOrThrowArgs} args - Arguments to find a SmsCampaign
+     * @example
+     * // Get one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SmsCampaignFindFirstOrThrowArgs>(args?: SelectSubset<T, SmsCampaignFindFirstOrThrowArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SmsCampaigns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SmsCampaigns
+     * const smsCampaigns = await prisma.smsCampaign.findMany()
+     * 
+     * // Get first 10 SmsCampaigns
+     * const smsCampaigns = await prisma.smsCampaign.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const smsCampaignWithIdOnly = await prisma.smsCampaign.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SmsCampaignFindManyArgs>(args?: SelectSubset<T, SmsCampaignFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SmsCampaign.
+     * @param {SmsCampaignCreateArgs} args - Arguments to create a SmsCampaign.
+     * @example
+     * // Create one SmsCampaign
+     * const SmsCampaign = await prisma.smsCampaign.create({
+     *   data: {
+     *     // ... data to create a SmsCampaign
+     *   }
+     * })
+     * 
+     */
+    create<T extends SmsCampaignCreateArgs>(args: SelectSubset<T, SmsCampaignCreateArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SmsCampaigns.
+     * @param {SmsCampaignCreateManyArgs} args - Arguments to create many SmsCampaigns.
+     * @example
+     * // Create many SmsCampaigns
+     * const smsCampaign = await prisma.smsCampaign.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SmsCampaignCreateManyArgs>(args?: SelectSubset<T, SmsCampaignCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SmsCampaigns and returns the data saved in the database.
+     * @param {SmsCampaignCreateManyAndReturnArgs} args - Arguments to create many SmsCampaigns.
+     * @example
+     * // Create many SmsCampaigns
+     * const smsCampaign = await prisma.smsCampaign.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SmsCampaigns and only return the `id`
+     * const smsCampaignWithIdOnly = await prisma.smsCampaign.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SmsCampaignCreateManyAndReturnArgs>(args?: SelectSubset<T, SmsCampaignCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SmsCampaign.
+     * @param {SmsCampaignDeleteArgs} args - Arguments to delete one SmsCampaign.
+     * @example
+     * // Delete one SmsCampaign
+     * const SmsCampaign = await prisma.smsCampaign.delete({
+     *   where: {
+     *     // ... filter to delete one SmsCampaign
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SmsCampaignDeleteArgs>(args: SelectSubset<T, SmsCampaignDeleteArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SmsCampaign.
+     * @param {SmsCampaignUpdateArgs} args - Arguments to update one SmsCampaign.
+     * @example
+     * // Update one SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SmsCampaignUpdateArgs>(args: SelectSubset<T, SmsCampaignUpdateArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SmsCampaigns.
+     * @param {SmsCampaignDeleteManyArgs} args - Arguments to filter SmsCampaigns to delete.
+     * @example
+     * // Delete a few SmsCampaigns
+     * const { count } = await prisma.smsCampaign.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SmsCampaignDeleteManyArgs>(args?: SelectSubset<T, SmsCampaignDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SmsCampaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SmsCampaigns
+     * const smsCampaign = await prisma.smsCampaign.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SmsCampaignUpdateManyArgs>(args: SelectSubset<T, SmsCampaignUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SmsCampaign.
+     * @param {SmsCampaignUpsertArgs} args - Arguments to update or create a SmsCampaign.
+     * @example
+     * // Update or create a SmsCampaign
+     * const smsCampaign = await prisma.smsCampaign.upsert({
+     *   create: {
+     *     // ... data to create a SmsCampaign
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SmsCampaign we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SmsCampaignUpsertArgs>(args: SelectSubset<T, SmsCampaignUpsertArgs<ExtArgs>>): Prisma__SmsCampaignClient<$Result.GetResult<Prisma.$SmsCampaignPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SmsCampaigns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignCountArgs} args - Arguments to filter SmsCampaigns to count.
+     * @example
+     * // Count the number of SmsCampaigns
+     * const count = await prisma.smsCampaign.count({
+     *   where: {
+     *     // ... the filter for the SmsCampaigns we want to count
+     *   }
+     * })
+    **/
+    count<T extends SmsCampaignCountArgs>(
+      args?: Subset<T, SmsCampaignCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SmsCampaignCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SmsCampaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SmsCampaignAggregateArgs>(args: Subset<T, SmsCampaignAggregateArgs>): Prisma.PrismaPromise<GetSmsCampaignAggregateType<T>>
+
+    /**
+     * Group by SmsCampaign.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsCampaignGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SmsCampaignGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SmsCampaignGroupByArgs['orderBy'] }
+        : { orderBy?: SmsCampaignGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SmsCampaignGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSmsCampaignGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SmsCampaign model
+   */
+  readonly fields: SmsCampaignFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SmsCampaign.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SmsCampaignClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    sentBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SmsCampaign model
+   */ 
+  interface SmsCampaignFieldRefs {
+    readonly id: FieldRef<"SmsCampaign", 'String'>
+    readonly title: FieldRef<"SmsCampaign", 'String'>
+    readonly message: FieldRef<"SmsCampaign", 'String'>
+    readonly targetGroup: FieldRef<"SmsCampaign", 'SmsCampaignTargetGroup'>
+    readonly recipients: FieldRef<"SmsCampaign", 'String[]'>
+    readonly recipientCount: FieldRef<"SmsCampaign", 'Int'>
+    readonly smsUnitsPerRecipient: FieldRef<"SmsCampaign", 'Int'>
+    readonly totalSmsUnits: FieldRef<"SmsCampaign", 'Int'>
+    readonly processedCount: FieldRef<"SmsCampaign", 'Int'>
+    readonly successCount: FieldRef<"SmsCampaign", 'Int'>
+    readonly failedCount: FieldRef<"SmsCampaign", 'Int'>
+    readonly status: FieldRef<"SmsCampaign", 'SmsCampaignStatus'>
+    readonly sentById: FieldRef<"SmsCampaign", 'String'>
+    readonly createdAt: FieldRef<"SmsCampaign", 'DateTime'>
+    readonly completedAt: FieldRef<"SmsCampaign", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SmsCampaign findUnique
+   */
+  export type SmsCampaignFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaign to fetch.
+     */
+    where: SmsCampaignWhereUniqueInput
+  }
+
+  /**
+   * SmsCampaign findUniqueOrThrow
+   */
+  export type SmsCampaignFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaign to fetch.
+     */
+    where: SmsCampaignWhereUniqueInput
+  }
+
+  /**
+   * SmsCampaign findFirst
+   */
+  export type SmsCampaignFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaign to fetch.
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsCampaigns to fetch.
+     */
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SmsCampaigns.
+     */
+    cursor?: SmsCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SmsCampaigns.
+     */
+    distinct?: SmsCampaignScalarFieldEnum | SmsCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * SmsCampaign findFirstOrThrow
+   */
+  export type SmsCampaignFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaign to fetch.
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsCampaigns to fetch.
+     */
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SmsCampaigns.
+     */
+    cursor?: SmsCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsCampaigns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SmsCampaigns.
+     */
+    distinct?: SmsCampaignScalarFieldEnum | SmsCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * SmsCampaign findMany
+   */
+  export type SmsCampaignFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter, which SmsCampaigns to fetch.
+     */
+    where?: SmsCampaignWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsCampaigns to fetch.
+     */
+    orderBy?: SmsCampaignOrderByWithRelationInput | SmsCampaignOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SmsCampaigns.
+     */
+    cursor?: SmsCampaignWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsCampaigns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsCampaigns.
+     */
+    skip?: number
+    distinct?: SmsCampaignScalarFieldEnum | SmsCampaignScalarFieldEnum[]
+  }
+
+  /**
+   * SmsCampaign create
+   */
+  export type SmsCampaignCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SmsCampaign.
+     */
+    data: XOR<SmsCampaignCreateInput, SmsCampaignUncheckedCreateInput>
+  }
+
+  /**
+   * SmsCampaign createMany
+   */
+  export type SmsCampaignCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SmsCampaigns.
+     */
+    data: SmsCampaignCreateManyInput | SmsCampaignCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SmsCampaign createManyAndReturn
+   */
+  export type SmsCampaignCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SmsCampaigns.
+     */
+    data: SmsCampaignCreateManyInput | SmsCampaignCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SmsCampaign update
+   */
+  export type SmsCampaignUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SmsCampaign.
+     */
+    data: XOR<SmsCampaignUpdateInput, SmsCampaignUncheckedUpdateInput>
+    /**
+     * Choose, which SmsCampaign to update.
+     */
+    where: SmsCampaignWhereUniqueInput
+  }
+
+  /**
+   * SmsCampaign updateMany
+   */
+  export type SmsCampaignUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SmsCampaigns.
+     */
+    data: XOR<SmsCampaignUpdateManyMutationInput, SmsCampaignUncheckedUpdateManyInput>
+    /**
+     * Filter which SmsCampaigns to update
+     */
+    where?: SmsCampaignWhereInput
+  }
+
+  /**
+   * SmsCampaign upsert
+   */
+  export type SmsCampaignUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SmsCampaign to update in case it exists.
+     */
+    where: SmsCampaignWhereUniqueInput
+    /**
+     * In case the SmsCampaign found by the `where` argument doesn't exist, create a new SmsCampaign with this data.
+     */
+    create: XOR<SmsCampaignCreateInput, SmsCampaignUncheckedCreateInput>
+    /**
+     * In case the SmsCampaign was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SmsCampaignUpdateInput, SmsCampaignUncheckedUpdateInput>
+  }
+
+  /**
+   * SmsCampaign delete
+   */
+  export type SmsCampaignDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+    /**
+     * Filter which SmsCampaign to delete.
+     */
+    where: SmsCampaignWhereUniqueInput
+  }
+
+  /**
+   * SmsCampaign deleteMany
+   */
+  export type SmsCampaignDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SmsCampaigns to delete
+     */
+    where?: SmsCampaignWhereInput
+  }
+
+  /**
+   * SmsCampaign without action
+   */
+  export type SmsCampaignDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsCampaign
+     */
+    select?: SmsCampaignSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SmsCampaignInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model DripFeed
    */
 
@@ -49057,6 +50307,27 @@ export namespace Prisma {
   export type AdminAuditLogScalarFieldEnum = (typeof AdminAuditLogScalarFieldEnum)[keyof typeof AdminAuditLogScalarFieldEnum]
 
 
+  export const SmsCampaignScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    message: 'message',
+    targetGroup: 'targetGroup',
+    recipients: 'recipients',
+    recipientCount: 'recipientCount',
+    smsUnitsPerRecipient: 'smsUnitsPerRecipient',
+    totalSmsUnits: 'totalSmsUnits',
+    processedCount: 'processedCount',
+    successCount: 'successCount',
+    failedCount: 'failedCount',
+    status: 'status',
+    sentById: 'sentById',
+    createdAt: 'createdAt',
+    completedAt: 'completedAt'
+  };
+
+  export type SmsCampaignScalarFieldEnum = (typeof SmsCampaignScalarFieldEnum)[keyof typeof SmsCampaignScalarFieldEnum]
+
+
   export const DripFeedScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -49722,6 +50993,34 @@ export namespace Prisma {
    * Reference to a field of type 'DepositStatus[]'
    */
   export type ListEnumDepositStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsCampaignTargetGroup'
+   */
+  export type EnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsCampaignTargetGroup'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsCampaignTargetGroup[]'
+   */
+  export type ListEnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsCampaignTargetGroup[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsCampaignStatus'
+   */
+  export type EnumSmsCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsCampaignStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SmsCampaignStatus[]'
+   */
+  export type ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SmsCampaignStatus[]'>
     
 
 
@@ -50487,6 +51786,7 @@ export namespace Prisma {
     deposits?: DepositListRelationFilter
     reviewedDeposits?: DepositListRelationFilter
     adminAuditLogs?: AdminAuditLogListRelationFilter
+    smsCampaignsSent?: SmsCampaignListRelationFilter
     childPanel?: XOR<ChildPanelNullableRelationFilter, ChildPanelWhereInput> | null
     affiliate?: XOR<AffiliateNullableRelationFilter, AffiliateWhereInput> | null
     couponRedemptions?: CouponRedemptionListRelationFilter
@@ -50532,6 +51832,7 @@ export namespace Prisma {
     deposits?: DepositOrderByRelationAggregateInput
     reviewedDeposits?: DepositOrderByRelationAggregateInput
     adminAuditLogs?: AdminAuditLogOrderByRelationAggregateInput
+    smsCampaignsSent?: SmsCampaignOrderByRelationAggregateInput
     childPanel?: ChildPanelOrderByWithRelationInput
     affiliate?: AffiliateOrderByWithRelationInput
     couponRedemptions?: CouponRedemptionOrderByRelationAggregateInput
@@ -50580,6 +51881,7 @@ export namespace Prisma {
     deposits?: DepositListRelationFilter
     reviewedDeposits?: DepositListRelationFilter
     adminAuditLogs?: AdminAuditLogListRelationFilter
+    smsCampaignsSent?: SmsCampaignListRelationFilter
     childPanel?: XOR<ChildPanelNullableRelationFilter, ChildPanelWhereInput> | null
     affiliate?: XOR<AffiliateNullableRelationFilter, AffiliateWhereInput> | null
     couponRedemptions?: CouponRedemptionListRelationFilter
@@ -52401,6 +53703,113 @@ export namespace Prisma {
     afterJson?: StringNullableWithAggregatesFilter<"AdminAuditLog"> | string | null
     ip?: StringNullableWithAggregatesFilter<"AdminAuditLog"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AdminAuditLog"> | Date | string
+  }
+
+  export type SmsCampaignWhereInput = {
+    AND?: SmsCampaignWhereInput | SmsCampaignWhereInput[]
+    OR?: SmsCampaignWhereInput[]
+    NOT?: SmsCampaignWhereInput | SmsCampaignWhereInput[]
+    id?: StringFilter<"SmsCampaign"> | string
+    title?: StringFilter<"SmsCampaign"> | string
+    message?: StringFilter<"SmsCampaign"> | string
+    targetGroup?: EnumSmsCampaignTargetGroupFilter<"SmsCampaign"> | $Enums.SmsCampaignTargetGroup
+    recipients?: StringNullableListFilter<"SmsCampaign">
+    recipientCount?: IntFilter<"SmsCampaign"> | number
+    smsUnitsPerRecipient?: IntFilter<"SmsCampaign"> | number
+    totalSmsUnits?: IntFilter<"SmsCampaign"> | number
+    processedCount?: IntFilter<"SmsCampaign"> | number
+    successCount?: IntFilter<"SmsCampaign"> | number
+    failedCount?: IntFilter<"SmsCampaign"> | number
+    status?: EnumSmsCampaignStatusFilter<"SmsCampaign"> | $Enums.SmsCampaignStatus
+    sentById?: StringFilter<"SmsCampaign"> | string
+    createdAt?: DateTimeFilter<"SmsCampaign"> | Date | string
+    completedAt?: DateTimeNullableFilter<"SmsCampaign"> | Date | string | null
+    sentBy?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type SmsCampaignOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    targetGroup?: SortOrder
+    recipients?: SortOrder
+    recipientCount?: SortOrder
+    smsUnitsPerRecipient?: SortOrder
+    totalSmsUnits?: SortOrder
+    processedCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    sentById?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    sentBy?: UserOrderByWithRelationInput
+  }
+
+  export type SmsCampaignWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SmsCampaignWhereInput | SmsCampaignWhereInput[]
+    OR?: SmsCampaignWhereInput[]
+    NOT?: SmsCampaignWhereInput | SmsCampaignWhereInput[]
+    title?: StringFilter<"SmsCampaign"> | string
+    message?: StringFilter<"SmsCampaign"> | string
+    targetGroup?: EnumSmsCampaignTargetGroupFilter<"SmsCampaign"> | $Enums.SmsCampaignTargetGroup
+    recipients?: StringNullableListFilter<"SmsCampaign">
+    recipientCount?: IntFilter<"SmsCampaign"> | number
+    smsUnitsPerRecipient?: IntFilter<"SmsCampaign"> | number
+    totalSmsUnits?: IntFilter<"SmsCampaign"> | number
+    processedCount?: IntFilter<"SmsCampaign"> | number
+    successCount?: IntFilter<"SmsCampaign"> | number
+    failedCount?: IntFilter<"SmsCampaign"> | number
+    status?: EnumSmsCampaignStatusFilter<"SmsCampaign"> | $Enums.SmsCampaignStatus
+    sentById?: StringFilter<"SmsCampaign"> | string
+    createdAt?: DateTimeFilter<"SmsCampaign"> | Date | string
+    completedAt?: DateTimeNullableFilter<"SmsCampaign"> | Date | string | null
+    sentBy?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type SmsCampaignOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    targetGroup?: SortOrder
+    recipients?: SortOrder
+    recipientCount?: SortOrder
+    smsUnitsPerRecipient?: SortOrder
+    totalSmsUnits?: SortOrder
+    processedCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    sentById?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    _count?: SmsCampaignCountOrderByAggregateInput
+    _avg?: SmsCampaignAvgOrderByAggregateInput
+    _max?: SmsCampaignMaxOrderByAggregateInput
+    _min?: SmsCampaignMinOrderByAggregateInput
+    _sum?: SmsCampaignSumOrderByAggregateInput
+  }
+
+  export type SmsCampaignScalarWhereWithAggregatesInput = {
+    AND?: SmsCampaignScalarWhereWithAggregatesInput | SmsCampaignScalarWhereWithAggregatesInput[]
+    OR?: SmsCampaignScalarWhereWithAggregatesInput[]
+    NOT?: SmsCampaignScalarWhereWithAggregatesInput | SmsCampaignScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SmsCampaign"> | string
+    title?: StringWithAggregatesFilter<"SmsCampaign"> | string
+    message?: StringWithAggregatesFilter<"SmsCampaign"> | string
+    targetGroup?: EnumSmsCampaignTargetGroupWithAggregatesFilter<"SmsCampaign"> | $Enums.SmsCampaignTargetGroup
+    recipients?: StringNullableListFilter<"SmsCampaign">
+    recipientCount?: IntWithAggregatesFilter<"SmsCampaign"> | number
+    smsUnitsPerRecipient?: IntWithAggregatesFilter<"SmsCampaign"> | number
+    totalSmsUnits?: IntWithAggregatesFilter<"SmsCampaign"> | number
+    processedCount?: IntWithAggregatesFilter<"SmsCampaign"> | number
+    successCount?: IntWithAggregatesFilter<"SmsCampaign"> | number
+    failedCount?: IntWithAggregatesFilter<"SmsCampaign"> | number
+    status?: EnumSmsCampaignStatusWithAggregatesFilter<"SmsCampaign"> | $Enums.SmsCampaignStatus
+    sentById?: StringWithAggregatesFilter<"SmsCampaign"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SmsCampaign"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"SmsCampaign"> | Date | string | null
   }
 
   export type DripFeedWhereInput = {
@@ -54287,6 +55696,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -54331,6 +55741,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -54375,6 +55786,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -54419,6 +55831,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -56418,6 +57831,131 @@ export namespace Prisma {
     afterJson?: NullableStringFieldUpdateOperationsInput | string | null
     ip?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SmsCampaignCreateInput = {
+    id?: string
+    title: string
+    message: string
+    targetGroup: $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignCreaterecipientsInput | string[]
+    recipientCount: number
+    smsUnitsPerRecipient: number
+    totalSmsUnits: number
+    processedCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+    sentBy: UserCreateNestedOneWithoutSmsCampaignsSentInput
+  }
+
+  export type SmsCampaignUncheckedCreateInput = {
+    id?: string
+    title: string
+    message: string
+    targetGroup: $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignCreaterecipientsInput | string[]
+    recipientCount: number
+    smsUnitsPerRecipient: number
+    totalSmsUnits: number
+    processedCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    sentById: string
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type SmsCampaignUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    targetGroup?: EnumSmsCampaignTargetGroupFieldUpdateOperationsInput | $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignUpdaterecipientsInput | string[]
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    smsUnitsPerRecipient?: IntFieldUpdateOperationsInput | number
+    totalSmsUnits?: IntFieldUpdateOperationsInput | number
+    processedCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sentBy?: UserUpdateOneRequiredWithoutSmsCampaignsSentNestedInput
+  }
+
+  export type SmsCampaignUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    targetGroup?: EnumSmsCampaignTargetGroupFieldUpdateOperationsInput | $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignUpdaterecipientsInput | string[]
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    smsUnitsPerRecipient?: IntFieldUpdateOperationsInput | number
+    totalSmsUnits?: IntFieldUpdateOperationsInput | number
+    processedCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    sentById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SmsCampaignCreateManyInput = {
+    id?: string
+    title: string
+    message: string
+    targetGroup: $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignCreaterecipientsInput | string[]
+    recipientCount: number
+    smsUnitsPerRecipient: number
+    totalSmsUnits: number
+    processedCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    sentById: string
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type SmsCampaignUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    targetGroup?: EnumSmsCampaignTargetGroupFieldUpdateOperationsInput | $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignUpdaterecipientsInput | string[]
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    smsUnitsPerRecipient?: IntFieldUpdateOperationsInput | number
+    totalSmsUnits?: IntFieldUpdateOperationsInput | number
+    processedCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SmsCampaignUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    targetGroup?: EnumSmsCampaignTargetGroupFieldUpdateOperationsInput | $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignUpdaterecipientsInput | string[]
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    smsUnitsPerRecipient?: IntFieldUpdateOperationsInput | number
+    totalSmsUnits?: IntFieldUpdateOperationsInput | number
+    processedCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    sentById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DripFeedCreateInput = {
@@ -58623,6 +60161,12 @@ export namespace Prisma {
     none?: AdminAuditLogWhereInput
   }
 
+  export type SmsCampaignListRelationFilter = {
+    every?: SmsCampaignWhereInput
+    some?: SmsCampaignWhereInput
+    none?: SmsCampaignWhereInput
+  }
+
   export type ChildPanelNullableRelationFilter = {
     is?: ChildPanelWhereInput | null
     isNot?: ChildPanelWhereInput | null
@@ -58677,6 +60221,10 @@ export namespace Prisma {
   }
 
   export type AdminAuditLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SmsCampaignOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -60172,6 +61720,110 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EnumSmsCampaignTargetGroupFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignTargetGroup | EnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignTargetGroup[] | ListEnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignTargetGroup[] | ListEnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignTargetGroupFilter<$PrismaModel> | $Enums.SmsCampaignTargetGroup
+  }
+
+  export type EnumSmsCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignStatus | EnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignStatusFilter<$PrismaModel> | $Enums.SmsCampaignStatus
+  }
+
+  export type SmsCampaignCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    targetGroup?: SortOrder
+    recipients?: SortOrder
+    recipientCount?: SortOrder
+    smsUnitsPerRecipient?: SortOrder
+    totalSmsUnits?: SortOrder
+    processedCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    sentById?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type SmsCampaignAvgOrderByAggregateInput = {
+    recipientCount?: SortOrder
+    smsUnitsPerRecipient?: SortOrder
+    totalSmsUnits?: SortOrder
+    processedCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+  }
+
+  export type SmsCampaignMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    targetGroup?: SortOrder
+    recipientCount?: SortOrder
+    smsUnitsPerRecipient?: SortOrder
+    totalSmsUnits?: SortOrder
+    processedCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    sentById?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type SmsCampaignMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    targetGroup?: SortOrder
+    recipientCount?: SortOrder
+    smsUnitsPerRecipient?: SortOrder
+    totalSmsUnits?: SortOrder
+    processedCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+    status?: SortOrder
+    sentById?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type SmsCampaignSumOrderByAggregateInput = {
+    recipientCount?: SortOrder
+    smsUnitsPerRecipient?: SortOrder
+    totalSmsUnits?: SortOrder
+    processedCount?: SortOrder
+    successCount?: SortOrder
+    failedCount?: SortOrder
+  }
+
+  export type EnumSmsCampaignTargetGroupWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignTargetGroup | EnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignTargetGroup[] | ListEnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignTargetGroup[] | ListEnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignTargetGroupWithAggregatesFilter<$PrismaModel> | $Enums.SmsCampaignTargetGroup
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsCampaignTargetGroupFilter<$PrismaModel>
+    _max?: NestedEnumSmsCampaignTargetGroupFilter<$PrismaModel>
+  }
+
+  export type EnumSmsCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignStatus | EnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.SmsCampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
+  }
+
   export type ServiceRelationFilter = {
     is?: ServiceWhereInput
     isNot?: ServiceWhereInput
@@ -61598,6 +63250,13 @@ export namespace Prisma {
     connect?: AdminAuditLogWhereUniqueInput | AdminAuditLogWhereUniqueInput[]
   }
 
+  export type SmsCampaignCreateNestedManyWithoutSentByInput = {
+    create?: XOR<SmsCampaignCreateWithoutSentByInput, SmsCampaignUncheckedCreateWithoutSentByInput> | SmsCampaignCreateWithoutSentByInput[] | SmsCampaignUncheckedCreateWithoutSentByInput[]
+    connectOrCreate?: SmsCampaignCreateOrConnectWithoutSentByInput | SmsCampaignCreateOrConnectWithoutSentByInput[]
+    createMany?: SmsCampaignCreateManySentByInputEnvelope
+    connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+  }
+
   export type ChildPanelCreateNestedOneWithoutUserInput = {
     create?: XOR<ChildPanelCreateWithoutUserInput, ChildPanelUncheckedCreateWithoutUserInput>
     connectOrCreate?: ChildPanelCreateOrConnectWithoutUserInput
@@ -61704,6 +63363,13 @@ export namespace Prisma {
     connectOrCreate?: AdminAuditLogCreateOrConnectWithoutActorInput | AdminAuditLogCreateOrConnectWithoutActorInput[]
     createMany?: AdminAuditLogCreateManyActorInputEnvelope
     connect?: AdminAuditLogWhereUniqueInput | AdminAuditLogWhereUniqueInput[]
+  }
+
+  export type SmsCampaignUncheckedCreateNestedManyWithoutSentByInput = {
+    create?: XOR<SmsCampaignCreateWithoutSentByInput, SmsCampaignUncheckedCreateWithoutSentByInput> | SmsCampaignCreateWithoutSentByInput[] | SmsCampaignUncheckedCreateWithoutSentByInput[]
+    connectOrCreate?: SmsCampaignCreateOrConnectWithoutSentByInput | SmsCampaignCreateOrConnectWithoutSentByInput[]
+    createMany?: SmsCampaignCreateManySentByInputEnvelope
+    connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
   }
 
   export type ChildPanelUncheckedCreateNestedOneWithoutUserInput = {
@@ -61890,6 +63556,20 @@ export namespace Prisma {
     update?: AdminAuditLogUpdateWithWhereUniqueWithoutActorInput | AdminAuditLogUpdateWithWhereUniqueWithoutActorInput[]
     updateMany?: AdminAuditLogUpdateManyWithWhereWithoutActorInput | AdminAuditLogUpdateManyWithWhereWithoutActorInput[]
     deleteMany?: AdminAuditLogScalarWhereInput | AdminAuditLogScalarWhereInput[]
+  }
+
+  export type SmsCampaignUpdateManyWithoutSentByNestedInput = {
+    create?: XOR<SmsCampaignCreateWithoutSentByInput, SmsCampaignUncheckedCreateWithoutSentByInput> | SmsCampaignCreateWithoutSentByInput[] | SmsCampaignUncheckedCreateWithoutSentByInput[]
+    connectOrCreate?: SmsCampaignCreateOrConnectWithoutSentByInput | SmsCampaignCreateOrConnectWithoutSentByInput[]
+    upsert?: SmsCampaignUpsertWithWhereUniqueWithoutSentByInput | SmsCampaignUpsertWithWhereUniqueWithoutSentByInput[]
+    createMany?: SmsCampaignCreateManySentByInputEnvelope
+    set?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    disconnect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    delete?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    update?: SmsCampaignUpdateWithWhereUniqueWithoutSentByInput | SmsCampaignUpdateWithWhereUniqueWithoutSentByInput[]
+    updateMany?: SmsCampaignUpdateManyWithWhereWithoutSentByInput | SmsCampaignUpdateManyWithWhereWithoutSentByInput[]
+    deleteMany?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
   }
 
   export type ChildPanelUpdateOneWithoutUserNestedInput = {
@@ -62098,6 +63778,20 @@ export namespace Prisma {
     update?: AdminAuditLogUpdateWithWhereUniqueWithoutActorInput | AdminAuditLogUpdateWithWhereUniqueWithoutActorInput[]
     updateMany?: AdminAuditLogUpdateManyWithWhereWithoutActorInput | AdminAuditLogUpdateManyWithWhereWithoutActorInput[]
     deleteMany?: AdminAuditLogScalarWhereInput | AdminAuditLogScalarWhereInput[]
+  }
+
+  export type SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput = {
+    create?: XOR<SmsCampaignCreateWithoutSentByInput, SmsCampaignUncheckedCreateWithoutSentByInput> | SmsCampaignCreateWithoutSentByInput[] | SmsCampaignUncheckedCreateWithoutSentByInput[]
+    connectOrCreate?: SmsCampaignCreateOrConnectWithoutSentByInput | SmsCampaignCreateOrConnectWithoutSentByInput[]
+    upsert?: SmsCampaignUpsertWithWhereUniqueWithoutSentByInput | SmsCampaignUpsertWithWhereUniqueWithoutSentByInput[]
+    createMany?: SmsCampaignCreateManySentByInputEnvelope
+    set?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    disconnect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    delete?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    connect?: SmsCampaignWhereUniqueInput | SmsCampaignWhereUniqueInput[]
+    update?: SmsCampaignUpdateWithWhereUniqueWithoutSentByInput | SmsCampaignUpdateWithWhereUniqueWithoutSentByInput[]
+    updateMany?: SmsCampaignUpdateManyWithWhereWithoutSentByInput | SmsCampaignUpdateManyWithWhereWithoutSentByInput[]
+    deleteMany?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
   }
 
   export type ChildPanelUncheckedUpdateOneWithoutUserNestedInput = {
@@ -63483,6 +65177,37 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAdminAuditLogsInput, UserUpdateWithoutAdminAuditLogsInput>, UserUncheckedUpdateWithoutAdminAuditLogsInput>
   }
 
+  export type SmsCampaignCreaterecipientsInput = {
+    set: string[]
+  }
+
+  export type UserCreateNestedOneWithoutSmsCampaignsSentInput = {
+    create?: XOR<UserCreateWithoutSmsCampaignsSentInput, UserUncheckedCreateWithoutSmsCampaignsSentInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSmsCampaignsSentInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumSmsCampaignTargetGroupFieldUpdateOperationsInput = {
+    set?: $Enums.SmsCampaignTargetGroup
+  }
+
+  export type SmsCampaignUpdaterecipientsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type EnumSmsCampaignStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SmsCampaignStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutSmsCampaignsSentNestedInput = {
+    create?: XOR<UserCreateWithoutSmsCampaignsSentInput, UserUncheckedCreateWithoutSmsCampaignsSentInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSmsCampaignsSentInput
+    upsert?: UserUpsertWithoutSmsCampaignsSentInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSmsCampaignsSentInput, UserUpdateWithoutSmsCampaignsSentInput>, UserUncheckedUpdateWithoutSmsCampaignsSentInput>
+  }
+
   export type ServiceCreateNestedOneWithoutDripFeedsInput = {
     create?: XOR<ServiceCreateWithoutDripFeedsInput, ServiceUncheckedCreateWithoutDripFeedsInput>
     connectOrCreate?: ServiceCreateOrConnectWithoutDripFeedsInput
@@ -64366,6 +66091,40 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDepositStatusFilter<$PrismaModel>
     _max?: NestedEnumDepositStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSmsCampaignTargetGroupFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignTargetGroup | EnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignTargetGroup[] | ListEnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignTargetGroup[] | ListEnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignTargetGroupFilter<$PrismaModel> | $Enums.SmsCampaignTargetGroup
+  }
+
+  export type NestedEnumSmsCampaignStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignStatus | EnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignStatusFilter<$PrismaModel> | $Enums.SmsCampaignStatus
+  }
+
+  export type NestedEnumSmsCampaignTargetGroupWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignTargetGroup | EnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignTargetGroup[] | ListEnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignTargetGroup[] | ListEnumSmsCampaignTargetGroupFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignTargetGroupWithAggregatesFilter<$PrismaModel> | $Enums.SmsCampaignTargetGroup
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsCampaignTargetGroupFilter<$PrismaModel>
+    _max?: NestedEnumSmsCampaignTargetGroupFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSmsCampaignStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SmsCampaignStatus | EnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SmsCampaignStatus[] | ListEnumSmsCampaignStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSmsCampaignStatusWithAggregatesFilter<$PrismaModel> | $Enums.SmsCampaignStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
+    _max?: NestedEnumSmsCampaignStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumChildPanelStatusFilter<$PrismaModel = never> = {
@@ -65789,6 +67548,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -65832,6 +67592,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -65880,6 +67641,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -65923,6 +67685,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -66261,6 +68024,50 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SmsCampaignCreateWithoutSentByInput = {
+    id?: string
+    title: string
+    message: string
+    targetGroup: $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignCreaterecipientsInput | string[]
+    recipientCount: number
+    smsUnitsPerRecipient: number
+    totalSmsUnits: number
+    processedCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type SmsCampaignUncheckedCreateWithoutSentByInput = {
+    id?: string
+    title: string
+    message: string
+    targetGroup: $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignCreaterecipientsInput | string[]
+    recipientCount: number
+    smsUnitsPerRecipient: number
+    totalSmsUnits: number
+    processedCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type SmsCampaignCreateOrConnectWithoutSentByInput = {
+    where: SmsCampaignWhereUniqueInput
+    create: XOR<SmsCampaignCreateWithoutSentByInput, SmsCampaignUncheckedCreateWithoutSentByInput>
+  }
+
+  export type SmsCampaignCreateManySentByInputEnvelope = {
+    data: SmsCampaignCreateManySentByInput | SmsCampaignCreateManySentByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ChildPanelCreateWithoutUserInput = {
     id?: string
     domain: string
@@ -66505,6 +68312,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -66548,6 +68356,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -66826,6 +68635,43 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AdminAuditLog"> | Date | string
   }
 
+  export type SmsCampaignUpsertWithWhereUniqueWithoutSentByInput = {
+    where: SmsCampaignWhereUniqueInput
+    update: XOR<SmsCampaignUpdateWithoutSentByInput, SmsCampaignUncheckedUpdateWithoutSentByInput>
+    create: XOR<SmsCampaignCreateWithoutSentByInput, SmsCampaignUncheckedCreateWithoutSentByInput>
+  }
+
+  export type SmsCampaignUpdateWithWhereUniqueWithoutSentByInput = {
+    where: SmsCampaignWhereUniqueInput
+    data: XOR<SmsCampaignUpdateWithoutSentByInput, SmsCampaignUncheckedUpdateWithoutSentByInput>
+  }
+
+  export type SmsCampaignUpdateManyWithWhereWithoutSentByInput = {
+    where: SmsCampaignScalarWhereInput
+    data: XOR<SmsCampaignUpdateManyMutationInput, SmsCampaignUncheckedUpdateManyWithoutSentByInput>
+  }
+
+  export type SmsCampaignScalarWhereInput = {
+    AND?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
+    OR?: SmsCampaignScalarWhereInput[]
+    NOT?: SmsCampaignScalarWhereInput | SmsCampaignScalarWhereInput[]
+    id?: StringFilter<"SmsCampaign"> | string
+    title?: StringFilter<"SmsCampaign"> | string
+    message?: StringFilter<"SmsCampaign"> | string
+    targetGroup?: EnumSmsCampaignTargetGroupFilter<"SmsCampaign"> | $Enums.SmsCampaignTargetGroup
+    recipients?: StringNullableListFilter<"SmsCampaign">
+    recipientCount?: IntFilter<"SmsCampaign"> | number
+    smsUnitsPerRecipient?: IntFilter<"SmsCampaign"> | number
+    totalSmsUnits?: IntFilter<"SmsCampaign"> | number
+    processedCount?: IntFilter<"SmsCampaign"> | number
+    successCount?: IntFilter<"SmsCampaign"> | number
+    failedCount?: IntFilter<"SmsCampaign"> | number
+    status?: EnumSmsCampaignStatusFilter<"SmsCampaign"> | $Enums.SmsCampaignStatus
+    sentById?: StringFilter<"SmsCampaign"> | string
+    createdAt?: DateTimeFilter<"SmsCampaign"> | Date | string
+    completedAt?: DateTimeNullableFilter<"SmsCampaign"> | Date | string | null
+  }
+
   export type ChildPanelUpsertWithoutUserInput = {
     update: XOR<ChildPanelUpdateWithoutUserInput, ChildPanelUncheckedUpdateWithoutUserInput>
     create: XOR<ChildPanelCreateWithoutUserInput, ChildPanelUncheckedCreateWithoutUserInput>
@@ -67055,6 +68901,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -67098,6 +68945,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -67157,6 +69005,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -67200,6 +69049,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -67242,6 +69092,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -67285,6 +69136,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -67344,6 +69196,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -67387,6 +69240,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -67430,6 +69284,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -67473,6 +69328,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -67564,6 +69420,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -67607,6 +69464,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -68692,6 +70550,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -68735,6 +70594,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -68975,6 +70835,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -69018,6 +70879,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -69263,6 +71125,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -69306,6 +71169,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -69521,6 +71385,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -69564,6 +71429,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -70072,6 +71938,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -70115,6 +71982,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -70274,6 +72142,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -70317,6 +72186,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -70481,6 +72351,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -70524,6 +72395,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -70620,6 +72492,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -70663,6 +72536,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -70898,6 +72772,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageCreateNestedManyWithoutSenderInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -70941,6 +72816,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageUncheckedCreateNestedManyWithoutSenderInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -70989,6 +72865,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageCreateNestedManyWithoutSenderInput
     deposits?: DepositCreateNestedManyWithoutUserInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -71032,6 +72909,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageUncheckedCreateNestedManyWithoutSenderInput
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -71200,6 +73078,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageUpdateManyWithoutSenderNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -71243,6 +73122,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageUncheckedUpdateManyWithoutSenderNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -71297,6 +73177,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageUpdateManyWithoutSenderNestedInput
     deposits?: DepositUpdateManyWithoutUserNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -71340,6 +73221,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageUncheckedUpdateManyWithoutSenderNestedInput
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -71510,6 +73392,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageCreateNestedManyWithoutSenderInput
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -71553,6 +73436,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageUncheckedCreateNestedManyWithoutSenderInput
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -71612,6 +73496,7 @@ export namespace Prisma {
     ticketMessages?: TicketMessageUpdateManyWithoutSenderNestedInput
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -71655,6 +73540,199 @@ export namespace Prisma {
     ticketMessages?: TicketMessageUncheckedUpdateManyWithoutSenderNestedInput
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
+    childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUncheckedUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUncheckedUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUncheckedUpdateOneWithoutRefereeNestedInput
+  }
+
+  export type UserCreateWithoutSmsCampaignsSentInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referredBy?: UserCreateNestedOneWithoutReferralsInput
+    referrals?: UserCreateNestedManyWithoutReferredByInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    tickets?: TicketCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageCreateNestedManyWithoutSenderInput
+    deposits?: DepositCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogCreateNestedOneWithoutRefereeInput
+  }
+
+  export type UserUncheckedCreateWithoutSmsCampaignsSentInput = {
+    id?: string
+    username: string
+    email: string
+    passwordHash?: string | null
+    role?: $Enums.Role
+    status?: $Enums.UserStatus
+    googleId?: string | null
+    avatarUrl?: string | null
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    apiKeyHash?: string | null
+    apiKeyPrefix?: string | null
+    apiKeyCreatedAt?: Date | string | null
+    isVip?: boolean
+    isReseller?: boolean
+    hasDeposited?: boolean
+    referralCode: string
+    referredById?: string | null
+    totalReferralEarnings?: Decimal | DecimalJsLike | number | string
+    phone?: string | null
+    notifyEmail?: boolean
+    notifyOrderUpdates?: boolean
+    notifyPromotions?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referrals?: UserUncheckedCreateNestedManyWithoutReferredByInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutUserInput
+    ticketMessages?: TicketMessageUncheckedCreateNestedManyWithoutSenderInput
+    deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
+    reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
+    adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
+    affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
+    couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    orderIntents?: OrderIntentUncheckedCreateNestedManyWithoutUserInput
+    referralsMade?: ReferralLogUncheckedCreateNestedManyWithoutReferrerInput
+    referralReceived?: ReferralLogUncheckedCreateNestedOneWithoutRefereeInput
+  }
+
+  export type UserCreateOrConnectWithoutSmsCampaignsSentInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSmsCampaignsSentInput, UserUncheckedCreateWithoutSmsCampaignsSentInput>
+  }
+
+  export type UserUpsertWithoutSmsCampaignsSentInput = {
+    update: XOR<UserUpdateWithoutSmsCampaignsSentInput, UserUncheckedUpdateWithoutSmsCampaignsSentInput>
+    create: XOR<UserCreateWithoutSmsCampaignsSentInput, UserUncheckedCreateWithoutSmsCampaignsSentInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSmsCampaignsSentInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSmsCampaignsSentInput, UserUncheckedUpdateWithoutSmsCampaignsSentInput>
+  }
+
+  export type UserUpdateWithoutSmsCampaignsSentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referredBy?: UserUpdateOneWithoutReferralsNestedInput
+    referrals?: UserUpdateManyWithoutReferredByNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    tickets?: TicketUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
+    affiliate?: AffiliateUpdateOneWithoutUserNestedInput
+    couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    orderIntents?: OrderIntentUpdateManyWithoutUserNestedInput
+    referralsMade?: ReferralLogUpdateManyWithoutReferrerNestedInput
+    referralReceived?: ReferralLogUpdateOneWithoutRefereeNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSmsCampaignsSentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    apiKeyHash?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyPrefix?: NullableStringFieldUpdateOperationsInput | string | null
+    apiKeyCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isVip?: BoolFieldUpdateOperationsInput | boolean
+    isReseller?: BoolFieldUpdateOperationsInput | boolean
+    hasDeposited?: BoolFieldUpdateOperationsInput | boolean
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredById?: NullableStringFieldUpdateOperationsInput | string | null
+    totalReferralEarnings?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyEmail?: BoolFieldUpdateOperationsInput | boolean
+    notifyOrderUpdates?: BoolFieldUpdateOperationsInput | boolean
+    notifyPromotions?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: UserUncheckedUpdateManyWithoutReferredByNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutUserNestedInput
+    ticketMessages?: TicketMessageUncheckedUpdateManyWithoutSenderNestedInput
+    deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
+    reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
+    adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -71823,6 +73901,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
@@ -71866,6 +73945,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
@@ -71925,6 +74005,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
@@ -71968,6 +74049,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -72011,6 +74093,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
@@ -72054,6 +74137,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
@@ -72113,6 +74197,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
@@ -72156,6 +74241,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -72340,6 +74426,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
@@ -72383,6 +74470,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
@@ -72479,6 +74567,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
@@ -72522,6 +74611,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -72565,6 +74655,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -72608,6 +74699,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -72656,6 +74748,7 @@ export namespace Prisma {
     deposits?: DepositCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelCreateNestedOneWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionCreateNestedManyWithoutUserInput
@@ -72699,6 +74792,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedCreateNestedManyWithoutUserInput
     reviewedDeposits?: DepositUncheckedCreateNestedManyWithoutReviewedByInput
     adminAuditLogs?: AdminAuditLogUncheckedCreateNestedManyWithoutActorInput
+    smsCampaignsSent?: SmsCampaignUncheckedCreateNestedManyWithoutSentByInput
     childPanel?: ChildPanelUncheckedCreateNestedOneWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     couponRedemptions?: CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
@@ -72758,6 +74852,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -72801,6 +74896,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -72855,6 +74951,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -72898,6 +74995,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -73506,6 +75604,23 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type SmsCampaignCreateManySentByInput = {
+    id?: string
+    title: string
+    message: string
+    targetGroup: $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignCreaterecipientsInput | string[]
+    recipientCount: number
+    smsUnitsPerRecipient: number
+    totalSmsUnits: number
+    processedCount?: number
+    successCount?: number
+    failedCount?: number
+    status?: $Enums.SmsCampaignStatus
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
   export type CouponRedemptionCreateManyUserInput = {
     id?: string
     couponId: string
@@ -73581,6 +75696,7 @@ export namespace Prisma {
     deposits?: DepositUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUpdateManyWithoutUserNestedInput
@@ -73624,6 +75740,7 @@ export namespace Prisma {
     deposits?: DepositUncheckedUpdateManyWithoutUserNestedInput
     reviewedDeposits?: DepositUncheckedUpdateManyWithoutReviewedByNestedInput
     adminAuditLogs?: AdminAuditLogUncheckedUpdateManyWithoutActorNestedInput
+    smsCampaignsSent?: SmsCampaignUncheckedUpdateManyWithoutSentByNestedInput
     childPanel?: ChildPanelUncheckedUpdateOneWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     couponRedemptions?: CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
@@ -73995,6 +76112,57 @@ export namespace Prisma {
     afterJson?: NullableStringFieldUpdateOperationsInput | string | null
     ip?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SmsCampaignUpdateWithoutSentByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    targetGroup?: EnumSmsCampaignTargetGroupFieldUpdateOperationsInput | $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignUpdaterecipientsInput | string[]
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    smsUnitsPerRecipient?: IntFieldUpdateOperationsInput | number
+    totalSmsUnits?: IntFieldUpdateOperationsInput | number
+    processedCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SmsCampaignUncheckedUpdateWithoutSentByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    targetGroup?: EnumSmsCampaignTargetGroupFieldUpdateOperationsInput | $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignUpdaterecipientsInput | string[]
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    smsUnitsPerRecipient?: IntFieldUpdateOperationsInput | number
+    totalSmsUnits?: IntFieldUpdateOperationsInput | number
+    processedCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SmsCampaignUncheckedUpdateManyWithoutSentByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    targetGroup?: EnumSmsCampaignTargetGroupFieldUpdateOperationsInput | $Enums.SmsCampaignTargetGroup
+    recipients?: SmsCampaignUpdaterecipientsInput | string[]
+    recipientCount?: IntFieldUpdateOperationsInput | number
+    smsUnitsPerRecipient?: IntFieldUpdateOperationsInput | number
+    totalSmsUnits?: IntFieldUpdateOperationsInput | number
+    processedCount?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    status?: EnumSmsCampaignStatusFieldUpdateOperationsInput | $Enums.SmsCampaignStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CouponRedemptionUpdateWithoutUserInput = {
@@ -75607,6 +77775,10 @@ export namespace Prisma {
      * @deprecated Use AdminAuditLogDefaultArgs instead
      */
     export type AdminAuditLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AdminAuditLogDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SmsCampaignDefaultArgs instead
+     */
+    export type SmsCampaignArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SmsCampaignDefaultArgs<ExtArgs>
     /**
      * @deprecated Use DripFeedDefaultArgs instead
      */

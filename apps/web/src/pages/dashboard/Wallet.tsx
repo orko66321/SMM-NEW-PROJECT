@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PaymentGatewayKeys } from "@smm/shared";
-import { createDeposit, getMyDeposits, getPaymentMethods, getPublicSettings, getWallet, initiateGatewayDeposit, validateCoupon } from "../../api/resources.js";
+import { createDeposit, getMyDeposits, getPaymentMethods, getPublicSettings, getWallet, initiateGatewayDeposit, updateMyProfile, validateCoupon } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
@@ -11,6 +11,7 @@ import { useLanguage } from "../../context/LanguageContext.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 import { BilingualNote, EmptyState, Icon, StatusBadge, Tabs, WalletBalance } from "../../components/ds/index.js";
 import { GlassPage, PageHeader } from "../../components/dashboard/GlassPage.js";
+import { BD_PHONE_REGEX } from "../../components/dashboard/PhoneOnboardingModal.js";
 
 // A checkout-initiated gateway deposit (Store "Buy now" / New Order) has no
 // admin-titled PaymentMethod behind it, so it falls back to storing the raw
@@ -66,7 +67,7 @@ export default function Wallet() {
   const queryClient = useQueryClient();
   const { formatCurrency } = useCurrency();
   const { t } = useLanguage();
-  const { user } = useAuth();
+  const { user, setUserPhone } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: wallet } = useQuery({ queryKey: ["wallet"], queryFn: getWallet, enabled: !!user });
   const { data: deposits } = useQuery({ queryKey: ["deposits"], queryFn: () => getMyDeposits({ page: 1, pageSize: 20 }), enabled: !!user });
@@ -90,6 +91,13 @@ export default function Wallet() {
   const [senderNumber, setSenderNumber] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Checkout fallback for an account with no phone on file (mainly Google
+  // sign-ups) — see components/dashboard/PhoneOnboardingModal.tsx, which
+  // is the primary prompt; this covers whoever dismissed it and came
+  // straight here. Saved via the same PATCH /users/me on submit, below.
+  const [notifyPhone, setNotifyPhone] = useState("");
+  const needsPhone = !!user && !user.phone;
 
   const [couponCode, setCouponCode] = useState("");
   const [couponBonus, setCouponBonus] = useState<string | null>(null);
@@ -171,10 +179,33 @@ export default function Wallet() {
     setCouponError(null);
   }
 
+  /** Validates + saves the fallback notification-phone field when it's showing. No-op (returns true) otherwise. */
+  async function ensurePhoneSaved(): Promise<boolean> {
+    if (!needsPhone) return true;
+    const trimmed = notifyPhone.trim();
+    if (!BD_PHONE_REGEX.test(trimmed)) {
+      setError(t("phoneOnboarding.invalidFormat"));
+      return false;
+    }
+    try {
+      await updateMyProfile({ phone: trimmed });
+      setUserPhone(trimmed);
+      queryClient.invalidateQueries({ queryKey: ["my-profile"] });
+      return true;
+    } catch (err) {
+      setError(apiErrorMessage(err, t("phoneOnboarding.saveFailedFallback")));
+      return false;
+    }
+  }
+
   async function onPayAutomated() {
     if (!selected || !amount) return;
     setSubmitting(true);
     setError(null);
+    if (!(await ensurePhoneSaved())) {
+      setSubmitting(false);
+      return;
+    }
     try {
       const redirectUrl = await initiateGatewayDeposit(selected.gatewayProvider as never, {
         amount: Number(amount),
@@ -194,6 +225,10 @@ export default function Wallet() {
     if (!selected || !amount) return;
     setSubmitting(true);
     setError(null);
+    if (!(await ensurePhoneSaved())) {
+      setSubmitting(false);
+      return;
+    }
     try {
       await createDeposit({
         paymentMethodId: selected.id,
@@ -310,6 +345,23 @@ export default function Wallet() {
           </p>
         )}
         {error && <p className="rounded-md bg-error/15 px-3 py-2 text-sm text-error">{error}</p>}
+
+        {needsPhone && (
+          <div>
+            <label className="label" htmlFor="notifyPhone">{t("phoneOnboarding.checkoutLabel")}</label>
+            <input
+              id="notifyPhone"
+              type="tel"
+              inputMode="numeric"
+              className="input-field"
+              placeholder={t("phoneOnboarding.placeholder")}
+              value={notifyPhone}
+              onChange={(e) => setNotifyPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 11))}
+              required
+            />
+            <p className="mt-1 text-xs text-on-surface-variant">{t("phoneOnboarding.checkoutHint")}</p>
+          </div>
+        )}
 
         <div>
           <label className="label">{t("wallet.paymentMethodLabel")}</label>

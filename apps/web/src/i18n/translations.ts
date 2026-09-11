@@ -779,6 +779,26 @@ const en = {
     keyRevokeFailedFallback: "Failed to revoke API key",
   },
 
+  // One-time onboarding modal (components/dashboard/PhoneOnboardingModal.tsx)
+  // for an account with no phone number yet — mainly Google sign-ups, since
+  // Google never hands one out. Mounted in DashboardLayout; also reused as
+  // an inline fallback field on Add Funds / New Order when a phone-gated
+  // notification is about to fire and none is on file yet.
+  phoneOnboarding: {
+    title: "Add your phone number",
+    message: "Add your mobile number to get instant SMS updates on your orders.",
+    inputLabel: "Mobile number",
+    placeholder: "01XXXXXXXXX",
+    invalidFormat: "Enter an 11-digit Bangladeshi number starting with 013–019.",
+    save: "Save & Continue",
+    saving: "Saving…",
+    remindLater: "Remind me later",
+    savedToast: "Phone number saved.",
+    saveFailedFallback: "Failed to save phone number",
+    checkoutLabel: "Notification phone number",
+    checkoutHint: "Used only for order/payment SMS updates — added to your account automatically.",
+  },
+
   // Floating "Need Help?" launcher (components/support/HelpWidget.tsx) and
   // its quick "open a support ticket" modal. Channel display names come
   // from the API (admin-set label or a default), so they aren't listed here.
@@ -1565,6 +1585,21 @@ const bn: Translations = {
     keyRevokedToast: "এপিআই কী বাতিল হয়েছে।",
     keyGenFailedFallback: "এপিআই কী জেনারেট করা যায়নি",
     keyRevokeFailedFallback: "এপিআই কী বাতিল করা যায়নি",
+  },
+
+  phoneOnboarding: {
+    title: "আপনার মোবাইল নম্বর যুক্ত করুন",
+    message: "অর্ডারের তাৎক্ষণিক SMS আপডেট পেতে আপনার মোবাইল নম্বরটি যুক্ত করুন।",
+    inputLabel: "মোবাইল নম্বর",
+    placeholder: "01XXXXXXXXX",
+    invalidFormat: "013–019 দিয়ে শুরু হওয়া ১১ সংখ্যার একটি সঠিক বাংলাদেশি নম্বর দিন।",
+    save: "সংরক্ষণ করে এগিয়ে যান",
+    saving: "সংরক্ষণ হচ্ছে…",
+    remindLater: "পরে মনে করিয়ে দিন",
+    savedToast: "মোবাইল নম্বর সংরক্ষিত হয়েছে।",
+    saveFailedFallback: "মোবাইল নম্বর সংরক্ষণ করা যায়নি",
+    checkoutLabel: "নোটিফিকেশন মোবাইল নম্বর",
+    checkoutHint: "শুধুমাত্র অর্ডার/পেমেন্ট SMS আপডেটের জন্য ব্যবহৃত হবে — স্বয়ংক্রিয়ভাবে আপনার অ্যাকাউন্টে যুক্ত হয়ে যাবে।",
   },
 
   helpWidget: {

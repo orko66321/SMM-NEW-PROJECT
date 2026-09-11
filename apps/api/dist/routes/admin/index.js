@@ -23,6 +23,7 @@ import { adminPackagesRouter } from "./packages.routes.js";
 import { adminStockPoolsRouter } from "./stockPools.routes.js";
 import { adminCommentTemplatesRouter } from "./commentTemplates.routes.js";
 import { adminReferralRouter } from "./referral.routes.js";
+import { adminSmsRouter } from "./sms.routes.js";
 export const adminRouter = Router();
 // Every route under /api/admin/* is authenticated and role-gated here —
 // `requireRole` checks the DB-verified role on `req.user` set by
@@ -62,3 +63,6 @@ adminRouter.use("/brands", adminOnly, adminBrandsRouter);
 adminRouter.use("/products", adminOnly, adminProductsRouter);
 adminRouter.use("/packages", adminOnly, adminPackagesRouter);
 adminRouter.use("/stock-pools", adminOnly, adminStockPoolsRouter);
+// Bulk SMS credits real money and reaches every customer's phone — ADMIN
+// only, same tier as Settings/gateways above.
+adminRouter.use("/sms", adminOnly, adminSmsRouter);

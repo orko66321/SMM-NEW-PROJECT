@@ -11,6 +11,7 @@ import LanguageSwitcher from "./LanguageSwitcher.js";
 import { Logo } from "../Logo.js";
 import { Icon, type IconName } from "../ds/Icon.js";
 import { cn } from "../ds/cn.js";
+import PhoneOnboardingModal from "../dashboard/PhoneOnboardingModal.js";
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
@@ -97,6 +98,12 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex min-h-screen bg-background">
+      {/* Onboarding: prompts for a notification phone number when the
+          account doesn't have one (mainly Google sign-ups). Dismisses
+          itself for guests via the `user &&` guard — this layout also
+          renders for guest-browsable /dashboard/* routes. */}
+      {user && !user.phone && <PhoneOnboardingModal />}
+
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 border-r border-outline-variant bg-surface-card md:block">
         <div className="flex h-16 items-center px-6">

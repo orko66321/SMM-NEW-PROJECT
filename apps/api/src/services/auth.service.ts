@@ -70,6 +70,7 @@ function publicUser(user: {
   apiKeyHash?: string | null;
   hasDeposited?: boolean;
   referralCode?: string;
+  phone?: string | null;
 }) {
   return {
     id: user.id,
@@ -87,6 +88,8 @@ function publicUser(user: {
     isReseller: (user.isReseller ?? false) || !!user.apiKeyHash,
     hasDeposited: user.hasDeposited ?? false,
     referralCode: user.referralCode ?? "",
+    // Null for most Google accounts — drives the phone-onboarding modal.
+    phone: user.phone ?? null,
   };
 }
 

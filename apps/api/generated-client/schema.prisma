@@ -533,6 +533,7 @@ model User {
   deposits            Deposit[]
   reviewedDeposits    Deposit[]            @relation("DepositReviewer")
   adminAuditLogs      AdminAuditLog[]      @relation("AuditActor")
+  smsCampaignsSent    SmsCampaign[]        @relation("SmsCampaignSentBy")
   childPanel          ChildPanel?
   affiliate           Affiliate?
   couponRedemptions   CouponRedemption[]
@@ -1119,6 +1120,54 @@ model AdminAuditLog {
 
   @@index([targetType, targetId])
   @@index([actorId, createdAt])
+}
+
+enum SmsCampaignTargetGroup {
+  ALL
+  VIP
+  RESELLER
+  CUSTOM
+}
+
+enum SmsCampaignStatus {
+  PENDING
+  SENDING
+  COMPLETED
+  FAILED
+}
+
+// Admin Panel → SMS Campaigns — one row per broadcast. `recipients` is a
+// snapshot of the resolved phone numbers taken at creation time (ALL/VIP/
+// RESELLER resolve from User.phone right then; CUSTOM is whatever the admin
+// pasted in), so a later phone change or account edit never reshapes an
+// already-queued campaign. cron/sendSmsCampaigns.ts processes `recipients`
+// in fixed-size batches per tick — `processedCount` is both "how many sent
+// so far" and the cursor into `recipients` for the next batch, so a tick can
+// pick up exactly where the last one left off; `successCount`/`failedCount`
+// always sum to `processedCount`. See services/smsCampaign.service.ts.
+model SmsCampaign {
+  id          String                 @id @default(cuid())
+  title       String
+  message     String
+  targetGroup SmsCampaignTargetGroup
+
+  recipients           String[]
+  recipientCount       Int
+  smsUnitsPerRecipient Int
+  totalSmsUnits        Int
+
+  processedCount Int @default(0)
+  successCount   Int @default(0)
+  failedCount    Int @default(0)
+
+  status      SmsCampaignStatus @default(PENDING)
+  sentById    String
+  sentBy      User              @relation("SmsCampaignSentBy", fields: [sentById], references: [id])
+  createdAt   DateTime          @default(now())
+  completedAt DateTime?
+
+  @@index([status])
+  @@index([createdAt])
 }
 
 // ── Phase 2+ domain: schema only, no API/UI wired yet ────────────────────

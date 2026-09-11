@@ -6,6 +6,7 @@ import { pollRefillStatus } from "./pollRefillStatus.js";
 import { reconcilePendingDeposits } from "./reconcilePendingDeposits.js";
 import { retryFailedOrderIntents } from "./retryFailedOrderIntents.js";
 import { syncAllActiveProviders } from "./syncProviders.js";
+import { sendSmsCampaigns } from "./sendSmsCampaigns.js";
 
 function runSafely(name: string, fn: () => Promise<{ [k: string]: number }>) {
   return async () => {
@@ -35,5 +36,6 @@ export function startCronJobs() {
   cron.schedule("*/5 * * * *", runSafely("reconcilePendingDeposits", reconcilePendingDeposits));
   cron.schedule("*/5 * * * *", runSafely("retryFailedOrderIntents", retryFailedOrderIntents));
   cron.schedule("0 */6 * * *", runSafely("syncAllActiveProviders", syncAllActiveProviders));
+  cron.schedule("*/1 * * * *", runSafely("sendSmsCampaigns", sendSmsCampaigns));
   logger.info("Cron jobs registered");
 }

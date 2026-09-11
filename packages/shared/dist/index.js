@@ -173,6 +173,11 @@ export const authUserSchema = z.object({
     // banner; `referralCode` powers the Refer & Earn page's share link.
     hasDeposited: z.boolean(),
     referralCode: z.string(),
+    // Null for most Google-signup accounts (Google doesn't hand out a phone
+    // number) and for anyone who skipped it at registration — the frontend's
+    // phone-onboarding modal/fallbacks (components/dashboard/PhoneOnboardingModal.tsx)
+    // key off this being falsy to prompt for one.
+    phone: z.string().nullable(),
 });
 // ── Wallet ───────────────────────────────────────────────────────────────
 // Phase 3: replaces the old free-text `method` deposit form — the user now
@@ -929,4 +934,58 @@ export const packageListQuerySchema = paginationQuerySchema.extend({
 export const purchasePackageSchema = z.object({
     packageId: z.string(),
     buyerInput: z.string().trim().min(1).max(2048),
+});
+// ── SMS Campaigns (Admin Panel bulk broadcast) ──────────────────────────
+// Keep in sync with the Prisma SmsCampaignTargetGroup / SmsCampaignStatus
+// enums. See apps/api/src/services/smsCampaign.service.ts (resolve +
+// create), apps/api/src/cron/sendSmsCampaigns.ts (batched sending).
+export const SmsCampaignTargetGroupValues = ["ALL", "VIP", "RESELLER", "CUSTOM"];
+export const SmsCampaignStatusValues = ["PENDING", "SENDING", "COMPLETED", "FAILED"];
+// Bangladeshi mobile format — kept identical to apps/api/src/lib/sms.ts's
+// normalizeBdPhone/PhoneOnboardingModal.tsx's BD_PHONE_REGEX so a "custom"
+// list validates the same numbers the rest of the panel already accepts.
+export const bdPhoneRegex = /^01[3-9]\d{8}$/;
+/**
+ * GSM 03.38 basic character set (the 7-bit alphabet every carrier bills a
+ * "standard" SMS segment against) — anything outside it forces UCS-2
+ * (Unicode) encoding for the whole message, which is how a single Bangla
+ * character drops the per-segment budget from 160 to 70. This is a
+ * practical approximation (omits the rarely-typed GSM "extension" table
+ * introduced by an 0x1B escape, e.g. `{`, `}`, `\`, `~`, `|`, `€`) — good
+ * enough for a live composer estimate; the provider's own accounting is
+ * always the final word on what actually got billed.
+ */
+const GSM7_BASIC_SET = "@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
+const gsm7Set = new Set(GSM7_BASIC_SET);
+export function isGsm7Text(text) {
+    for (const ch of text) {
+        if (!gsm7Set.has(ch))
+            return false;
+    }
+    return true;
+}
+/** Single source of truth for "how many SMS units does this message cost" — used by the live composer preview and the actual campaign-creation billing count, so they can never drift apart. */
+export function computeSmsSegments(text) {
+    const gsm = isGsm7Text(text);
+    const length = text.length;
+    const singleSegmentLimit = gsm ? 160 : 70;
+    // A concatenated (multi-part) SMS reserves a few characters per part for
+    // the UDH concatenation header, dropping the per-part budget to 153/67.
+    const multiSegmentLimit = gsm ? 153 : 67;
+    const segments = length === 0 ? 0 : length <= singleSegmentLimit ? 1 : Math.ceil(length / multiSegmentLimit);
+    return { encoding: gsm ? "GSM7" : "UNICODE", length, singleSegmentLimit, segments };
+}
+export const createSmsCampaignSchema = z
+    .object({
+    title: z.string().trim().min(1).max(150),
+    message: z.string().trim().min(1).max(1000),
+    targetGroup: z.enum(SmsCampaignTargetGroupValues),
+    // Required (and validated) only when targetGroup is CUSTOM — checked in
+    // the refine below rather than a discriminated union, so a non-CUSTOM
+    // submission doesn't need to bother sending an empty array.
+    customNumbers: z.array(z.string().trim().regex(bdPhoneRegex)).min(1).max(20_000).optional(),
+})
+    .refine((v) => v.targetGroup !== "CUSTOM" || !!v.customNumbers?.length, {
+    message: "customNumbers is required when targetGroup is CUSTOM",
+    path: ["customNumbers"],
 });
