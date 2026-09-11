@@ -40399,6 +40399,14 @@ export namespace Prisma {
     smtpUser: string | null
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
+    smsEnabled: boolean | null
+    smsApiKeyCiphertext: string | null
+    smsWelcomeEnabled: boolean | null
+    smsWelcomeTemplate: string | null
+    smsAddFundEnabled: boolean | null
+    smsAddFundTemplate: string | null
+    smsOrderConfirmationEnabled: boolean | null
+    smsOrderConfirmationTemplate: string | null
     resendOrderButtonEnabled: boolean | null
     firstDepositBonusEnabled: boolean | null
     firstDepositBonusPercent: Decimal | null
@@ -40445,6 +40453,14 @@ export namespace Prisma {
     smtpUser: string | null
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
+    smsEnabled: boolean | null
+    smsApiKeyCiphertext: string | null
+    smsWelcomeEnabled: boolean | null
+    smsWelcomeTemplate: string | null
+    smsAddFundEnabled: boolean | null
+    smsAddFundTemplate: string | null
+    smsOrderConfirmationEnabled: boolean | null
+    smsOrderConfirmationTemplate: string | null
     resendOrderButtonEnabled: boolean | null
     firstDepositBonusEnabled: boolean | null
     firstDepositBonusPercent: Decimal | null
@@ -40491,6 +40507,14 @@ export namespace Prisma {
     smtpUser: number
     smtpPassCiphertext: number
     smtpFromAddress: number
+    smsEnabled: number
+    smsApiKeyCiphertext: number
+    smsWelcomeEnabled: number
+    smsWelcomeTemplate: number
+    smsAddFundEnabled: number
+    smsAddFundTemplate: number
+    smsOrderConfirmationEnabled: number
+    smsOrderConfirmationTemplate: number
     resendOrderButtonEnabled: number
     firstDepositBonusEnabled: number
     firstDepositBonusPercent: number
@@ -40563,6 +40587,14 @@ export namespace Prisma {
     smtpUser?: true
     smtpPassCiphertext?: true
     smtpFromAddress?: true
+    smsEnabled?: true
+    smsApiKeyCiphertext?: true
+    smsWelcomeEnabled?: true
+    smsWelcomeTemplate?: true
+    smsAddFundEnabled?: true
+    smsAddFundTemplate?: true
+    smsOrderConfirmationEnabled?: true
+    smsOrderConfirmationTemplate?: true
     resendOrderButtonEnabled?: true
     firstDepositBonusEnabled?: true
     firstDepositBonusPercent?: true
@@ -40609,6 +40641,14 @@ export namespace Prisma {
     smtpUser?: true
     smtpPassCiphertext?: true
     smtpFromAddress?: true
+    smsEnabled?: true
+    smsApiKeyCiphertext?: true
+    smsWelcomeEnabled?: true
+    smsWelcomeTemplate?: true
+    smsAddFundEnabled?: true
+    smsAddFundTemplate?: true
+    smsOrderConfirmationEnabled?: true
+    smsOrderConfirmationTemplate?: true
     resendOrderButtonEnabled?: true
     firstDepositBonusEnabled?: true
     firstDepositBonusPercent?: true
@@ -40655,6 +40695,14 @@ export namespace Prisma {
     smtpUser?: true
     smtpPassCiphertext?: true
     smtpFromAddress?: true
+    smsEnabled?: true
+    smsApiKeyCiphertext?: true
+    smsWelcomeEnabled?: true
+    smsWelcomeTemplate?: true
+    smsAddFundEnabled?: true
+    smsAddFundTemplate?: true
+    smsOrderConfirmationEnabled?: true
+    smsOrderConfirmationTemplate?: true
     resendOrderButtonEnabled?: true
     firstDepositBonusEnabled?: true
     firstDepositBonusPercent?: true
@@ -40788,6 +40836,14 @@ export namespace Prisma {
     smtpUser: string | null
     smtpPassCiphertext: string | null
     smtpFromAddress: string | null
+    smsEnabled: boolean
+    smsApiKeyCiphertext: string | null
+    smsWelcomeEnabled: boolean
+    smsWelcomeTemplate: string | null
+    smsAddFundEnabled: boolean
+    smsAddFundTemplate: string | null
+    smsOrderConfirmationEnabled: boolean
+    smsOrderConfirmationTemplate: string | null
     resendOrderButtonEnabled: boolean
     firstDepositBonusEnabled: boolean
     firstDepositBonusPercent: Decimal
@@ -40853,6 +40909,14 @@ export namespace Prisma {
     smtpUser?: boolean
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
+    smsEnabled?: boolean
+    smsApiKeyCiphertext?: boolean
+    smsWelcomeEnabled?: boolean
+    smsWelcomeTemplate?: boolean
+    smsAddFundEnabled?: boolean
+    smsAddFundTemplate?: boolean
+    smsOrderConfirmationEnabled?: boolean
+    smsOrderConfirmationTemplate?: boolean
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: boolean
@@ -40899,6 +40963,14 @@ export namespace Prisma {
     smtpUser?: boolean
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
+    smsEnabled?: boolean
+    smsApiKeyCiphertext?: boolean
+    smsWelcomeEnabled?: boolean
+    smsWelcomeTemplate?: boolean
+    smsAddFundEnabled?: boolean
+    smsAddFundTemplate?: boolean
+    smsOrderConfirmationEnabled?: boolean
+    smsOrderConfirmationTemplate?: boolean
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: boolean
@@ -40945,6 +41017,14 @@ export namespace Prisma {
     smtpUser?: boolean
     smtpPassCiphertext?: boolean
     smtpFromAddress?: boolean
+    smsEnabled?: boolean
+    smsApiKeyCiphertext?: boolean
+    smsWelcomeEnabled?: boolean
+    smsWelcomeTemplate?: boolean
+    smsAddFundEnabled?: boolean
+    smsAddFundTemplate?: boolean
+    smsOrderConfirmationEnabled?: boolean
+    smsOrderConfirmationTemplate?: boolean
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: boolean
@@ -40995,6 +41075,14 @@ export namespace Prisma {
       smtpUser: string | null
       smtpPassCiphertext: string | null
       smtpFromAddress: string | null
+      smsEnabled: boolean
+      smsApiKeyCiphertext: string | null
+      smsWelcomeEnabled: boolean
+      smsWelcomeTemplate: string | null
+      smsAddFundEnabled: boolean
+      smsAddFundTemplate: string | null
+      smsOrderConfirmationEnabled: boolean
+      smsOrderConfirmationTemplate: string | null
       resendOrderButtonEnabled: boolean
       firstDepositBonusEnabled: boolean
       firstDepositBonusPercent: Prisma.Decimal
@@ -41431,6 +41519,14 @@ export namespace Prisma {
     readonly smtpUser: FieldRef<"SiteSettings", 'String'>
     readonly smtpPassCiphertext: FieldRef<"SiteSettings", 'String'>
     readonly smtpFromAddress: FieldRef<"SiteSettings", 'String'>
+    readonly smsEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly smsApiKeyCiphertext: FieldRef<"SiteSettings", 'String'>
+    readonly smsWelcomeEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly smsWelcomeTemplate: FieldRef<"SiteSettings", 'String'>
+    readonly smsAddFundEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly smsAddFundTemplate: FieldRef<"SiteSettings", 'String'>
+    readonly smsOrderConfirmationEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly smsOrderConfirmationTemplate: FieldRef<"SiteSettings", 'String'>
     readonly resendOrderButtonEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly firstDepositBonusEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly firstDepositBonusPercent: FieldRef<"SiteSettings", 'Decimal'>
@@ -48883,6 +48979,14 @@ export namespace Prisma {
     smtpUser: 'smtpUser',
     smtpPassCiphertext: 'smtpPassCiphertext',
     smtpFromAddress: 'smtpFromAddress',
+    smsEnabled: 'smsEnabled',
+    smsApiKeyCiphertext: 'smsApiKeyCiphertext',
+    smsWelcomeEnabled: 'smsWelcomeEnabled',
+    smsWelcomeTemplate: 'smsWelcomeTemplate',
+    smsAddFundEnabled: 'smsAddFundEnabled',
+    smsAddFundTemplate: 'smsAddFundTemplate',
+    smsOrderConfirmationEnabled: 'smsOrderConfirmationEnabled',
+    smsOrderConfirmationTemplate: 'smsOrderConfirmationTemplate',
     resendOrderButtonEnabled: 'resendOrderButtonEnabled',
     firstDepositBonusEnabled: 'firstDepositBonusEnabled',
     firstDepositBonusPercent: 'firstDepositBonusPercent',
@@ -52504,6 +52608,14 @@ export namespace Prisma {
     smtpUser?: StringNullableFilter<"SiteSettings"> | string | null
     smtpPassCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableFilter<"SiteSettings"> | string | null
+    smsEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsApiKeyCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
+    smsWelcomeEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsWelcomeTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    smsAddFundEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsAddFundTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    smsOrderConfirmationEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsOrderConfirmationTemplate?: StringNullableFilter<"SiteSettings"> | string | null
     resendOrderButtonEnabled?: BoolFilter<"SiteSettings"> | boolean
     firstDepositBonusEnabled?: BoolFilter<"SiteSettings"> | boolean
     firstDepositBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
@@ -52550,6 +52662,14 @@ export namespace Prisma {
     smtpUser?: SortOrderInput | SortOrder
     smtpPassCiphertext?: SortOrderInput | SortOrder
     smtpFromAddress?: SortOrderInput | SortOrder
+    smsEnabled?: SortOrder
+    smsApiKeyCiphertext?: SortOrderInput | SortOrder
+    smsWelcomeEnabled?: SortOrder
+    smsWelcomeTemplate?: SortOrderInput | SortOrder
+    smsAddFundEnabled?: SortOrder
+    smsAddFundTemplate?: SortOrderInput | SortOrder
+    smsOrderConfirmationEnabled?: SortOrder
+    smsOrderConfirmationTemplate?: SortOrderInput | SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder
@@ -52599,6 +52719,14 @@ export namespace Prisma {
     smtpUser?: StringNullableFilter<"SiteSettings"> | string | null
     smtpPassCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableFilter<"SiteSettings"> | string | null
+    smsEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsApiKeyCiphertext?: StringNullableFilter<"SiteSettings"> | string | null
+    smsWelcomeEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsWelcomeTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    smsAddFundEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsAddFundTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    smsOrderConfirmationEnabled?: BoolFilter<"SiteSettings"> | boolean
+    smsOrderConfirmationTemplate?: StringNullableFilter<"SiteSettings"> | string | null
     resendOrderButtonEnabled?: BoolFilter<"SiteSettings"> | boolean
     firstDepositBonusEnabled?: BoolFilter<"SiteSettings"> | boolean
     firstDepositBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
@@ -52645,6 +52773,14 @@ export namespace Prisma {
     smtpUser?: SortOrderInput | SortOrder
     smtpPassCiphertext?: SortOrderInput | SortOrder
     smtpFromAddress?: SortOrderInput | SortOrder
+    smsEnabled?: SortOrder
+    smsApiKeyCiphertext?: SortOrderInput | SortOrder
+    smsWelcomeEnabled?: SortOrder
+    smsWelcomeTemplate?: SortOrderInput | SortOrder
+    smsAddFundEnabled?: SortOrder
+    smsAddFundTemplate?: SortOrderInput | SortOrder
+    smsOrderConfirmationEnabled?: SortOrder
+    smsOrderConfirmationTemplate?: SortOrderInput | SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder
@@ -52699,6 +52835,14 @@ export namespace Prisma {
     smtpUser?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smtpPassCiphertext?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smtpFromAddress?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    smsEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    smsApiKeyCiphertext?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    smsWelcomeEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    smsWelcomeTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    smsAddFundEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    smsAddFundTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    smsOrderConfirmationEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    smsOrderConfirmationTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     resendOrderButtonEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     firstDepositBonusEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     firstDepositBonusPercent?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
@@ -56426,6 +56570,14 @@ export namespace Prisma {
     smtpUser?: string | null
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
+    smsEnabled?: boolean
+    smsApiKeyCiphertext?: string | null
+    smsWelcomeEnabled?: boolean
+    smsWelcomeTemplate?: string | null
+    smsAddFundEnabled?: boolean
+    smsAddFundTemplate?: string | null
+    smsOrderConfirmationEnabled?: boolean
+    smsOrderConfirmationTemplate?: string | null
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: Decimal | DecimalJsLike | number | string
@@ -56472,6 +56624,14 @@ export namespace Prisma {
     smtpUser?: string | null
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
+    smsEnabled?: boolean
+    smsApiKeyCiphertext?: string | null
+    smsWelcomeEnabled?: boolean
+    smsWelcomeTemplate?: string | null
+    smsAddFundEnabled?: boolean
+    smsAddFundTemplate?: string | null
+    smsOrderConfirmationEnabled?: boolean
+    smsOrderConfirmationTemplate?: string | null
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: Decimal | DecimalJsLike | number | string
@@ -56518,6 +56678,14 @@ export namespace Prisma {
     smtpUser?: NullableStringFieldUpdateOperationsInput | string | null
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    smsAddFundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsAddFundTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    smsOrderConfirmationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsOrderConfirmationTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -56564,6 +56732,14 @@ export namespace Prisma {
     smtpUser?: NullableStringFieldUpdateOperationsInput | string | null
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    smsAddFundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsAddFundTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    smsOrderConfirmationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsOrderConfirmationTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -56610,6 +56786,14 @@ export namespace Prisma {
     smtpUser?: string | null
     smtpPassCiphertext?: string | null
     smtpFromAddress?: string | null
+    smsEnabled?: boolean
+    smsApiKeyCiphertext?: string | null
+    smsWelcomeEnabled?: boolean
+    smsWelcomeTemplate?: string | null
+    smsAddFundEnabled?: boolean
+    smsAddFundTemplate?: string | null
+    smsOrderConfirmationEnabled?: boolean
+    smsOrderConfirmationTemplate?: string | null
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: Decimal | DecimalJsLike | number | string
@@ -56656,6 +56840,14 @@ export namespace Prisma {
     smtpUser?: NullableStringFieldUpdateOperationsInput | string | null
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    smsAddFundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsAddFundTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    smsOrderConfirmationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsOrderConfirmationTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -56702,6 +56894,14 @@ export namespace Prisma {
     smtpUser?: NullableStringFieldUpdateOperationsInput | string | null
     smtpPassCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
     smtpFromAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApiKeyCiphertext?: NullableStringFieldUpdateOperationsInput | string | null
+    smsWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    smsAddFundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsAddFundTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    smsOrderConfirmationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsOrderConfirmationTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -59914,6 +60114,14 @@ export namespace Prisma {
     smtpUser?: SortOrder
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
+    smsEnabled?: SortOrder
+    smsApiKeyCiphertext?: SortOrder
+    smsWelcomeEnabled?: SortOrder
+    smsWelcomeTemplate?: SortOrder
+    smsAddFundEnabled?: SortOrder
+    smsAddFundTemplate?: SortOrder
+    smsOrderConfirmationEnabled?: SortOrder
+    smsOrderConfirmationTemplate?: SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder
@@ -59972,6 +60180,14 @@ export namespace Prisma {
     smtpUser?: SortOrder
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
+    smsEnabled?: SortOrder
+    smsApiKeyCiphertext?: SortOrder
+    smsWelcomeEnabled?: SortOrder
+    smsWelcomeTemplate?: SortOrder
+    smsAddFundEnabled?: SortOrder
+    smsAddFundTemplate?: SortOrder
+    smsOrderConfirmationEnabled?: SortOrder
+    smsOrderConfirmationTemplate?: SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder
@@ -60018,6 +60234,14 @@ export namespace Prisma {
     smtpUser?: SortOrder
     smtpPassCiphertext?: SortOrder
     smtpFromAddress?: SortOrder
+    smsEnabled?: SortOrder
+    smsApiKeyCiphertext?: SortOrder
+    smsWelcomeEnabled?: SortOrder
+    smsWelcomeTemplate?: SortOrder
+    smsAddFundEnabled?: SortOrder
+    smsAddFundTemplate?: SortOrder
+    smsOrderConfirmationEnabled?: SortOrder
+    smsOrderConfirmationTemplate?: SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder

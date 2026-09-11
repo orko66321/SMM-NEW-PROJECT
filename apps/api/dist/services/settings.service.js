@@ -3,6 +3,7 @@ import { encrypt, decrypt } from "../lib/crypto.js";
 import { env } from "../env.js";
 import { AppError } from "../utils/AppError.js";
 import { sendMail, isMailConfigured } from "../lib/mailer.js";
+import { sendSms, isSmsConfigured } from "../lib/sms.js";
 // Deliberately a singleton row (fixed id) rather than a key/value table —
 // see the model comment in schema.prisma. Upserted lazily on first read so
 // the app works before any admin has ever opened the Settings page.
@@ -46,6 +47,14 @@ export async function getAdminSettings() {
         smtpUser: s.smtpUser,
         smtpFromAddress: s.smtpFromAddress,
         smtpConfigured: !!s.smtpPassCiphertext,
+        smsEnabled: s.smsEnabled,
+        smsApiKeyConfigured: !!s.smsApiKeyCiphertext,
+        smsWelcomeEnabled: s.smsWelcomeEnabled,
+        smsWelcomeTemplate: s.smsWelcomeTemplate,
+        smsAddFundEnabled: s.smsAddFundEnabled,
+        smsAddFundTemplate: s.smsAddFundTemplate,
+        smsOrderConfirmationEnabled: s.smsOrderConfirmationEnabled,
+        smsOrderConfirmationTemplate: s.smsOrderConfirmationTemplate,
         resendOrderButtonEnabled: s.resendOrderButtonEnabled,
         firstDepositBonusEnabled: s.firstDepositBonusEnabled,
         firstDepositBonusPercent: s.firstDepositBonusPercent.toString(),
@@ -109,6 +118,18 @@ export async function updateSettings(input) {
             // UI never re-displays it after saving, so there's nothing to prefill.
             ...(input.smtpPassword ? { smtpPassCiphertext: encrypt(input.smtpPassword) } : {}),
             smtpFromAddress: input.smtpFromAddress,
+            ...(input.smsEnabled === undefined ? {} : { smsEnabled: input.smsEnabled }),
+            // Omit smsApiKey to keep the existing encrypted value — same
+            // never-re-displayed-after-saving treatment as smtpPassword above.
+            ...(input.smsApiKey ? { smsApiKeyCiphertext: encrypt(input.smsApiKey) } : {}),
+            ...(input.smsWelcomeEnabled === undefined ? {} : { smsWelcomeEnabled: input.smsWelcomeEnabled }),
+            smsWelcomeTemplate: input.smsWelcomeTemplate === undefined ? undefined : input.smsWelcomeTemplate || null,
+            ...(input.smsAddFundEnabled === undefined ? {} : { smsAddFundEnabled: input.smsAddFundEnabled }),
+            smsAddFundTemplate: input.smsAddFundTemplate === undefined ? undefined : input.smsAddFundTemplate || null,
+            ...(input.smsOrderConfirmationEnabled === undefined
+                ? {}
+                : { smsOrderConfirmationEnabled: input.smsOrderConfirmationEnabled }),
+            smsOrderConfirmationTemplate: input.smsOrderConfirmationTemplate === undefined ? undefined : input.smsOrderConfirmationTemplate || null,
             // Omitted by an older admin client ⇒ leave the stored value alone.
             ...(input.resendOrderButtonEnabled === undefined
                 ? {}
@@ -205,5 +226,52 @@ export async function sendTestEmail(to) {
         // Surface the mail-server error (auth failed, self-signed cert, …) so the
         // operator can fix their config — but never a stack trace.
         throw AppError.badRequest(err instanceof Error ? err.message : "Failed to send test email");
+    }
+}
+// Built-in wording used whenever the admin hasn't (yet) overridden a
+// template. `{{placeholder}}` tokens are filled in by
+// services/notifications.service.ts — keep any new placeholder documented
+// there too.
+export const DEFAULT_SMS_TEMPLATES = {
+    welcome: "Welcome to {{siteName}}, {{username}}! Your account is ready — start ordering now.",
+    addFund: "{{siteName}}: Your deposit of {{amount}} has been credited. New wallet balance: {{balance}}.",
+    orderConfirmation: "{{siteName}}: Order #{{orderId}} for {{service}} (qty {{quantity}}) placed successfully.",
+};
+/**
+ * Internal only — used exclusively by lib/sms.ts to actually send an SMS,
+ * and by services/notifications.service.ts to read the per-event templates.
+ * Never exposed through any route. Returns null if SMS isn't fully
+ * configured/enabled, so callers know to skip rather than crash.
+ */
+export async function getSmsConfig() {
+    const s = await ensureSettings();
+    if (!s.smsEnabled || !s.smsApiKeyCiphertext)
+        return null;
+    return {
+        apiKey: decrypt(s.smsApiKeyCiphertext),
+        welcomeEnabled: s.smsWelcomeEnabled,
+        welcomeTemplate: s.smsWelcomeTemplate || DEFAULT_SMS_TEMPLATES.welcome,
+        addFundEnabled: s.smsAddFundEnabled,
+        addFundTemplate: s.smsAddFundTemplate || DEFAULT_SMS_TEMPLATES.addFund,
+        orderConfirmationEnabled: s.smsOrderConfirmationEnabled,
+        orderConfirmationTemplate: s.smsOrderConfirmationTemplate || DEFAULT_SMS_TEMPLATES.orderConfirmation,
+        siteName: s.siteName,
+    };
+}
+/**
+ * Admin-only "Send test SMS" action (Settings → SMS Notifications) — same
+ * shape/purpose as sendTestEmail above. Always uses the saved API key; the
+ * caller only supplies the destination number.
+ */
+export async function sendTestSms(to) {
+    if (!(await isSmsConfigured())) {
+        throw AppError.badRequest("SMS isn't configured — enable it below and save an API key first");
+    }
+    const s = await ensureSettings();
+    try {
+        await sendSms(to, `${s.siteName}: This is a test SMS from your admin panel. If you received it, SMS is working.`);
+    }
+    catch (err) {
+        throw AppError.badRequest(err instanceof Error ? err.message : "Failed to send test SMS");
     }
 }

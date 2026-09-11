@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import { Prisma } from "#prisma/client";
 import type { CreateOrderInput, ResolveManualRefillInput, UpdateOrderStatusInput } from "@smm/shared";
 import { prisma } from "../lib/prisma.js";
+import { logger } from "../lib/logger.js";
 import { AppError } from "../utils/AppError.js";
 import { adjustWalletBalance } from "./wallet.service.js";
 import {
@@ -14,6 +15,7 @@ import {
 } from "./providerClient.service.js";
 import { isResendOrderButtonEnabled } from "./settings.service.js";
 import { recomputeServiceCompletionStats } from "./catalog.service.js";
+import { sendOrderConfirmationSms } from "./notifications.service.js";
 
 /** Provider error text can be long/HTML — keep the DB column and admin UI sane. */
 const MAX_API_ERROR_LEN = 4000;
@@ -107,14 +109,44 @@ export async function placeOrderInTransaction(
 }
 
 export async function createOrder(userId: string, input: CreateOrderInput, idempotencyKey: string) {
+  // Cheap pre-check, not the correctness guard (that's the @@unique on
+  // IdempotencyKey inside the transaction) — just so a replayed/retried
+  // submit doesn't re-fire the order-confirmation SMS below. A near-
+  // simultaneous duplicate could race this and send (or skip) one extra
+  // text; harmless for a best-effort notification.
+  const alreadyPlaced = await prisma.idempotencyKey.findUnique({
+    where: { userId_key: { userId, key: idempotencyKey } },
+    select: { id: true },
+  });
+
+  let order;
   try {
-    return await prisma.$transaction((tx) => placeOrderInTransaction(tx, userId, input, idempotencyKey));
+    order = await prisma.$transaction((tx) => placeOrderInTransaction(tx, userId, input, idempotencyKey));
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
       // Concurrent request with the same idempotency key won the race.
       throw AppError.conflict("A duplicate request is already being processed. Please retry.");
     }
     throw err;
+  }
+
+  if (!alreadyPlaced) void notifyOrderConfirmationSms(order);
+
+  return order;
+}
+
+/** Best-effort — see notifications.service.ts's header comment. */
+async function notifyOrderConfirmationSms(order: { id: string; userId: string; serviceId: string | null; quantity: number }): Promise<void> {
+  try {
+    if (!order.serviceId) return;
+    const [user, service] = await Promise.all([
+      prisma.user.findUnique({ where: { id: order.userId }, select: { username: true, phone: true } }),
+      prisma.service.findUnique({ where: { id: order.serviceId }, select: { name: true } }),
+    ]);
+    if (!user || !service) return;
+    await sendOrderConfirmationSms(user, { orderId: order.id, service: service.name, quantity: order.quantity });
+  } catch (err) {
+    logger.error({ err, orderId: order.id }, "Order-confirmation SMS notification failed");
   }
 }
 

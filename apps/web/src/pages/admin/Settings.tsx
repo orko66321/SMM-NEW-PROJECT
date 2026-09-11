@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { DisplayCurrency, LiveChatProvider, ReferrerRewardType } from "@smm/shared";
-import { getAdminSettings, sendAdminTestEmail, updateAdminSettings } from "../../api/resources.js";
+import { getAdminSettings, sendAdminTestEmail, sendAdminTestSms, updateAdminSettings } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { Link } from "react-router-dom";
 import { Breadcrumbs, Button } from "../../components/ds/index.js";
@@ -45,6 +45,14 @@ interface AdminSettings {
   smtpUser: string | null;
   smtpFromAddress: string | null;
   smtpConfigured: boolean;
+  smsEnabled: boolean;
+  smsApiKeyConfigured: boolean;
+  smsWelcomeEnabled: boolean;
+  smsWelcomeTemplate: string | null;
+  smsAddFundEnabled: boolean;
+  smsAddFundTemplate: string | null;
+  smsOrderConfirmationEnabled: boolean;
+  smsOrderConfirmationTemplate: string | null;
   resendOrderButtonEnabled: boolean;
   firstDepositBonusEnabled: boolean;
   firstDepositBonusPercent: string;
@@ -215,6 +223,14 @@ export default function AdminSettingsPage() {
     smtpUser: "",
     smtpPassword: "",
     smtpFromAddress: "",
+    smsEnabled: false,
+    smsApiKey: "",
+    smsWelcomeEnabled: false,
+    smsWelcomeTemplate: "",
+    smsAddFundEnabled: false,
+    smsAddFundTemplate: "",
+    smsOrderConfirmationEnabled: false,
+    smsOrderConfirmationTemplate: "",
     resendOrderButtonEnabled: true,
     firstDepositBonusEnabled: false,
     firstDepositBonusPercent: "0",
@@ -230,6 +246,8 @@ export default function AdminSettingsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [testEmailTo, setTestEmailTo] = useState("");
   const [sendingTestEmail, setSendingTestEmail] = useState(false);
+  const [testSmsTo, setTestSmsTo] = useState("");
+  const [sendingTestSms, setSendingTestSms] = useState(false);
 
   useEffect(() => {
     if (user?.email) setTestEmailTo((current) => current || user.email);
@@ -267,6 +285,14 @@ export default function AdminSettingsPage() {
       smtpUser: s.smtpUser ?? "",
       smtpPassword: "",
       smtpFromAddress: s.smtpFromAddress ?? "",
+      smsEnabled: s.smsEnabled ?? false,
+      smsApiKey: "",
+      smsWelcomeEnabled: s.smsWelcomeEnabled ?? false,
+      smsWelcomeTemplate: s.smsWelcomeTemplate ?? "",
+      smsAddFundEnabled: s.smsAddFundEnabled ?? false,
+      smsAddFundTemplate: s.smsAddFundTemplate ?? "",
+      smsOrderConfirmationEnabled: s.smsOrderConfirmationEnabled ?? false,
+      smsOrderConfirmationTemplate: s.smsOrderConfirmationTemplate ?? "",
       resendOrderButtonEnabled: s.resendOrderButtonEnabled ?? true,
       firstDepositBonusEnabled: s.firstDepositBonusEnabled ?? false,
       firstDepositBonusPercent: s.firstDepositBonusPercent ?? "0",
@@ -314,6 +340,14 @@ export default function AdminSettingsPage() {
         smtpUser: form.smtpUser || null,
         ...(form.smtpPassword ? { smtpPassword: form.smtpPassword } : {}),
         smtpFromAddress: form.smtpFromAddress || null,
+        smsEnabled: form.smsEnabled,
+        ...(form.smsApiKey ? { smsApiKey: form.smsApiKey } : {}),
+        smsWelcomeEnabled: form.smsWelcomeEnabled,
+        smsWelcomeTemplate: form.smsWelcomeTemplate.trim() || null,
+        smsAddFundEnabled: form.smsAddFundEnabled,
+        smsAddFundTemplate: form.smsAddFundTemplate.trim() || null,
+        smsOrderConfirmationEnabled: form.smsOrderConfirmationEnabled,
+        smsOrderConfirmationTemplate: form.smsOrderConfirmationTemplate.trim() || null,
         resendOrderButtonEnabled: form.resendOrderButtonEnabled,
         firstDepositBonusEnabled: form.firstDepositBonusEnabled,
         firstDepositBonusPercent: Number(form.firstDepositBonusPercent) || 0,
@@ -329,7 +363,7 @@ export default function AdminSettingsPage() {
       toast.push("Settings saved.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin-settings"] });
       queryClient.invalidateQueries({ queryKey: ["public-settings"] });
-      setForm((f) => ({ ...f, smtpPassword: "" }));
+      setForm((f) => ({ ...f, smtpPassword: "", smsApiKey: "" }));
     } catch (err) {
       toast.push(apiErrorMessage(err, "Failed to save settings"), "error");
     } finally {
@@ -347,6 +381,19 @@ export default function AdminSettingsPage() {
       toast.push(apiErrorMessage(err, "Test email failed"), "error");
     } finally {
       setSendingTestEmail(false);
+    }
+  }
+
+  async function onSendTestSms() {
+    if (!testSmsTo.trim()) return;
+    setSendingTestSms(true);
+    try {
+      await sendAdminTestSms(testSmsTo.trim());
+      toast.push("Test SMS sent.", "success");
+    } catch (err) {
+      toast.push(apiErrorMessage(err, "Test SMS failed"), "error");
+    } finally {
+      setSendingTestSms(false);
     }
   }
 
@@ -740,6 +787,91 @@ export default function AdminSettingsPage() {
         </div>
         <p className="text-xs text-on-surface-variant">
           Save your SMTP settings first — the test uses the saved password, not what&apos;s typed above.
+        </p>
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold">SMS Notifications (uronto SMS)</h2>
+        <p className="text-xs text-on-surface-variant">
+          {settings ? ((settings as AdminSettings).smsApiKeyConfigured ? "An API key is currently saved." : "No API key saved yet.") : ""}
+          {" "}Sends a text for welcome / add-fund / order-confirmation events, each toggled independently below.
+        </p>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={form.smsEnabled} onChange={(e) => setForm((f) => ({ ...f, smsEnabled: e.target.checked }))} /> Enable SMS sending
+        </label>
+        <input
+          className="input-field"
+          type="password"
+          placeholder="uronto SMS API key (leave blank to keep existing)"
+          value={form.smsApiKey}
+          onChange={(e) => setForm((f) => ({ ...f, smsApiKey: e.target.value }))}
+        />
+
+        <div className="space-y-3 border-t border-outline-variant pt-3">
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={form.smsWelcomeEnabled} onChange={(e) => setForm((f) => ({ ...f, smsWelcomeEnabled: e.target.checked }))} /> Welcome SMS (on sign-up, if a phone was given)
+          </label>
+          <textarea
+            className="input-field"
+            rows={2}
+            placeholder="Welcome to {{siteName}}, {{username}}! Your account is ready — start ordering now."
+            value={form.smsWelcomeTemplate}
+            onChange={(e) => setForm((f) => ({ ...f, smsWelcomeTemplate: e.target.value }))}
+          />
+        </div>
+
+        <div className="space-y-3 border-t border-outline-variant pt-3">
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={form.smsAddFundEnabled} onChange={(e) => setForm((f) => ({ ...f, smsAddFundEnabled: e.target.checked }))} /> Add Fund SMS (on deposit credit)
+          </label>
+          <textarea
+            className="input-field"
+            rows={2}
+            placeholder="{{siteName}}: Your deposit of {{amount}} has been credited. New wallet balance: {{balance}}."
+            value={form.smsAddFundTemplate}
+            onChange={(e) => setForm((f) => ({ ...f, smsAddFundTemplate: e.target.value }))}
+          />
+        </div>
+
+        <div className="space-y-3 border-t border-outline-variant pt-3">
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={form.smsOrderConfirmationEnabled} onChange={(e) => setForm((f) => ({ ...f, smsOrderConfirmationEnabled: e.target.checked }))} /> Order Confirmation SMS (on order placed)
+          </label>
+          <textarea
+            className="input-field"
+            rows={2}
+            placeholder="{{siteName}}: Order #{{orderId}} for {{service}} (qty {{quantity}}) placed successfully."
+            value={form.smsOrderConfirmationTemplate}
+            onChange={(e) => setForm((f) => ({ ...f, smsOrderConfirmationTemplate: e.target.value }))}
+          />
+        </div>
+        <p className="text-xs text-on-surface-variant">
+          Leave a template blank to use the default wording shown as its placeholder. Available tokens: {"{{siteName}}"}, {"{{username}}"},
+          {" "}{"{{amount}}"}, {"{{balance}}"} (Add Fund only), {"{{orderId}}"}, {"{{service}}"}, {"{{quantity}}"} (Order Confirmation only).
+        </p>
+
+        <div className="flex flex-col gap-2 border-t border-outline-variant pt-3 sm:flex-row sm:items-center">
+          <input
+            type="tel"
+            className="input-field sm:flex-1"
+            placeholder="Send test SMS to… e.g. 01700000000"
+            value={testSmsTo}
+            onChange={(e) => setTestSmsTo(e.target.value)}
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={sendingTestSms || !testSmsTo.trim()}
+            onClick={onSendTestSms}
+          >
+            {sendingTestSms && (
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            )}
+            {sendingTestSms ? "Sending…" : "Send test SMS"}
+          </Button>
+        </div>
+        <p className="text-xs text-on-surface-variant">
+          Save your SMS settings first — the test uses the saved API key, not what&apos;s typed above.
         </p>
       </div>
 

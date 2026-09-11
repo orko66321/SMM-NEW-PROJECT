@@ -1273,6 +1273,27 @@ model SiteSettings {
   smtpPassCiphertext String?
   smtpFromAddress    String?
 
+  // SMS notifications (uronto SMS — https://urontosms.hostgi.com/api/sms,
+  // a GET request with `key`/`number`/`msg` query params). Same
+  // admin-configured-secret pattern as SMTP above: the API key is encrypted
+  // at rest (lib/crypto.ts) and never re-returned to the admin UI after
+  // saving. Each event has its own on/off switch and an editable template
+  // (`{{placeholder}}` tokens filled in by services/notifications.service.ts)
+  // so an admin can disable or reword any single message without code
+  // changes. Sends are always best-effort — a failure never rolls back or
+  // blocks the registration/deposit/order flow that triggered it.
+  smsEnabled          Boolean @default(false)
+  smsApiKeyCiphertext String?
+
+  smsWelcomeEnabled  Boolean @default(false)
+  smsWelcomeTemplate String?
+
+  smsAddFundEnabled  Boolean @default(false)
+  smsAddFundTemplate String?
+
+  smsOrderConfirmationEnabled  Boolean @default(false)
+  smsOrderConfirmationTemplate String?
+
   // Kill-switch for the admin Orders "Resend to provider" button (and its
   // endpoint). Default on — it is a normal part of the admin workflow.
   resendOrderButtonEnabled Boolean @default(true)

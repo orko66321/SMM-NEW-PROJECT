@@ -22,6 +22,7 @@ import type {
   BannerInput,
   PostInput,
   SendTestEmailInput,
+  SendTestSmsInput,
   ServiceInput,
   StockPoolInput,
   SupportChannelType,
@@ -243,6 +244,8 @@ export const getAdminSettings = () => apiClient.get("/admin/settings").then((r) 
 export const updateAdminSettings = (input: UpdateSettingsInput) => apiClient.put("/admin/settings", input);
 export const sendAdminTestEmail = (to: string) =>
   apiClient.post("/admin/settings/test-email", { to } satisfies SendTestEmailInput);
+export const sendAdminTestSms = (to: string) =>
+  apiClient.post("/admin/settings/test-sms", { to } satisfies SendTestSmsInput);
 export const getAdminSiteNotice = () => apiClient.get("/admin/site-notice").then((r) => r.data);
 export const updateAdminSiteNotice = (input: UpdateSiteNoticeInput) => apiClient.put("/admin/site-notice", input);
 

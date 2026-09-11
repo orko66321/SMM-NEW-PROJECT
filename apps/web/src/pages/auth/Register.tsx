@@ -13,7 +13,7 @@ export default function Register() {
   const toast = useToast();
   const { t } = useLanguage();
   const refFromUrl = new URLSearchParams(location.search).get("ref")?.trim() ?? "";
-  const [form, setForm] = useState({ username: "", email: "", password: "", referralCode: refFromUrl });
+  const [form, setForm] = useState({ username: "", email: "", password: "", phone: "", referralCode: refFromUrl });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,6 +26,7 @@ export default function Register() {
         username: form.username,
         email: form.email,
         password: form.password,
+        ...(form.phone.trim() ? { phone: form.phone.trim() } : {}),
         ...(form.referralCode.trim() ? { referralCode: form.referralCode.trim() } : {}),
       });
       toast.push(t("auth.register.createdToast"), "success");
@@ -78,6 +79,19 @@ export default function Register() {
           <p className="mt-1 text-xs text-on-surface-variant">
             {t("auth.register.passwordHint")}
           </p>
+        </div>
+        <div>
+          <label className="label" htmlFor="phone">
+            {t("auth.register.phoneLabel")} <span className="normal-case text-on-surface-variant">({t("common.optional")})</span>
+          </label>
+          <input
+            id="phone"
+            type="tel"
+            className="input-field"
+            value={form.phone}
+            onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+            placeholder={t("auth.register.phonePlaceholder")}
+          />
         </div>
         <div>
           <label className="label" htmlFor="referralCode">

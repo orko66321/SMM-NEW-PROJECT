@@ -2,10 +2,32 @@ import { Prisma } from "#prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import { logger } from "../lib/logger.js";
-import { adjustWalletBalance } from "./wallet.service.js";
+import { adjustWalletBalance, getWalletForUser } from "./wallet.service.js";
 import { redeemCouponForDeposit, validateCoupon } from "./coupon.service.js";
 import { fulfillOrderIntent } from "./order.service.js";
 import { fulfillStorePackageIntent } from "./store.service.js";
+import { sendAddFundSms } from "./notifications.service.js";
+/**
+ * Best-effort "Add Fund" SMS, fired after a deposit-credit transaction has
+ * committed (never from inside one — see notifications.service.ts). Re-reads
+ * the user + wallet rather than threading them through the transaction
+ * result, so a failure here can never affect the credit that already
+ * happened.
+ */
+async function notifyAddFundSms(userId, amount) {
+    try {
+        const [user, wallet] = await Promise.all([
+            prisma.user.findUnique({ where: { id: userId }, select: { username: true, phone: true } }),
+            getWalletForUser(userId),
+        ]);
+        if (!user)
+            return;
+        await sendAddFundSms(user, { amount: Number(amount), balance: Number(wallet.balance) });
+    }
+    catch (err) {
+        logger.error({ err, userId }, "Add-fund SMS notification failed");
+    }
+}
 /** Row-locks a Deposit within an existing transaction — see wallet.service.ts's adjustWalletBalance for the same pattern applied to wallets. */
 async function lockDeposit(tx, depositId) {
     const rows = await tx.$queryRaw `SELECT "id" FROM "Deposit" WHERE "id" = ${depositId} FOR UPDATE`;
@@ -275,7 +297,7 @@ export async function listDepositsForAdmin(page, pageSize, status) {
  * credited, or vice versa.
  */
 export async function reviewDeposit(depositId, reviewerId, action, note) {
-    return prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
         const locked = await lockDeposit(tx, depositId);
         if (!locked)
             throw AppError.notFound("Deposit not found");
@@ -300,6 +322,9 @@ export async function reviewDeposit(depositId, reviewerId, action, note) {
         }
         return updated;
     });
+    if (action === "APPROVE")
+        void notifyAddFundSms(result.userId, result.amount);
+    return result;
 }
 /**
  * The gateway-confirmed counterpart to `reviewDeposit` above — same
@@ -316,7 +341,12 @@ export async function confirmGatewayDeposit(gatewayRef, result,
 // existing caller/test keeps today's Phase 2/3 auto-credit behavior unless it
 // explicitly opts out.
 options = { autoVerify: true }) {
-    return prisma.$transaction(async (tx) => {
+    // Set inside the transaction only on the branch that actually calls
+    // creditApprovedDeposit — every other branch (already resolved, still
+    // PENDING, auto-verify held back) returns early without crediting, and
+    // must not fire a duplicate/false "funds added" SMS.
+    let credited = false;
+    const txResult = await prisma.$transaction(async (tx) => {
         const deposit = await tx.deposit.findUnique({ where: { gatewayRef } });
         if (!deposit)
             throw AppError.notFound("Deposit not found for this payment reference");
@@ -373,6 +403,7 @@ options = { autoVerify: true }) {
                 }
             }
             await creditApprovedDeposit(tx, current);
+            credited = true;
             // Insufficient-balance redirect flow (see order.service.ts's
             // createOrderOrRedirect / fulfillOrderIntent) — this deposit was
             // initiated specifically to fund an order the user couldn't afford
@@ -414,4 +445,7 @@ options = { autoVerify: true }) {
         }
         return updated;
     });
+    if (credited)
+        void notifyAddFundSms(txResult.userId, txResult.amount);
+    return txResult;
 }
