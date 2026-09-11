@@ -34,7 +34,7 @@ const navRows: NavRow[] = [
   { to: "/admin/coupons", label: "Coupons", icon: "coupon", adminOnly: true },
   { to: "/admin/comments", label: "Comment", icon: "bell", adminOnly: true },
   { to: "/admin/referrals", label: "Referrals", icon: "users", adminOnly: true },
-  { to: "/admin/sms-campaigns", label: "SMS Campaigns", icon: "campaign", adminOnly: true },
+  { to: "/admin/campaigns", label: "Broadcast & Campaign Center", icon: "campaign", adminOnly: true },
   { to: "/admin/notice-settings", label: "Notice Settings", icon: "campaign", adminOnly: true },
   { to: "/admin/banner", label: "Banner Slider", icon: "image", adminOnly: true },
   { to: "/admin/posts", label: "Documentation", icon: "docs", adminOnly: true },

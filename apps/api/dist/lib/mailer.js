@@ -26,13 +26,20 @@ export async function isMailConfigured() {
         return true;
     return (await getMailjetConfig()) !== null;
 }
-export async function sendMail(to, subject, text) {
+/**
+ * `html`, when given, is sent alongside `text` (a plain-text fallback for
+ * clients that don't render HTML) — every provider below accepts both in
+ * the same request. Optional because every transactional-email call site
+ * (password reset, order/deposit notifications) only ever sends `text`;
+ * only the Bulk Email broadcaster composes HTML.
+ */
+export async function sendMail(to, subject, text, html) {
     if (env.RESEND_API_KEY) {
-        await sendViaResend(to, subject, text);
+        await sendViaResend(to, subject, text, html);
         return;
     }
     if (env.BREVO_API_KEY) {
-        await sendViaBrevo(to, subject, text);
+        await sendViaBrevo(to, subject, text, html);
         return;
     }
     const config = await getMailjetConfig();
@@ -40,7 +47,18 @@ export async function sendMail(to, subject, text) {
         logger.warn({ to, subject, text }, "Email not configured — logging instead of sending");
         return;
     }
-    await sendViaMailjet(config, to, subject, text);
+    await sendViaMailjet(config, to, subject, text, html);
+}
+/** Naive tag-stripping plain-text fallback for a Bulk Email HTML body that has no separately-authored text version. */
+export function htmlToPlainText(html) {
+    return html
+        .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, " ")
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<\/(p|div|h[1-6]|li)>/gi, "\n")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/[ \t]+/g, " ")
+        .replace(/\n\s+/g, "\n")
+        .trim();
 }
 function requireMailFrom(keyName) {
     if (!env.MAIL_FROM) {
@@ -62,18 +80,18 @@ async function postJson(url, headers, body) {
         throw new Error(err instanceof Error ? `Email API request failed: ${err.message}` : "Email API request failed");
     }
 }
-async function sendViaResend(to, subject, text) {
+async function sendViaResend(to, subject, text, html) {
     const from = requireMailFrom("RESEND_API_KEY");
-    const res = await postJson("https://api.resend.com/emails", { authorization: `Bearer ${env.RESEND_API_KEY}` }, { from, to: [to], subject, text });
+    const res = await postJson("https://api.resend.com/emails", { authorization: `Bearer ${env.RESEND_API_KEY}` }, { from, to: [to], subject, text, ...(html ? { html } : {}) });
     if (!res.ok) {
         const detail = await res.text().catch(() => "");
         logger.error({ status: res.status, detail }, "Resend API rejected the email");
         throw new Error(`Resend API error ${res.status}: ${detail.slice(0, 300)}`);
     }
 }
-async function sendViaBrevo(to, subject, text) {
+async function sendViaBrevo(to, subject, text, html) {
     const from = requireMailFrom("BREVO_API_KEY");
-    const res = await postJson("https://api.brevo.com/v3/smtp/email", { "api-key": env.BREVO_API_KEY, accept: "application/json" }, { sender: { email: from }, to: [{ email: to }], subject, textContent: text });
+    const res = await postJson("https://api.brevo.com/v3/smtp/email", { "api-key": env.BREVO_API_KEY, accept: "application/json" }, { sender: { email: from }, to: [{ email: to }], subject, textContent: text, ...(html ? { htmlContent: html } : {}) });
     if (!res.ok) {
         const detail = await res.text().catch(() => "");
         logger.error({ status: res.status, detail }, "Brevo API rejected the email");
@@ -110,7 +128,7 @@ function extractMailjetError(body) {
  * deposit notifications). A 4xx never retries — that's a config problem
  * (bad key, unverified sender) a second identical request won't fix.
  */
-async function sendViaMailjet(config, to, subject, text) {
+async function sendViaMailjet(config, to, subject, text, html) {
     const auth = Buffer.from(`${config.apiKey}:${config.secretKey}`).toString("base64");
     const payload = {
         Messages: [
@@ -119,6 +137,7 @@ async function sendViaMailjet(config, to, subject, text) {
                 To: [{ Email: to }],
                 Subject: subject,
                 TextPart: text,
+                ...(html ? { HTMLPart: html } : {}),
             },
         ],
     };

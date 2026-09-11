@@ -1013,6 +1013,7 @@ export declare const updateSettingsSchema: z.ZodObject<{
     emailOrderFailedEnabled: z.ZodOptional<z.ZodBoolean>;
     emailOrderFailedSubject: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
     emailOrderFailedTemplate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
+    emailBroadcastEnabled: z.ZodOptional<z.ZodBoolean>;
     resendOrderButtonEnabled: z.ZodOptional<z.ZodBoolean>;
     firstDepositBonusEnabled: z.ZodOptional<z.ZodBoolean>;
     firstDepositBonusPercent: z.ZodOptional<z.ZodNumber>;
@@ -1083,6 +1084,7 @@ export declare const updateSettingsSchema: z.ZodObject<{
     emailOrderFailedEnabled?: boolean | undefined;
     emailOrderFailedSubject?: string | null | undefined;
     emailOrderFailedTemplate?: string | null | undefined;
+    emailBroadcastEnabled?: boolean | undefined;
     resendOrderButtonEnabled?: boolean | undefined;
     firstDepositBonusEnabled?: boolean | undefined;
     firstDepositBonusPercent?: number | undefined;
@@ -1153,6 +1155,7 @@ export declare const updateSettingsSchema: z.ZodObject<{
     emailOrderFailedEnabled?: boolean | undefined;
     emailOrderFailedSubject?: string | null | undefined;
     emailOrderFailedTemplate?: string | null | undefined;
+    emailBroadcastEnabled?: boolean | undefined;
     resendOrderButtonEnabled?: boolean | undefined;
     firstDepositBonusEnabled?: boolean | undefined;
     firstDepositBonusPercent?: number | undefined;
@@ -2254,10 +2257,10 @@ export declare const purchasePackageSchema: z.ZodObject<{
     buyerInput: string;
 }>;
 export type PurchasePackageInput = z.infer<typeof purchasePackageSchema>;
-export declare const SmsCampaignTargetGroupValues: readonly ["ALL", "VIP", "RESELLER", "CUSTOM"];
-export type SmsCampaignTargetGroup = (typeof SmsCampaignTargetGroupValues)[number];
-export declare const SmsCampaignStatusValues: readonly ["PENDING", "SENDING", "COMPLETED", "FAILED"];
-export type SmsCampaignStatus = (typeof SmsCampaignStatusValues)[number];
+export declare const CampaignTargetGroupValues: readonly ["ALL", "VIP", "RESELLER", "CUSTOM"];
+export type CampaignTargetGroup = (typeof CampaignTargetGroupValues)[number];
+export declare const CampaignStatusValues: readonly ["PENDING", "SENDING", "COMPLETED", "FAILED"];
+export type CampaignStatus = (typeof CampaignStatusValues)[number];
 export declare const bdPhoneRegex: RegExp;
 export declare function isGsm7Text(text: string): boolean;
 export interface SmsSegmentInfo {
@@ -2297,3 +2300,35 @@ export declare const createSmsCampaignSchema: z.ZodEffects<z.ZodObject<{
     customNumbers?: string[] | undefined;
 }>;
 export type CreateSmsCampaignInput = z.infer<typeof createSmsCampaignSchema>;
+export declare const createEmailCampaignSchema: z.ZodEffects<z.ZodObject<{
+    title: z.ZodString;
+    subject: z.ZodString;
+    bodyHtml: z.ZodString;
+    targetGroup: z.ZodEnum<["ALL", "VIP", "RESELLER", "CUSTOM"]>;
+    customEmails: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+}, "strip", z.ZodTypeAny, {
+    title: string;
+    targetGroup: "CUSTOM" | "ALL" | "VIP" | "RESELLER";
+    subject: string;
+    bodyHtml: string;
+    customEmails?: string[] | undefined;
+}, {
+    title: string;
+    targetGroup: "CUSTOM" | "ALL" | "VIP" | "RESELLER";
+    subject: string;
+    bodyHtml: string;
+    customEmails?: string[] | undefined;
+}>, {
+    title: string;
+    targetGroup: "CUSTOM" | "ALL" | "VIP" | "RESELLER";
+    subject: string;
+    bodyHtml: string;
+    customEmails?: string[] | undefined;
+}, {
+    title: string;
+    targetGroup: "CUSTOM" | "ALL" | "VIP" | "RESELLER";
+    subject: string;
+    bodyHtml: string;
+    customEmails?: string[] | undefined;
+}>;
+export type CreateEmailCampaignInput = z.infer<typeof createEmailCampaignSchema>;

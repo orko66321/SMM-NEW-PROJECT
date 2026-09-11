@@ -539,6 +539,7 @@ model User {
   reviewedDeposits    Deposit[]            @relation("DepositReviewer")
   adminAuditLogs      AdminAuditLog[]      @relation("AuditActor")
   smsCampaignsSent    SmsCampaign[]        @relation("SmsCampaignSentBy")
+  emailCampaignsSent  EmailCampaign[]      @relation("EmailCampaignSentBy")
   childPanel          ChildPanel?
   affiliate           Affiliate?
   couponRedemptions   CouponRedemption[]
@@ -1127,34 +1128,40 @@ model AdminAuditLog {
   @@index([actorId, createdAt])
 }
 
-enum SmsCampaignTargetGroup {
+// Shared by SmsCampaign and EmailCampaign below — the Admin Panel's
+// unified "Broadcast & Campaign Center" targets the same four audiences
+// on both channels.
+enum CampaignTargetGroup {
   ALL
   VIP
   RESELLER
   CUSTOM
 }
 
-enum SmsCampaignStatus {
+enum CampaignStatus {
   PENDING
   SENDING
   COMPLETED
   FAILED
 }
 
-// Admin Panel → SMS Campaigns — one row per broadcast. `recipients` is a
-// snapshot of the resolved phone numbers taken at creation time (ALL/VIP/
-// RESELLER resolve from User.phone right then; CUSTOM is whatever the admin
-// pasted in), so a later phone change or account edit never reshapes an
-// already-queued campaign. cron/sendSmsCampaigns.ts processes `recipients`
-// in fixed-size batches per tick — `processedCount` is both "how many sent
-// so far" and the cursor into `recipients` for the next batch, so a tick can
-// pick up exactly where the last one left off; `successCount`/`failedCount`
-// always sum to `processedCount`. See services/smsCampaign.service.ts.
+// Admin Panel → Broadcast & Campaign Center → Bulk SMS — one row per
+// broadcast. `recipients` is a snapshot of the resolved phone numbers taken
+// at creation time (ALL/VIP/RESELLER resolve from User.phone right then;
+// CUSTOM is whatever the admin pasted in), so a later phone change or
+// account edit never reshapes an already-queued campaign. Not
+// personalized — every recipient gets the identical `message` text (unlike
+// EmailCampaign below, which does support {{username}}). cron/
+// sendSmsCampaigns.ts processes `recipients` in fixed-size batches per
+// tick — `processedCount` is both "how many sent so far" and the cursor
+// into `recipients` for the next batch, so a tick can pick up exactly
+// where the last one left off; `successCount`/`failedCount` always sum to
+// `processedCount`. See services/smsCampaign.service.ts.
 model SmsCampaign {
-  id          String                 @id @default(cuid())
+  id          String              @id @default(cuid())
   title       String
   message     String
-  targetGroup SmsCampaignTargetGroup
+  targetGroup CampaignTargetGroup
 
   recipients           String[]
   recipientCount       Int
@@ -1165,10 +1172,47 @@ model SmsCampaign {
   successCount   Int @default(0)
   failedCount    Int @default(0)
 
-  status      SmsCampaignStatus @default(PENDING)
+  status      CampaignStatus @default(PENDING)
   sentById    String
-  sentBy      User              @relation("SmsCampaignSentBy", fields: [sentById], references: [id])
-  createdAt   DateTime          @default(now())
+  sentBy      User           @relation("SmsCampaignSentBy", fields: [sentById], references: [id])
+  createdAt   DateTime       @default(now())
+  completedAt DateTime?
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Admin Panel → Broadcast & Campaign Center → Bulk Email — same
+// snapshot-at-creation / processedCount-as-cursor shape as SmsCampaign
+// above, but personalized: `recipientEmails`/`recipientUsernames` are
+// parallel arrays (same index = same recipient; an empty username means
+// either a CUSTOM address with no matching account, or one that just
+// hasn't set a username-worthy… every User has a username, so empty only
+// happens for a CUSTOM address that isn't a registered user at all) —
+// cron/sendEmailCampaigns.ts renders `bodyHtml`/`subject`'s {{username}}
+// per recipient rather than sending one identical body to everyone. Master
+// on/off is SiteSettings.emailBroadcastEnabled — deliberately separate
+// from smtpEnabled (which gates ALL email, including password reset) so
+// an admin can pause marketing blasts without breaking transactional mail.
+model EmailCampaign {
+  id          String              @id @default(cuid())
+  title       String
+  subject     String
+  bodyHtml    String
+  targetGroup CampaignTargetGroup
+
+  recipientEmails    String[]
+  recipientUsernames String[]
+  recipientCount     Int
+
+  processedCount Int @default(0)
+  successCount   Int @default(0)
+  failedCount    Int @default(0)
+
+  status      CampaignStatus @default(PENDING)
+  sentById    String
+  sentBy      User           @relation("EmailCampaignSentBy", fields: [sentById], references: [id])
+  createdAt   DateTime       @default(now())
   completedAt DateTime?
 
   @@index([status])
@@ -1393,6 +1437,14 @@ model SiteSettings {
   emailOrderFailedEnabled  Boolean @default(false)
   emailOrderFailedSubject  String?
   emailOrderFailedTemplate String?
+
+  // Broadcast & Campaign Center's Bulk Email master switch — deliberately
+  // separate from smtpEnabled (which gates every email, transactional
+  // included) so an admin can pause marketing blasts without breaking
+  // password reset / order notifications. Bulk SMS has no equivalent extra
+  // flag; smsEnabled already serves that role there since nothing else
+  // depends on it staying on.
+  emailBroadcastEnabled Boolean @default(false)
 
   // Kill-switch for the admin Orders "Resend to provider" button (and its
   // endpoint). Default on — it is a normal part of the admin workflow.

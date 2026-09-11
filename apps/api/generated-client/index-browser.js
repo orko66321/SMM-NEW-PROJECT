@@ -523,6 +523,24 @@ exports.Prisma.SmsCampaignScalarFieldEnum = {
   completedAt: 'completedAt'
 };
 
+exports.Prisma.EmailCampaignScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  subject: 'subject',
+  bodyHtml: 'bodyHtml',
+  targetGroup: 'targetGroup',
+  recipientEmails: 'recipientEmails',
+  recipientUsernames: 'recipientUsernames',
+  recipientCount: 'recipientCount',
+  processedCount: 'processedCount',
+  successCount: 'successCount',
+  failedCount: 'failedCount',
+  status: 'status',
+  sentById: 'sentById',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.DripFeedScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -638,6 +656,7 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   emailOrderFailedEnabled: 'emailOrderFailedEnabled',
   emailOrderFailedSubject: 'emailOrderFailedSubject',
   emailOrderFailedTemplate: 'emailOrderFailedTemplate',
+  emailBroadcastEnabled: 'emailBroadcastEnabled',
   resendOrderButtonEnabled: 'resendOrderButtonEnabled',
   firstDepositBonusEnabled: 'firstDepositBonusEnabled',
   firstDepositBonusPercent: 'firstDepositBonusPercent',
@@ -901,14 +920,14 @@ exports.DepositStatus = exports.$Enums.DepositStatus = {
   REJECTED: 'REJECTED'
 };
 
-exports.SmsCampaignTargetGroup = exports.$Enums.SmsCampaignTargetGroup = {
+exports.CampaignTargetGroup = exports.$Enums.CampaignTargetGroup = {
   ALL: 'ALL',
   VIP: 'VIP',
   RESELLER: 'RESELLER',
   CUSTOM: 'CUSTOM'
 };
 
-exports.SmsCampaignStatus = exports.$Enums.SmsCampaignStatus = {
+exports.CampaignStatus = exports.$Enums.CampaignStatus = {
   PENDING: 'PENDING',
   SENDING: 'SENDING',
   COMPLETED: 'COMPLETED',
@@ -1008,6 +1027,7 @@ exports.Prisma.ModelName = {
   Deposit: 'Deposit',
   AdminAuditLog: 'AdminAuditLog',
   SmsCampaign: 'SmsCampaign',
+  EmailCampaign: 'EmailCampaign',
   DripFeed: 'DripFeed',
   Affiliate: 'Affiliate',
   ChildPanel: 'ChildPanel',
