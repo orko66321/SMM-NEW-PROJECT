@@ -6,26 +6,28 @@ import { adjustWalletBalance, getWalletForUser } from "./wallet.service.js";
 import { redeemCouponForDeposit, validateCoupon } from "./coupon.service.js";
 import { fulfillOrderIntent } from "./order.service.js";
 import { fulfillStorePackageIntent } from "./store.service.js";
-import { sendAddFundSms } from "./notifications.service.js";
+import { notifyAddFundSuccess, notifyAddFundFailed } from "./notifications.service.js";
 import type { CreateManualDepositInput } from "@smm/shared";
 
 /**
- * Best-effort "Add Fund" SMS, fired after a deposit-credit transaction has
- * committed (never from inside one — see notifications.service.ts). Re-reads
- * the user + wallet rather than threading them through the transaction
- * result, so a failure here can never affect the credit that already
- * happened.
+ * Best-effort "Add Fund" notification (SMS + email), fired after a deposit
+ * transaction has committed (never from inside one — see
+ * notifications.service.ts). Re-reads the user + wallet rather than
+ * threading them through the transaction result, so a failure here can
+ * never affect the approve/reject that already happened.
  */
-async function notifyAddFundSms(userId: string, amount: Prisma.Decimal): Promise<void> {
+async function notifyDepositOutcome(userId: string, amount: Prisma.Decimal, approved: boolean): Promise<void> {
   try {
-    const [user, wallet] = await Promise.all([
-      prisma.user.findUnique({ where: { id: userId }, select: { username: true, phone: true } }),
-      getWalletForUser(userId),
-    ]);
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { username: true, email: true, phone: true } });
     if (!user) return;
-    await sendAddFundSms(user, { amount: Number(amount), balance: Number(wallet.balance) });
+    if (approved) {
+      const wallet = await getWalletForUser(userId);
+      await notifyAddFundSuccess(user, { amount: Number(amount), balance: Number(wallet.balance) });
+    } else {
+      await notifyAddFundFailed(user, { amount: Number(amount) });
+    }
   } catch (err) {
-    logger.error({ err, userId }, "Add-fund SMS notification failed");
+    logger.error({ err, userId, approved }, "Add-fund notification failed");
   }
 }
 
@@ -376,7 +378,7 @@ export async function reviewDeposit(
     return updated;
   });
 
-  if (action === "APPROVE") void notifyAddFundSms(result.userId, result.amount);
+  void notifyDepositOutcome(result.userId, result.amount, action === "APPROVE");
 
   return result;
 }
@@ -400,10 +402,12 @@ export async function confirmGatewayDeposit(
   options: { autoVerify: boolean } = { autoVerify: true },
 ) {
   // Set inside the transaction only on the branch that actually calls
-  // creditApprovedDeposit — every other branch (already resolved, still
-  // PENDING, auto-verify held back) returns early without crediting, and
-  // must not fire a duplicate/false "funds added" SMS.
+  // creditApprovedDeposit / genuinely flips PENDING → REJECTED — every other
+  // branch (already resolved, still PENDING, auto-verify held back) returns
+  // early without changing anything, and must not fire a duplicate/false
+  // "funds added" or "deposit failed" notification.
   let credited = false;
+  let justRejected = false;
 
   const txResult = await prisma.$transaction(async (tx) => {
     const deposit = await tx.deposit.findUnique({ where: { gatewayRef } });
@@ -443,6 +447,7 @@ export async function confirmGatewayDeposit(
         reviewedAt: new Date(),
       },
     });
+    if (result.status !== "PAID") justRejected = true;
 
     if (result.status === "PAID") {
       // Soft check only, never blocks crediting — result.amount is whatever
@@ -516,7 +521,8 @@ export async function confirmGatewayDeposit(
     return updated;
   });
 
-  if (credited) void notifyAddFundSms(txResult.userId, txResult.amount);
+  if (credited) void notifyDepositOutcome(txResult.userId, txResult.amount, true);
+  if (justRejected) void notifyDepositOutcome(txResult.userId, txResult.amount, false);
 
   return txResult;
 }

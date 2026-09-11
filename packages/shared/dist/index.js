@@ -518,6 +518,25 @@ export const updateSettingsSchema = z.object({
     smsAddFundTemplate: z.string().trim().max(500).or(z.literal("")).nullable().optional(),
     smsOrderConfirmationEnabled: z.boolean().optional(),
     smsOrderConfirmationTemplate: z.string().trim().max(500).or(z.literal("")).nullable().optional(),
+    // Email notifications (welcome / add-fund / order), sent via the existing
+    // SMTP/Resend/Brevo transport. Same optional/skip-undefined,
+    // ""-normalises-to-null treatment as every other admin-editable template
+    // field above.
+    emailWelcomeEnabled: z.boolean().optional(),
+    emailWelcomeSubject: z.string().trim().max(200).or(z.literal("")).nullable().optional(),
+    emailWelcomeTemplate: z.string().trim().max(5000).or(z.literal("")).nullable().optional(),
+    emailAddFundSuccessEnabled: z.boolean().optional(),
+    emailAddFundSuccessSubject: z.string().trim().max(200).or(z.literal("")).nullable().optional(),
+    emailAddFundSuccessTemplate: z.string().trim().max(5000).or(z.literal("")).nullable().optional(),
+    emailAddFundFailedEnabled: z.boolean().optional(),
+    emailAddFundFailedSubject: z.string().trim().max(200).or(z.literal("")).nullable().optional(),
+    emailAddFundFailedTemplate: z.string().trim().max(5000).or(z.literal("")).nullable().optional(),
+    emailOrderSuccessEnabled: z.boolean().optional(),
+    emailOrderSuccessSubject: z.string().trim().max(200).or(z.literal("")).nullable().optional(),
+    emailOrderSuccessTemplate: z.string().trim().max(5000).or(z.literal("")).nullable().optional(),
+    emailOrderFailedEnabled: z.boolean().optional(),
+    emailOrderFailedSubject: z.string().trim().max(200).or(z.literal("")).nullable().optional(),
+    emailOrderFailedTemplate: z.string().trim().max(5000).or(z.literal("")).nullable().optional(),
     // Admin Orders "Resend to provider" kill-switch. Optional so an older
     // admin client still validates; settings.service leaves it untouched when omitted.
     resendOrderButtonEnabled: z.boolean().optional(),

@@ -7,7 +7,7 @@ import { adjustWalletBalance } from "./wallet.service.js";
 import { getProviderOrThrow, getProviderOrderStatus, mapProviderOrderStatus, submitProviderCancel, submitProviderOrder, submitProviderRefill, } from "./providerClient.service.js";
 import { isResendOrderButtonEnabled } from "./settings.service.js";
 import { recomputeServiceCompletionStats } from "./catalog.service.js";
-import { sendOrderConfirmationSms } from "./notifications.service.js";
+import { notifyOrderSuccess, notifyOrderFailed } from "./notifications.service.js";
 /** Provider error text can be long/HTML — keep the DB column and admin UI sane. */
 const MAX_API_ERROR_LEN = 4000;
 function providerErrorText(err) {
@@ -102,24 +102,41 @@ export async function createOrder(userId, input, idempotencyKey) {
         throw err;
     }
     if (!alreadyPlaced)
-        void notifyOrderConfirmationSms(order);
+        void notifyOrderPlaced(order);
     return order;
 }
 /** Best-effort — see notifications.service.ts's header comment. */
-async function notifyOrderConfirmationSms(order) {
+async function notifyOrderPlaced(order) {
     try {
         if (!order.serviceId)
             return;
         const [user, service] = await Promise.all([
-            prisma.user.findUnique({ where: { id: order.userId }, select: { username: true, phone: true } }),
+            prisma.user.findUnique({ where: { id: order.userId }, select: { username: true, email: true, phone: true } }),
             prisma.service.findUnique({ where: { id: order.serviceId }, select: { name: true } }),
         ]);
         if (!user || !service)
             return;
-        await sendOrderConfirmationSms(user, { orderId: order.id, service: service.name, quantity: order.quantity });
+        await notifyOrderSuccess(user, { orderId: order.id, service: service.name, quantity: order.quantity });
     }
     catch (err) {
-        logger.error({ err, orderId: order.id }, "Order-confirmation SMS notification failed");
+        logger.error({ err, orderId: order.id }, "Order-success notification failed");
+    }
+}
+/** Best-effort — see notifications.service.ts's header comment. */
+async function notifyOrderFailedOutcome(order) {
+    try {
+        if (!order.serviceId)
+            return;
+        const [user, service] = await Promise.all([
+            prisma.user.findUnique({ where: { id: order.userId }, select: { username: true, email: true, phone: true } }),
+            prisma.service.findUnique({ where: { id: order.serviceId }, select: { name: true } }),
+        ]);
+        if (!user || !service)
+            return;
+        await notifyOrderFailed(user, { orderId: order.id, service: service.name, refundAmount: Number(order.charge) });
+    }
+    catch (err) {
+        logger.error({ err, orderId: order.id }, "Order-failed notification failed");
     }
 }
 /**
@@ -338,7 +355,11 @@ export async function setOrderAdminComment(orderId, input) {
  * an order can never be left in "canceled but still charged" limbo.
  */
 export async function updateOrderStatus(orderId, input) {
-    return prisma.$transaction(async (tx) => {
+    // Set inside the transaction only on a genuine first transition into
+    // FAILED — not CANCELED (a user's own cancel isn't a "failure" to notify
+    // about) and not a re-poll of an already-terminal order.
+    let justFailed = false;
+    const result = await prisma.$transaction(async (tx) => {
         const order = await tx.order.findUnique({ where: { id: orderId } });
         if (!order)
             throw AppError.notFound("Order not found");
@@ -384,9 +405,14 @@ export async function updateOrderStatus(orderId, input) {
                 referenceId: order.id,
                 note: `Refund for ${input.status.toLowerCase()} order`,
             });
+            if (input.status === "FAILED")
+                justFailed = true;
         }
         return updated;
     });
+    if (justFailed)
+        void notifyOrderFailedOutcome(result);
+    return result;
 }
 // ── Auto-fulfillment support (Phase 2 — see apps/api/src/cron/) ──────────
 /** Orders eligible for automatic provider submission: PENDING, not yet submitted, and the service has opted in. */

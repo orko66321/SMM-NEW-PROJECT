@@ -53,6 +53,21 @@ interface AdminSettings {
   smsAddFundTemplate: string | null;
   smsOrderConfirmationEnabled: boolean;
   smsOrderConfirmationTemplate: string | null;
+  emailWelcomeEnabled: boolean;
+  emailWelcomeSubject: string | null;
+  emailWelcomeTemplate: string | null;
+  emailAddFundSuccessEnabled: boolean;
+  emailAddFundSuccessSubject: string | null;
+  emailAddFundSuccessTemplate: string | null;
+  emailAddFundFailedEnabled: boolean;
+  emailAddFundFailedSubject: string | null;
+  emailAddFundFailedTemplate: string | null;
+  emailOrderSuccessEnabled: boolean;
+  emailOrderSuccessSubject: string | null;
+  emailOrderSuccessTemplate: string | null;
+  emailOrderFailedEnabled: boolean;
+  emailOrderFailedSubject: string | null;
+  emailOrderFailedTemplate: string | null;
   resendOrderButtonEnabled: boolean;
   firstDepositBonusEnabled: boolean;
   firstDepositBonusPercent: string;
@@ -188,6 +203,50 @@ function ColorSlot({ value, onChange }: { value: string; onChange: (hex: string)
   );
 }
 
+/** One email-notification event row in the "Email Notifications" card — toggle + subject + body template. */
+function EmailEventRow({
+  title,
+  enabled,
+  onToggle,
+  subject,
+  onSubjectChange,
+  subjectPlaceholder,
+  template,
+  onTemplateChange,
+  templatePlaceholder,
+}: {
+  title: string;
+  enabled: boolean;
+  onToggle: (v: boolean) => void;
+  subject: string;
+  onSubjectChange: (v: string) => void;
+  subjectPlaceholder: string;
+  template: string;
+  onTemplateChange: (v: string) => void;
+  templatePlaceholder: string;
+}) {
+  return (
+    <div className="space-y-2 border-t border-outline-variant pt-3">
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" checked={enabled} onChange={(e) => onToggle(e.target.checked)} /> {title}
+      </label>
+      <input
+        className="input-field"
+        placeholder={subjectPlaceholder}
+        value={subject}
+        onChange={(e) => onSubjectChange(e.target.value)}
+      />
+      <textarea
+        className="input-field"
+        rows={3}
+        placeholder={templatePlaceholder}
+        value={template}
+        onChange={(e) => onTemplateChange(e.target.value)}
+      />
+    </div>
+  );
+}
+
 export default function AdminSettingsPage() {
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -231,6 +290,21 @@ export default function AdminSettingsPage() {
     smsAddFundTemplate: "",
     smsOrderConfirmationEnabled: false,
     smsOrderConfirmationTemplate: "",
+    emailWelcomeEnabled: false,
+    emailWelcomeSubject: "",
+    emailWelcomeTemplate: "",
+    emailAddFundSuccessEnabled: false,
+    emailAddFundSuccessSubject: "",
+    emailAddFundSuccessTemplate: "",
+    emailAddFundFailedEnabled: false,
+    emailAddFundFailedSubject: "",
+    emailAddFundFailedTemplate: "",
+    emailOrderSuccessEnabled: false,
+    emailOrderSuccessSubject: "",
+    emailOrderSuccessTemplate: "",
+    emailOrderFailedEnabled: false,
+    emailOrderFailedSubject: "",
+    emailOrderFailedTemplate: "",
     resendOrderButtonEnabled: true,
     firstDepositBonusEnabled: false,
     firstDepositBonusPercent: "0",
@@ -293,6 +367,21 @@ export default function AdminSettingsPage() {
       smsAddFundTemplate: s.smsAddFundTemplate ?? "",
       smsOrderConfirmationEnabled: s.smsOrderConfirmationEnabled ?? false,
       smsOrderConfirmationTemplate: s.smsOrderConfirmationTemplate ?? "",
+      emailWelcomeEnabled: s.emailWelcomeEnabled ?? false,
+      emailWelcomeSubject: s.emailWelcomeSubject ?? "",
+      emailWelcomeTemplate: s.emailWelcomeTemplate ?? "",
+      emailAddFundSuccessEnabled: s.emailAddFundSuccessEnabled ?? false,
+      emailAddFundSuccessSubject: s.emailAddFundSuccessSubject ?? "",
+      emailAddFundSuccessTemplate: s.emailAddFundSuccessTemplate ?? "",
+      emailAddFundFailedEnabled: s.emailAddFundFailedEnabled ?? false,
+      emailAddFundFailedSubject: s.emailAddFundFailedSubject ?? "",
+      emailAddFundFailedTemplate: s.emailAddFundFailedTemplate ?? "",
+      emailOrderSuccessEnabled: s.emailOrderSuccessEnabled ?? false,
+      emailOrderSuccessSubject: s.emailOrderSuccessSubject ?? "",
+      emailOrderSuccessTemplate: s.emailOrderSuccessTemplate ?? "",
+      emailOrderFailedEnabled: s.emailOrderFailedEnabled ?? false,
+      emailOrderFailedSubject: s.emailOrderFailedSubject ?? "",
+      emailOrderFailedTemplate: s.emailOrderFailedTemplate ?? "",
       resendOrderButtonEnabled: s.resendOrderButtonEnabled ?? true,
       firstDepositBonusEnabled: s.firstDepositBonusEnabled ?? false,
       firstDepositBonusPercent: s.firstDepositBonusPercent ?? "0",
@@ -348,6 +437,21 @@ export default function AdminSettingsPage() {
         smsAddFundTemplate: form.smsAddFundTemplate.trim() || null,
         smsOrderConfirmationEnabled: form.smsOrderConfirmationEnabled,
         smsOrderConfirmationTemplate: form.smsOrderConfirmationTemplate.trim() || null,
+        emailWelcomeEnabled: form.emailWelcomeEnabled,
+        emailWelcomeSubject: form.emailWelcomeSubject.trim() || null,
+        emailWelcomeTemplate: form.emailWelcomeTemplate.trim() || null,
+        emailAddFundSuccessEnabled: form.emailAddFundSuccessEnabled,
+        emailAddFundSuccessSubject: form.emailAddFundSuccessSubject.trim() || null,
+        emailAddFundSuccessTemplate: form.emailAddFundSuccessTemplate.trim() || null,
+        emailAddFundFailedEnabled: form.emailAddFundFailedEnabled,
+        emailAddFundFailedSubject: form.emailAddFundFailedSubject.trim() || null,
+        emailAddFundFailedTemplate: form.emailAddFundFailedTemplate.trim() || null,
+        emailOrderSuccessEnabled: form.emailOrderSuccessEnabled,
+        emailOrderSuccessSubject: form.emailOrderSuccessSubject.trim() || null,
+        emailOrderSuccessTemplate: form.emailOrderSuccessTemplate.trim() || null,
+        emailOrderFailedEnabled: form.emailOrderFailedEnabled,
+        emailOrderFailedSubject: form.emailOrderFailedSubject.trim() || null,
+        emailOrderFailedTemplate: form.emailOrderFailedTemplate.trim() || null,
         resendOrderButtonEnabled: form.resendOrderButtonEnabled,
         firstDepositBonusEnabled: form.firstDepositBonusEnabled,
         firstDepositBonusPercent: Number(form.firstDepositBonusPercent) || 0,
@@ -872,6 +976,81 @@ export default function AdminSettingsPage() {
         </div>
         <p className="text-xs text-on-surface-variant">
           Save your SMS settings first — the test uses the saved API key, not what&apos;s typed above.
+        </p>
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold">Email Notifications</h2>
+        <p className="text-xs text-on-surface-variant">
+          Sent via whichever email transport is already configured above (SMTP, or a hosted provider on the API
+          server) — use the &ldquo;Send test email&rdquo; button in the SMTP card to confirm that&apos;s working. Each
+          event below is toggled independently and defaults to off.
+        </p>
+
+        <EmailEventRow
+          title="Welcome email (on sign-up)"
+          enabled={form.emailWelcomeEnabled}
+          onToggle={(v) => setForm((f) => ({ ...f, emailWelcomeEnabled: v }))}
+          subject={form.emailWelcomeSubject}
+          onSubjectChange={(v) => setForm((f) => ({ ...f, emailWelcomeSubject: v }))}
+          subjectPlaceholder="Welcome to {{siteName}}!"
+          template={form.emailWelcomeTemplate}
+          onTemplateChange={(v) => setForm((f) => ({ ...f, emailWelcomeTemplate: v }))}
+          templatePlaceholder={"Hi {{username}},\n\nWelcome to {{siteName}}! Your account is ready — you can start ordering right away.\n\nThanks,\n{{siteName}} Team"}
+        />
+
+        <EmailEventRow
+          title="Add Fund — successful (deposit credited)"
+          enabled={form.emailAddFundSuccessEnabled}
+          onToggle={(v) => setForm((f) => ({ ...f, emailAddFundSuccessEnabled: v }))}
+          subject={form.emailAddFundSuccessSubject}
+          onSubjectChange={(v) => setForm((f) => ({ ...f, emailAddFundSuccessSubject: v }))}
+          subjectPlaceholder="Deposit confirmed — {{siteName}}"
+          template={form.emailAddFundSuccessTemplate}
+          onTemplateChange={(v) => setForm((f) => ({ ...f, emailAddFundSuccessTemplate: v }))}
+          templatePlaceholder={"Hi {{username}},\n\nYour deposit of {{amount}} has been credited. Your new wallet balance is {{balance}}.\n\nThanks,\n{{siteName}} Team"}
+        />
+
+        <EmailEventRow
+          title="Add Fund — unsuccessful (deposit rejected)"
+          enabled={form.emailAddFundFailedEnabled}
+          onToggle={(v) => setForm((f) => ({ ...f, emailAddFundFailedEnabled: v }))}
+          subject={form.emailAddFundFailedSubject}
+          onSubjectChange={(v) => setForm((f) => ({ ...f, emailAddFundFailedSubject: v }))}
+          subjectPlaceholder="Deposit not approved — {{siteName}}"
+          template={form.emailAddFundFailedTemplate}
+          onTemplateChange={(v) => setForm((f) => ({ ...f, emailAddFundFailedTemplate: v }))}
+          templatePlaceholder={"Hi {{username}},\n\nYour deposit of {{amount}} could not be approved. If you believe this is a mistake, please contact support.\n\n{{siteName}} Team"}
+        />
+
+        <EmailEventRow
+          title="Order — successful (order placed)"
+          enabled={form.emailOrderSuccessEnabled}
+          onToggle={(v) => setForm((f) => ({ ...f, emailOrderSuccessEnabled: v }))}
+          subject={form.emailOrderSuccessSubject}
+          onSubjectChange={(v) => setForm((f) => ({ ...f, emailOrderSuccessSubject: v }))}
+          subjectPlaceholder="Order placed — #{{orderId}}"
+          template={form.emailOrderSuccessTemplate}
+          onTemplateChange={(v) => setForm((f) => ({ ...f, emailOrderSuccessTemplate: v }))}
+          templatePlaceholder={"Hi {{username}},\n\nYour order #{{orderId}} for {{service}} (qty {{quantity}}) has been placed successfully.\n\nThanks,\n{{siteName}} Team"}
+        />
+
+        <EmailEventRow
+          title="Order — unsuccessful (order failed, refunded)"
+          enabled={form.emailOrderFailedEnabled}
+          onToggle={(v) => setForm((f) => ({ ...f, emailOrderFailedEnabled: v }))}
+          subject={form.emailOrderFailedSubject}
+          onSubjectChange={(v) => setForm((f) => ({ ...f, emailOrderFailedSubject: v }))}
+          subjectPlaceholder="Order failed — #{{orderId}}"
+          template={form.emailOrderFailedTemplate}
+          onTemplateChange={(v) => setForm((f) => ({ ...f, emailOrderFailedTemplate: v }))}
+          templatePlaceholder={"Hi {{username}},\n\nUnfortunately your order #{{orderId}} for {{service}} could not be completed. {{refundAmount}} has been refunded to your wallet.\n\n{{siteName}} Team"}
+        />
+
+        <p className="text-xs text-on-surface-variant">
+          Leave a subject/body blank to use the default wording shown as its placeholder. Available tokens:{" "}
+          {"{{siteName}}"}, {"{{username}}"}, {"{{amount}}"} / {"{{balance}}"} (Add Fund), {"{{orderId}}"} /{" "}
+          {"{{service}}"} / {"{{quantity}}"} / {"{{refundAmount}}"} (Order).
         </p>
       </div>
 

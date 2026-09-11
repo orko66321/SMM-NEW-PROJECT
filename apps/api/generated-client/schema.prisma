@@ -1294,6 +1294,34 @@ model SiteSettings {
   smsOrderConfirmationEnabled  Boolean @default(false)
   smsOrderConfirmationTemplate String?
 
+  // Email notifications — same admin-editable-template pattern as the SMS
+  // block above, sent via the existing lib/mailer.ts (Resend/Brevo/SMTP,
+  // whichever is configured), so there's no separate "is email configured"
+  // toggle here: sendMail already no-ops (logs instead) when nothing's set
+  // up. Order events cover the placement outcome, not later fulfillment —
+  // "success" mirrors the SMS order-confirmation trigger (order placed +
+  // charged); "failed" fires when an order is later marked FAILED (provider
+  // couldn't deliver), which updateOrderStatus already auto-refunds.
+  emailWelcomeEnabled  Boolean @default(false)
+  emailWelcomeSubject  String?
+  emailWelcomeTemplate String?
+
+  emailAddFundSuccessEnabled  Boolean @default(false)
+  emailAddFundSuccessSubject  String?
+  emailAddFundSuccessTemplate String?
+
+  emailAddFundFailedEnabled  Boolean @default(false)
+  emailAddFundFailedSubject  String?
+  emailAddFundFailedTemplate String?
+
+  emailOrderSuccessEnabled  Boolean @default(false)
+  emailOrderSuccessSubject  String?
+  emailOrderSuccessTemplate String?
+
+  emailOrderFailedEnabled  Boolean @default(false)
+  emailOrderFailedSubject  String?
+  emailOrderFailedTemplate String?
+
   // Kill-switch for the admin Orders "Resend to provider" button (and its
   // endpoint). Default on — it is a normal part of the admin workflow.
   resendOrderButtonEnabled Boolean @default(true)

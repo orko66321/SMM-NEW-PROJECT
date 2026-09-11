@@ -40407,6 +40407,21 @@ export namespace Prisma {
     smsAddFundTemplate: string | null
     smsOrderConfirmationEnabled: boolean | null
     smsOrderConfirmationTemplate: string | null
+    emailWelcomeEnabled: boolean | null
+    emailWelcomeSubject: string | null
+    emailWelcomeTemplate: string | null
+    emailAddFundSuccessEnabled: boolean | null
+    emailAddFundSuccessSubject: string | null
+    emailAddFundSuccessTemplate: string | null
+    emailAddFundFailedEnabled: boolean | null
+    emailAddFundFailedSubject: string | null
+    emailAddFundFailedTemplate: string | null
+    emailOrderSuccessEnabled: boolean | null
+    emailOrderSuccessSubject: string | null
+    emailOrderSuccessTemplate: string | null
+    emailOrderFailedEnabled: boolean | null
+    emailOrderFailedSubject: string | null
+    emailOrderFailedTemplate: string | null
     resendOrderButtonEnabled: boolean | null
     firstDepositBonusEnabled: boolean | null
     firstDepositBonusPercent: Decimal | null
@@ -40461,6 +40476,21 @@ export namespace Prisma {
     smsAddFundTemplate: string | null
     smsOrderConfirmationEnabled: boolean | null
     smsOrderConfirmationTemplate: string | null
+    emailWelcomeEnabled: boolean | null
+    emailWelcomeSubject: string | null
+    emailWelcomeTemplate: string | null
+    emailAddFundSuccessEnabled: boolean | null
+    emailAddFundSuccessSubject: string | null
+    emailAddFundSuccessTemplate: string | null
+    emailAddFundFailedEnabled: boolean | null
+    emailAddFundFailedSubject: string | null
+    emailAddFundFailedTemplate: string | null
+    emailOrderSuccessEnabled: boolean | null
+    emailOrderSuccessSubject: string | null
+    emailOrderSuccessTemplate: string | null
+    emailOrderFailedEnabled: boolean | null
+    emailOrderFailedSubject: string | null
+    emailOrderFailedTemplate: string | null
     resendOrderButtonEnabled: boolean | null
     firstDepositBonusEnabled: boolean | null
     firstDepositBonusPercent: Decimal | null
@@ -40515,6 +40545,21 @@ export namespace Prisma {
     smsAddFundTemplate: number
     smsOrderConfirmationEnabled: number
     smsOrderConfirmationTemplate: number
+    emailWelcomeEnabled: number
+    emailWelcomeSubject: number
+    emailWelcomeTemplate: number
+    emailAddFundSuccessEnabled: number
+    emailAddFundSuccessSubject: number
+    emailAddFundSuccessTemplate: number
+    emailAddFundFailedEnabled: number
+    emailAddFundFailedSubject: number
+    emailAddFundFailedTemplate: number
+    emailOrderSuccessEnabled: number
+    emailOrderSuccessSubject: number
+    emailOrderSuccessTemplate: number
+    emailOrderFailedEnabled: number
+    emailOrderFailedSubject: number
+    emailOrderFailedTemplate: number
     resendOrderButtonEnabled: number
     firstDepositBonusEnabled: number
     firstDepositBonusPercent: number
@@ -40595,6 +40640,21 @@ export namespace Prisma {
     smsAddFundTemplate?: true
     smsOrderConfirmationEnabled?: true
     smsOrderConfirmationTemplate?: true
+    emailWelcomeEnabled?: true
+    emailWelcomeSubject?: true
+    emailWelcomeTemplate?: true
+    emailAddFundSuccessEnabled?: true
+    emailAddFundSuccessSubject?: true
+    emailAddFundSuccessTemplate?: true
+    emailAddFundFailedEnabled?: true
+    emailAddFundFailedSubject?: true
+    emailAddFundFailedTemplate?: true
+    emailOrderSuccessEnabled?: true
+    emailOrderSuccessSubject?: true
+    emailOrderSuccessTemplate?: true
+    emailOrderFailedEnabled?: true
+    emailOrderFailedSubject?: true
+    emailOrderFailedTemplate?: true
     resendOrderButtonEnabled?: true
     firstDepositBonusEnabled?: true
     firstDepositBonusPercent?: true
@@ -40649,6 +40709,21 @@ export namespace Prisma {
     smsAddFundTemplate?: true
     smsOrderConfirmationEnabled?: true
     smsOrderConfirmationTemplate?: true
+    emailWelcomeEnabled?: true
+    emailWelcomeSubject?: true
+    emailWelcomeTemplate?: true
+    emailAddFundSuccessEnabled?: true
+    emailAddFundSuccessSubject?: true
+    emailAddFundSuccessTemplate?: true
+    emailAddFundFailedEnabled?: true
+    emailAddFundFailedSubject?: true
+    emailAddFundFailedTemplate?: true
+    emailOrderSuccessEnabled?: true
+    emailOrderSuccessSubject?: true
+    emailOrderSuccessTemplate?: true
+    emailOrderFailedEnabled?: true
+    emailOrderFailedSubject?: true
+    emailOrderFailedTemplate?: true
     resendOrderButtonEnabled?: true
     firstDepositBonusEnabled?: true
     firstDepositBonusPercent?: true
@@ -40703,6 +40778,21 @@ export namespace Prisma {
     smsAddFundTemplate?: true
     smsOrderConfirmationEnabled?: true
     smsOrderConfirmationTemplate?: true
+    emailWelcomeEnabled?: true
+    emailWelcomeSubject?: true
+    emailWelcomeTemplate?: true
+    emailAddFundSuccessEnabled?: true
+    emailAddFundSuccessSubject?: true
+    emailAddFundSuccessTemplate?: true
+    emailAddFundFailedEnabled?: true
+    emailAddFundFailedSubject?: true
+    emailAddFundFailedTemplate?: true
+    emailOrderSuccessEnabled?: true
+    emailOrderSuccessSubject?: true
+    emailOrderSuccessTemplate?: true
+    emailOrderFailedEnabled?: true
+    emailOrderFailedSubject?: true
+    emailOrderFailedTemplate?: true
     resendOrderButtonEnabled?: true
     firstDepositBonusEnabled?: true
     firstDepositBonusPercent?: true
@@ -40844,6 +40934,21 @@ export namespace Prisma {
     smsAddFundTemplate: string | null
     smsOrderConfirmationEnabled: boolean
     smsOrderConfirmationTemplate: string | null
+    emailWelcomeEnabled: boolean
+    emailWelcomeSubject: string | null
+    emailWelcomeTemplate: string | null
+    emailAddFundSuccessEnabled: boolean
+    emailAddFundSuccessSubject: string | null
+    emailAddFundSuccessTemplate: string | null
+    emailAddFundFailedEnabled: boolean
+    emailAddFundFailedSubject: string | null
+    emailAddFundFailedTemplate: string | null
+    emailOrderSuccessEnabled: boolean
+    emailOrderSuccessSubject: string | null
+    emailOrderSuccessTemplate: string | null
+    emailOrderFailedEnabled: boolean
+    emailOrderFailedSubject: string | null
+    emailOrderFailedTemplate: string | null
     resendOrderButtonEnabled: boolean
     firstDepositBonusEnabled: boolean
     firstDepositBonusPercent: Decimal
@@ -40917,6 +41022,21 @@ export namespace Prisma {
     smsAddFundTemplate?: boolean
     smsOrderConfirmationEnabled?: boolean
     smsOrderConfirmationTemplate?: boolean
+    emailWelcomeEnabled?: boolean
+    emailWelcomeSubject?: boolean
+    emailWelcomeTemplate?: boolean
+    emailAddFundSuccessEnabled?: boolean
+    emailAddFundSuccessSubject?: boolean
+    emailAddFundSuccessTemplate?: boolean
+    emailAddFundFailedEnabled?: boolean
+    emailAddFundFailedSubject?: boolean
+    emailAddFundFailedTemplate?: boolean
+    emailOrderSuccessEnabled?: boolean
+    emailOrderSuccessSubject?: boolean
+    emailOrderSuccessTemplate?: boolean
+    emailOrderFailedEnabled?: boolean
+    emailOrderFailedSubject?: boolean
+    emailOrderFailedTemplate?: boolean
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: boolean
@@ -40971,6 +41091,21 @@ export namespace Prisma {
     smsAddFundTemplate?: boolean
     smsOrderConfirmationEnabled?: boolean
     smsOrderConfirmationTemplate?: boolean
+    emailWelcomeEnabled?: boolean
+    emailWelcomeSubject?: boolean
+    emailWelcomeTemplate?: boolean
+    emailAddFundSuccessEnabled?: boolean
+    emailAddFundSuccessSubject?: boolean
+    emailAddFundSuccessTemplate?: boolean
+    emailAddFundFailedEnabled?: boolean
+    emailAddFundFailedSubject?: boolean
+    emailAddFundFailedTemplate?: boolean
+    emailOrderSuccessEnabled?: boolean
+    emailOrderSuccessSubject?: boolean
+    emailOrderSuccessTemplate?: boolean
+    emailOrderFailedEnabled?: boolean
+    emailOrderFailedSubject?: boolean
+    emailOrderFailedTemplate?: boolean
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: boolean
@@ -41025,6 +41160,21 @@ export namespace Prisma {
     smsAddFundTemplate?: boolean
     smsOrderConfirmationEnabled?: boolean
     smsOrderConfirmationTemplate?: boolean
+    emailWelcomeEnabled?: boolean
+    emailWelcomeSubject?: boolean
+    emailWelcomeTemplate?: boolean
+    emailAddFundSuccessEnabled?: boolean
+    emailAddFundSuccessSubject?: boolean
+    emailAddFundSuccessTemplate?: boolean
+    emailAddFundFailedEnabled?: boolean
+    emailAddFundFailedSubject?: boolean
+    emailAddFundFailedTemplate?: boolean
+    emailOrderSuccessEnabled?: boolean
+    emailOrderSuccessSubject?: boolean
+    emailOrderSuccessTemplate?: boolean
+    emailOrderFailedEnabled?: boolean
+    emailOrderFailedSubject?: boolean
+    emailOrderFailedTemplate?: boolean
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: boolean
@@ -41083,6 +41233,21 @@ export namespace Prisma {
       smsAddFundTemplate: string | null
       smsOrderConfirmationEnabled: boolean
       smsOrderConfirmationTemplate: string | null
+      emailWelcomeEnabled: boolean
+      emailWelcomeSubject: string | null
+      emailWelcomeTemplate: string | null
+      emailAddFundSuccessEnabled: boolean
+      emailAddFundSuccessSubject: string | null
+      emailAddFundSuccessTemplate: string | null
+      emailAddFundFailedEnabled: boolean
+      emailAddFundFailedSubject: string | null
+      emailAddFundFailedTemplate: string | null
+      emailOrderSuccessEnabled: boolean
+      emailOrderSuccessSubject: string | null
+      emailOrderSuccessTemplate: string | null
+      emailOrderFailedEnabled: boolean
+      emailOrderFailedSubject: string | null
+      emailOrderFailedTemplate: string | null
       resendOrderButtonEnabled: boolean
       firstDepositBonusEnabled: boolean
       firstDepositBonusPercent: Prisma.Decimal
@@ -41527,6 +41692,21 @@ export namespace Prisma {
     readonly smsAddFundTemplate: FieldRef<"SiteSettings", 'String'>
     readonly smsOrderConfirmationEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly smsOrderConfirmationTemplate: FieldRef<"SiteSettings", 'String'>
+    readonly emailWelcomeEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly emailWelcomeSubject: FieldRef<"SiteSettings", 'String'>
+    readonly emailWelcomeTemplate: FieldRef<"SiteSettings", 'String'>
+    readonly emailAddFundSuccessEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly emailAddFundSuccessSubject: FieldRef<"SiteSettings", 'String'>
+    readonly emailAddFundSuccessTemplate: FieldRef<"SiteSettings", 'String'>
+    readonly emailAddFundFailedEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly emailAddFundFailedSubject: FieldRef<"SiteSettings", 'String'>
+    readonly emailAddFundFailedTemplate: FieldRef<"SiteSettings", 'String'>
+    readonly emailOrderSuccessEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly emailOrderSuccessSubject: FieldRef<"SiteSettings", 'String'>
+    readonly emailOrderSuccessTemplate: FieldRef<"SiteSettings", 'String'>
+    readonly emailOrderFailedEnabled: FieldRef<"SiteSettings", 'Boolean'>
+    readonly emailOrderFailedSubject: FieldRef<"SiteSettings", 'String'>
+    readonly emailOrderFailedTemplate: FieldRef<"SiteSettings", 'String'>
     readonly resendOrderButtonEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly firstDepositBonusEnabled: FieldRef<"SiteSettings", 'Boolean'>
     readonly firstDepositBonusPercent: FieldRef<"SiteSettings", 'Decimal'>
@@ -48987,6 +49167,21 @@ export namespace Prisma {
     smsAddFundTemplate: 'smsAddFundTemplate',
     smsOrderConfirmationEnabled: 'smsOrderConfirmationEnabled',
     smsOrderConfirmationTemplate: 'smsOrderConfirmationTemplate',
+    emailWelcomeEnabled: 'emailWelcomeEnabled',
+    emailWelcomeSubject: 'emailWelcomeSubject',
+    emailWelcomeTemplate: 'emailWelcomeTemplate',
+    emailAddFundSuccessEnabled: 'emailAddFundSuccessEnabled',
+    emailAddFundSuccessSubject: 'emailAddFundSuccessSubject',
+    emailAddFundSuccessTemplate: 'emailAddFundSuccessTemplate',
+    emailAddFundFailedEnabled: 'emailAddFundFailedEnabled',
+    emailAddFundFailedSubject: 'emailAddFundFailedSubject',
+    emailAddFundFailedTemplate: 'emailAddFundFailedTemplate',
+    emailOrderSuccessEnabled: 'emailOrderSuccessEnabled',
+    emailOrderSuccessSubject: 'emailOrderSuccessSubject',
+    emailOrderSuccessTemplate: 'emailOrderSuccessTemplate',
+    emailOrderFailedEnabled: 'emailOrderFailedEnabled',
+    emailOrderFailedSubject: 'emailOrderFailedSubject',
+    emailOrderFailedTemplate: 'emailOrderFailedTemplate',
     resendOrderButtonEnabled: 'resendOrderButtonEnabled',
     firstDepositBonusEnabled: 'firstDepositBonusEnabled',
     firstDepositBonusPercent: 'firstDepositBonusPercent',
@@ -52616,6 +52811,21 @@ export namespace Prisma {
     smsAddFundTemplate?: StringNullableFilter<"SiteSettings"> | string | null
     smsOrderConfirmationEnabled?: BoolFilter<"SiteSettings"> | boolean
     smsOrderConfirmationTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailWelcomeEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailWelcomeSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailWelcomeTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailAddFundSuccessEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailAddFundSuccessSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailAddFundSuccessTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailAddFundFailedEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailAddFundFailedSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailAddFundFailedTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailOrderSuccessEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailOrderSuccessSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailOrderSuccessTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailOrderFailedEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailOrderFailedSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailOrderFailedTemplate?: StringNullableFilter<"SiteSettings"> | string | null
     resendOrderButtonEnabled?: BoolFilter<"SiteSettings"> | boolean
     firstDepositBonusEnabled?: BoolFilter<"SiteSettings"> | boolean
     firstDepositBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
@@ -52670,6 +52880,21 @@ export namespace Prisma {
     smsAddFundTemplate?: SortOrderInput | SortOrder
     smsOrderConfirmationEnabled?: SortOrder
     smsOrderConfirmationTemplate?: SortOrderInput | SortOrder
+    emailWelcomeEnabled?: SortOrder
+    emailWelcomeSubject?: SortOrderInput | SortOrder
+    emailWelcomeTemplate?: SortOrderInput | SortOrder
+    emailAddFundSuccessEnabled?: SortOrder
+    emailAddFundSuccessSubject?: SortOrderInput | SortOrder
+    emailAddFundSuccessTemplate?: SortOrderInput | SortOrder
+    emailAddFundFailedEnabled?: SortOrder
+    emailAddFundFailedSubject?: SortOrderInput | SortOrder
+    emailAddFundFailedTemplate?: SortOrderInput | SortOrder
+    emailOrderSuccessEnabled?: SortOrder
+    emailOrderSuccessSubject?: SortOrderInput | SortOrder
+    emailOrderSuccessTemplate?: SortOrderInput | SortOrder
+    emailOrderFailedEnabled?: SortOrder
+    emailOrderFailedSubject?: SortOrderInput | SortOrder
+    emailOrderFailedTemplate?: SortOrderInput | SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder
@@ -52727,6 +52952,21 @@ export namespace Prisma {
     smsAddFundTemplate?: StringNullableFilter<"SiteSettings"> | string | null
     smsOrderConfirmationEnabled?: BoolFilter<"SiteSettings"> | boolean
     smsOrderConfirmationTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailWelcomeEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailWelcomeSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailWelcomeTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailAddFundSuccessEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailAddFundSuccessSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailAddFundSuccessTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailAddFundFailedEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailAddFundFailedSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailAddFundFailedTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailOrderSuccessEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailOrderSuccessSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailOrderSuccessTemplate?: StringNullableFilter<"SiteSettings"> | string | null
+    emailOrderFailedEnabled?: BoolFilter<"SiteSettings"> | boolean
+    emailOrderFailedSubject?: StringNullableFilter<"SiteSettings"> | string | null
+    emailOrderFailedTemplate?: StringNullableFilter<"SiteSettings"> | string | null
     resendOrderButtonEnabled?: BoolFilter<"SiteSettings"> | boolean
     firstDepositBonusEnabled?: BoolFilter<"SiteSettings"> | boolean
     firstDepositBonusPercent?: DecimalFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
@@ -52781,6 +53021,21 @@ export namespace Prisma {
     smsAddFundTemplate?: SortOrderInput | SortOrder
     smsOrderConfirmationEnabled?: SortOrder
     smsOrderConfirmationTemplate?: SortOrderInput | SortOrder
+    emailWelcomeEnabled?: SortOrder
+    emailWelcomeSubject?: SortOrderInput | SortOrder
+    emailWelcomeTemplate?: SortOrderInput | SortOrder
+    emailAddFundSuccessEnabled?: SortOrder
+    emailAddFundSuccessSubject?: SortOrderInput | SortOrder
+    emailAddFundSuccessTemplate?: SortOrderInput | SortOrder
+    emailAddFundFailedEnabled?: SortOrder
+    emailAddFundFailedSubject?: SortOrderInput | SortOrder
+    emailAddFundFailedTemplate?: SortOrderInput | SortOrder
+    emailOrderSuccessEnabled?: SortOrder
+    emailOrderSuccessSubject?: SortOrderInput | SortOrder
+    emailOrderSuccessTemplate?: SortOrderInput | SortOrder
+    emailOrderFailedEnabled?: SortOrder
+    emailOrderFailedSubject?: SortOrderInput | SortOrder
+    emailOrderFailedTemplate?: SortOrderInput | SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder
@@ -52843,6 +53098,21 @@ export namespace Prisma {
     smsAddFundTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     smsOrderConfirmationEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     smsOrderConfirmationTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailWelcomeEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    emailWelcomeSubject?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailWelcomeTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailAddFundSuccessEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    emailAddFundSuccessSubject?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailAddFundSuccessTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailAddFundFailedEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    emailAddFundFailedSubject?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailAddFundFailedTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailOrderSuccessEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    emailOrderSuccessSubject?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailOrderSuccessTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailOrderFailedEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
+    emailOrderFailedSubject?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+    emailOrderFailedTemplate?: StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
     resendOrderButtonEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     firstDepositBonusEnabled?: BoolWithAggregatesFilter<"SiteSettings"> | boolean
     firstDepositBonusPercent?: DecimalWithAggregatesFilter<"SiteSettings"> | Decimal | DecimalJsLike | number | string
@@ -56578,6 +56848,21 @@ export namespace Prisma {
     smsAddFundTemplate?: string | null
     smsOrderConfirmationEnabled?: boolean
     smsOrderConfirmationTemplate?: string | null
+    emailWelcomeEnabled?: boolean
+    emailWelcomeSubject?: string | null
+    emailWelcomeTemplate?: string | null
+    emailAddFundSuccessEnabled?: boolean
+    emailAddFundSuccessSubject?: string | null
+    emailAddFundSuccessTemplate?: string | null
+    emailAddFundFailedEnabled?: boolean
+    emailAddFundFailedSubject?: string | null
+    emailAddFundFailedTemplate?: string | null
+    emailOrderSuccessEnabled?: boolean
+    emailOrderSuccessSubject?: string | null
+    emailOrderSuccessTemplate?: string | null
+    emailOrderFailedEnabled?: boolean
+    emailOrderFailedSubject?: string | null
+    emailOrderFailedTemplate?: string | null
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: Decimal | DecimalJsLike | number | string
@@ -56632,6 +56917,21 @@ export namespace Prisma {
     smsAddFundTemplate?: string | null
     smsOrderConfirmationEnabled?: boolean
     smsOrderConfirmationTemplate?: string | null
+    emailWelcomeEnabled?: boolean
+    emailWelcomeSubject?: string | null
+    emailWelcomeTemplate?: string | null
+    emailAddFundSuccessEnabled?: boolean
+    emailAddFundSuccessSubject?: string | null
+    emailAddFundSuccessTemplate?: string | null
+    emailAddFundFailedEnabled?: boolean
+    emailAddFundFailedSubject?: string | null
+    emailAddFundFailedTemplate?: string | null
+    emailOrderSuccessEnabled?: boolean
+    emailOrderSuccessSubject?: string | null
+    emailOrderSuccessTemplate?: string | null
+    emailOrderFailedEnabled?: boolean
+    emailOrderFailedSubject?: string | null
+    emailOrderFailedTemplate?: string | null
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: Decimal | DecimalJsLike | number | string
@@ -56686,6 +56986,21 @@ export namespace Prisma {
     smsAddFundTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     smsOrderConfirmationEnabled?: BoolFieldUpdateOperationsInput | boolean
     smsOrderConfirmationTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailWelcomeSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundSuccessEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAddFundSuccessSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundSuccessTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundFailedEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAddFundFailedSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundFailedTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderSuccessEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailOrderSuccessSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderSuccessTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderFailedEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailOrderFailedSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderFailedTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -56740,6 +57055,21 @@ export namespace Prisma {
     smsAddFundTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     smsOrderConfirmationEnabled?: BoolFieldUpdateOperationsInput | boolean
     smsOrderConfirmationTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailWelcomeSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundSuccessEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAddFundSuccessSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundSuccessTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundFailedEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAddFundFailedSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundFailedTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderSuccessEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailOrderSuccessSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderSuccessTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderFailedEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailOrderFailedSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderFailedTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -56794,6 +57124,21 @@ export namespace Prisma {
     smsAddFundTemplate?: string | null
     smsOrderConfirmationEnabled?: boolean
     smsOrderConfirmationTemplate?: string | null
+    emailWelcomeEnabled?: boolean
+    emailWelcomeSubject?: string | null
+    emailWelcomeTemplate?: string | null
+    emailAddFundSuccessEnabled?: boolean
+    emailAddFundSuccessSubject?: string | null
+    emailAddFundSuccessTemplate?: string | null
+    emailAddFundFailedEnabled?: boolean
+    emailAddFundFailedSubject?: string | null
+    emailAddFundFailedTemplate?: string | null
+    emailOrderSuccessEnabled?: boolean
+    emailOrderSuccessSubject?: string | null
+    emailOrderSuccessTemplate?: string | null
+    emailOrderFailedEnabled?: boolean
+    emailOrderFailedSubject?: string | null
+    emailOrderFailedTemplate?: string | null
     resendOrderButtonEnabled?: boolean
     firstDepositBonusEnabled?: boolean
     firstDepositBonusPercent?: Decimal | DecimalJsLike | number | string
@@ -56848,6 +57193,21 @@ export namespace Prisma {
     smsAddFundTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     smsOrderConfirmationEnabled?: BoolFieldUpdateOperationsInput | boolean
     smsOrderConfirmationTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailWelcomeSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundSuccessEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAddFundSuccessSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundSuccessTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundFailedEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAddFundFailedSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundFailedTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderSuccessEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailOrderSuccessSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderSuccessTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderFailedEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailOrderFailedSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderFailedTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -56902,6 +57262,21 @@ export namespace Prisma {
     smsAddFundTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     smsOrderConfirmationEnabled?: BoolFieldUpdateOperationsInput | boolean
     smsOrderConfirmationTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailWelcomeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailWelcomeSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailWelcomeTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundSuccessEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAddFundSuccessSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundSuccessTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundFailedEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailAddFundFailedSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailAddFundFailedTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderSuccessEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailOrderSuccessSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderSuccessTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderFailedEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailOrderFailedSubject?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOrderFailedTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     resendOrderButtonEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusEnabled?: BoolFieldUpdateOperationsInput | boolean
     firstDepositBonusPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -60122,6 +60497,21 @@ export namespace Prisma {
     smsAddFundTemplate?: SortOrder
     smsOrderConfirmationEnabled?: SortOrder
     smsOrderConfirmationTemplate?: SortOrder
+    emailWelcomeEnabled?: SortOrder
+    emailWelcomeSubject?: SortOrder
+    emailWelcomeTemplate?: SortOrder
+    emailAddFundSuccessEnabled?: SortOrder
+    emailAddFundSuccessSubject?: SortOrder
+    emailAddFundSuccessTemplate?: SortOrder
+    emailAddFundFailedEnabled?: SortOrder
+    emailAddFundFailedSubject?: SortOrder
+    emailAddFundFailedTemplate?: SortOrder
+    emailOrderSuccessEnabled?: SortOrder
+    emailOrderSuccessSubject?: SortOrder
+    emailOrderSuccessTemplate?: SortOrder
+    emailOrderFailedEnabled?: SortOrder
+    emailOrderFailedSubject?: SortOrder
+    emailOrderFailedTemplate?: SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder
@@ -60188,6 +60578,21 @@ export namespace Prisma {
     smsAddFundTemplate?: SortOrder
     smsOrderConfirmationEnabled?: SortOrder
     smsOrderConfirmationTemplate?: SortOrder
+    emailWelcomeEnabled?: SortOrder
+    emailWelcomeSubject?: SortOrder
+    emailWelcomeTemplate?: SortOrder
+    emailAddFundSuccessEnabled?: SortOrder
+    emailAddFundSuccessSubject?: SortOrder
+    emailAddFundSuccessTemplate?: SortOrder
+    emailAddFundFailedEnabled?: SortOrder
+    emailAddFundFailedSubject?: SortOrder
+    emailAddFundFailedTemplate?: SortOrder
+    emailOrderSuccessEnabled?: SortOrder
+    emailOrderSuccessSubject?: SortOrder
+    emailOrderSuccessTemplate?: SortOrder
+    emailOrderFailedEnabled?: SortOrder
+    emailOrderFailedSubject?: SortOrder
+    emailOrderFailedTemplate?: SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder
@@ -60242,6 +60647,21 @@ export namespace Prisma {
     smsAddFundTemplate?: SortOrder
     smsOrderConfirmationEnabled?: SortOrder
     smsOrderConfirmationTemplate?: SortOrder
+    emailWelcomeEnabled?: SortOrder
+    emailWelcomeSubject?: SortOrder
+    emailWelcomeTemplate?: SortOrder
+    emailAddFundSuccessEnabled?: SortOrder
+    emailAddFundSuccessSubject?: SortOrder
+    emailAddFundSuccessTemplate?: SortOrder
+    emailAddFundFailedEnabled?: SortOrder
+    emailAddFundFailedSubject?: SortOrder
+    emailAddFundFailedTemplate?: SortOrder
+    emailOrderSuccessEnabled?: SortOrder
+    emailOrderSuccessSubject?: SortOrder
+    emailOrderSuccessTemplate?: SortOrder
+    emailOrderFailedEnabled?: SortOrder
+    emailOrderFailedSubject?: SortOrder
+    emailOrderFailedTemplate?: SortOrder
     resendOrderButtonEnabled?: SortOrder
     firstDepositBonusEnabled?: SortOrder
     firstDepositBonusPercent?: SortOrder
