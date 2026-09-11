@@ -73,6 +73,7 @@ interface AdminSettings {
   emailOrderFailedEnabled: boolean;
   emailOrderFailedSubject: string | null;
   emailOrderFailedTemplate: string | null;
+  emailBroadcastEnabled: boolean;
   resendOrderButtonEnabled: boolean;
   firstDepositBonusEnabled: boolean;
   firstDepositBonusPercent: string;
@@ -315,6 +316,7 @@ export default function AdminSettingsPage() {
     emailOrderFailedEnabled: false,
     emailOrderFailedSubject: "",
     emailOrderFailedTemplate: "",
+    emailBroadcastEnabled: false,
     resendOrderButtonEnabled: true,
     firstDepositBonusEnabled: false,
     firstDepositBonusPercent: "0",
@@ -399,6 +401,7 @@ export default function AdminSettingsPage() {
       emailOrderFailedEnabled: s.emailOrderFailedEnabled ?? false,
       emailOrderFailedSubject: s.emailOrderFailedSubject ?? "",
       emailOrderFailedTemplate: s.emailOrderFailedTemplate ?? "",
+      emailBroadcastEnabled: s.emailBroadcastEnabled ?? false,
       resendOrderButtonEnabled: s.resendOrderButtonEnabled ?? true,
       firstDepositBonusEnabled: s.firstDepositBonusEnabled ?? false,
       firstDepositBonusPercent: s.firstDepositBonusPercent ?? "0",
@@ -474,6 +477,7 @@ export default function AdminSettingsPage() {
         emailOrderFailedEnabled: form.emailOrderFailedEnabled,
         emailOrderFailedSubject: form.emailOrderFailedSubject.trim() || null,
         emailOrderFailedTemplate: form.emailOrderFailedTemplate.trim() || null,
+        emailBroadcastEnabled: form.emailBroadcastEnabled,
         resendOrderButtonEnabled: form.resendOrderButtonEnabled,
         firstDepositBonusEnabled: form.firstDepositBonusEnabled,
         firstDepositBonusPercent: Number(form.firstDepositBonusPercent) || 0,
@@ -1087,6 +1091,18 @@ export default function AdminSettingsPage() {
         <p className="text-xs text-on-surface-variant">
           Save your SMS settings first — the test uses the saved credentials, not what&apos;s typed above.
         </p>
+      </div>
+
+      <div className="card space-y-3">
+        <h2 className="text-sm font-semibold">Bulk Email Broadcast</h2>
+        <p className="text-xs text-on-surface-variant">
+          Master switch for the Admin &rarr; <Link to="/admin/campaigns" className="text-primary hover:underline">Broadcast &amp; Campaign Center</Link>&rsquo;s
+          Bulk Email tab — separate from the per-event notifications below, so pausing marketing blasts never
+          affects password-reset or order/deposit emails.
+        </p>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={form.emailBroadcastEnabled} onChange={(e) => setForm((f) => ({ ...f, emailBroadcastEnabled: e.target.checked }))} /> Enable bulk email sending
+        </label>
       </div>
 
       <div className="card space-y-3">

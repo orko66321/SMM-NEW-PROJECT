@@ -54,7 +54,7 @@ import AdminPosts from "./pages/admin/Posts.js";
 import AdminCoupons from "./pages/admin/Coupons.js";
 import AdminCommentTemplates from "./pages/admin/CommentTemplates.js";
 import AdminReferrals from "./pages/admin/Referrals.js";
-import AdminSmsCampaigns from "./pages/admin/SmsCampaigns.js";
+import AdminCampaignManager from "./pages/admin/CampaignManager.js";
 import AdminBrands from "./pages/admin/Brands.js";
 import AdminProducts from "./pages/admin/Products.js";
 import AdminPackages from "./pages/admin/Packages.js";
@@ -144,7 +144,7 @@ export default function App() {
             <Route path="coupons" element={<AdminCoupons />} />
             <Route path="comments" element={<AdminCommentTemplates />} />
             <Route path="referrals" element={<AdminReferrals />} />
-            <Route path="sms-campaigns" element={<AdminSmsCampaigns />} />
+            <Route path="campaigns" element={<AdminCampaignManager />} />
             <Route path="brands" element={<AdminBrands />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="packages" element={<AdminPackages />} />

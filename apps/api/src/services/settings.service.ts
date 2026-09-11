@@ -92,6 +92,7 @@ export async function getAdminSettings() {
     emailOrderFailedEnabled: s.emailOrderFailedEnabled,
     emailOrderFailedSubject: s.emailOrderFailedSubject,
     emailOrderFailedTemplate: s.emailOrderFailedTemplate,
+    emailBroadcastEnabled: s.emailBroadcastEnabled,
     resendOrderButtonEnabled: s.resendOrderButtonEnabled,
     firstDepositBonusEnabled: s.firstDepositBonusEnabled,
     firstDepositBonusPercent: s.firstDepositBonusPercent.toString(),
@@ -110,6 +111,12 @@ export async function getAdminSettings() {
 export async function isResendOrderButtonEnabled(): Promise<boolean> {
   const s = await ensureSettings();
   return s.resendOrderButtonEnabled;
+}
+
+/** Broadcast & Campaign Center's Bulk Email master switch — see the SiteSettings model comment in schema.prisma. */
+export async function isEmailBroadcastEnabled(): Promise<boolean> {
+  const s = await ensureSettings();
+  return s.emailBroadcastEnabled;
 }
 
 export async function updateSettings(input: UpdateSettingsInput) {
@@ -207,6 +214,7 @@ export async function updateSettings(input: UpdateSettingsInput) {
         input.emailOrderFailedSubject === undefined ? undefined : input.emailOrderFailedSubject || null,
       emailOrderFailedTemplate:
         input.emailOrderFailedTemplate === undefined ? undefined : input.emailOrderFailedTemplate || null,
+      ...(input.emailBroadcastEnabled === undefined ? {} : { emailBroadcastEnabled: input.emailBroadcastEnabled }),
       // Omitted by an older admin client ⇒ leave the stored value alone.
       ...(input.resendOrderButtonEnabled === undefined
         ? {}

@@ -695,6 +695,9 @@ export const updateSettingsSchema = z.object({
   emailOrderFailedEnabled: z.boolean().optional(),
   emailOrderFailedSubject: z.string().trim().max(200).or(z.literal("")).nullable().optional(),
   emailOrderFailedTemplate: z.string().trim().max(5000).or(z.literal("")).nullable().optional(),
+  // Broadcast & Campaign Center's Bulk Email master switch — separate from
+  // smtpEnabled (see the SiteSettings model comment in schema.prisma).
+  emailBroadcastEnabled: z.boolean().optional(),
   // Admin Orders "Resend to provider" kill-switch. Optional so an older
   // admin client still validates; settings.service leaves it untouched when omitted.
   resendOrderButtonEnabled: z.boolean().optional(),
@@ -1182,15 +1185,18 @@ export const purchasePackageSchema = z.object({
 export type PurchasePackageInput = z.infer<typeof purchasePackageSchema>;
 
 // ── SMS Campaigns (Admin Panel bulk broadcast) ──────────────────────────
-// Keep in sync with the Prisma SmsCampaignTargetGroup / SmsCampaignStatus
-// enums. See apps/api/src/services/smsCampaign.service.ts (resolve +
-// create), apps/api/src/cron/sendSmsCampaigns.ts (batched sending).
+// Shared by the Bulk SMS and Bulk Email campaigns below (Admin Panel →
+// Broadcast & Campaign Center) — keep in sync with the Prisma
+// CampaignTargetGroup / CampaignStatus enums. See
+// apps/api/src/services/smsCampaign.service.ts / emailCampaign.service.ts
+// (resolve + create) and apps/api/src/cron/sendSmsCampaigns.ts /
+// sendEmailCampaigns.ts (batched sending).
 
-export const SmsCampaignTargetGroupValues = ["ALL", "VIP", "RESELLER", "CUSTOM"] as const;
-export type SmsCampaignTargetGroup = (typeof SmsCampaignTargetGroupValues)[number];
+export const CampaignTargetGroupValues = ["ALL", "VIP", "RESELLER", "CUSTOM"] as const;
+export type CampaignTargetGroup = (typeof CampaignTargetGroupValues)[number];
 
-export const SmsCampaignStatusValues = ["PENDING", "SENDING", "COMPLETED", "FAILED"] as const;
-export type SmsCampaignStatus = (typeof SmsCampaignStatusValues)[number];
+export const CampaignStatusValues = ["PENDING", "SENDING", "COMPLETED", "FAILED"] as const;
+export type CampaignStatus = (typeof CampaignStatusValues)[number];
 
 // Bangladeshi mobile format — kept identical to apps/api/src/lib/sms.ts's
 // normalizeBdPhone/PhoneOnboardingModal.tsx's BD_PHONE_REGEX so a "custom"
@@ -1243,7 +1249,7 @@ export const createSmsCampaignSchema = z
   .object({
     title: z.string().trim().min(1).max(150),
     message: z.string().trim().min(1).max(1000),
-    targetGroup: z.enum(SmsCampaignTargetGroupValues),
+    targetGroup: z.enum(CampaignTargetGroupValues),
     // Required (and validated) only when targetGroup is CUSTOM — checked in
     // the refine below rather than a discriminated union, so a non-CUSTOM
     // submission doesn't need to bother sending an empty array.
@@ -1254,3 +1260,25 @@ export const createSmsCampaignSchema = z
     path: ["customNumbers"],
   });
 export type CreateSmsCampaignInput = z.infer<typeof createSmsCampaignSchema>;
+
+// Bulk Email — same shape as createSmsCampaignSchema, with a subject +
+// HTML body instead of a single SMS text, and a raw email address (not a
+// BD phone) for the CUSTOM audience.
+export const createEmailCampaignSchema = z
+  .object({
+    title: z.string().trim().min(1).max(150),
+    subject: z.string().trim().min(1).max(200),
+    // Admin-authored HTML — rendered as-is into the email, and (in the
+    // admin-only Live Preview) into the composer page via
+    // dangerouslySetInnerHTML. Trusted input: this endpoint is ADMIN-only,
+    // and the only content ever rendered this way is what that same admin
+    // just typed into this same form — never another user's data.
+    bodyHtml: z.string().trim().min(1).max(50_000),
+    targetGroup: z.enum(CampaignTargetGroupValues),
+    customEmails: z.array(z.string().trim().toLowerCase().email()).min(1).max(20_000).optional(),
+  })
+  .refine((v) => v.targetGroup !== "CUSTOM" || !!v.customEmails?.length, {
+    message: "customEmails is required when targetGroup is CUSTOM",
+    path: ["customEmails"],
+  });
+export type CreateEmailCampaignInput = z.infer<typeof createEmailCampaignSchema>;

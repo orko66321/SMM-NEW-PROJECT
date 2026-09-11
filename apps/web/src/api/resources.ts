@@ -24,6 +24,7 @@ import type {
   SendTestEmailInput,
   SendTestSmsInput,
   CreateSmsCampaignInput,
+  CreateEmailCampaignInput,
   ServiceInput,
   StockPoolInput,
   SupportChannelType,
@@ -259,6 +260,14 @@ export const getAdminSmsCampaigns = (params: { page: number; pageSize: number })
   apiClient.get("/admin/sms/campaigns", { params }).then((r) => r.data);
 export const createAdminSmsCampaign = (input: CreateSmsCampaignInput) =>
   apiClient.post("/admin/sms/campaigns", input).then((r) => r.data);
+
+// ── Email Campaigns (admin bulk broadcast) ──────────────────────────────
+export const getAdminEmailAudienceCounts = () => apiClient.get("/admin/email/audience-counts").then((r) => r.data);
+export const getAdminEmailCampaigns = (params: { page: number; pageSize: number }) =>
+  apiClient.get("/admin/email/campaigns", { params }).then((r) => r.data);
+export const createAdminEmailCampaign = (input: CreateEmailCampaignInput) =>
+  apiClient.post("/admin/email/campaigns", input).then((r) => r.data);
+
 export const getAdminSiteNotice = () => apiClient.get("/admin/site-notice").then((r) => r.data);
 export const updateAdminSiteNotice = (input: UpdateSiteNoticeInput) => apiClient.put("/admin/site-notice", input);
 

@@ -28,13 +28,20 @@ export async function isMailConfigured(): Promise<boolean> {
   return (await getMailjetConfig()) !== null;
 }
 
-export async function sendMail(to: string, subject: string, text: string): Promise<void> {
+/**
+ * `html`, when given, is sent alongside `text` (a plain-text fallback for
+ * clients that don't render HTML) — every provider below accepts both in
+ * the same request. Optional because every transactional-email call site
+ * (password reset, order/deposit notifications) only ever sends `text`;
+ * only the Bulk Email broadcaster composes HTML.
+ */
+export async function sendMail(to: string, subject: string, text: string, html?: string): Promise<void> {
   if (env.RESEND_API_KEY) {
-    await sendViaResend(to, subject, text);
+    await sendViaResend(to, subject, text, html);
     return;
   }
   if (env.BREVO_API_KEY) {
-    await sendViaBrevo(to, subject, text);
+    await sendViaBrevo(to, subject, text, html);
     return;
   }
 
@@ -43,7 +50,19 @@ export async function sendMail(to: string, subject: string, text: string): Promi
     logger.warn({ to, subject, text }, "Email not configured — logging instead of sending");
     return;
   }
-  await sendViaMailjet(config, to, subject, text);
+  await sendViaMailjet(config, to, subject, text, html);
+}
+
+/** Naive tag-stripping plain-text fallback for a Bulk Email HTML body that has no separately-authored text version. */
+export function htmlToPlainText(html: string): string {
+  return html
+    .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div|h[1-6]|li)>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n\s+/g, "\n")
+    .trim();
 }
 
 function requireMailFrom(keyName: string): string {
@@ -67,12 +86,12 @@ async function postJson(url: string, headers: Record<string, string>, body: unkn
   }
 }
 
-async function sendViaResend(to: string, subject: string, text: string): Promise<void> {
+async function sendViaResend(to: string, subject: string, text: string, html?: string): Promise<void> {
   const from = requireMailFrom("RESEND_API_KEY");
   const res = await postJson(
     "https://api.resend.com/emails",
     { authorization: `Bearer ${env.RESEND_API_KEY as string}` },
-    { from, to: [to], subject, text },
+    { from, to: [to], subject, text, ...(html ? { html } : {}) },
   );
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
@@ -81,12 +100,12 @@ async function sendViaResend(to: string, subject: string, text: string): Promise
   }
 }
 
-async function sendViaBrevo(to: string, subject: string, text: string): Promise<void> {
+async function sendViaBrevo(to: string, subject: string, text: string, html?: string): Promise<void> {
   const from = requireMailFrom("BREVO_API_KEY");
   const res = await postJson(
     "https://api.brevo.com/v3/smtp/email",
     { "api-key": env.BREVO_API_KEY as string, accept: "application/json" },
-    { sender: { email: from }, to: [{ email: to }], subject, textContent: text },
+    { sender: { email: from }, to: [{ email: to }], subject, textContent: text, ...(html ? { htmlContent: html } : {}) },
   );
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
@@ -128,6 +147,7 @@ async function sendViaMailjet(
   to: string,
   subject: string,
   text: string,
+  html?: string,
 ): Promise<void> {
   const auth = Buffer.from(`${config.apiKey}:${config.secretKey}`).toString("base64");
   const payload = {
@@ -137,6 +157,7 @@ async function sendViaMailjet(
         To: [{ Email: to }],
         Subject: subject,
         TextPart: text,
+        ...(html ? { HTMLPart: html } : {}),
       },
     ],
   };
