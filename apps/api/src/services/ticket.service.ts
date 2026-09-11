@@ -13,6 +13,7 @@ import {
   requestRefill,
 } from "./order.service.js";
 import { runTicketAutomation } from "./ticketAutomation.service.js";
+import { notifyTicketReply } from "./notifications.service.js";
 
 // Ticket bodies are free-text rendered back to both the customer and admin
 // staff — sanitize on the way in so stored XSS via a ticket message is not
@@ -321,10 +322,13 @@ export async function addUserMessage(ticketId: string, userId: string, input: Ti
 
 /** Admin/agent free-text reply. */
 export async function addAdminMessage(ticketId: string, agentId: string, message: string) {
-  const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+  const ticket = await prisma.ticket.findUnique({
+    where: { id: ticketId },
+    include: { user: { select: { username: true, email: true } } },
+  });
   if (!ticket) throw AppError.notFound("Ticket not found");
 
-  return prisma.$transaction(async (tx) => {
+  const created = await prisma.$transaction(async (tx) => {
     const created = await tx.ticketMessage.create({
       data: { ticketId, senderId: agentId, senderRole: "ADMIN", body: sanitize(message) },
     });
@@ -334,6 +338,14 @@ export async function addAdminMessage(ticketId: string, agentId: string, message
     });
     return created;
   });
+
+  // Fire-and-forget, AFTER the transaction above has committed — a slow or
+  // failing Mailjet call must never delay or fail the admin's reply. Errors
+  // are caught and logged inside notifyTicketReply itself (see its
+  // `guarded`/`fireEmail` wrappers in notifications.service.ts).
+  void notifyTicketReply(ticket.user, { ticketId: ticket.id, ticketSubject: ticket.subject, replyBody: created.body });
+
+  return created;
 }
 
 export async function updateTicketStatus(ticketId: string, status: string) {

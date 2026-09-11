@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import { cancelOrderForUser, refreshOrderFromProvider, requestRefill, } from "./order.service.js";
 import { runTicketAutomation } from "./ticketAutomation.service.js";
+import { notifyTicketReply } from "./notifications.service.js";
 // Ticket bodies are free-text rendered back to both the customer and admin
 // staff — sanitize on the way in so stored XSS via a ticket message is not
 // possible regardless of how the frontend later renders it. Plain
@@ -283,10 +284,13 @@ export async function addUserMessage(ticketId, userId, input) {
 }
 /** Admin/agent free-text reply. */
 export async function addAdminMessage(ticketId, agentId, message) {
-    const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+    const ticket = await prisma.ticket.findUnique({
+        where: { id: ticketId },
+        include: { user: { select: { username: true, email: true } } },
+    });
     if (!ticket)
         throw AppError.notFound("Ticket not found");
-    return prisma.$transaction(async (tx) => {
+    const created = await prisma.$transaction(async (tx) => {
         const created = await tx.ticketMessage.create({
             data: { ticketId, senderId: agentId, senderRole: "ADMIN", body: sanitize(message) },
         });
@@ -296,6 +300,12 @@ export async function addAdminMessage(ticketId, agentId, message) {
         });
         return created;
     });
+    // Fire-and-forget, AFTER the transaction above has committed — a slow or
+    // failing Mailjet call must never delay or fail the admin's reply. Errors
+    // are caught and logged inside notifyTicketReply itself (see its
+    // `guarded`/`fireEmail` wrappers in notifications.service.ts).
+    void notifyTicketReply(ticket.user, { ticketId: ticket.id, ticketSubject: ticket.subject, replyBody: created.body });
+    return created;
 }
 export async function updateTicketStatus(ticketId, status) {
     const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
