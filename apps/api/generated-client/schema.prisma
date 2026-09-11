@@ -188,6 +188,11 @@ enum LiveChatProvider {
   CRISP
 }
 
+enum SmsProvider {
+  URONTO
+  MILEJET
+}
+
 enum DisplayCurrency {
   USD
   BDT
@@ -1322,17 +1327,35 @@ model SiteSettings {
   smtpPassCiphertext String?
   smtpFromAddress    String?
 
-  // SMS notifications (uronto SMS — https://urontosms.hostgi.com/api/sms,
-  // a GET request with `key`/`number`/`msg` query params). Same
-  // admin-configured-secret pattern as SMTP above: the API key is encrypted
-  // at rest (lib/crypto.ts) and never re-returned to the admin UI after
-  // saving. Each event has its own on/off switch and an editable template
-  // (`{{placeholder}}` tokens filled in by services/notifications.service.ts)
-  // so an admin can disable or reword any single message without code
-  // changes. Sends are always best-effort — a failure never rolls back or
-  // blocks the registration/deposit/order flow that triggered it.
-  smsEnabled          Boolean @default(false)
-  smsApiKeyCiphertext String?
+  // SMS notifications — pluggable provider (lib/sms.ts dispatches on
+  // `smsProvider`, same multi-provider-priority shape as lib/mailer.ts's
+  // Resend/Brevo/SMTP), so everything downstream (notifications.service.ts,
+  // the admin SMS Campaigns broadcaster) just calls sendSms() and never
+  // cares which gateway is actually active:
+  //   URONTO  — https://urontosms.hostgi.com/api/sms, GET with
+  //             `key`/`number`/`msg` query params.
+  //   MILEJET — POST JSON {api_key, secret_key, sender_id, contacts, msg,
+  //             type}; `type` is auto-detected text/unicode from the
+  //             message content, not admin-set.
+  // Same admin-configured-secret pattern as SMTP above: every secret is
+  // encrypted at rest (lib/crypto.ts) and never re-returned to the admin UI
+  // after saving. Each EVENT (below) has its own on/off switch and an
+  // editable template (`{{placeholder}}` tokens filled in by
+  // services/notifications.service.ts) so an admin can disable or reword
+  // any single message without code changes, independent of which provider
+  // is sending it. Sends are always best-effort — a failure never rolls
+  // back or blocks the registration/deposit/order flow that triggered it.
+  smsEnabled          Boolean     @default(false)
+  smsProvider         SmsProvider @default(URONTO)
+  smsApiKeyCiphertext String? // URONTO's single API key
+
+  smsMilejetApiKeyCiphertext    String?
+  smsMilejetSecretKeyCiphertext String?
+  smsMilejetSenderId            String?
+  // Empty/null ⇒ lib/sms.ts's hardcoded default
+  // (https://api.milejet.com/api/v1/sms/send). Stored so an admin can
+  // repoint it if MiLeJet ever changes their endpoint, without a redeploy.
+  smsMilejetApiUrl              String?
 
   smsWelcomeEnabled  Boolean @default(false)
   smsWelcomeTemplate String?

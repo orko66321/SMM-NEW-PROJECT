@@ -944,6 +944,8 @@ export declare const paymentMethodInputSchema: z.ZodEffects<z.ZodEffects<z.ZodOb
 export type PaymentMethodInput = z.infer<typeof paymentMethodInputSchema>;
 export declare const LiveChatProviderValues: readonly ["NONE", "TAWKTO", "CRISP"];
 export type LiveChatProvider = (typeof LiveChatProviderValues)[number];
+export declare const SmsProviderValues: readonly ["URONTO", "MILEJET"];
+export type SmsProvider = (typeof SmsProviderValues)[number];
 export declare const DisplayCurrencyValues: readonly ["USD", "BDT"];
 export declare const ReferrerRewardTypeValues: readonly ["PERCENTAGE", "FIXED"];
 export type ReferrerRewardType = (typeof ReferrerRewardTypeValues)[number];
@@ -984,7 +986,12 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpPassword: z.ZodOptional<z.ZodString>;
     smtpFromAddress: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     smsEnabled: z.ZodOptional<z.ZodBoolean>;
+    smsProvider: z.ZodOptional<z.ZodEnum<["URONTO", "MILEJET"]>>;
     smsApiKey: z.ZodOptional<z.ZodString>;
+    smsMilejetApiKey: z.ZodOptional<z.ZodString>;
+    smsMilejetSecretKey: z.ZodOptional<z.ZodString>;
+    smsMilejetSenderId: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
+    smsMilejetApiUrl: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
     smsWelcomeEnabled: z.ZodOptional<z.ZodBoolean>;
     smsWelcomeTemplate: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodString, z.ZodLiteral<"">]>>>;
     smsAddFundEnabled: z.ZodOptional<z.ZodBoolean>;
@@ -1049,7 +1056,12 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpPassword?: string | undefined;
     smtpFromAddress?: string | null | undefined;
     smsEnabled?: boolean | undefined;
+    smsProvider?: "URONTO" | "MILEJET" | undefined;
     smsApiKey?: string | undefined;
+    smsMilejetApiKey?: string | undefined;
+    smsMilejetSecretKey?: string | undefined;
+    smsMilejetSenderId?: string | null | undefined;
+    smsMilejetApiUrl?: string | null | undefined;
     smsWelcomeEnabled?: boolean | undefined;
     smsWelcomeTemplate?: string | null | undefined;
     smsAddFundEnabled?: boolean | undefined;
@@ -1114,7 +1126,12 @@ export declare const updateSettingsSchema: z.ZodObject<{
     smtpPassword?: string | undefined;
     smtpFromAddress?: string | null | undefined;
     smsEnabled?: boolean | undefined;
+    smsProvider?: "URONTO" | "MILEJET" | undefined;
     smsApiKey?: string | undefined;
+    smsMilejetApiKey?: string | undefined;
+    smsMilejetSecretKey?: string | undefined;
+    smsMilejetSenderId?: string | null | undefined;
+    smsMilejetApiUrl?: string | null | undefined;
     smsWelcomeEnabled?: boolean | undefined;
     smsWelcomeTemplate?: string | null | undefined;
     smsAddFundEnabled?: boolean | undefined;
@@ -1159,10 +1176,13 @@ export declare const sendTestEmailSchema: z.ZodObject<{
 export type SendTestEmailInput = z.infer<typeof sendTestEmailSchema>;
 export declare const sendTestSmsSchema: z.ZodObject<{
     to: z.ZodString;
+    message: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     to: string;
+    message?: string | undefined;
 }, {
     to: string;
+    message?: string | undefined;
 }>;
 export type SendTestSmsInput = z.infer<typeof sendTestSmsSchema>;
 export declare const publicSettingsSchema: z.ZodObject<{

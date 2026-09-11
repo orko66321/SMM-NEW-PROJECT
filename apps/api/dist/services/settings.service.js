@@ -4,7 +4,7 @@ import { encrypt, decrypt } from "../lib/crypto.js";
 import { env } from "../env.js";
 import { AppError } from "../utils/AppError.js";
 import { sendMail, isMailConfigured } from "../lib/mailer.js";
-import { sendSms, isSmsConfigured } from "../lib/sms.js";
+import { sendSmsRaw, isSmsConfigured, MILEJET_DEFAULT_API_URL } from "../lib/sms.js";
 // Deliberately a singleton row (fixed id) rather than a key/value table —
 // see the model comment in schema.prisma. Upserted lazily on first read so
 // the app works before any admin has ever opened the Settings page.
@@ -62,7 +62,12 @@ export async function getAdminSettings() {
         smtpFromAddress: s.smtpFromAddress,
         smtpConfigured: !!s.smtpPassCiphertext,
         smsEnabled: s.smsEnabled,
+        smsProvider: s.smsProvider,
         smsApiKeyConfigured: !!s.smsApiKeyCiphertext,
+        smsMilejetApiKeyConfigured: !!s.smsMilejetApiKeyCiphertext,
+        smsMilejetSecretKeyConfigured: !!s.smsMilejetSecretKeyCiphertext,
+        smsMilejetSenderId: s.smsMilejetSenderId,
+        smsMilejetApiUrl: s.smsMilejetApiUrl,
         smsWelcomeEnabled: s.smsWelcomeEnabled,
         smsWelcomeTemplate: s.smsWelcomeTemplate,
         smsAddFundEnabled: s.smsAddFundEnabled,
@@ -148,9 +153,14 @@ export async function updateSettings(input) {
             ...(input.smtpPassword ? { smtpPassCiphertext: encrypt(input.smtpPassword) } : {}),
             smtpFromAddress: input.smtpFromAddress,
             ...(input.smsEnabled === undefined ? {} : { smsEnabled: input.smsEnabled }),
-            // Omit smsApiKey to keep the existing encrypted value — same
+            ...(input.smsProvider === undefined ? {} : { smsProvider: input.smsProvider }),
+            // Omit any *Key to keep the existing encrypted value — same
             // never-re-displayed-after-saving treatment as smtpPassword above.
             ...(input.smsApiKey ? { smsApiKeyCiphertext: encrypt(input.smsApiKey) } : {}),
+            ...(input.smsMilejetApiKey ? { smsMilejetApiKeyCiphertext: encrypt(input.smsMilejetApiKey) } : {}),
+            ...(input.smsMilejetSecretKey ? { smsMilejetSecretKeyCiphertext: encrypt(input.smsMilejetSecretKey) } : {}),
+            smsMilejetSenderId: input.smsMilejetSenderId === undefined ? undefined : input.smsMilejetSenderId || null,
+            smsMilejetApiUrl: input.smsMilejetApiUrl === undefined ? undefined : input.smsMilejetApiUrl || null,
             ...(input.smsWelcomeEnabled === undefined ? {} : { smsWelcomeEnabled: input.smsWelcomeEnabled }),
             smsWelcomeTemplate: input.smsWelcomeTemplate === undefined ? undefined : input.smsWelcomeTemplate || null,
             ...(input.smsAddFundEnabled === undefined ? {} : { smsAddFundEnabled: input.smsAddFundEnabled }),
@@ -243,40 +253,49 @@ export async function getUsdToBdtRate() {
     return s.usdToBdtRate;
 }
 /**
- * Internal only — used exclusively by lib/mailer.ts to actually send email.
- * Never exposed through any route. Returns null if SMTP isn't fully
- * configured/enabled, so callers know to fall back rather than crash.
+ * Internal only — used exclusively by lib/mailer.ts to actually send email
+ * via Mailjet's HTTP Send API v3.1. Never exposed through any route.
+ * Returns null if it isn't fully configured/enabled, so callers know to
+ * fall back rather than crash.
+ *
+ * Reuses the existing smtpUser/smtpPassCiphertext/smtpFromAddress columns
+ * (Mailjet API Key / Secret Key / verified sender) rather than adding new
+ * ones — this site's mail sending moved from SMTP (in-v3.mailjet.com:587,
+ * which shared-hosting outbound-port blocking made unreliable) to Mailjet's
+ * HTTPS API, but it's the exact same two credentials either way, so
+ * there's nothing for the admin to re-enter and no migration needed.
+ * smtpHost/smtpPort are no longer read — HTTPS needs no host/port.
  */
-export async function getSmtpConfig() {
+export async function getMailjetConfig() {
     const s = await ensureSettings();
-    if (!s.smtpEnabled || !s.smtpHost || !s.smtpPort || !s.smtpPassCiphertext || !s.smtpFromAddress) {
+    if (!s.smtpEnabled || !s.smtpUser || !s.smtpPassCiphertext || !s.smtpFromAddress) {
         return null;
     }
     return {
-        host: s.smtpHost,
-        port: s.smtpPort,
-        user: s.smtpUser ?? undefined,
-        pass: decrypt(s.smtpPassCiphertext),
+        apiKey: s.smtpUser,
+        secretKey: decrypt(s.smtpPassCiphertext),
         from: s.smtpFromAddress,
+        fromName: s.siteName,
     };
 }
 /**
  * Admin-only "Send test email" action — lets the operator confirm the saved
- * SMTP config actually works right after saving it, without triggering a real
- * password-reset flow. Always uses the saved SMTP password (via
- * getSmtpConfig/sendMail); the caller only supplies the destination.
+ * Mailjet config actually works right after saving it, without triggering a
+ * real password-reset flow. Always uses the saved credentials (via
+ * getMailjetConfig/sendMail); the caller only supplies the destination.
  */
 export async function sendTestEmail(to) {
     if (!(await isMailConfigured())) {
-        throw AppError.badRequest("Email isn't configured — either set BREVO_API_KEY + MAIL_FROM on the API server (recommended on Railway), or fill in and save the SMTP settings below (host, port, password, from-address)");
+        throw AppError.badRequest("Email isn't configured — either set BREVO_API_KEY + MAIL_FROM on the API server (recommended on Railway), or fill in and save the Mailjet settings below (API key, secret key, from-address)");
     }
     const s = await ensureSettings();
     try {
-        await sendMail(to, `SMTP test — ${s.siteName}`, "This is a test email from your admin panel. If you received it, SMTP is working.");
+        await sendMail(to, `Mailjet test — ${s.siteName}`, "This is a test email from your admin panel. If you received it, email sending is working.");
     }
     catch (err) {
-        // Surface the mail-server error (auth failed, self-signed cert, …) so the
-        // operator can fix their config — but never a stack trace.
+        // Surface Mailjet's actual error (invalid key, unverified sender,
+        // rate limit, …) so the operator can fix their config fast — but
+        // never a stack trace.
         throw AppError.badRequest(err instanceof Error ? err.message : "Failed to send test email");
     }
 }
@@ -292,15 +311,16 @@ export const DEFAULT_SMS_TEMPLATES = {
 /**
  * Internal only — used exclusively by lib/sms.ts to actually send an SMS,
  * and by services/notifications.service.ts to read the per-event templates.
- * Never exposed through any route. Returns null if SMS isn't fully
- * configured/enabled, so callers know to skip rather than crash.
+ * Never exposed through any route. Returns null if SMS isn't enabled or the
+ * ACTIVE provider isn't fully configured (switching smsProvider to MILEJET
+ * with only a uronto key saved is treated as unconfigured, not a fallback
+ * to uronto), so callers know to skip rather than crash.
  */
 export async function getSmsConfig() {
     const s = await ensureSettings();
-    if (!s.smsEnabled || !s.smsApiKeyCiphertext)
+    if (!s.smsEnabled)
         return null;
-    return {
-        apiKey: decrypt(s.smsApiKeyCiphertext),
+    const base = {
         welcomeEnabled: s.smsWelcomeEnabled,
         welcomeTemplate: s.smsWelcomeTemplate || DEFAULT_SMS_TEMPLATES.welcome,
         addFundEnabled: s.smsAddFundEnabled,
@@ -309,6 +329,23 @@ export async function getSmsConfig() {
         orderConfirmationTemplate: s.smsOrderConfirmationTemplate || DEFAULT_SMS_TEMPLATES.orderConfirmation,
         siteName: s.siteName,
     };
+    if (s.smsProvider === "MILEJET") {
+        if (!s.smsMilejetApiKeyCiphertext || !s.smsMilejetSecretKeyCiphertext || !s.smsMilejetSenderId)
+            return null;
+        return {
+            ...base,
+            provider: "MILEJET",
+            milejet: {
+                apiKey: decrypt(s.smsMilejetApiKeyCiphertext),
+                secretKey: decrypt(s.smsMilejetSecretKeyCiphertext),
+                senderId: s.smsMilejetSenderId,
+                apiUrl: s.smsMilejetApiUrl || MILEJET_DEFAULT_API_URL,
+            },
+        };
+    }
+    if (!s.smsApiKeyCiphertext)
+        return null;
+    return { ...base, provider: "URONTO", uronto: { apiKey: decrypt(s.smsApiKeyCiphertext) } };
 }
 // Built-in wording for the email-notification templates — same role as
 // DEFAULT_SMS_TEMPLATES above, for services/notifications.service.ts.
@@ -363,19 +400,27 @@ export async function getEmailNotificationConfig() {
     };
 }
 /**
- * Admin-only "Send test SMS" action (Settings → SMS Notifications) — same
- * shape/purpose as sendTestEmail above. Always uses the saved API key; the
- * caller only supplies the destination number.
+ * Admin-only "Send test SMS" / Live Tester action (Settings → SMS
+ * Notifications) — same shape/purpose as sendTestEmail above, but returns
+ * the raw provider response (never throws on a rejected send, only on
+ * "not configured at all") so the Live Tester UI can show the admin
+ * exactly what MiLeJet/uronto said back, success or failure. Always uses
+ * the saved credentials; the caller only supplies the destination and an
+ * optional custom message.
  */
-export async function sendTestSms(to) {
+export async function sendTestSms(to, message) {
     if (!(await isSmsConfigured())) {
-        throw AppError.badRequest("SMS isn't configured — enable it below and save an API key first");
+        throw AppError.badRequest("SMS isn't configured — enable it below and save your provider's credentials first");
     }
     const s = await ensureSettings();
-    try {
-        await sendSms(to, `${s.siteName}: This is a test SMS from your admin panel. If you received it, SMS is working.`);
+    const text = message?.trim() || `${s.siteName}: This is a test SMS from your admin panel. If you received it, SMS is working.`;
+    const result = await sendSmsRaw(to, text);
+    // isSmsConfigured() just confirmed a config exists, so a null result here
+    // would mean it disappeared mid-request (a concurrent settings save) —
+    // vanishingly rare; surface it as the same "not configured" error rather
+    // than adding a third response shape for the UI to handle.
+    if (!result) {
+        throw AppError.badRequest("SMS isn't configured — enable it below and save your provider's credentials first");
     }
-    catch (err) {
-        throw AppError.badRequest(err instanceof Error ? err.message : "Failed to send test SMS");
-    }
+    return result;
 }

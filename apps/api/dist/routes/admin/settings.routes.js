@@ -22,6 +22,8 @@ adminSettingsRouter.put("/", validate(updateSettingsSchema), asyncHandler(async 
             ...req.body,
             smtpPassword: req.body.smtpPassword ? "[REDACTED]" : undefined,
             smsApiKey: req.body.smsApiKey ? "[REDACTED]" : undefined,
+            smsMilejetApiKey: req.body.smsMilejetApiKey ? "[REDACTED]" : undefined,
+            smsMilejetSecretKey: req.body.smsMilejetSecretKey ? "[REDACTED]" : undefined,
             ...Object.fromEntries(["mainLogo", "walletLogo", "autoPayLogo", "icon512", "icon192", "icon512Alt"]
                 .filter((k) => req.body[k] !== undefined)
                 .map((k) => [k, req.body[k] ? "[image]" : null])),
@@ -35,6 +37,8 @@ adminSettingsRouter.post("/test-email", validate(sendTestEmailSchema), asyncHand
     res.status(200).json({ ok: true });
 }));
 adminSettingsRouter.post("/test-sms", validate(sendTestSmsSchema), asyncHandler(async (req, res) => {
-    await sendTestSms(req.body.to);
-    res.status(200).json({ ok: true });
+    // Raw provider response, not just {ok:true} — the Live Tester panel
+    // shows this verbatim for debugging a new gateway/credential setup.
+    const result = await sendTestSms(req.body.to, req.body.message);
+    res.status(200).json(result);
 }));
