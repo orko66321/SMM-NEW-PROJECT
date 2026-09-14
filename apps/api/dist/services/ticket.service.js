@@ -22,7 +22,9 @@ const TICKET_INCLUDE = {
     category: { select: { id: true, name: true, isAutomated: true } },
     subcategory: { select: { id: true, name: true, actionKey: true } },
     messages: { orderBy: { createdAt: "asc" } },
-    orderActions: { orderBy: { createdAt: "asc" } },
+    // `order` here is just for its orderNumber — the admin audit log shows
+    // "REFILL on #10023", not the internal cuid.
+    orderActions: { orderBy: { createdAt: "asc" }, include: { order: { select: { orderNumber: true } } } },
 };
 // ── Category / subcategory catalog (DB-driven, admin-editable) ──────────────
 export async function listTicketCategories() {
@@ -51,6 +53,13 @@ export async function listTicketCategories() {
  * doesn't exist or isn't theirs is rejected with a clear per-ID error and
  * NOTHING is acted on (build spec §4 step 2 / §10 — the most likely place
  * for an IDOR bug).
+ *
+ * Accepts the short numeric `Order #10001` the customer actually sees in
+ * their Order History (bare digits, an optional leading "#") — this is the
+ * expected/primary format. A raw cuid `id` is still accepted too, for any
+ * old link or integration still passing one. Returns both the numeric
+ * orderNumber (for the human-readable subject/message text) and the real
+ * `id` (for the automation engine / DB storage, which still key off it).
  */
 async function parseAndAuthorizeOrderIds(userId, raw) {
     const tokens = (raw ?? "")
@@ -63,16 +72,42 @@ async function parseAndAuthorizeOrderIds(userId, raw) {
     if (unique.length > MAX_ORDER_IDS) {
         throw AppError.badRequest(`At most ${MAX_ORDER_IDS} Order IDs per ticket`);
     }
+    const numericTokens = new Map(); // original token -> parsed orderNumber
+    const cuidTokens = [];
+    for (const token of unique) {
+        const digits = token.replace(/^#/, "");
+        if (/^\d+$/.test(digits) && Number.isSafeInteger(Number(digits))) {
+            numericTokens.set(token, Number(digits));
+        }
+        else {
+            cuidTokens.push(token);
+        }
+    }
     const owned = await prisma.order.findMany({
-        where: { id: { in: unique }, userId },
-        select: { id: true },
+        where: {
+            userId,
+            OR: [
+                ...(numericTokens.size > 0 ? [{ orderNumber: { in: [...numericTokens.values()] } }] : []),
+                ...(cuidTokens.length > 0 ? [{ id: { in: cuidTokens } }] : []),
+            ],
+        },
+        select: { id: true, orderNumber: true },
     });
-    const ownedSet = new Set(owned.map((o) => o.id));
-    const missing = unique.filter((id) => !ownedSet.has(id));
+    const byOrderNumber = new Map(owned.map((o) => [o.orderNumber, o]));
+    const byId = new Map(owned.map((o) => [o.id, o]));
+    const resolved = [];
+    const missing = [];
+    for (const token of unique) {
+        const match = numericTokens.has(token) ? byOrderNumber.get(numericTokens.get(token)) : byId.get(token);
+        if (match)
+            resolved.push(match);
+        else
+            missing.push(token);
+    }
     if (missing.length > 0) {
         throw AppError.badRequest(`These Order IDs aren't in your account: ${missing.join(", ")}`);
     }
-    return unique;
+    return resolved;
 }
 async function resolveAutomatedInput(userId, categoryId, input) {
     if (!input.subcategoryId)
@@ -82,13 +117,13 @@ async function resolveAutomatedInput(userId, categoryId, input) {
     });
     if (!subcategory)
         throw AppError.badRequest("Unknown subcategory");
-    const orderIds = await parseAndAuthorizeOrderIds(userId, input.orderIds);
-    return { subcategory, orderIds };
+    const orders = await parseAndAuthorizeOrderIds(userId, input.orderIds);
+    return { subcategory, orders };
 }
 // Build spec §5 — no subject input; it's generated server-side.
-function buildAiSubject(subcategoryName, orderIds) {
-    const suffix = orderIds.length > 1 ? ` (+${orderIds.length - 1} more)` : "";
-    return `${subcategoryName} — Order #${orderIds[0]}${suffix}`;
+function buildAiSubject(subcategoryName, orders) {
+    const suffix = orders.length > 1 ? ` (+${orders.length - 1} more)` : "";
+    return `${subcategoryName} — Order #${orders[0].orderNumber}${suffix}`;
 }
 function buildHumanSubject(message) {
     const flat = message.replace(/\s+/g, " ").trim();
@@ -111,13 +146,14 @@ export async function createTicket(userId, input) {
     if (!category)
         throw AppError.badRequest("Unknown ticket category");
     if (category.isAutomated) {
-        const { subcategory, orderIds } = await resolveAutomatedInput(userId, category.id, input);
+        const { subcategory, orders } = await resolveAutomatedInput(userId, category.id, input);
+        const orderIds = orders.map((o) => o.id);
         const ticket = await prisma.ticket.create({
             data: {
                 userId,
                 categoryId: category.id,
                 subcategoryId: subcategory.id,
-                subject: buildAiSubject(subcategory.name, orderIds),
+                subject: buildAiSubject(subcategory.name, orders),
                 status: "AI_PROCESSING",
                 orderIds,
                 messages: {
@@ -125,7 +161,7 @@ export async function createTicket(userId, input) {
                         {
                             senderId: userId,
                             senderRole: "USER",
-                            body: `${subcategory.name} requested for order(s): ${orderIds.join(", ")}`,
+                            body: `${subcategory.name} requested for order(s): ${orders.map((o) => `#${o.orderNumber}`).join(", ")}`,
                         },
                     ],
                 },
@@ -209,6 +245,7 @@ export async function getTicketForAdmin(ticketId) {
             where: { id: { in: ticket.orderIds } },
             select: {
                 id: true,
+                orderNumber: true,
                 status: true,
                 quantity: true,
                 link: true,
@@ -239,14 +276,15 @@ export async function addUserMessage(ticketId, userId, input) {
         ? await prisma.ticketCategory.findFirst({ where: { id: input.categoryId, enabled: true } })
         : null;
     if (category?.isAutomated) {
-        const { subcategory, orderIds } = await resolveAutomatedInput(userId, category.id, input);
+        const { subcategory, orders } = await resolveAutomatedInput(userId, category.id, input);
+        const orderIds = orders.map((o) => o.id);
         await prisma.$transaction(async (tx) => {
             await tx.ticketMessage.create({
                 data: {
                     ticketId,
                     senderId: userId,
                     senderRole: "USER",
-                    body: `${subcategory.name} requested for order(s): ${orderIds.join(", ")}`,
+                    body: `${subcategory.name} requested for order(s): ${orders.map((o) => `#${o.orderNumber}`).join(", ")}`,
                 },
             });
             await tx.ticket.update({

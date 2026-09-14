@@ -107,7 +107,7 @@ export function TicketForm({
               className="input-field"
               value={orderIds}
               onChange={(e) => setOrderIds(e.target.value)}
-              placeholder="10867110,10867210,10867500"
+              placeholder="10023,10045"
               required
             />
             <p className="mt-1 text-xs text-on-surface-variant">{t("tickets.orderIdsHint")}</p>

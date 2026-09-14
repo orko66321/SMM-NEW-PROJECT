@@ -15,6 +15,7 @@ const statusTabs = ["ALL", ...OrderStatusValues] as const;
 
 type OrderRow = {
   id: string;
+  orderNumber: number;
   createdAt: string;
   service: { name: string; nameBn: string | null; refillEnabled: boolean } | null;
   // Present instead of `service` for a Store (Brand → Product → Package) purchase.
@@ -144,8 +145,8 @@ function OrderCard({ o }: { o: OrderRow }) {
 
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-outline-variant pt-3">
         <span className="flex min-w-0 items-center gap-1">
-          <span className="truncate font-mono text-xs text-on-surface-variant">#{o.id.slice(0, 8)}</span>
-          <CopyIdButton id={o.id} />
+          <span className="truncate font-mono text-xs text-on-surface-variant">#{o.orderNumber}</span>
+          <CopyIdButton id={String(o.orderNumber)} />
         </span>
         {isRefillEligible(o) && <RefillButton orderId={o.id} />}
         {o.stockCode && <RevealCodeButton orderId={o.id} />}
@@ -275,8 +276,8 @@ export default function OrdersHistory() {
               <tr className={o.adminComment ? "border-b-0" : ""}>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1 font-mono text-xs text-on-surface-variant">
-                    <span>{o.id.slice(0, 8)}</span>
-                    <CopyIdButton id={o.id} />
+                    <span>#{o.orderNumber}</span>
+                    <CopyIdButton id={String(o.orderNumber)} />
                   </div>
                 </td>
                 <td className="px-4 py-3 text-xs">{new Date(o.createdAt).toLocaleDateString()}</td>

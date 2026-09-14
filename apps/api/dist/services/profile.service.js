@@ -8,6 +8,7 @@ export async function getMyProfile(userId) {
         throw AppError.notFound("User not found");
     return {
         id: user.id,
+        userNumber: user.userNumber,
         username: user.username,
         email: user.email,
         phone: user.phone,

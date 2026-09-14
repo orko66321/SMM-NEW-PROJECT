@@ -63,6 +63,12 @@ export async function runTicketAutomation(params) {
     const { ticketId, userId, actionKey, orderIds } = params;
     const lines = [];
     let allClean = orderIds.length > 0;
+    // For the customer-facing summary line below — the ticket thread should
+    // read "Order #10023", never the internal cuid.
+    const orders = orderIds.length
+        ? await prisma.order.findMany({ where: { id: { in: orderIds } }, select: { id: true, orderNumber: true } })
+        : [];
+    const orderNumberById = new Map(orders.map((o) => [o.id, o.orderNumber]));
     for (const orderId of orderIds) {
         const outcome = await handleOrder(userId, actionKey, orderId);
         if (outcome.result !== "SUCCESS")
@@ -76,7 +82,7 @@ export async function runTicketAutomation(params) {
                 detail: outcome.detail,
             },
         });
-        lines.push(`• Order #${orderId}: ${outcome.detail}`);
+        lines.push(`• Order #${orderNumberById.get(orderId) ?? orderId}: ${outcome.detail}`);
     }
     const escalated = !allClean;
     const header = escalated

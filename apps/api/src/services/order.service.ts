@@ -287,6 +287,7 @@ export async function fulfillOrderIntent(
 
 function serializeOrder(order: {
   id: string;
+  orderNumber: number;
   userId: string;
   serviceId: string | null;
   link: string;
@@ -302,6 +303,7 @@ function serializeOrder(order: {
 }) {
   return {
     id: order.id,
+    orderNumber: order.orderNumber,
     userId: order.userId,
     serviceId: order.serviceId,
     link: order.link,
@@ -340,6 +342,18 @@ export async function listOrdersForUser(userId: string, page: number, pageSize: 
   return { items: safeItems, total, page, pageSize };
 }
 
+/**
+ * Admin search boxes accept the short numeric order/user number ("10042" or
+ * "#10042") alongside the raw cuid — this pulls a clean integer out of
+ * either form, or null if the search text isn't (just) a number.
+ */
+function parseNumericId(search: string): number | null {
+  const trimmed = search.trim().replace(/^#/, "");
+  if (!/^\d+$/.test(trimmed)) return null;
+  const n = Number(trimmed);
+  return Number.isSafeInteger(n) ? n : null;
+}
+
 export async function listOrdersForAdmin(
   page: number,
   pageSize: number,
@@ -348,12 +362,14 @@ export async function listOrdersForAdmin(
   dateRange?: { from?: Date; to?: Date },
   likeOnly?: boolean,
 ) {
+  const searchAsNumber = search ? parseNumericId(search) : null;
   const where: Prisma.OrderWhereInput = {
     ...(status ? { status: status as never } : {}),
     ...(search
       ? {
           OR: [
             { id: { equals: search } },
+            ...(searchAsNumber !== null ? [{ orderNumber: { equals: searchAsNumber } }] : []),
             { link: { contains: search, mode: "insensitive" } },
             { user: { username: { contains: search, mode: "insensitive" } } },
           ],

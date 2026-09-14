@@ -470,6 +470,13 @@ model StockCode {
 
 model User {
   id           String     @id @default(cuid())
+  // Short, human-readable account number shown everywhere the cuid `id`
+  // used to be (admin panel, profile page, support conversations) — e.g.
+  // "User #1001". Backed by a real Postgres sequence (started at 1001 by
+  // migration 20260915120000_numeric_user_order_ids), so assignment is
+  // atomic under concurrent signups with no app-level locking needed. Never
+  // used for lookups/joins — `id` remains the actual primary key everywhere.
+  userNumber   Int        @unique @default(autoincrement())
   username     String     @unique
   email        String     @unique
   // Nullable — a social-login-only account (Google) has no password until
@@ -796,16 +803,22 @@ model Service {
 // ── Orders ───────────────────────────────────────────────────────────────
 
 model Order {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  id          String   @id @default(cuid())
+  // Short, human-readable order number shown everywhere the cuid `id` used
+  // to be (order history, invoices, admin tables/search) — e.g.
+  // "Order #10001". Same Postgres-sequence approach as User.userNumber
+  // (started at 10001 by migration 20260915120000_numeric_user_order_ids).
+  // Never used for lookups/joins — `id` remains the actual primary key.
+  orderNumber Int      @unique @default(autoincrement())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
   // Nullable: a Store purchase (see Package below) that isn't SMM-linked has
   // no Service at all — the flat Services page's own order pipeline is
   // untouched, this only relaxes the FK so the same Order table can also
   // hold Package purchases. Every existing SMM-order code path still always
   // sets this (see order.service.ts / store.service.ts).
-  serviceId String?
-  service   Service? @relation(fields: [serviceId], references: [id])
+  serviceId   String?
+  service     Service? @relation(fields: [serviceId], references: [id])
 
   // Set when this order was placed through the Brand → Product → Package
   // store (store.service.ts) rather than the flat Services page.
