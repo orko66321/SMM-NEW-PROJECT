@@ -19,6 +19,7 @@ interface TicketMessage {
 }
 interface LinkedOrder {
   id: string;
+  orderNumber: number;
   status: string;
   quantity: number;
   link: string;
@@ -30,6 +31,7 @@ interface LinkedOrder {
 interface OrderAction {
   id: string;
   orderId: string;
+  order: { orderNumber: number } | null;
   actionKey: string;
   result: string;
   detail: string | null;
@@ -157,7 +159,7 @@ export default function AdminTicketDetail() {
             <div key={o.id} className="rounded-control border border-outline-variant p-3 text-sm">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="font-mono text-xs text-on-surface-variant">#{o.id}</p>
+                  <p className="font-mono text-xs text-on-surface-variant">#{o.orderNumber}</p>
                   <p className="truncate">{o.service?.name ?? "—"} · qty {o.quantity} · {o.mode}</p>
                   <p className="truncate text-xs text-on-surface-variant">{o.link}</p>
                 </div>
@@ -187,7 +189,7 @@ export default function AdminTicketDetail() {
             {orderActions.map((a) => (
               <li key={a.id}>
                 <span className="font-mono">{new Date(a.createdAt).toLocaleString()}</span>{" "}
-                — {a.actionKey} on #{a.orderId}: <span className="font-semibold">{a.result}</span>
+                — {a.actionKey} on #{a.order?.orderNumber ?? a.orderId}: <span className="font-semibold">{a.result}</span>
                 {a.detail ? ` — ${a.detail}` : ""}
               </li>
             ))}

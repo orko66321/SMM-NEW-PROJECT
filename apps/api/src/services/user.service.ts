@@ -2,18 +2,32 @@ import { prisma } from "../lib/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import type { UpdateUserInput } from "@smm/shared";
 
+/**
+ * Admin search boxes accept the short numeric user/order number ("1042" or
+ * "#1042") alongside username/email — this pulls a clean integer out of
+ * either form, or null if the search text isn't (just) a number.
+ */
+function parseNumericId(search: string): number | null {
+  const trimmed = search.trim().replace(/^#/, "");
+  if (!/^\d+$/.test(trimmed)) return null;
+  const n = Number(trimmed);
+  return Number.isSafeInteger(n) ? n : null;
+}
+
 export async function listUsers(
   page: number,
   pageSize: number,
   search?: string,
   dateRange?: { from?: Date; to?: Date },
 ) {
+  const searchAsNumber = search ? parseNumericId(search) : null;
   const where = {
     ...(search
       ? {
           OR: [
             { username: { contains: search, mode: "insensitive" as const } },
             { email: { contains: search, mode: "insensitive" as const } },
+            ...(searchAsNumber !== null ? [{ userNumber: { equals: searchAsNumber } }] : []),
           ],
         }
       : {}),
@@ -37,6 +51,7 @@ export async function listUsers(
   return {
     items: items.map((u) => ({
       id: u.id,
+      userNumber: u.userNumber,
       username: u.username,
       email: u.email,
       role: u.role,

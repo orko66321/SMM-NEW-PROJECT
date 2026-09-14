@@ -213,6 +213,7 @@ exports.Prisma.StockCodeScalarFieldEnum = {
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
+  userNumber: 'userNumber',
   username: 'username',
   email: 'email',
   passwordHash: 'passwordHash',
@@ -372,6 +373,7 @@ exports.Prisma.ServiceScalarFieldEnum = {
 
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
+  orderNumber: 'orderNumber',
   userId: 'userId',
   serviceId: 'serviceId',
   packageId: 'packageId',

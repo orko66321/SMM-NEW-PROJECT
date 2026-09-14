@@ -2,7 +2,33 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
 import { getAdminUsers } from "../../api/resources.js";
-import { Badge, Breadcrumbs, EmptyState, Pagination } from "../../components/ds/index.js";
+import { Badge, Breadcrumbs, EmptyState, Icon, Pagination } from "../../components/ds/index.js";
+
+function CopyUserIdButton({ userNumber }: { userNumber: number }) {
+  const [copied, setCopied] = useState(false);
+
+  async function onCopy() {
+    try {
+      await navigator.clipboard.writeText(String(userNumber));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // clipboard unavailable — ignore silently
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onCopy}
+      aria-label="Copy user ID"
+      title={copied ? "Copied" : "Copy user ID"}
+      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-control text-on-surface-variant transition hover:bg-surface-container-high hover:text-on-surface"
+    >
+      <Icon name={copied ? "check" : "copy"} size={14} className={copied ? "text-success" : undefined} />
+    </button>
+  );
+}
 
 export default function AdminUsers() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,7 +59,7 @@ export default function AdminUsers() {
         <h1 className="text-xl font-bold">Users</h1>
         <input
           className="input-field w-full sm:max-w-xs"
-          placeholder="Search username or email…"
+          placeholder="Search user # / username / email…"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -55,6 +81,7 @@ export default function AdminUsers() {
         <table className="w-full min-w-[720px] text-sm">
           <thead className="border-b border-outline-variant text-left text-xs uppercase text-on-surface-variant">
             <tr>
+              <th className="px-4 py-3">ID</th>
               <th className="px-4 py-3">Username</th>
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Balance</th>
@@ -65,12 +92,18 @@ export default function AdminUsers() {
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
-            {isLoading && <tr><td colSpan={7} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
+            {isLoading && <tr><td colSpan={8} className="px-4 py-6 text-center text-on-surface-variant">Loading…</td></tr>}
             {!isLoading && data?.items.length === 0 && (
-              <tr><td colSpan={7} className="px-4 py-6"><EmptyState icon="users" title="No users found" /></td></tr>
+              <tr><td colSpan={8} className="px-4 py-6"><EmptyState icon="users" title="No users found" /></td></tr>
             )}
-            {data?.items.map((u: { id: string; username: string; email: string; balance: string; ordersCount: number; role: string; status: string; createdAt: string }) => (
+            {data?.items.map((u: { id: string; userNumber: number; username: string; email: string; balance: string; ordersCount: number; role: string; status: string; createdAt: string }) => (
               <tr key={u.id} className="row-hover">
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-1 font-mono text-xs text-on-surface-variant">
+                    <span>#{u.userNumber}</span>
+                    <CopyUserIdButton userNumber={u.userNumber} />
+                  </div>
+                </td>
                 <td className="px-4 py-3">
                   <Link to={`/admin/users/${u.id}`} className="font-medium text-accent-on-dark hover:underline">{u.username}</Link>
                 </td>

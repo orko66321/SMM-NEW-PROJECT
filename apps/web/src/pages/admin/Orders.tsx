@@ -19,6 +19,7 @@ import { Badge, type BadgeTone, Breadcrumbs, EmptyState, Icon, Pagination, Statu
 
 type AdminOrderRow = {
   id: string;
+  orderNumber: number;
   user: { username: string };
   service: { name: string } | null;
   package: { name: string; product: { name: string; brand: { name: string } } } | null;
@@ -131,7 +132,7 @@ type RefillRow = {
   providerRefillId: string | null;
   note: string | null;
   createdAt: string;
-  order: { id: string; service: { name: string }; user: { username: string } };
+  order: { id: string; orderNumber: number; service: { name: string }; user: { username: string } };
 };
 
 const REFILL_STATUS_TONE: Record<string, BadgeTone> = {
@@ -195,7 +196,7 @@ function RefillRequestsPanel() {
               <tr key={r.id} className="row-hover">
                 <td className="px-3 py-2">{r.order.user.username}</td>
                 <td className="px-3 py-2">{r.order.service.name}</td>
-                <td className="px-3 py-2 font-mono text-xs text-on-surface-variant">{r.order.id.slice(0, 8)}</td>
+                <td className="px-3 py-2 font-mono text-xs text-on-surface-variant">#{r.order.orderNumber}</td>
                 <td className="px-3 py-2"><Badge tone={REFILL_STATUS_TONE[r.status] ?? "neutral"}>{r.status}</Badge></td>
                 <td className="px-3 py-2 text-xs">{new Date(r.createdAt).toLocaleString()}</td>
                 <td className="px-3 py-2">
@@ -303,7 +304,7 @@ export default function AdminOrders() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold">Orders</h1>
         <div className="flex flex-col gap-2 sm:flex-row">
-          <input className="input-field w-full sm:w-auto" placeholder="Search ID / link / username" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+          <input className="input-field w-full sm:w-auto" placeholder="Search order # / link / username" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
           <select className="input-field w-full sm:w-auto" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}>
             <option value="">All statuses</option>
             {OrderStatusValues.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -362,12 +363,12 @@ export default function AdminOrders() {
                   <button
                     type="button"
                     className="inline-flex min-h-[44px] items-center gap-1 sm:min-h-0"
-                    onClick={() => onCopyId(o.id)}
-                    aria-label="Copy full order ID"
+                    onClick={() => onCopyId(String(o.orderNumber))}
+                    aria-label="Copy order number"
                     title={o.id}
                   >
-                    {o.id.slice(0, 8)}
-                    <span className="text-[10px] text-primary">{copiedId === o.id ? "Copied" : "Copy"}</span>
+                    #{o.orderNumber}
+                    <span className="text-[10px] text-primary">{copiedId === String(o.orderNumber) ? "Copied" : "Copy"}</span>
                   </button>
                 </td>
                 <td className="px-4 py-3">{o.user.username}</td>
@@ -403,7 +404,7 @@ export default function AdminOrders() {
                   <td colSpan={9} className="px-4 py-4">
                     <div className="grid gap-3 text-xs sm:grid-cols-2">
                       <div className="space-y-1">
-                        <p><span className="text-on-surface-variant">Order ID:</span> <span className="font-mono">{o.id}</span></p>
+                        <p><span className="text-on-surface-variant">Order ID:</span> <span className="font-mono">#{o.orderNumber}</span> <span className="font-mono text-on-surface-variant/70">({o.id})</span></p>
                         <p><span className="text-on-surface-variant">Link / target:</span> <span className="break-all font-mono">{o.link}</span></p>
                         <p><span className="text-on-surface-variant">Mode:</span> {o.mode}</p>
                         <p><span className="text-on-surface-variant">Provider ref:</span> <span className="font-mono">{o.providerOrderId ?? "—"}</span></p>

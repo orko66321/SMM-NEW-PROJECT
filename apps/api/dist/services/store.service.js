@@ -246,6 +246,7 @@ export async function fulfillStorePackageIntent(tx, intent) {
 function serializeStoreOrder(order) {
     return {
         id: order.id,
+        orderNumber: order.orderNumber,
         packageId: order.packageId,
         link: order.link,
         quantity: order.quantity,

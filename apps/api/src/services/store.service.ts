@@ -283,6 +283,7 @@ export async function fulfillStorePackageIntent(
 
 function serializeStoreOrder(order: {
   id: string;
+  orderNumber: number;
   packageId: string | null;
   link: string;
   quantity: number;
@@ -293,6 +294,7 @@ function serializeStoreOrder(order: {
 }) {
   return {
     id: order.id,
+    orderNumber: order.orderNumber,
     packageId: order.packageId,
     link: order.link,
     quantity: order.quantity,

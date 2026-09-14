@@ -247,6 +247,7 @@ export async function fulfillOrderIntent(tx, intent) {
 function serializeOrder(order) {
     return {
         id: order.id,
+        orderNumber: order.orderNumber,
         userId: order.userId,
         serviceId: order.serviceId,
         link: order.link,
@@ -283,13 +284,27 @@ export async function listOrdersForUser(userId, page, pageSize, status) {
     const safeItems = items.map(({ apiErrorResponse: _adminOnly, ...rest }) => rest);
     return { items: safeItems, total, page, pageSize };
 }
+/**
+ * Admin search boxes accept the short numeric order/user number ("10042" or
+ * "#10042") alongside the raw cuid — this pulls a clean integer out of
+ * either form, or null if the search text isn't (just) a number.
+ */
+function parseNumericId(search) {
+    const trimmed = search.trim().replace(/^#/, "");
+    if (!/^\d+$/.test(trimmed))
+        return null;
+    const n = Number(trimmed);
+    return Number.isSafeInteger(n) ? n : null;
+}
 export async function listOrdersForAdmin(page, pageSize, status, search, dateRange, likeOnly) {
+    const searchAsNumber = search ? parseNumericId(search) : null;
     const where = {
         ...(status ? { status: status } : {}),
         ...(search
             ? {
                 OR: [
                     { id: { equals: search } },
+                    ...(searchAsNumber !== null ? [{ orderNumber: { equals: searchAsNumber } }] : []),
                     { link: { contains: search, mode: "insensitive" } },
                     { user: { username: { contains: search, mode: "insensitive" } } },
                 ],

@@ -15,6 +15,7 @@ import { GuestLockedCard } from "../../components/auth/GuestGate.js";
 import { BilingualNote, Icon } from "../../components/ds/index.js";
 
 interface Profile {
+  userNumber: number;
   username: string;
   email: string;
   phone: string | null;
@@ -85,6 +86,13 @@ function ProfileDetailsCard({ profile }: { profile: Profile }) {
           <img src={profile.avatarUrl} alt="" className="h-10 w-10 rounded-full border border-outline-variant" referrerPolicy="no-referrer" />
         )}
         <h2 className="text-lg font-bold">{t("profile.accountDetails")}</h2>
+      </div>
+      <div>
+        <label className="label">{t("profile.userIdLabel")}</label>
+        <div className="flex items-center gap-1">
+          <input className="input-field font-mono" value={`#${profile.userNumber}`} disabled />
+          <CopyButton value={String(profile.userNumber)} label={t("profile.copyUserId")} />
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>

@@ -108,7 +108,10 @@ export default function AdminUserDetail() {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="card space-y-3 lg:col-span-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="text-xl font-bold break-all">@{user.username}</h1>
+          <div className="flex flex-wrap items-baseline gap-2">
+            <h1 className="text-xl font-bold break-all">@{user.username}</h1>
+            <span className="font-mono text-sm text-on-surface-variant">User #{user.userNumber}</span>
+          </div>
           <Badge tone={user.status === "ACTIVE" ? "success" : "error"}>{user.status}</Badge>
         </div>
         <p className="text-sm text-on-surface-variant break-all">{user.email}</p>

@@ -110,6 +110,13 @@ export async function runTicketAutomation(params: {
   const lines: string[] = [];
   let allClean = orderIds.length > 0;
 
+  // For the customer-facing summary line below — the ticket thread should
+  // read "Order #10023", never the internal cuid.
+  const orders = orderIds.length
+    ? await prisma.order.findMany({ where: { id: { in: orderIds } }, select: { id: true, orderNumber: true } })
+    : [];
+  const orderNumberById = new Map(orders.map((o) => [o.id, o.orderNumber]));
+
   for (const orderId of orderIds) {
     const outcome = await handleOrder(userId, actionKey, orderId);
     if (outcome.result !== "SUCCESS") allClean = false;
@@ -124,7 +131,7 @@ export async function runTicketAutomation(params: {
       },
     });
 
-    lines.push(`• Order #${orderId}: ${outcome.detail}`);
+    lines.push(`• Order #${orderNumberById.get(orderId) ?? orderId}: ${outcome.detail}`);
   }
 
   const escalated = !allClean;
