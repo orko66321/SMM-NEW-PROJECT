@@ -807,6 +807,7 @@ const en = {
   helpWidget: {
     open: "Need help?",
     close: "Close",
+    liveChat: "Live Chat with Support",
     openTicket: "Open a support ticket",
     ticketModalTitle: "Open a support ticket",
     subjectLabel: "Subject",
@@ -1609,6 +1610,7 @@ const bn: Translations = {
   helpWidget: {
     open: "সাহায্য লাগবে?",
     close: "বন্ধ করুন",
+    liveChat: "সাপোর্টের সাথে লাইভ চ্যাট করুন",
     openTicket: "সাপোর্ট টিকিট খুলুন",
     ticketModalTitle: "সাপোর্ট টিকিট খুলুন",
     subjectLabel: "বিষয়",

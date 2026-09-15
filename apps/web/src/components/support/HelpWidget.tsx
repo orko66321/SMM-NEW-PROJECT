@@ -2,13 +2,21 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "react-router-dom";
 import type { PublicSupportChannel, SupportChannelType } from "@smm/shared";
-import { createTicket, getPublicSupportChannels } from "../../api/resources.js";
+import { createTicket, getPublicSupportChannels, getPublicSettings } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { cn } from "../ds/cn.js";
 import { TicketForm, type TicketFormValue } from "../tickets/TicketForm.js";
+import { openCrispChat } from "../../lib/crisp.js";
+
+// Not a SupportChannelType — Crisp isn't one of the admin-managed link-out
+// channels, it's the site-wide live-chat widget from Settings → Live Chat.
+// Kept as its own tray item so it can sit in the same "Need help?" stack
+// without pretending to be a DB-driven channel.
+const CRISP_GLYPH_PATH =
+  "M12 3C6.48 3 2 6.7 2 11.25c0 2.6 1.46 4.92 3.75 6.43-.1.9-.44 2.13-1.31 3.32a.5.5 0 0 0 .53.78c1.9-.5 3.36-1.37 4.24-2.02.9.19 1.83.29 2.79.29 5.52 0 10-3.7 10-8.25S17.52 3 12 3zm-4 9.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm4 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm4 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z";
 
 // Brand glyphs kept local to the widget — these are third-party logos, not
 // part of the design-system Icon set. `bg` is the brand colour for the
@@ -83,6 +91,12 @@ export default function HelpWidget() {
     queryFn: getPublicSupportChannels,
     staleTime: 60_000,
   });
+  // Crisp isn't a SupportChannel row — it's the site-wide live-chat widget
+  // from Settings → Live Chat. Its own floating launcher is kept hidden
+  // (LiveChatLoader.tsx) so it never collides with this widget's FAB; this
+  // tray item is the way back into it.
+  const { data: settings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
+  const crispEnabled = settings?.liveChatProvider === "CRISP" && !!settings?.liveChatWidgetId;
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -92,13 +106,19 @@ export default function HelpWidget() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  type TrayItem = { kind: "crisp" } | { kind: "channel"; channel: PublicSupportChannel };
+  const trayItems: TrayItem[] = [
+    ...(crispEnabled ? [{ kind: "crisp" as const }] : []),
+    ...channels.map((channel): TrayItem => ({ kind: "channel", channel })),
+  ];
+
   // Hidden inside the admin panel — it would overlap the admin bottom nav
   // and the operator isn't the audience for it.
   if (location.pathname.startsWith("/admin")) return null;
-  if (channels.length === 0) return null;
+  if (trayItems.length === 0) return null;
 
   // Nearest-to-the-button item animates in first on open, out last on close.
-  const stagger = (i: number) => (open ? (channels.length - 1 - i) * 45 : i * 35);
+  const stagger = (i: number) => (open ? (trayItems.length - 1 - i) * 45 : i * 35);
 
   function isBranded(type: SupportChannelType) {
     return type === "WHATSAPP" || type === "TELEGRAM" || type === "MESSENGER";
@@ -123,14 +143,16 @@ export default function HelpWidget() {
       <div className="fixed bottom-20 right-5 z-50 flex flex-col items-end gap-3.5 md:bottom-7 md:right-8 md:gap-4">
         {/* Channel tray */}
         <ul className={cn("flex flex-col items-end gap-3 md:gap-3.5", !open && "pointer-events-none")}>
-          {channels.map((channel, i) => {
-            const label = channel.label;
+          {trayItems.map((item, i) => {
+            const label = item.kind === "crisp" ? t("helpWidget.liveChat") : item.channel.label;
+            const branded = item.kind === "channel" && isBranded(item.channel.type);
             const circleClass = cn(
               "help-channel relative flex h-12 w-12 items-center justify-center rounded-full text-white md:h-14 md:w-14",
               "transition-transform duration-200 ease-ds hover:scale-110",
-              !isBranded(channel.type) && "bg-primary",
+              !branded && "bg-primary",
             );
-            const circleStyle = isBranded(channel.type) ? { backgroundColor: GLYPHS[channel.type].bg } : undefined;
+            const circleStyle =
+              item.kind === "channel" && branded ? { backgroundColor: GLYPHS[item.channel.type].bg } : undefined;
             const hoverLabel = (
               <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-full bg-surface-card/95 px-3 py-1.5 text-sm font-medium text-on-surface opacity-0 shadow-raised ring-1 ring-white/10 backdrop-blur transition-opacity duration-150 group-hover:opacity-100">
                 {label}
@@ -140,9 +162,28 @@ export default function HelpWidget() {
               "group flex items-center justify-end transition-all duration-300 ease-ds",
               open ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-90 opacity-0",
             );
+            const key = item.kind === "crisp" ? "crisp" : item.channel.type;
             return (
-              <li key={channel.type} style={{ transitionDelay: `${stagger(i)}ms` }} className={itemClass} aria-hidden={!open}>
-                {channel.type === "TICKET" ? (
+              <li key={key} style={{ transitionDelay: `${stagger(i)}ms` }} className={itemClass} aria-hidden={!open}>
+                {item.kind === "crisp" ? (
+                  <button
+                    type="button"
+                    tabIndex={open ? 0 : -1}
+                    aria-label={label}
+                    title={label}
+                    className={cn(circleClass, "focus:outline-none focus-visible:ring-2 focus-visible:ring-white")}
+                    style={circleStyle}
+                    onClick={() => {
+                      openCrispChat();
+                      setOpen(false);
+                    }}
+                  >
+                    {hoverLabel}
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 md:h-6 md:w-6">
+                      <path d={CRISP_GLYPH_PATH} />
+                    </svg>
+                  </button>
+                ) : item.channel.type === "TICKET" ? (
                   <button
                     type="button"
                     tabIndex={open ? 0 : -1}
@@ -156,11 +197,11 @@ export default function HelpWidget() {
                     }}
                   >
                     {hoverLabel}
-                    <ChannelIcon type={channel.type} />
+                    <ChannelIcon type={item.channel.type} />
                   </button>
                 ) : (
                   <a
-                    href={channel.href ?? "#"}
+                    href={item.channel.href ?? "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     tabIndex={open ? 0 : -1}
@@ -171,7 +212,7 @@ export default function HelpWidget() {
                     onClick={() => setOpen(false)}
                   >
                     {hoverLabel}
-                    <ChannelIcon type={channel.type} />
+                    <ChannelIcon type={item.channel.type} />
                   </a>
                 )}
               </li>

@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { createTicket, getMyTickets } from "../../api/resources.js";
+import { createTicket, getMyTickets, getPublicSettings } from "../../api/resources.js";
 import { apiErrorMessage } from "../../api/client.js";
 import { useToast } from "../../components/ui/Toast.js";
 import { useAuth } from "../../context/AuthContext.js";
 import { useLanguage } from "../../context/LanguageContext.js";
 import { GuestLockedCard } from "../../components/auth/GuestGate.js";
-import { EmptyState, StatusBadge, Tabs } from "../../components/ds/index.js";
+import { EmptyState, Icon, StatusBadge, Tabs } from "../../components/ds/index.js";
 import { GlassPage, PageHeader } from "../../components/dashboard/GlassPage.js";
 import { TicketForm, type TicketFormValue } from "../../components/tickets/TicketForm.js";
+import { openCrispChat } from "../../lib/crisp.js";
 
 export default function Tickets() {
   const toast = useToast();
@@ -21,6 +22,11 @@ export default function Tickets() {
     queryFn: () => getMyTickets({ page: 1, pageSize: 20 }),
     enabled: !!user,
   });
+  // Same source HelpWidget checks — a direct, labeled way into Crisp from
+  // this page, instead of only the floating tray. Fully optional: renders
+  // nothing when Crisp isn't configured (Admin → Settings → Live Chat).
+  const { data: settings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
+  const crispEnabled = settings?.liveChatProvider === "CRISP" && !!settings?.liveChatWidgetId;
 
   const [tab, setTab] = useState<"new" | "history">("new");
   const [formKey, setFormKey] = useState(0);
@@ -43,7 +49,19 @@ export default function Tickets() {
     }
   }
 
-  const header = <PageHeader title={t("dashboardLayout.nav.tickets")} />;
+  const header = (
+    <PageHeader
+      title={t("dashboardLayout.nav.tickets")}
+      action={
+        crispEnabled ? (
+          <button type="button" className="btn-primary inline-flex items-center gap-2" onClick={() => openCrispChat()}>
+            <Icon name="support" size={16} />
+            {t("helpWidget.liveChat")}
+          </button>
+        ) : undefined
+      }
+    />
+  );
 
   if (!user) {
     return (

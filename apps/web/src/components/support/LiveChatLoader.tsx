@@ -13,6 +13,13 @@ const SCRIPT_ID = "smm-live-chat-widget";
  * as a plain JS string property (Crisp's CRISP_WEBSITE_ID) — neither path
  * lets an admin-entered string execute as code in this page, closing off
  * the stored-XSS vector a raw "paste your chat script here" field would open.
+ *
+ * Crisp specifically: its own floating launcher icon is hidden immediately
+ * (`chat:hide`) rather than left to sit in the bottom-right corner
+ * alongside the site's own "Need help?" button — the two collided there.
+ * It's brought back on demand by `lib/crisp.ts`'s openCrispChat(), called
+ * from a "Live Chat" entry in the Help widget's tray and from the Tickets
+ * page, and hidden again once the visitor closes the conversation.
  */
 export default function LiveChatLoader() {
   const { data: settings } = useQuery({ queryKey: ["public-settings"], queryFn: getPublicSettings, staleTime: 60_000 });
@@ -30,7 +37,13 @@ export default function LiveChatLoader() {
       script.src = `https://embed.tawk.to/${encodeURIComponent(settings.liveChatWidgetId)}/default`;
       script.crossOrigin = "*";
     } else if (settings.liveChatProvider === "CRISP") {
-      (window as unknown as { CRISP_WEBSITE_ID?: string }).CRISP_WEBSITE_ID = settings.liveChatWidgetId;
+      const w = window as unknown as { CRISP_WEBSITE_ID?: string; $crisp?: unknown[][] };
+      // Same init Crisp's own snippet does — a plain array queue, safe to
+      // push onto before the real script below has finished loading.
+      w.$crisp = w.$crisp || [];
+      w.CRISP_WEBSITE_ID = settings.liveChatWidgetId;
+      w.$crisp.push(["do", "chat:hide"]);
+      w.$crisp.push(["on", "chat:closed", () => w.$crisp!.push(["do", "chat:hide"])]);
       script.src = "https://client.crisp.chat/l.js";
     } else {
       return;
